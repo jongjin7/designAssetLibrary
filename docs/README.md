@@ -15,40 +15,40 @@ NOVA aims to bridge the gap between physical and digital design inspiration.
 
 ## 2. Quick Links
 
-### 🎨 [Design & UI](file:///Volumes/macData/designAssetLibrary/docs/design/overview.md)
+### 🎨 [Design & UI](design/overview.md)
 
-- [**Design Overview**](file:///Volumes/macData/designAssetLibrary/docs/design/overview.md) (Fluid Premium Philosophy)
-- [Design Tokens](file:///Volumes/macData/designAssetLibrary/docs/design/design-tokens.md) (Colors, Typography)
-- [Layout Guide](file:///Volumes/macData/designAssetLibrary/docs/design/layout.md) (3-Column Adaptive)
-- [**Common Components (Phase 1)**](file:///Volumes/macData/designAssetLibrary/docs/design/components-phase1.md) (Shared Assets)
-- [Storybook Strategy](file:///Volumes/macData/designAssetLibrary/docs/design/storybook.md) (Isolated Testing)
+- [**Design Overview**](design/overview.md) (Fluid Premium Philosophy)
+- [Design Tokens](design/design-tokens.md) (Colors, Typography)
+- [Layout Guide](design/layout.md) (3-Column Adaptive)
+- [**Common Components (Phase 1)**](design/components-phase1.md) (Shared Assets)
+- [Storybook Strategy](design/storybook.md) (Isolated Testing)
 
-### 🛠️ [Setup & Infrastructure](file:///Volumes/macData/designAssetLibrary/docs/setup/structure.md)
+### 🛠️ [Setup & Infrastructure](setup/structure.md)
 
-- [Monorepo Structure](file:///Volumes/macData/designAssetLibrary/docs/setup/structure.md)
-- [Development Commands](file:///Volumes/macData/designAssetLibrary/docs/setup/commands.md)
+- [Monorepo Structure](setup/structure.md)
+- [Development Commands](setup/commands.md)
 
-### 🏗️ [Architecture](file:///Volumes/macData/designAssetLibrary/docs/architecture/database-schema.md)
+### 🏗️ [Architecture](architecture/database-schema.md)
 
-- [**Database Schema Design**](file:///Volumes/macData/designAssetLibrary/docs/architecture/database-schema.md) (Sprint 1 & 2 Unified)
-- [Backend (Supabase)](file:///Volumes/macData/designAssetLibrary/docs/architecture/backend.md)
-- [Frontend (Next.js)](file:///Volumes/macData/designAssetLibrary/docs/architecture/frontend.md)
+- [**Database Schema Design**](architecture/database-schema.md) (Sprint 1 & 2 Unified)
+- [Backend (Supabase)](architecture/backend.md)
+- [Frontend (Next.js)](architecture/frontend.md)
 
-### ✨ [Feature Specs](file:///Volumes/macData/designAssetLibrary/docs/features/sprint1-mobile.md)
+### ✨ [Feature Specs](features/sprint1-mobile.md)
 
-- [**Sprint 1: Mobile Collector**](file:///Volumes/macData/designAssetLibrary/docs/features/sprint1-mobile.md) (PWA & AI)
-- [**Sprint 2: Desktop Manager**](file:///Volumes/macData/designAssetLibrary/docs/features/sprint2-desktop.md) (Folders & Extensions)
+- [**Sprint 1: Mobile Collector**](features/sprint1-mobile.md) (PWA & AI)
+- [**Sprint 2: Desktop Manager**](features/sprint2-desktop.md) (Folders & Extensions)
 
 ---
 
 ## 3. Reference Documents
 
-- [**Integrated Development Plan (Sprint 1 & 2)**](file:///Volumes/macData/designAssetLibrary/docs/DEVELOPMENT_PLAN.md)
-- [Design Tokens](file:///Volumes/macData/designAssetLibrary/docs/design/design-tokens.md)
-- [UI Components (Phase 1)](file:///Volumes/macData/designAssetLibrary/docs/design/components-phase1.md)
+- [**Integrated Development Plan (Sprint 1 & 2)**](DEVELOPMENT_PLAN.md)
+- [Design Tokens](design/design-tokens.md)
+- [UI Components (Phase 1)](design/components-phase1.md)
 
 ---
 
 ## 4. Getting Started
 
-To get the project running locally, refer to the [Setup Guide](file:///Volumes/macData/designAssetLibrary/docs/setup/structure.md).
+To get the project running locally, refer to the [Setup Guide](setup/structure.md).

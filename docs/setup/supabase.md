@@ -243,6 +243,6 @@ Deno.serve(async (req) => {
 
 ## 7. 관련 문서
 
-- [프로젝트 구조](file:///Volumes/macData/designAssetLibrary/docs/setup/structure.md)
-- [개발 명령어](file:///Volumes/macData/designAssetLibrary/docs/setup/commands.md)
-- [통합 개발 계획](file:///Volumes/macData/designAssetLibrary/docs/DEVELOPMENT_PLAN.md)
+- [프로젝트 구조](structure.md)
+- [개발 명령어](commands.md)
+- [통합 개발 계획](../DEVELOPMENT_PLAN.md)

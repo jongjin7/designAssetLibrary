@@ -1,4 +1,4 @@
-# Project Structure: NOVA Monorepo
+# 프로젝트 구조: NOVA 모노레포 (Project Structure: NOVA Monorepo)
 
 모노레포 내의 각 애플리케이션(`apps`)과 공유 패키지(`packages`)의 역할 및 디렉토리 구조를 설명합니다. 각 구성 요소가 어떻게 유기적으로 연결되어 고성능 파이프라인을 형성하는지 정의합니다.
 
@@ -56,4 +56,4 @@ To achieve **0.2s instant browsing**, the system implements:
 
 1. **Adding a Feature:** Ensure shared types are added to `packages/shared` first if they impact multiple apps.
 2. **UI Updates:** Check `packages/ui` to see if a component can be shared before building it locally.
-3. **Running the Project:** Refer to [commands.md](file:///Volumes/macData/designAssetLibrary/docs/setup/commands.md) for CLI instructions.
+3. **Running the Project:** Refer to [commands.md](commands.md) for CLI instructions.
