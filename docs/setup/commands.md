@@ -25,6 +25,7 @@ You can use the `--filter` (or `-F`) flag to run commands for specific apps from
 ### Web App (`apps/web-app`)
 
 - `pnpm --filter web-app dev` - Start Next.js development server.
+- `pnpm --filter web-app dev:https` - Start dev server with HTTPS (required for mobile camera testing).
 - `pnpm --filter web-app build` - Build the Next.js production bundle.
 
 ### Desktop App (`apps/desktop-app`)

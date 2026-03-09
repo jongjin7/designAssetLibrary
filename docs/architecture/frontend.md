@@ -35,6 +35,8 @@ To achieve **0.2s instant browsing**, the system implements:
 
 - **Offline Mode:** Assets captured while offline are stored in IndexedDB.
 - **Background Sync:** Service Workers handle the upload queue when connectivity is restored.
+- **Secure Context (Camera Access):** `MediaDevices.getUserMedia()` requires a Secure Context (HTTPS or `localhost`). Mobile testing should use `--experimental-https`.
+- **Hybrid Capture Fallback:** On insecure/unsupported environments, the app automatically reflects an alternative "File Input" picker to ensure capture remains functional via the device gallery.
 
 ### 4.2 Desktop Integration (Sprint 2)
 
