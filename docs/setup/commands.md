@@ -1,4 +1,4 @@
-# Development Commands: NOVA (pnpm)
+# 개발 명령어: NOVA (Development Commands: NOVA)
 
 NOVA 모노레포 환경에서 pnpm을 사용하여 프로젝트를 빌드, 실행, 테스트하기 위한 주요 명령어 가이드입니다. 루트 및 개별 앱별 명령어와 Supabase 관련 명령어를 포함합니다.
 
@@ -23,14 +23,17 @@ Run these from the project root directory.
 You can use the `--filter` (or `-F`) flag to run commands for specific apps from the root.
 
 ### Web App (`apps/web-app`)
+
 - `pnpm --filter web-app dev` - Start Next.js development server.
 - `pnpm --filter web-app build` - Build the Next.js production bundle.
 
 ### Desktop App (`apps/desktop-app`)
+
 - `pnpm --filter desktop-app desktop:dev` - Launch Electron in development mode.
 - `pnpm --filter desktop-app desktop:build` - Package the Electron app.
 
 ### Browser Extension (`apps/extension`)
+
 - `pnpm --filter nova-extension dev` - Start Vite for extension development.
 - `pnpm --filter nova-extension build` - Build the extension.
 
@@ -48,5 +51,6 @@ You can use the `--filter` (or `-F`) flag to run commands for specific apps from
 ---
 
 ## 4. Maintenance & Cleaning
+
 - `pnpm clean` - Remove all `node_modules` and build artifacts.
 - `pnpm update -r` - Update packages across the workspace.

@@ -1,4 +1,4 @@
-# Storybook Structure: NOVA Shared Library
+# 스토리북 구조: NOVA 공유 라이브러리 (Storybook Structure: NOVA Shared Library)
 
 To maintain a scalable component library across the monorepo, Storybook follows a strict directory structure mirroring **Atomic Design**.
 
@@ -23,11 +23,12 @@ All components and their stories live in `packages/ui`.
 ## 2. Component Bundling Rules
 
 Every component folder must contain:
-1.  **`index.tsx`**: The functional React component.
-2.  **`styles.module.css`**: Scoped Vanilla CSS.
-3.  **`types.ts`**: TypeScript Interface/Props.
-4.  **`Component.stories.tsx`**: Storybook stories.
-5.  **`Component.mdx`**: (Optional) Long-form design documentation.
+
+1. **`index.tsx`**: The functional React component.
+2. **`styles.module.css`**: Scoped Vanilla CSS.
+3. **`types.ts`**: TypeScript Interface/Props.
+4. **`Component.stories.tsx`**: Storybook stories.
+5. **`Component.mdx`**: (Optional) Long-form design documentation.
 
 ---
 
@@ -52,6 +53,6 @@ Every component folder must contain:
 
 ## 5. Deployment Workflow
 
-1.  **Develop**: Create component and story in `packages/ui`.
-2.  **Test**: Verify in Storybook (Mobile/Desktop views).
-3.  **Deploy**: Storybook is built and deployed as a static site (Chromatic or Vercel) for designer review.
+1. **Develop**: Create component and story in `packages/ui`.
+2. **Test**: Verify in Storybook (Mobile/Desktop views).
+3. **Deploy**: Storybook is built and deployed as a static site (Chromatic or Vercel) for designer review.

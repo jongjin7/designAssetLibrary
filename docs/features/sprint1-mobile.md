@@ -1,4 +1,4 @@
-# Sprint 1: Mobile Collector Specification
+# Sprint 1: 모바일 수집기 명세 (Mobile Collector Specification)
 
 모바일 웹(PWA) 기반의 디자인 자산 수집 도구에 대한 기능 명세서입니다. 카메라 캡처, 이미지 최적화, AI 기반 자동 분류 및 실시간 동기화 구현을 목표로 합니다.
 
@@ -15,6 +15,7 @@ Sprint 1 focuses on building the **PWA-based mobile application** for instant de
 ---
 
 ## 2. Core User Stories
+
 1. **As a designer**, I want to take a photo of a physical design and have its colors automatically extracted.
 2. **As a collector**, I want to capture multiple assets in a row without waiting for each one to upload.
 3. **As a user**, I want to see my mobile-captured assets update in real-time on my desktop dashboard.
@@ -40,13 +41,15 @@ Sprint 1 focuses on building the **PWA-based mobile application** for instant de
 - **6 Capture Modes:** Full Page, Visible Area, Selected Element, Batch Image Save, Responsive Viewport, and Text/Color Picker.
 - **Performance:** Extension to Dashboard sync also targetting < 3s.
 
-### 3.4 Storage Logic
-- **Pathing:** `/users/[user_id]/[year]/[month]/[uuid].webp`.
-- **Optimization:** Automatic conversion to WEBP/AVIF to minimize storage and bandwidth.
+## 3.4 Storage Logic
+
+- **Pathing**: `/users/[user_id]/[year]/[month]/[uuid].webp`.
+- **Optimization**: Automatic conversion to WEBP/AVIF to minimize storage and bandwidth.
 
 ---
 
 ## 4. Acceptance Criteria (AC)
+
 - [ ] PWA can be installed on iOS/Android home screens.
 - [ ] Users can capture an image and see it appear in the dashboard within **3 seconds**.
 - [ ] AI-extracted tags achieve **70% accuracy** in early testing.

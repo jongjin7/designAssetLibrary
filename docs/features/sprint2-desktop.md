@@ -1,4 +1,4 @@
-# Sprint 2: Desktop Management Specification
+# Sprint 2: 데스크탑 관리 명세 (Desktop Management Specification)
 
 데스크탑 대시보드와 브라우저 확장 프로그램 개발을 위한 기능 명세서입니다. 계층형 폴더 관리, 메타데이터 기반 스마트 폴더, 그리고 6가지 모드의 강력한 웹 캡처 도구 사양을 정의합니다.
 
@@ -37,7 +37,7 @@ Sprint 2 focuses on the **Desktop Experience**, featuring advanced organization 
 
 ### 3.3 Desktop App Extension
 
-- **6 Capture Modes:** 
+- **6 Capture Modes:**
   - **Full Page:** High-res auto-stitching.
   - **Visible Area:** Current screen capture.
   - **Selected Element:** DOM-based capture.
@@ -50,9 +50,9 @@ Sprint 2 focuses on the **Desktop Experience**, featuring advanced organization 
 
 ## 4. Milestones (Sprint 2: Weeks 4-6)
 
-- **Week 4:** Desktop Dashboard UI & Adaptive Layout.
-- **Week 5:** Hierarchical Folder System & Smart Folder Logic.
-- **Week 6:** Browser Extension (6 modes) & Beta Release.
+- **Week 4**: Desktop Dashboard UI & Adaptive Layout.
+- **Week 5**: Hierarchical Folder System & Smart Folder Logic.
+- **Week 6**: Browser Extension (6 modes) & Beta Release.
 
 ---
 

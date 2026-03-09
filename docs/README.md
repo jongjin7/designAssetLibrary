@@ -33,6 +33,7 @@ NOVA aims to bridge the gap between physical and digital design inspiration.
 - [**Database Schema Design**](architecture/database-schema.md) (Sprint 1 & 2 Unified)
 - [Backend (Supabase)](architecture/backend.md)
 - [Frontend (Next.js)](architecture/frontend.md)
+- [**Coding Implementation Guide**](CONTRIBUTING_CODE.md) (Atomic Granularity & Anti-Bloat)
 
 ### ✨ [Feature Specs](features/sprint1-mobile.md)
 

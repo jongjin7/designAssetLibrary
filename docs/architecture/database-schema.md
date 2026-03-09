@@ -1,4 +1,4 @@
-# Database Schema Design: NOVA
+# 데이터베이스 스키마 설계: NOVA (Database Schema Design: NOVA)
 
 Sprint 1의 모바일 수집가와 Sprint 2의 데스크탑 매니저가 공유하는 통합 데이터베이스 스키마 설계도입니다. AI 태깅, 계층형 폴더, 스마트 폴더를 지원하기 위한 테이블 구조를 정의합니다.
 
@@ -15,6 +15,7 @@ Designing a schema to ensure that metadata collected by the **Sprint 1 (Mobile C
 ## 2. Table Definitions
 
 ### 2.1 `assets`
+
 The central store for all design assets (images, captures, etc.).
 
 | Column | Type | Description |
@@ -36,6 +37,7 @@ The central store for all design assets (images, captures, etc.).
 | `updated_at` | `TIMESTAMPTZ` | Updated on manual edits. |
 
 ### 2.2 `folders` (Sprint 2)
+
 Manual hierarchical organization.
 
 | Column | Type | Description |
@@ -61,7 +63,8 @@ erDiagram
     TAGS ||--o{ ASSET_TAGS : "assigned to"
 ```
 
-### Key Indices:
+### Key Indices
+
 - `idx_assets_user_id`: For fast retrieval of user data.
 - `idx_assets_folder_id`: For folder navigation.
 - `idx_folders_parent_id`: For recursive tree building.

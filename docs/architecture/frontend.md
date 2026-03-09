@@ -19,6 +19,7 @@ All frontend applications consume from the `packages/ui` package to ensure visua
 
 - **Design Tokens:** Defined centrally in `packages/ui/tokens`.
 - **Core Components:** Buttons, Modals, Asset Cards, and File Grids.
+- **Implementation Strategy:** All components and logic must follow the [Coding Implementation Guide](../CONTRIBUTING_CODE.md) (Atomic Granularity & Anti-Bloat) to ensure small, manageable files and prevent bloated components.
 
 ## 3. High-Performance Pipeline
 
@@ -38,13 +39,13 @@ To achieve **0.2s instant browsing**, the system implements:
 ### 4.2 Desktop Integration (Sprint 2)
 
 - **Styling**: Tailwind CSS v4 (CSS-first engine)
-    - Zero-config approach (No `tailwind.config.js`).
-    - Theme configuration via native CSS `@theme` in `globals.css`.
-    - Auto-scanning of workspace packages via `@source` directives.
+  - Zero-config approach (No `tailwind.config.js`).
+  - Theme configuration via native CSS `@theme` in `globals.css`.
+  - Auto-scanning of workspace packages via `@source` directives.
 - **Responsive Layout:** A 3-level adaptive layout:
-    - **Mobile:** Single column (viewfinder/list).
-    - **Tablet:** 2-column (sidebar + list).
-    - **Desktop:** 3-column (sidebar + list + detail panel).
+  - **Mobile**: Single column (viewfinder/list).
+  - **Tablet**: 2-column (sidebar + list).
+  - **Desktop**: 3-column (sidebar + list + detail panel).
 - **Native APIs:** Use `window.electron` bridge for local file system drag-and-drop.
 
 ## 5. State Management
