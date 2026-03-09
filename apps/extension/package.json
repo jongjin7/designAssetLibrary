@@ -1,0 +1,22 @@
+{
+  "name": "nova-extension",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc && vite build",
+    "type-check": "tsc --noEmit"
+  },
+  "dependencies": {
+    "react": "18.3.1",
+    "react-dom": "18.3.1",
+    "lucide-react": "^0.453.0"
+  },
+  "devDependencies": {
+    "vite": "^5.2.0",
+    "@crxjs/vite-plugin": "^2.0.0-beta.23",
+    "typescript": "^5.4.0",
+    "@types/react": "^18.2.66",
+    "@types/react-dom": "^18.2.22"
+  }
+}
