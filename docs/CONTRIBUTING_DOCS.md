@@ -16,7 +16,8 @@
 1.  **H1 제목**: 한글 명칭과 영문 명칭을 병기합니다.
     - 형식: `# [한글제목]: [영문부제] ([Original English Title])`
 2.  **한글 요약문 (Visible Summary)**: 제목 바로 아래에 해당 문서의 핵심 내용을 한글로 1~3문장 작성합니다. (에이전트가 아닌 **사람**을 위한 섹션)
-3.  **영문 기술 명세 (Technical Specs)**: 본문 및 하위 섹션(H2~)은 **영문**으로 작성합니다. (에이전트의 **코드 생성 정확도**를 위한 섹션)
+3.  **영문 기술 명세 (Technical Specs)**: 본문 및 하위 섹션(H2~)은- **Subject**: 한글로 작업 내용을 간결하게 작성합니다.
+ (에이전트의 **코드 생성 정확도**를 위한 섹션)
 
 ```markdown
 # 문서 제목: 부제 (Document Title)
@@ -36,7 +37,7 @@ English description here for better agent alignment.
 - `docs(feat): `: 기능 명세서 수정
 - `docs(setup): `: 설정 및 가이드 수정
 
-**예시:** `docs(design): add glassmorphism tokens to design-tokens.md`
+**예시:** `docs(design): design-tokens.md에 글래스모피즘 토큰 추가`
 
 ## 4. 기술적 정밀성 유지
 

@@ -1,5 +1,5 @@
-# <type>(<scope>): <subject>
-# 예: docs(design): add glassmorphism tokens to design-tokens.md
+# <type>(<scope>): <한글 요약>
+# 예: docs(design): design-tokens.md에 글래스모피즘 토큰 추가
 
 # --- 커밋 타입 지침 ---
 # feat     : 새로운 기능 추가
