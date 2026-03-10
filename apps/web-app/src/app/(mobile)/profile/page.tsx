@@ -1,6 +1,7 @@
 'use client';
 
 import { User, Bell, Shield, Palette, HelpCircle, LogOut, ChevronRight, Database, LayoutGrid } from 'lucide-react';
+import { InstallBanner } from '../../../components/shared/InstallBanner';
 
 const profileGroups = [
   {
@@ -42,6 +43,11 @@ export default function ProfilePage() {
           <p className="settings-screen__name">NOVA Designer</p>
           <p className="settings-screen__email">user@nova.design</p>
         </div>
+      </div>
+
+      {/* 앱 설치 배너 - 설치 가능한 경우에만 노출 */}
+      <div className="profile-install-banner">
+        <InstallBanner showClose={false} />
       </div>
 
       {profileGroups.map(group => (
