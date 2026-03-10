@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "dev": "pnpm --filter web-app dev",
-    "dev:https": "pnpm --filter web-app dev:https",
+    "dev:https": "cd apps/web-app && npx next dev --experimental-https --port 3000",
     "web:dev": "pnpm --filter web-app dev",
     "desktop:dev": "pnpm --filter desktop-app desktop:dev",
     "ext:dev": "pnpm --filter nova-extension dev",

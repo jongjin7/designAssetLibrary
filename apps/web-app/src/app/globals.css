@@ -380,6 +380,9 @@ button { cursor: pointer; border: none; background: none; font-family: inherit; 
   border-radius: 20px 20px 0 0;
   overflow-y: auto;
   animation: slideUp 0.3s cubic-bezier(0.23, 1, 0.32, 1);
+  /* Prevent pull-to-refresh and browser gestures */
+  touch-action: pan-y;
+  overscroll-behavior-y: contain;
 }
 
 .bottom-sheet__handle {
@@ -388,6 +391,8 @@ button { cursor: pointer; border: none; background: none; font-family: inherit; 
   border-radius: 2px;
   background: rgba(255, 255, 255, 0.2);
   margin: 10px auto 4px;
+  /* Ensure handle area is purely for dragging, not scrolling or gestures */
+  touch-action: none;
 }
 
 /* ===================================================
