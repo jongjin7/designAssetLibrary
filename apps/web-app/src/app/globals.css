@@ -195,6 +195,30 @@ button { cursor: pointer; border: none; background: none; font-family: inherit; 
   color: var(--color-nv-text-tertiary);
 }
 
+.search-bar__filter,
+.search-bar__clear {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 6px;
+  color: var(--color-nv-text-tertiary);
+  transition: color 0.15s;
+  cursor: pointer;
+}
+
+.search-bar__clear {
+  margin-right: -4px;
+}
+
+.search-bar__filter {
+  margin: -6px -4px -6px 0;
+}
+
+.search-bar__filter:hover,
+.search-bar__clear:hover {
+  color: var(--color-nv-primary);
+}
+
 /* ===================================================
    Filter Chips
    =================================================== */
@@ -369,34 +393,61 @@ button { cursor: pointer; border: none; background: none; font-family: inherit; 
 /* ===================================================
    Asset Detail
    =================================================== */
-.asset-detail__preview {
+.asset-detail {
+  display: flex;
+  flex-direction: column;
+}
+
+.asset-detail__preview-container {
+  position: relative;
   width: 100%;
   aspect-ratio: 16/10;
-  border-radius: 0 0 16px 16px;
-  margin-bottom: 16px;
+  overflow: hidden;
+  background: var(--color-nv-bg);
+}
+
+.asset-detail__preview {
+  width: 100%;
+  height: 100%;
+  border-radius: 0 0 24px 24px;
+}
+
+.asset-detail__preview-overlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(180deg, transparent 60%, rgba(11, 14, 20, 0.4) 100%);
+  border-radius: 0 0 24px 24px;
 }
 
 .asset-detail__meta {
-  padding: 0 20px 12px;
+  padding: 20px 20px 16px;
 }
 
 .asset-detail__name {
-  font-size: 16px;
-  font-weight: 600;
+  font-size: 20px;
+  font-weight: 700;
+  letter-spacing: -0.5px;
+  color: var(--color-nv-text-primary);
 }
 
 .asset-detail__info {
-  font-size: 12px;
+  font-size: 13px;
   color: var(--color-nv-text-tertiary);
-  margin-top: 4px;
+  margin-top: 6px;
+}
+
+.asset-detail__content {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  padding-bottom: 24px;
 }
 
 .asset-detail__actions {
   display: flex;
-  gap: 0;
-  padding: 12px 20px 20px;
-  border-top: 1px solid rgba(255, 255, 255, 0.05);
-  margin-top: 8px;
+  padding: 16px 12px calc(16px + env(safe-area-inset-bottom, 0px));
+  background: rgba(255, 255, 255, 0.02);
+  border-top: 1px solid rgba(255, 255, 255, 0.06);
 }
 
 .action-btn {
@@ -404,20 +455,39 @@ button { cursor: pointer; border: none; background: none; font-family: inherit; 
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 6px;
-  padding: 12px;
-  font-size: 12px;
+  gap: 8px;
+  padding: 12px 4px;
+  font-size: 11px;
+  font-weight: 500;
   color: var(--color-nv-text-secondary);
-  border-radius: 12px;
-  transition: background 0.2s;
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-.action-btn:hover {
+.action-btn__icon {
+  width: 44px;
+  height: 44px;
+  border-radius: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  color: var(--color-nv-text-primary);
+  transition: inherit;
 }
 
-.action-btn--danger {
+.action-btn:active {
+  transform: scale(0.95);
+}
+
+.action-btn:active .action-btn__icon {
+  background: rgba(255, 255, 255, 0.08);
+}
+
+.action-btn--danger .action-btn__icon {
   color: var(--color-nv-danger);
+  background: rgba(244, 63, 94, 0.08);
+  border-color: rgba(244, 63, 94, 0.15);
 }
 
 /* ===================================================
@@ -491,24 +561,6 @@ button { cursor: pointer; border: none; background: none; font-family: inherit; 
    =================================================== */
 .search-screen {
   padding: 12px 0;
-}
-
-.search-screen__header {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  padding-right: 16px;
-}
-
-.search-screen__header .search-bar {
-  flex: 1;
-}
-
-.search-screen__cancel {
-  font-size: 14px;
-  color: var(--color-nv-primary);
-  font-weight: 500;
-  white-space: nowrap;
 }
 
 .search-screen__discover {

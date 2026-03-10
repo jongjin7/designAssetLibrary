@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 
 interface BottomSheetProps {
   isOpen: boolean;
@@ -9,34 +9,65 @@ interface BottomSheetProps {
 }
 
 export function BottomSheet({ isOpen, onClose, children }: BottomSheetProps) {
-  const sheetRef = useRef<HTMLDivElement>(null);
+  const [shouldRender, setShouldRender] = useState(isOpen);
+  const [isClosing, setIsClosing] = useState(false);
+  const [dragY, setDragY] = useState(0);
+  const [isDragging, setIsDragging] = useState(false);
   const startY = useRef(0);
 
   useEffect(() => {
-    if (isOpen) document.body.style.overflow = 'hidden';
-    else document.body.style.overflow = '';
-    return () => { document.body.style.overflow = ''; };
+    if (isOpen) {
+      setShouldRender(true);
+      setIsClosing(false);
+      setDragY(0);
+      document.body.style.overflow = 'hidden';
+    } else {
+      setIsClosing(true);
+      setTimeout(() => {
+        setShouldRender(false);
+        setIsClosing(false);
+      }, 300); // Match CSS transition time
+      document.body.style.overflow = '';
+    }
   }, [isOpen]);
 
   const handleTouchStart = (e: React.TouchEvent) => {
     startY.current = e.touches[0].clientY;
+    setIsDragging(true);
   };
 
-  const handleTouchEnd = (e: React.TouchEvent) => {
-    const delta = e.changedTouches[0].clientY - startY.current;
-    if (delta > 100) onClose();
+  const handleTouchMove = (e: React.TouchEvent) => {
+    const currentY = e.touches[0].clientY;
+    const deltaY = currentY - startY.current;
+    if (deltaY > 0) setDragY(deltaY);
   };
 
-  if (!isOpen) return null;
+  const handleTouchEnd = () => {
+    setIsDragging(false);
+    if (dragY > 120) {
+      onClose();
+    } else {
+      setDragY(0);
+    }
+  };
+
+  if (!shouldRender) return null;
 
   return (
-    <div className="bottom-sheet-overlay" onClick={onClose}>
+    <div 
+      className={`bottom-sheet-overlay ${isClosing ? 'is-closing' : ''} ${isOpen ? 'is-open' : ''}`} 
+      onClick={onClose}
+    >
       <div
-        ref={sheetRef}
-        className="bottom-sheet"
+        className={`bottom-sheet ${isClosing ? 'is-closing' : ''}`}
         onClick={e => e.stopPropagation()}
         onTouchStart={handleTouchStart}
+        onTouchMove={handleTouchMove}
         onTouchEnd={handleTouchEnd}
+        style={{
+          transform: isClosing ? 'translateY(100%)' : `translateY(${dragY}px)`,
+          transition: isDragging ? 'none' : 'transform 0.3s cubic-bezier(0.2, 0.8, 0.2, 1)'
+        }}
       >
         <div className="bottom-sheet__handle" />
         {children}

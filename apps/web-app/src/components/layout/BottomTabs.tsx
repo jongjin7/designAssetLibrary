@@ -2,13 +2,12 @@
 
 import { usePathname } from 'next/navigation';
 import Link from 'next/link';
-import { Grid2x2, Search, Camera, Settings } from 'lucide-react';
+import { Grid2x2, Camera, User } from 'lucide-react';
 
 const tabs = [
   { label: 'Library', icon: Grid2x2, href: '/library' },
-  { label: 'Search', icon: Search, href: '/search' },
   { label: 'Capture', icon: Camera, href: '/capture', isCenter: true },
-  { label: 'Settings', icon: Settings, href: '/settings' },
+  { label: 'Profile', icon: User, href: '/profile' },
 ];
 
 export function BottomTabs() {

@@ -49,6 +49,11 @@ export function useAssets() {
     setSelectedAsset(null);
   }, []);
 
+  const deleteAsset = useCallback((id: string) => {
+    assetStore.deleteAsset(id);
+    refreshAssets();
+  }, [refreshAssets]);
+
   return { 
     assets: filteredAssets, 
     filter, 
@@ -57,6 +62,7 @@ export function useAssets() {
     openDetail, 
     closeDetail, 
     addAsset,
+    deleteAsset,
     mounted 
   };
 }

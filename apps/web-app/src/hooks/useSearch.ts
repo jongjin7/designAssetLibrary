@@ -2,7 +2,7 @@
 
 import { useState, useMemo, useEffect, useRef } from 'react';
 import { Asset } from '../types/asset';
-import { mockAssets } from '../data/mockAssets';
+import { assetStore } from '../store/assetStore';
 
 export function useSearch() {
   const [query, setQuery] = useState('');
@@ -17,19 +17,26 @@ export function useSearch() {
     return () => clearTimeout(timer);
   }, [query]);
 
+  const [refreshTrigger, setRefreshTrigger] = useState(0);
+
   const results = useMemo<Asset[]>(() => {
     if (!debouncedQuery.trim()) return [];
     const q = debouncedQuery.toLowerCase();
-    return mockAssets.filter(asset =>
+    return assetStore.getAssets().filter(asset =>
       asset.tags.some(t => t.includes(q)) ||
       asset.fileName.toLowerCase().includes(q)
     );
-  }, [debouncedQuery]);
+  }, [debouncedQuery, refreshTrigger]);
 
   const addRecentSearch = (term: string) => {
     if (!term.trim()) return;
     setRecentSearches(prev => [term, ...prev.filter(s => s !== term)].slice(0, 8));
   };
 
-  return { query, setQuery, results, recentSearches, addRecentSearch, inputRef, hasQuery: !!debouncedQuery.trim() };
+  const deleteAsset = (id: string) => {
+    assetStore.deleteAsset(id);
+    setRefreshTrigger(prev => prev + 1);
+  };
+
+  return { query, setQuery, results, recentSearches, addRecentSearch, deleteAsset, inputRef, hasQuery: !!debouncedQuery.trim() };
 }

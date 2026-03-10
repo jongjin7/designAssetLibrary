@@ -9,4 +9,7 @@ export const assetStore = {
   addAsset: (asset: Asset) => {
     assets = [asset, ...assets];
   },
+  deleteAsset: (id: string) => {
+    assets = assets.filter(asset => asset.id !== id);
+  },
 };
