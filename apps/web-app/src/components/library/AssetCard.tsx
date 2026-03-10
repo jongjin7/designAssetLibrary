@@ -9,8 +9,21 @@ interface AssetCardProps {
 
 export function AssetCard({ asset, onTap }: AssetCardProps) {
   return (
-    <button className="asset-card" onClick={() => onTap(asset)} aria-label={asset.fileName}>
-      <div className="asset-card__thumb" style={{ background: asset.thumbnailGradient }} />
+    <div 
+      className="asset-card" 
+      onClick={() => onTap(asset)} 
+      role="button"
+      tabIndex={0}
+      aria-label={asset.fileName}
+      onKeyDown={(e) => e.key === 'Enter' && onTap(asset)}
+    >
+      <div className="asset-card__thumb">
+        {asset.thumbnail ? (
+          <img src={asset.thumbnail} alt={asset.fileName} className="asset-card__img" />
+        ) : (
+          <div className="asset-card__gradient" style={{ background: asset.thumbnailGradient }} />
+        )}
+      </div>
       <div className="asset-card__footer">
         <div className="asset-card__palette">
           {asset.palette.slice(0, 3).map((color, i) => (
@@ -19,6 +32,6 @@ export function AssetCard({ asset, onTap }: AssetCardProps) {
         </div>
         <p className="asset-card__name">{asset.fileName.replace(/\.\w+$/, '')}</p>
       </div>
-    </button>
+    </div>
   );
 }
