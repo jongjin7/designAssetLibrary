@@ -4,7 +4,7 @@ import { useEffect, useRef, useState, useImperativeHandle, forwardRef } from 're
 import { CameraOff, Image as ImageIcon } from 'lucide-react';
 
 export interface CaptureViewfinderRef {
-  takePhoto: () => string | null;
+  takePhoto: () => { dataUrl: string; fileName?: string; fileSize?: string } | null;
   toggleCamera: () => void;
   openGallery: () => void;
   clearPreview: () => void;
@@ -25,6 +25,7 @@ export const CaptureViewfinder = forwardRef<CaptureViewfinderRef, CaptureViewfin
     const [facingMode, setFacingMode] = useState<'user' | 'environment'>('environment');
     const [error, setError] = useState<'PERMISSION' | 'INSECURE' | 'NOT_FOUND' | null>(null);
     const [previewImage, setPreviewImage] = useState<string | null>(null);
+    const [selectedFileInfo, setSelectedFileInfo] = useState<{ name: string; size: string } | null>(null);
 
     const isRequestingRef = useRef(false);
 
@@ -90,23 +91,33 @@ export const CaptureViewfinder = forwardRef<CaptureViewfinderRef, CaptureViewfin
 
     useImperativeHandle(ref, () => ({
       takePhoto: () => {
-        // 갤러리 선택 모드인 경우 현재 미리보기 이미지 반환
-        if (previewImage) return previewImage;
+        // 갤러리 선택 모드인 경우 현재 미리보기 이미지와 원본 정보 반환
+        if (previewImage) {
+          return { 
+            dataUrl: previewImage, 
+            fileName: selectedFileInfo?.name, 
+            fileSize: selectedFileInfo?.size 
+          };
+        }
 
         if (!videoRef.current || !canvasRef.current) return null;
         const video = videoRef.current;
         const canvas = canvasRef.current;
         
-        // 비디오 실제 크기에 맞춤
         canvas.width = video.videoWidth || 1280;
         canvas.height = video.videoHeight || 720;
         
         const ctx = canvas.getContext('2d');
         if (!ctx) return null;
         
-        // 비디오 프레임 그리기
         ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
-        return canvas.toDataURL('image/webp', 0.8);
+        const dataUrl = canvas.toDataURL('image/webp', 0.8);
+        
+        // 데이터 URL 기반 용량 계산 (근사치)
+        const sizeInBytes = Math.round((dataUrl.length * 3) / 4);
+        const fileSize = formatBytes(sizeInBytes);
+
+        return { dataUrl, fileSize };
       },
       toggleCamera: () => {
         if (error && error !== 'NOT_FOUND') return;
@@ -125,12 +136,25 @@ export const CaptureViewfinder = forwardRef<CaptureViewfinderRef, CaptureViewfin
     const handleFileSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
       const file = e.target.files?.[0];
       if (file) {
+        setSelectedFileInfo({
+          name: file.name,
+          size: formatBytes(file.size)
+        });
         const reader = new FileReader();
         reader.onloadend = () => {
           setPreviewImage(reader.result as string);
         };
         reader.readAsDataURL(file);
       }
+    };
+
+    const formatBytes = (bytes: number, decimals = 1) => {
+      if (bytes === 0) return '0 Bytes';
+      const k = 1024;
+      const dm = decimals < 0 ? 0 : decimals;
+      const sizes = ['Bytes', 'KB', 'MB', 'GB'];
+      const i = Math.floor(Math.log(bytes) / Math.log(k));
+      return parseFloat((bytes / Math.pow(k, i)).toFixed(dm)) + ' ' + sizes[i];
     };
 
     return (

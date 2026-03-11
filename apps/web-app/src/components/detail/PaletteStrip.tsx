@@ -2,9 +2,10 @@
 
 interface PaletteStripProps {
   colors: string[];
+  isAiRefined?: boolean;
 }
 
-export function PaletteStrip({ colors }: PaletteStripProps) {
+export function PaletteStrip({ colors, isAiRefined }: PaletteStripProps) {
   const copyToClipboard = (color: string) => {
     navigator.clipboard.writeText(color);
     alert(`${color} 색상이 복사되었습니다!`);
@@ -12,7 +13,10 @@ export function PaletteStrip({ colors }: PaletteStripProps) {
 
   return (
     <div className="palette-strip">
-      <p className="palette-strip__label">추출된 핵심 컬러</p>
+      <div className="palette-strip__header">
+        <p className="palette-strip__label">추출된 핵심 컬러</p>
+        {isAiRefined && <span className="ai-badge-text">AI Refined</span>}
+      </div>
       <div className="palette-strip__colors">
         {colors.map((color, i) => (
           <button 

@@ -6,6 +6,7 @@ import { useRouter } from 'next/navigation';
 import { CaptureViewfinder, CaptureViewfinderRef } from '../../../components/capture/CaptureViewfinder';
 import { CaptureControls } from '../../../components/capture/CaptureControls';
 import { useAssets } from '../../../hooks/useAssets';
+import { extractColors } from '../../../lib/colorExtractor';
 
 export default function CapturePage() {
   const router = useRouter();
@@ -25,25 +26,35 @@ export default function CapturePage() {
     };
   }, []);
 
-  const handleShutter = () => {
+  const handleShutter = async () => {
     if (!viewfinderRef.current || isCapturing.current) return;
     
-    const photo = viewfinderRef.current.takePhoto();
-    if (!photo) return;
+    const result = viewfinderRef.current.takePhoto();
+    if (!result) return;
+    
+    const { dataUrl, fileName, fileSize } = result;
     
     isCapturing.current = true;
-    setCapturedImage(photo);
+    setCapturedImage(dataUrl);
     setProgress(0);
 
-    // Mock asset saving
+    // AI/Canvas Color Extraction
+    let palette = ['#6366F1', '#06B6D4', '#F8FAFC']; // Default
+    try {
+      palette = await extractColors(dataUrl);
+    } catch (err) {
+      console.warn('Failed to extract colors during capture:', err);
+    }
+
+    // Create asset with REAL metadata and palette
     const newAsset = {
       id: Date.now().toString(),
-      fileName: `capture-${Date.now()}.webp`,
-      fileSize: '800 KB',
+      fileName: fileName || `capture-${Date.now()}.webp`,
+      fileSize: fileSize || '0 KB',
       mimeType: 'image/webp',
       thumbnailGradient: 'linear-gradient(135deg, #6366F1 0%, #06B6D4 100%)',
-      thumbnail: photo,
-      palette: ['#6366F1', '#06B6D4', '#F8FAFC'],
+      thumbnail: dataUrl,
+      palette: palette,
       tags: ['captured', 'new'],
       createdAt: new Date().toISOString().split('T')[0],
       isFavorite: false,

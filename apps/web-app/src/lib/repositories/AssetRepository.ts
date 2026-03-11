@@ -5,6 +5,7 @@ export interface AssetRepository {
   getAssetById(id: string): Promise<Asset | null>;
   saveAsset(asset: Partial<Asset>, file?: Blob): Promise<Asset>;
   deleteAsset(id: string): Promise<void>;
+  updateAsset(id: string, updates: Partial<Asset>): Promise<void>;
   toggleFavorite(id: string): Promise<void>;
 }
 

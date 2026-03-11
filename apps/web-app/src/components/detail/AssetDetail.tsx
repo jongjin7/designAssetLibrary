@@ -1,20 +1,70 @@
-'use client';
-
-import { Share2, FolderInput, Trash2 } from 'lucide-react';
+import { useState, useEffect } from 'react';
+import { Share2, FolderInput, Trash2, RefreshCcw, Sparkles } from 'lucide-react';
 import { Asset } from '../../types/asset';
 import { BottomSheet } from './BottomSheet';
 import { PaletteStrip } from './PaletteStrip';
 import { TagList } from './TagList';
+import { extractColorsAI } from '../../lib/colorExtractorAI';
+import { extractColors } from '../../lib/colorExtractor';
 
 interface AssetDetailProps {
   asset: Asset | null;
   onClose: () => void;
   onDelete?: (id: string) => void;
   onMove?: (id: string) => void;
+  onUpdate?: (id: string, updates: Partial<Asset>) => void;
 }
 
-export function AssetDetail({ asset, onClose, onDelete, onMove }: AssetDetailProps) {
+export function AssetDetail({ asset, onClose, onDelete, onMove, onUpdate }: AssetDetailProps) {
+  const [palette, setPalette] = useState<string[]>(asset?.palette || []);
+  const [isExtracting, setIsExtracting] = useState(false);
+  const [isAiRefined, setIsAiRefined] = useState(false);
+
+  useEffect(() => {
+    if (asset) {
+      setPalette(asset.palette);
+      setIsAiRefined(false);
+      
+      // Only auto-extract if the palette is empty
+      if (asset.thumbnail && (!asset.palette || asset.palette.length === 0)) {
+        handleBasicExtraction();
+      }
+    }
+  }, [asset?.id, asset?.palette]);
+
   if (!asset) return null;
+
+  const handleBasicExtraction = async () => {
+    if (!asset.thumbnail) return;
+    try {
+      const extracted = await extractColors(asset.thumbnail);
+      setPalette(extracted);
+      // Auto-update if it was empty
+      if (!asset.palette || asset.palette.length === 0) {
+        onUpdate?.(asset.id, { palette: extracted });
+      }
+    } catch (err) {
+      console.warn('Basic color extraction failed:', err);
+    }
+  };
+
+  const handleAIExtraction = async () => {
+    if (!asset.thumbnail) return;
+    
+    setIsExtracting(true);
+    try {
+      const extracted = await extractColorsAI(asset.thumbnail);
+      setPalette(extracted);
+      setIsAiRefined(true);
+      // Persist the high-quality AI palette
+      onUpdate?.(asset.id, { palette: extracted });
+    } catch (err) {
+      console.warn('AI Color extraction failed:', err);
+      alert('AI 분석 중 오류가 발생했습니다.');
+    } finally {
+      setIsExtracting(false);
+    }
+  };
 
   const formatDate = (dateStr: string) => {
     try {
@@ -29,7 +79,6 @@ export function AssetDetail({ asset, onClose, onDelete, onMove }: AssetDetailPro
   };
 
   const handleShare = async () => {
-    // ... (rest of handleShare)
     const shareData = {
       title: 'NOVA Design Asset',
       text: `${asset.fileName} 에셋을 확인해 보세요.`,
@@ -82,13 +131,31 @@ export function AssetDetail({ asset, onClose, onDelete, onMove }: AssetDetailPro
         <div className="asset-detail__meta">
           <div className="asset-detail__header">
             <h2 className="asset-detail__name">{asset.fileName}</h2>
-            <span className="asset-detail__size">{asset.fileSize}</span>
+            <div className="asset-detail__specs">
+               <span className="asset-detail__size">{asset.fileSize}</span>
+               <span className="asset-detail__divider">·</span>
+               <span className="asset-detail__type">{asset.mimeType.split('/')[1].toUpperCase()}</span>
+            </div>
           </div>
           <p className="asset-detail__date">{formatDate(asset.createdAt)}</p>
         </div>
 
         <div className="asset-detail__content">
-          <PaletteStrip colors={asset.palette} />
+          <div className="palette-section">
+            <div className="palette-section__header">
+              <PaletteStrip colors={palette} isAiRefined={isAiRefined} />
+            </div>
+            {asset.thumbnail && (
+              <button 
+                className={`extract-btn ${isExtracting ? 'is-loading' : ''} ${isAiRefined ? 'is-refined' : ''}`}
+                onClick={handleAIExtraction}
+                disabled={isExtracting}
+              >
+                <Sparkles size={14} className={isExtracting ? 'animate-pulse' : ''} />
+                <span>{isAiRefined ? 'AI 다시 분석' : 'AI 분석'}</span>
+              </button>
+            )}
+          </div>
           <TagList tags={asset.tags} />
         </div>
 

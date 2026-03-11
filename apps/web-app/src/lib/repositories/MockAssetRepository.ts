@@ -170,6 +170,15 @@ export class MockAssetRepository implements AssetRepository {
     this.persist();
   }
 
+  async updateAsset(id: string, updates: Partial<Asset>): Promise<void> {
+    await this.initialize();
+    this.assets = this.assets.map(a => 
+      a.id === id ? { ...a, ...updates } : a
+    );
+    this.persist();
+    console.log('[Mock/OPFS] Asset updated:', id, updates);
+  }
+
   private persist() {
     try {
       localStorage.setItem(STORAGE_KEY, JSON.stringify(this.assets));

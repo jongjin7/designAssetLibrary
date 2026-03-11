@@ -70,6 +70,15 @@ export function useAssets() {
     }
   }, [refreshAssets]);
 
+  const updateAsset = useCallback(async (id: string, updates: Partial<Asset>) => {
+    try {
+      await assetRepository.updateAsset(id, updates);
+      await refreshAssets();
+    } catch (error) {
+      console.error('Failed to update asset:', error);
+    }
+  }, [refreshAssets]);
+
   const toggleFavorite = useCallback(async (id: string) => {
     try {
       await assetRepository.toggleFavorite(id);
@@ -88,6 +97,7 @@ export function useAssets() {
     closeDetail, 
     addAsset,
     deleteAsset,
+    updateAsset,
     toggleFavorite,
     loading,
     mounted 

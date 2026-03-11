@@ -11,7 +11,7 @@ import { useAssets } from '../../../hooks/useAssets';
 
 export default function LibraryPage() {
   const router = useRouter();
-  const { assets, loading, filter, setFilter, selectedAsset, openDetail, closeDetail, deleteAsset } = useAssets();
+  const { assets, loading, filter, setFilter, selectedAsset, openDetail, closeDetail, deleteAsset, updateAsset } = useAssets();
   const [searchText, setSearchText] = useState('');
 
   // Inline filtering for text search
