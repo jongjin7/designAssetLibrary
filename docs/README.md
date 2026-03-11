@@ -31,15 +31,15 @@ NOVA aims to bridge the gap between physical and digital design inspiration.
 ### 🏗️ [Architecture](architecture/database-schema.md)
 
 - [**Database Schema Design**](architecture/database-schema.md) (Sprint 1 & 2 Unified)
-- [**Data Layer (Repository Pattern)**](architecture/data-layer.md) (Local-First & Sync)
+- [**Data Layer (Repository Pattern)**](architecture/frontend.md#5-data-layer--state-management) (Local-First & Sync)
 - [Backend (Supabase)](architecture/backend.md)
-- [Frontend (Next.js)](architecture/frontend.md)
+- [**Frontend (Next.js)**](architecture/frontend.md)
 - [**Coding Implementation Guide**](CONTRIBUTING_CODE.md) (Atomic Granularity & Anti-Bloat)
 
 ### ✨ [Feature Specs](features/sprint1-mobile.md)
 
 - [**Sprint 1: Mobile Collector**](features/sprint1-mobile.md) (PWA & AI)
-- [**PWA Implementation Status**](features/pwa-implementation-status.md) (Offline & Install)
+- [**PWA Strategy & Status**](architecture/frontend.md#41-pwa-strategy-sprint-1) (Offline & Install)
 - [**Sprint 2: Desktop Manager**](features/sprint2-desktop.md) (Folders & Extensions)
 
 ---
