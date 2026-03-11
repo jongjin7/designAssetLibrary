@@ -26,7 +26,14 @@ export const CaptureViewfinder = forwardRef<CaptureViewfinderRef, CaptureViewfin
     const [error, setError] = useState<'PERMISSION' | 'INSECURE' | 'NOT_FOUND' | null>(null);
     const [previewImage, setPreviewImage] = useState<string | null>(null);
 
+    const isRequestingRef = useRef(false);
+
     const startCamera = async (mode: 'user' | 'environment') => {
+      if (isRequestingRef.current) {
+        console.log('[Camera] Request already in progress, skipping...');
+        return;
+      }
+
       // 1. 보안 컨텍스트 체크
       if (!window.isSecureContext && window.location.hostname !== 'localhost') {
         setError('INSECURE');
@@ -39,6 +46,7 @@ export const CaptureViewfinder = forwardRef<CaptureViewfinderRef, CaptureViewfin
         activeStreamRef.current = null;
       }
 
+      isRequestingRef.current = true;
       try {
         const constraints = {
           video: { 
@@ -49,6 +57,7 @@ export const CaptureViewfinder = forwardRef<CaptureViewfinderRef, CaptureViewfin
           audio: false
         };
         
+        console.log('[Camera] Requesting access with mode:', mode);
         const newStream = await navigator.mediaDevices.getUserMedia(constraints);
         activeStreamRef.current = newStream;
         setStream(newStream || null);
@@ -60,6 +69,8 @@ export const CaptureViewfinder = forwardRef<CaptureViewfinderRef, CaptureViewfin
       } catch (err: any) {
         console.error('카메라 시작 오류:', err);
         setError(err.name === 'NotAllowedError' ? 'PERMISSION' : 'NOT_FOUND');
+      } finally {
+        isRequestingRef.current = false;
       }
     };
 
@@ -107,6 +118,7 @@ export const CaptureViewfinder = forwardRef<CaptureViewfinderRef, CaptureViewfin
       clearPreview: () => {
         setPreviewImage(null);
         if (fileInputRef.current) fileInputRef.current.value = '';
+        if (!activeStreamRef.current) startCamera(facingMode);
       }
     }));
 
@@ -131,7 +143,7 @@ export const CaptureViewfinder = forwardRef<CaptureViewfinderRef, CaptureViewfin
           onChange={handleFileSelect} 
         />
 
-        {error ? (
+        {error && !previewImage ? (
           <div className="capture-viewfinder__fallback">
             <div className="fallback-content">
               <div className="fallback-icon">

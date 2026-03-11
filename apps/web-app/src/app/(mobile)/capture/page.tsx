@@ -57,17 +57,19 @@ export default function CapturePage() {
         if (captureIntervalRef.current) clearInterval(captureIntervalRef.current);
         setProgress(100);
         
-        // Side effects should be here, outside of setProgress callback
-        addAsset(newAsset);
-        setToast(true);
-        
-        setTimeout(() => {
-          setToast(false);
-          setCapturedImage(null);
-          viewfinderRef.current?.clearPreview();
-          setProgress(0);
-          isCapturing.current = false; // Reset capturing flag
-        }, 2000);
+        // Wait for persistence to complete
+        addAsset(newAsset).then(() => {
+          setToast(true);
+          
+          setTimeout(() => {
+            setToast(false);
+            setCapturedImage(null);
+            viewfinderRef.current?.clearPreview();
+            setProgress(0);
+            isCapturing.current = false;
+            // router.push('/library'); // Removed: Stay on page for multiple shots
+          }, 1500);
+        });
       } else {
         setProgress(currentProgress);
       }

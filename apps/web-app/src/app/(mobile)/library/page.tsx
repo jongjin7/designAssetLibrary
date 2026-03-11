@@ -11,7 +11,7 @@ import { useAssets } from '../../../hooks/useAssets';
 
 export default function LibraryPage() {
   const router = useRouter();
-  const { assets, filter, setFilter, selectedAsset, openDetail, closeDetail, deleteAsset } = useAssets();
+  const { assets, loading, filter, setFilter, selectedAsset, openDetail, closeDetail, deleteAsset } = useAssets();
   const [searchText, setSearchText] = useState('');
 
   // Inline filtering for text search
@@ -36,7 +36,14 @@ export default function LibraryPage() {
           placeholder="에셋 이름, 태그로 검색..." 
         />
         <FilterChips active={filter} onChange={(f) => setFilter(f as any)} />
-        <AssetGrid assets={filteredAssets} onAssetTap={openDetail} />
+        
+        {loading ? (
+          <div className="library-loading" style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', padding: '40px', color: 'var(--color-nv-text-secondary)' }}>
+            <p>자산을 불러오는 중...</p>
+          </div>
+        ) : (
+          <AssetGrid assets={filteredAssets} onAssetTap={openDetail} />
+        )}
       </section>
 
       <AssetDetail asset={selectedAsset} onClose={closeDetail} onDelete={deleteAsset} />
