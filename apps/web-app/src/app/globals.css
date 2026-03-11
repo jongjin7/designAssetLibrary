@@ -480,7 +480,12 @@ button { cursor: pointer; border: none; background: none; font-family: inherit; 
 .asset-detail__preview {
   width: 100%;
   height: 100%;
+  object-fit: contain;
   border-radius: 0 0 24px 24px;
+}
+
+.asset-detail__preview--gradient {
+  background-size: cover;
 }
 
 .asset-detail__preview-overlay {
@@ -488,23 +493,44 @@ button { cursor: pointer; border: none; background: none; font-family: inherit; 
   inset: 0;
   background: linear-gradient(180deg, transparent 60%, rgba(11, 14, 20, 0.4) 100%);
   border-radius: 0 0 24px 24px;
+  pointer-events: none;
 }
 
 .asset-detail__meta {
-  padding: 20px 20px 16px;
+  padding: 24px 20px 16px;
+}
+
+.asset-detail__header {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 12px;
 }
 
 .asset-detail__name {
+  flex: 1;
   font-size: 20px;
   font-weight: 700;
   letter-spacing: -0.5px;
   color: var(--color-nv-text-primary);
+  word-break: break-all;
 }
 
-.asset-detail__info {
+.asset-detail__size {
   font-size: 13px;
+  font-weight: 500;
+  color: var(--color-nv-text-secondary);
+  background: rgba(255, 255, 255, 0.04);
+  padding: 2px 8px;
+  border-radius: 6px;
+  border: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+.asset-detail__date {
+  font-size: 14px;
+  font-weight: 500;
   color: var(--color-nv-text-tertiary);
-  margin-top: 6px;
+  margin-top: 4px;
 }
 
 .asset-detail__content {

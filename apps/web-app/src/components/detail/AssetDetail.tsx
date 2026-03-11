@@ -16,7 +16,20 @@ interface AssetDetailProps {
 export function AssetDetail({ asset, onClose, onDelete, onMove }: AssetDetailProps) {
   if (!asset) return null;
 
+  const formatDate = (dateStr: string) => {
+    try {
+      const date = new Date(dateStr);
+      const y = date.getFullYear();
+      const m = String(date.getMonth() + 1).padStart(2, '0');
+      const d = String(date.getDate()).padStart(2, '0');
+      return `${y}. ${m}. ${d}`;
+    } catch {
+      return dateStr;
+    }
+  };
+
   const handleShare = async () => {
+    // ... (rest of handleShare)
     const shareData = {
       title: 'NOVA Design Asset',
       text: `${asset.fileName} 에셋을 확인해 보세요.`,
@@ -58,13 +71,20 @@ export function AssetDetail({ asset, onClose, onDelete, onMove }: AssetDetailPro
     <BottomSheet isOpen={!!asset} onClose={onClose}>
       <div className="asset-detail">
         <div className="asset-detail__preview-container">
-          <div className="asset-detail__preview" style={{ background: asset.thumbnailGradient }} />
+          {asset.thumbnail ? (
+            <img src={asset.thumbnail} alt={asset.fileName} className="asset-detail__preview asset-detail__preview--image" />
+          ) : (
+            <div className="asset-detail__preview asset-detail__preview--gradient" style={{ background: asset.thumbnailGradient }} />
+          )}
           <div className="asset-detail__preview-overlay" />
         </div>
 
         <div className="asset-detail__meta">
-          <h2 className="asset-detail__name">{asset.fileName}</h2>
-          <p className="asset-detail__info">{asset.fileSize} · {asset.createdAt}</p>
+          <div className="asset-detail__header">
+            <h2 className="asset-detail__name">{asset.fileName}</h2>
+            <span className="asset-detail__size">{asset.fileSize}</span>
+          </div>
+          <p className="asset-detail__date">{formatDate(asset.createdAt)}</p>
         </div>
 
         <div className="asset-detail__content">
@@ -75,15 +95,15 @@ export function AssetDetail({ asset, onClose, onDelete, onMove }: AssetDetailPro
         <div className="asset-detail__actions">
           <button className="action-btn" onClick={handleShare}>
             <div className="action-btn__icon"><Share2 size={20} /></div>
-            <span>공유하기</span>
+            <span>공유</span>
           </button>
           <button className="action-btn" onClick={handleMove}>
             <div className="action-btn__icon"><FolderInput size={20} /></div>
-            <span>이동하기</span>
+            <span>이동</span>
           </button>
           <button className="action-btn action-btn--danger" onClick={handleDelete}>
             <div className="action-btn__icon"><Trash2 size={20} /></div>
-            <span>삭제하기</span>
+            <span>삭제</span>
           </button>
         </div>
       </div>
