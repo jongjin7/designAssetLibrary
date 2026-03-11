@@ -2,19 +2,27 @@
 
 import { useState, useMemo, useCallback, useEffect } from 'react';
 import { Asset } from '../types/asset';
-import { mockAssets } from '../data/mockAssets';
-import { assetStore } from '../store/assetStore';
+import { assetRepository } from '../lib/dataService';
 
 type FilterType = 'all' | 'recent' | 'favorites';
 
 export function useAssets() {
   const [assets, setAssets] = useState<Asset[]>([]);
+  const [loading, setLoading] = useState(true);
   const [mounted, setMounted] = useState(false);
   const [filter, setFilter] = useState<FilterType>('all');
   const [selectedAsset, setSelectedAsset] = useState<Asset | null>(null);
 
-  const refreshAssets = useCallback(() => {
-    setAssets([...assetStore.getAssets()]);
+  const refreshAssets = useCallback(async () => {
+    setLoading(true);
+    try {
+      const data = await assetRepository.getAssets();
+      setAssets(data);
+    } catch (error) {
+      console.error('Failed to fetch assets:', error);
+    } finally {
+      setLoading(false);
+    }
   }, []);
 
   useEffect(() => {
@@ -22,9 +30,13 @@ export function useAssets() {
     refreshAssets();
   }, [refreshAssets]);
 
-  const addAsset = useCallback((asset: Asset) => {
-    assetStore.addAsset(asset);
-    refreshAssets();
+  const addAsset = useCallback(async (asset: Partial<Asset>, file?: Blob) => {
+    try {
+      await assetRepository.saveAsset(asset, file);
+      await refreshAssets();
+    } catch (error) {
+      console.error('Failed to add asset:', error);
+    }
   }, [refreshAssets]);
 
   const filteredAssets = useMemo(() => {
@@ -49,9 +61,22 @@ export function useAssets() {
     setSelectedAsset(null);
   }, []);
 
-  const deleteAsset = useCallback((id: string) => {
-    assetStore.deleteAsset(id);
-    refreshAssets();
+  const deleteAsset = useCallback(async (id: string) => {
+    try {
+      await assetRepository.deleteAsset(id);
+      await refreshAssets();
+    } catch (error) {
+      console.error('Failed to delete asset:', error);
+    }
+  }, [refreshAssets]);
+
+  const toggleFavorite = useCallback(async (id: string) => {
+    try {
+      await assetRepository.toggleFavorite(id);
+      await refreshAssets();
+    } catch (error) {
+      console.error('Failed to toggle favorite:', error);
+    }
   }, [refreshAssets]);
 
   return { 
@@ -63,6 +88,8 @@ export function useAssets() {
     closeDetail, 
     addAsset,
     deleteAsset,
+    toggleFavorite,
+    loading,
     mounted 
   };
 }

@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useRef } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import { X, CheckCircle } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import { CaptureViewfinder, CaptureViewfinderRef } from '../../../components/capture/CaptureViewfinder';
@@ -16,6 +16,14 @@ export default function CapturePage() {
   const [capturedImage, setCapturedImage] = useState<string | null>(null);
   const [isFileMode, setIsFileMode] = useState(false);
   const isCapturing = useRef(false);
+
+  const captureIntervalRef = useRef<NodeJS.Timeout | null>(null);
+
+  useEffect(() => {
+    return () => {
+      if (captureIntervalRef.current) clearInterval(captureIntervalRef.current);
+    };
+  }, []);
 
   const handleShutter = () => {
     if (!viewfinderRef.current || isCapturing.current) return;
@@ -42,11 +50,11 @@ export default function CapturePage() {
     };
     
     let currentProgress = 0;
-    const interval = setInterval(() => {
+    captureIntervalRef.current = setInterval(() => {
       currentProgress += 10;
       
       if (currentProgress >= 100) {
-        clearInterval(interval);
+        if (captureIntervalRef.current) clearInterval(captureIntervalRef.current);
         setProgress(100);
         
         // Side effects should be here, outside of setProgress callback
@@ -82,12 +90,10 @@ export default function CapturePage() {
         </div>
       )}
 
-      <button className="capture-screen__close" onClick={() => router.push('/library')} aria-label="닫기">
-        <X size={24} />
-      </button>
-
+      {/* Viewfinder is the main content */}
       <CaptureViewfinder ref={viewfinderRef} onPreviewChange={setIsFileMode} />
       
+      {/* Captured Image Preview overlay during processing */}
       {capturedImage && (
         <div className="capture-preview">
           <img src={capturedImage} alt="Captured" className="capture-preview__image" />
@@ -95,12 +101,23 @@ export default function CapturePage() {
         </div>
       )}
 
+      {/* Controls below viewfinder */}
       <CaptureControls 
         onShutter={handleShutter} 
         onGallery={handleGallery}
         onToggleCamera={handleToggleCamera} 
         mode={isFileMode ? 'file' : 'camera'}
       />
+
+      {/* Floating Close button - Moved to bottom for highest z-index priority */}
+      <button 
+        className="capture-screen__close" 
+        onClick={() => router.push('/library')} 
+        aria-label="닫기"
+        title="라이브러리로 돌아가기"
+      >
+        <X size={24} />
+      </button>
 
       {toast && (
         <div className="upload-toast">
