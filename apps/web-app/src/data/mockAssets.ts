@@ -96,3 +96,50 @@ export const mockAssets: Asset[] = [
     isFavorite: true,
   },
 ];
+
+export const mockFolders = [
+  {
+    id: 'f1',
+    name: 'Work',
+    parentId: null,
+    isSmartFolder: false,
+    createdAt: '2026-03-01',
+    updatedAt: '2026-03-01',
+    autoTags: ['work'],
+  },
+  {
+    id: 'f2',
+    name: 'UI Design',
+    parentId: 'f1',
+    isSmartFolder: false,
+    createdAt: '2026-03-02',
+    updatedAt: '2026-03-02',
+    autoTags: ['ui'],
+  },
+  {
+    id: 'f3',
+    name: 'Icons',
+    parentId: 'f1',
+    isSmartFolder: false,
+    createdAt: '2026-03-03',
+    updatedAt: '2026-03-03',
+    autoTags: ['icon'],
+  },
+  {
+    id: 'f4',
+    name: 'Personal',
+    parentId: null,
+    isSmartFolder: false,
+    createdAt: '2026-03-04',
+    updatedAt: '2026-03-04',
+  },
+  {
+    id: 's1',
+    name: 'Blue Assets',
+    parentId: null,
+    isSmartFolder: true,
+    smartLogic: { color: 'blue' },
+    createdAt: '2026-03-05',
+    updatedAt: '2026-03-05',
+  }
+];

@@ -28,6 +28,7 @@ export const viewport: Viewport = {
 };
 
 import { PWAHandler } from "../components/shared/PWAHandler";
+import DashboardPage from "./(desktop)/dashboard/page";
 
 export default function RootLayout({
   children,
@@ -62,6 +63,9 @@ export default function RootLayout({
         />
         <PWAHandler />
         {children}
+        <div className="desktop-shell">
+          <DashboardPage />
+        </div>
       </body>
     </html>
   );

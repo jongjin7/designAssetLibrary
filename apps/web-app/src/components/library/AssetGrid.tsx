@@ -6,9 +6,11 @@ import { AssetCard } from './AssetCard';
 interface AssetGridProps {
   assets: Asset[];
   onAssetTap: (asset: Asset) => void;
+  selectedIds?: Set<string>;
+  onSelect?: (id: string, e: React.MouseEvent) => void;
 }
 
-export function AssetGrid({ assets, onAssetTap }: AssetGridProps) {
+export function AssetGrid({ assets, onAssetTap, selectedIds, onSelect }: AssetGridProps) {
   if (assets.length === 0) {
     return (
       <div className="empty-state">
@@ -22,7 +24,13 @@ export function AssetGrid({ assets, onAssetTap }: AssetGridProps) {
   return (
     <div className="asset-grid">
       {assets.map(asset => (
-        <AssetCard key={asset.id} asset={asset} onTap={onAssetTap} />
+        <AssetCard 
+          key={asset.id} 
+          asset={asset} 
+          onTap={onAssetTap} 
+          isSelected={selectedIds?.has(asset.id)}
+          onSelect={onSelect}
+        />
       ))}
     </div>
   );
