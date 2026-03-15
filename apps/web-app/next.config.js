@@ -9,6 +9,7 @@ const withPWA = require('@ducanh2912/next-pwa').default({
 
 /** @type {import('next').NextConfig} */
 const nextConfig = {
+  transpilePackages: ['@nova/ui'],
   // 같은 네트워크의 모바일 기기에서 IP 접속 허용 (개발 시)
   allowedDevOrigins: [
     'https://localhost:3000',

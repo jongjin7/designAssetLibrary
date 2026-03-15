@@ -1,14 +1,14 @@
-'use client';
-
 import { Download, X, Share } from 'lucide-react';
 import { usePWA } from '../../hooks/usePWA';
 import { useState, useEffect } from 'react';
+import { NVCard } from '@nova/ui';
 
 interface InstallBannerProps {
   showClose?: boolean;
+  className?: string;
 }
 
-export function InstallBanner({ showClose = true }: InstallBannerProps) {
+export function InstallBanner({ showClose = true, className }: InstallBannerProps) {
   const { isInstallable, isPromptReady, install } = usePWA();
   const [dismissed, setDismissed] = useState(false);
   const [platform, setPlatform] = useState<'ios-safari' | 'ios-other' | 'other' | null>(null);
@@ -38,20 +38,20 @@ export function InstallBanner({ showClose = true }: InstallBannerProps) {
   // iOS Safari: 홈 화면 추가 안내 배너
   if (platform === 'ios-safari' && !isInstallable) {
     return (
-      <div className="install-banner">
+      <NVCard className={`install-banner flex items-center !p-4 !rounded-xl ${className || ''}`.trim()} hoverEffect={false}>
         <div className="install-banner__icon">
           <Share size={18} />
         </div>
-        <div className="install-banner__text">
-          <p className="install-banner__title">홈 화면에 추가하기</p>
-          <p className="install-banner__sub">공유(□↑) → &apos;홈 화면에 추가&apos; 선택</p>
+        <div className="install-banner__text ml-3 flex-1">
+          <p className="install-banner__title font-bold text-sm">홈 화면에 추가하기</p>
+          <p className="install-banner__sub text-xs opacity-60">공유(□↑) → &apos;홈 화면에 추가&apos; 선택</p>
         </div>
         {showClose && (
-          <button className="install-banner__close" onClick={() => setDismissed(true)} aria-label="닫기">
+          <button className="install-banner__close p-1 ml-2 opacity-40 hover:opacity-100" onClick={() => setDismissed(true)} aria-label="닫기">
             <X size={16} />
           </button>
         )}
-      </div>
+      </NVCard>
     );
   }
 
@@ -69,24 +69,24 @@ export function InstallBanner({ showClose = true }: InstallBannerProps) {
   };
 
   return (
-    <div className="install-banner">
+    <NVCard className={`install-banner flex items-center !p-4 !rounded-xl ${className || ''}`.trim()} hoverEffect={false}>
       <div className="install-banner__icon">
         <Download size={18} />
       </div>
-      <div className="install-banner__text">
-        <p className="install-banner__title">NOVA 앱 설치</p>
-        <p className="install-banner__sub">
+      <div className="install-banner__text ml-3 flex-1">
+        <p className="install-banner__title font-bold text-sm">NOVA 앱 설치</p>
+        <p className="install-banner__sub text-xs opacity-60">
           {installMsg || (isPromptReady ? '홈 화면에 추가하여 빠르게 실행' : '설치 준비 중...')}
         </p>
       </div>
-      <button className="install-banner__btn" onClick={handleInstall}>
+      <button className="install-banner__btn bg-nv-primary/20 text-nv-primary px-3 py-1.5 rounded-lg text-xs font-bold hover:bg-nv-primary hover:text-white transition-colors" onClick={handleInstall}>
         설치
       </button>
       {showClose && (
-        <button className="install-banner__close" onClick={() => setDismissed(true)} aria-label="닫기">
+        <button className="install-banner__close p-1 ml-2 opacity-40 hover:opacity-100" onClick={() => setDismissed(true)} aria-label="닫기">
           <X size={16} />
         </button>
       )}
-    </div>
+    </NVCard>
   );
 }

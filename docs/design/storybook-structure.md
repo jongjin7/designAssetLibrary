@@ -36,7 +36,7 @@ Every component folder must contain:
 
 | Level | Component Example | Rules |
 | :--- | :--- | :--- |
-| **Atom** | `NVButton` | No external data. Pure style + callback. |
+| **Atom** | `NVButton` | No external data. Pure style + callback. <br/>*Variants: primary, secondary, vivid, danger, ghost, glass* |
 | **Molecule** | `NVAvatarGroup` | Combines 2+ Atoms. |
 | **Organism** | `NVAssetCard` | May use multiple molecules. Complex state. |
 | **Layout** | `NVMainGrid` | Defines the flex/grid container. |

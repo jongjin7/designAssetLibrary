@@ -1,0 +1,21 @@
+@import "tailwindcss";
+@import url('https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css');
+
+@theme {
+  --font-sans: "Pretendard Variable", Pretendard, -apple-system, BlinkMacSystemFont, system-ui, Roboto, "Helvetica Neue", "Segoe UI", "Apple SD Gothic Neo", "Noto Sans KR", "Malgun Gothic", "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", sans-serif;
+
+  /* NOVA Design Tokens */
+  --color-nv-bg: #0B0E14;
+  --color-nv-surface: #111827;
+  --color-nv-glass: rgba(255, 255, 255, 0.05);
+  --color-nv-glass-border: rgba(255, 255, 255, 0.08);
+  --color-nv-primary: #6366F1;
+  --color-nv-vivid: #06B6D4;
+  --color-nv-text-primary: #F8FAFC;
+  --color-nv-text-secondary: #94A3B8;
+  --color-nv-text-tertiary: #64748B;
+  --color-nv-danger: #F43F5E;
+  --shadow-nv-glow: 0 0 20px rgba(99, 102, 241, 0.2);
+}
+
+@source "./**/*.{js,ts,jsx,tsx}";

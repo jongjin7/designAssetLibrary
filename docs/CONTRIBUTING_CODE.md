@@ -34,6 +34,21 @@ The NOVA project follows a philosophy of **Atomic Granularity**. We strictly avo
 - **Location**: `hooks/`, `services/`, 또는 `packages/shared/src/utils/`.
 - **Rule**: 컴포넌트는 데이터의 흐름만 제어하고, 실제 데이터 조작 로직은 독립적으로 테스트 가능한 파일로 관리합니다.
 
+### 2.3 Styling & UI Component Management (스타일링 및 UI 컴포넌트 관리)
+
+일관된 디자인 시스템 유지와 코드 격리를 위해 다음 규칙을 준수합니다.
+
+- **Tailwind CSS First**: 개별 컴포넌트의 기본 레이아웃, 간격, 폰트 스타일은 Tailwind CSS 클래스를 사용합니다.
+- **Custom Classes for Complex Effects**: 그라데이션, 복잡한 Shadow(layered), 다단계 트랜지션 등 Tailwind로 표현하기에 코드 가독성을 해치는 복잡한 시각 효과는 `globals.css`에 의미 있는 이름의 커스텀 클래스로 정의하여 사용합니다. (예: `.nv-glass-panel-premium`)
+- **Storybook UI**: 반복적으로 사용되는 원자적(Atomic) UI 패턴이나 공통 컴포넌트는 `packages/ui/`에서 관리하며, Storybook을 통해 독립적으로 개발 및 품질을 검증합니다.
+- **Style Isolation**: 전역 CSS 클래스보다는 컴포넌트 수준의 스타일링을 지향하되, 공통 시각 효과는 커스텀 유틸리티 클래스를 통해 재사용합니다.
+
+### 2.4 Typography & Sizing (타이포그래피 및 사이징)
+
+- **Base Font**: 모든 UI의 기본 폰트는 `Pretendard`를 사용합니다. 웹 폰트 로딩 최적화를 위해 CSS 변수 `--font-sans`를 참조하십시오.
+- **2-Multiple Sizing System**: 모든 폰트 사이즈는 **2배수(Even numbers)** 단위로 설정하는 것을 원칙으로 합니다. (예: 12px, 14px, 16px, 20px, 24px, 32px ...)
+- **Tailwind Rules**: 가급적 Tailwind의 기본 폰트 사이즈 클래스(`text-xs`, `text-sm` 등)를 사용하며, 커스텀 사이즈가 필요한 경우에도 2배수 규칙을 준수하여 `text-[18px]`와 같이 작성합니다. 홀수 단위(11px, 13px 등)의 사용은 지양합니다.
+
 ---
 
 ## 3. Practical Example: Asset List (실전 예시: 에셋 목록)
