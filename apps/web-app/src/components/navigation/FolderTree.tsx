@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { ChevronRight, ChevronDown, Folder as FolderIcon, MoreVertical, Plus } from 'lucide-react';
+import { ChevronRight, ChevronDown, Folder as FolderIcon, MoreVertical, Plus, Sparkles } from 'lucide-react';
 import { Folder } from '../../types/folder';
 
 interface FolderTreeProps {
@@ -7,9 +7,10 @@ interface FolderTreeProps {
   activeFolderId: string | null;
   onFolderClick: (id: string | null) => void;
   onCreateFolder?: (parentId: string | null) => void;
+  isCollapsed?: boolean;
 }
 
-export function FolderTree({ folders, activeFolderId, onFolderClick, onCreateFolder }: FolderTreeProps) {
+export function FolderTree({ folders, activeFolderId, onFolderClick, onCreateFolder, isCollapsed = false }: FolderTreeProps) {
   const [expanded, setExpanded] = useState<Record<string, boolean>>({});
 
   const toggleExpand = (id: string, e: React.MouseEvent) => {
@@ -33,23 +34,30 @@ export function FolderTree({ folders, activeFolderId, onFolderClick, onCreateFol
             <div key={folder.id} className="folder-tree__node">
               <div 
                 className={`folder-tree__item ${isActive ? 'is-active' : ''}`}
-                style={{ paddingLeft: `${depth * 12 + 12}px` }}
+                style={{ paddingLeft: isCollapsed ? '0' : `${depth * 12 + 12}px`, justifyContent: isCollapsed ? 'center' : 'flex-start' }}
                 onClick={() => onFolderClick(folder.id)}
+                title={isCollapsed ? folder.name : undefined}
               >
-                <span className="folder-tree__toggle" onClick={(e) => toggleExpand(folder.id, e)}>
-                  {hasChildren ? (
-                    isExpanded ? <ChevronDown size={14} /> : <ChevronRight size={14} />
-                  ) : (
-                    <span className="folder-tree__spacer" />
-                  )}
-                </span>
+                {!isCollapsed && (
+                  <span className="folder-tree__toggle" onClick={(e) => toggleExpand(folder.id, e)}>
+                    {hasChildren ? (
+                      isExpanded ? <ChevronDown size={14} /> : <ChevronRight size={14} />
+                    ) : (
+                      <span className="folder-tree__spacer" />
+                    )}
+                  </span>
+                )}
                 <FolderIcon size={16} className="folder-tree__icon" />
-                <span className="folder-tree__name">{folder.name}</span>
-                <button className="folder-tree__more">
-                  <MoreVertical size={14} />
-                </button>
+                {!isCollapsed && (
+                  <>
+                    <span className="folder-tree__name">{folder.name}</span>
+                    <button className="folder-tree__more">
+                      <MoreVertical size={14} />
+                    </button>
+                  </>
+                )}
               </div>
-              {isExpanded && renderFolderItems(folder.id, depth + 1)}
+              {!isCollapsed && isExpanded && renderFolderItems(folder.id, depth + 1)}
             </div>
           );
         })}
@@ -61,8 +69,8 @@ export function FolderTree({ folders, activeFolderId, onFolderClick, onCreateFol
     <div className="folder-tree">
       <div className="folder-tree__section">
         <div className="folder-tree__section-header">
-          <span className="nav-section-title">폴더</span>
-          <button className="add-btn" onClick={() => onCreateFolder?.(null)}>
+          {!isCollapsed && <span className="nav-section-title">폴더</span>}
+          <button className="add-btn" onClick={() => onCreateFolder?.(null)} title="폴더 추가">
             <Plus size={14} />
           </button>
         </div>
@@ -70,18 +78,19 @@ export function FolderTree({ folders, activeFolderId, onFolderClick, onCreateFol
       </div>
 
       <div className="folder-tree__section">
-        <span className="nav-section-title">스마트 폴더</span>
+        {!isCollapsed && <span className="nav-section-title">스마트 폴더</span>}
         <div className="folder-tree__list">
           {folders.filter(f => f.isSmartFolder).map(folder => (
             <div 
               key={folder.id} 
               className={`folder-tree__item ${activeFolderId === folder.id ? 'is-active' : ''}`}
-              style={{ paddingLeft: '12px' }}
+              style={{ paddingLeft: isCollapsed ? '0' : '12px', justifyContent: isCollapsed ? 'center' : 'flex-start' }}
               onClick={() => onFolderClick(folder.id)}
+              title={isCollapsed ? folder.name : undefined}
             >
-              <span className="folder-tree__spacer" />
-              <div className="smart-folder-dot" />
-              <span className="folder-tree__name">{folder.name}</span>
+              {!isCollapsed && <span className="folder-tree__spacer" />}
+              <Sparkles size={16} className={`smart-folder-icon ${activeFolderId === folder.id ? 'is-active' : ''}`} />
+              {!isCollapsed && <span className="folder-tree__name">{folder.name}</span>}
             </div>
           ))}
         </div>
