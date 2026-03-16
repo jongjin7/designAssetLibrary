@@ -1,9 +1,15 @@
 // Atoms
 export * from './atoms/NVButton';
 export * from './atoms/NVCard';
+export * from './atoms/NVChip';
+export * from './atoms/NVInput';
+export * from './atoms/NVSelect';
+
 
 // Molecules
-// Exported as they are created
+export * from './molecules/NVFilterGroup';
+export * from './molecules/NVSearchBar';
+
 
 // Organisms
 // Exported as they are created

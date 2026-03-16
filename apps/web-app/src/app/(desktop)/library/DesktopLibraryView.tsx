@@ -1,19 +1,18 @@
 'use client';
 
 import { useAssets } from '../../../hooks/useAssets';
-import { useFolders } from '../../../hooks/useFolders';
 import { processFileToAsset } from '../../../lib/assetProcessor';
 import { AssetGrid } from '../../../components/library/AssetGrid';
 import { AssetInspector } from '../../../components/detail/AssetInspector';
 import { DropZone } from '../../../components/shared/DropZone';
 import { SearchBar } from '../../../components/shared/SearchBar';
+import { FilterChips } from '../../../components/library/FilterChips';
 import { AdvancedFilter } from '../../../components/library/AdvancedFilter';
 import { DesktopShell } from '../../../components/layout/DesktopShell';
 import { useState, useMemo } from 'react';
 
 export default function DesktopLibraryView() {
-  const { assets, loading, selectedAsset, closeDetail, deleteAsset, updateAsset, openDetail, addAsset } = useAssets();
-  const { folders, createFolder } = useFolders();
+  const { assets, loading, filter, setFilter, selectedAsset, closeDetail, deleteAsset, updateAsset, openDetail, addAsset } = useAssets();
   
   const [searchText, setSearchText] = useState('');
   const [selectedIds, setSelectedIds] = useState<Set<string>>(new Set());
@@ -97,6 +96,10 @@ export default function DesktopLibraryView() {
             onReset={handleFilterReset}
           />
         )}
+
+        <div className="px-8 mt-4">
+          <FilterChips active={filter} onChange={(f) => setFilter(f as any)} />
+        </div>
 
         <div className="scroll-area">
           {selectedIds.size > 0 && (

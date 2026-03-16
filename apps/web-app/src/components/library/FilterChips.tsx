@@ -1,8 +1,11 @@
 'use client';
 
+import { NVFilterGroup } from '@nova/ui';
+
 interface FilterChipsProps {
   active: string;
   onChange: (filter: string) => void;
+  className?: string;
 }
 
 const filters = [
@@ -11,18 +14,14 @@ const filters = [
   { key: 'favorites', label: '즐겨찾기' },
 ];
 
-export function FilterChips({ active, onChange }: FilterChipsProps) {
+export function FilterChips({ active, onChange, className = '' }: FilterChipsProps) {
   return (
-    <div className="filter-chips">
-      {filters.map(f => (
-        <button
-          key={f.key}
-          className={`filter-chip ${active === f.key ? 'filter-chip--active' : ''}`}
-          onClick={() => onChange(f.key)}
-        >
-          {f.label}
-        </button>
-      ))}
+    <div className={`px-5 desktop:px-0 ${className}`}>
+      <NVFilterGroup
+        options={filters}
+        activeKey={active}
+        onChange={onChange}
+      />
     </div>
   );
 }
