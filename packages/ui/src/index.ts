@@ -5,6 +5,7 @@ export * from './atoms/NVInput';
 export * from './atoms/NVSelect';
 export * from './atoms/NVChip';
 export * from './atoms/NVEmptyState';
+export * from './atoms/NVIconButton';
 
 // Molecules
 export * from './molecules/NVFilterGroup';

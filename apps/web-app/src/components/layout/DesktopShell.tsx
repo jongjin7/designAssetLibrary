@@ -6,6 +6,8 @@ import { useFolders } from '../../hooks/useFolders';
 import { FolderTree } from '../navigation/FolderTree';
 import { Grid, Star, Clock, Menu } from 'lucide-react';
 
+import { NVIconButton } from '@nova/ui';
+
 interface DesktopShellProps {
   children: React.ReactNode;
 }
@@ -35,13 +37,15 @@ export function DesktopShell({ children }: DesktopShellProps) {
               NOVA
             </h1>
           )}
-          <button 
-            className={`p-2 rounded-lg text-slate-500 hover:bg-white/5 hover:text-indigo-500 transition-all ${isSidebarCollapsed ? 'mx-auto' : ''}`}
+          <NVIconButton
+            icon={Menu}
+            variant="ghost"
+            size="sm"
+            className={isSidebarCollapsed ? 'mx-auto' : ''}
             onClick={() => setIsSidebarCollapsed(!isSidebarCollapsed)}
-            title={isSidebarCollapsed ? "확장" : "축소"}
-          >
-            <Menu size={20} />
-          </button>
+            title={isSidebarCollapsed ? "메뉴 확장" : "메뉴 축소"}
+          />
+
         </div>
         
         <nav className="flex-1 px-3 py-2 flex flex-col gap-1 overflow-y-auto">

@@ -1,5 +1,6 @@
 import React from 'react';
 import { Search, X, SlidersHorizontal } from 'lucide-react';
+import { NVIconButton } from '../../atoms/NVIconButton';
 import { NVInput } from '../../atoms/NVInput';
 
 export interface NVSearchBarProps {
@@ -31,30 +32,34 @@ export const NVSearchBar: React.FC<NVSearchBarProps> = ({
   };
 
   const rightElement = (
-    <>
+    <div className="flex items-center gap-0.5 mr-0.5">
       {value && !readOnly && (
-        <button
-          className="p-1.5 text-slate-500 hover:text-slate-50 transition-colors"
+        <NVIconButton
+          icon={X}
+          variant="ghost"
+          size="sm"
           onClick={handleClear}
+          title="검색어 지우기"
           aria-label="입력 초기화"
-        >
-          <X size={16} />
-        </button>
+        />
       )}
       {showFilter && (
-        <button
-          className="p-1.5 text-slate-500 hover:text-indigo-500 transition-colors border-l border-white/10 ml-1 pl-2"
-          onClick={(e) => {
+        <NVIconButton
+          icon={SlidersHorizontal}
+          variant="ghost"
+          size="sm"
+          className="border-l border-white/10 rounded-none h-5 ml-1 pl-1"
+          onClick={(e: React.MouseEvent) => {
             e.stopPropagation();
             onFilterClick?.(e);
           }}
+          title="상세 필터"
           aria-label="필터 설정"
-        >
-          <SlidersHorizontal size={16} />
-        </button>
+        />
       )}
-    </>
+    </div>
   );
+
 
   return (
     <NVInput
