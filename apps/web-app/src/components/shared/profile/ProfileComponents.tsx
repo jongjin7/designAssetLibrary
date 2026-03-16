@@ -24,12 +24,12 @@ export const ProfileItem: React.FC<ProfileItemProps> = ({
       className={`shared-profile-item w-full flex items-center gap-3.5 px-4 py-3 hover:bg-white/[0.05] rounded-xl transition-all text-left ${className}`}
       onClick={onClick}
     >
-      <Icon size={iconSize} className="flex-shrink-0 text-nv-text-tertiary" />
+      <Icon size={iconSize} className="flex-shrink-0 text-slate-500" />
       <div className="flex-1 min-w-0">
-        <p className="text-sm font-semibold text-nv-text-primary">{label}</p>
-        {sub && <p className="text-xs text-nv-text-tertiary mt-0.5 truncate">{sub}</p>}
+        <p className="text-sm font-semibold text-slate-50">{label}</p>
+        {sub && <p className="text-xs text-slate-500 mt-0.5 truncate">{sub}</p>}
       </div>
-      <ChevronRight size={14} className="shared-profile-item__arrow flex-shrink-0 opacity-20 text-nv-text-tertiary" />
+      <ChevronRight size={14} className="shared-profile-item__arrow flex-shrink-0 opacity-20 text-slate-500" />
     </button>
   );
 };
@@ -47,7 +47,7 @@ export const ProfileSection: React.FC<ProfileSectionProps> = ({
 }) => {
   return (
     <NVCard className={`shared-profile-section mb-6 !p-5 ${className}`} hoverEffect={false}>
-      <h4 className="text-xs font-bold text-nv-text-tertiary uppercase tracking-wider px-1 mb-4 opacity-70">
+      <h4 className="text-xs font-bold text-slate-500 uppercase tracking-wider px-1 mb-4 opacity-70">
         {title}
       </h4>
       <div className="flex flex-col gap-1">

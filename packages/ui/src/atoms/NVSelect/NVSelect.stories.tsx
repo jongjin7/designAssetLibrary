@@ -26,15 +26,15 @@ export const Sizes: Story = {
   render: () => (
     <div className="flex flex-col gap-6 w-full max-w-md">
       <div className="flex flex-col gap-2">
-        <span className="text-xs text-nv-text-tertiary font-mono">Size: SM</span>
+        <span className="text-xs text-slate-500 font-mono">Size: SM</span>
         <NVSelect size="sm" options={options} icon={<Filter size={14} />} />
       </div>
       <div className="flex flex-col gap-2">
-        <span className="text-xs text-nv-text-tertiary font-mono">Size: MD (Default)</span>
+        <span className="text-xs text-slate-500 font-mono">Size: MD (Default)</span>
         <NVSelect size="md" options={options} icon={<Filter size={16} />} />
       </div>
       <div className="flex flex-col gap-2">
-        <span className="text-xs text-nv-text-tertiary font-mono">Size: LG</span>
+        <span className="text-xs text-slate-500 font-mono">Size: LG</span>
         <NVSelect size="lg" options={options} icon={<Filter size={18} />} />
       </div>
     </div>

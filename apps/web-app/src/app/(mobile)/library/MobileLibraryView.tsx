@@ -72,7 +72,7 @@ export default function LibraryPage() {
         <FilterChips active={filter} onChange={(f) => setFilter(f as any)} />
         
         {loading ? (
-          <div className="library-loading" style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', padding: '40px', color: 'var(--color-nv-text-secondary)' }}>
+          <div className="library-loading" style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', padding: '40px', color: 'var(--color-slate-400)' }}>
             <p>자산을 불러오는 중...</p>
           </div>
         ) : (

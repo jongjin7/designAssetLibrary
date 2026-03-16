@@ -4,19 +4,7 @@
 @source "../**/*.{js,ts,jsx,tsx}";
 
 /* Explicit fallback for danger variant to ensure visibility in main app */
-.nv-btn-danger {
-  background-color: rgba(244, 63, 94, 0.1) !important;
-  border-color: rgba(244, 63, 94, 0.2) !important;
-  color: #F43F5E !important;
-  border-style: solid !important;
-  border-width: 1px !important;
-}
 
-.nv-btn-danger:hover {
-  background-color: #F43F5E !important;
-  color: white !important;
-  border-color: #F43F5E !important;
-}
 
 
 
@@ -43,7 +31,7 @@
 
 .shared-profile-item:hover .shared-profile-item__arrow {
   opacity: 0.8 !important;
-  color: var(--color-nv-primary);
+  color: var(--color-indigo-500);
   transform: translateX(2px);
   transition: all 0.2s;
 }
@@ -148,7 +136,7 @@
 .settings-screen--desktop .shared-profile-section__title {
   font-size: 16px;
   margin-bottom: 16px;
-  color: var(--color-nv-text-secondary);
+  color: var(--color-slate-400);
 }
 
 
@@ -159,23 +147,7 @@
 }
 
 
-/* ===================================================
-   Mobile Shell
-   =================================================== */
-.mobile-shell {
-  display: flex;
-  flex-direction: column;
-  min-height: 100dvh;
-  max-width: 760px;
-  margin: 0 auto;
-  position: relative;
-}
 
-.mobile-shell__content {
-  flex: 1;
-  overflow-y: auto;
-  padding-bottom: calc(72px + env(safe-area-inset-bottom, 0px));
-}
 
 /* ===================================================
    Top Bar
@@ -210,7 +182,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  color: var(--color-nv-primary);
+  color: var(--color-indigo-500);
   flex-shrink: 0;
 }
 
@@ -221,19 +193,19 @@
 .install-banner__title {
   font-size: 13px;
   font-weight: 600;
-  color: var(--color-nv-text-primary);
+  color: var(--color-slate-50);
 }
 
 .install-banner__sub {
   font-size: 11px;
-  color: var(--color-nv-text-tertiary);
+  color: var(--color-slate-500);
   margin-top: 2px;
 }
 
 .install-banner__btn {
   padding: 7px 14px;
   border-radius: 8px;
-  background: var(--color-nv-primary);
+  background: var(--color-indigo-500);
   color: #fff;
   font-size: 13px;
   font-weight: 600;
@@ -241,7 +213,7 @@
 }
 
 .install-banner__close {
-  color: var(--color-nv-text-tertiary);
+  color: var(--color-slate-500);
   flex-shrink: 0;
   padding: 4px;
 }
@@ -263,7 +235,7 @@
   font-size: 22px;
   font-weight: 800;
   letter-spacing: -0.5px;
-  background: linear-gradient(135deg, var(--color-nv-primary), var(--color-nv-vivid));
+  background: linear-gradient(135deg, var(--color-indigo-500), var(--color-cyan-500));
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
@@ -313,13 +285,13 @@
   align-items: center;
   gap: 4px;
   font-size: 10px;
-  color: var(--color-nv-text-tertiary);
+  color: var(--color-slate-500);
   transition: color 0.2s;
   padding: 6px 12px;
 }
 
 .bottom-tabs__item--active {
-  color: var(--color-nv-primary);
+  color: var(--color-indigo-500);
 }
 
 .bottom-tabs__fab {
@@ -329,7 +301,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  background: linear-gradient(135deg, var(--color-nv-primary), var(--color-nv-vivid));
+  background: linear-gradient(135deg, var(--color-indigo-500), var(--color-cyan-500));
   color: white;
   box-shadow: 0 4px 20px rgba(99, 102, 241, 0.35);
   transition: transform 0.2s, box-shadow 0.2s;
@@ -376,7 +348,7 @@
   width: 100%;
   max-width: 430px;
   max-height: 85dvh;
-  background: var(--color-nv-surface);
+  background: var(--color-slate-900);
   border-radius: 20px 20px 0 0;
   overflow-y: auto;
   animation: slideUp 0.3s cubic-bezier(0.23, 1, 0.32, 1);
@@ -408,7 +380,7 @@
   width: 100%;
   aspect-ratio: 16/10;
   overflow: hidden;
-  background: var(--color-nv-bg);
+  background: var(--color-slate-950);
 }
 
 .asset-detail__preview {
@@ -445,7 +417,7 @@
 .asset-detail__name {
   font-size: 18px;
   font-weight: 700;
-  color: var(--color-nv-text-primary);
+  color: var(--color-slate-50);
   flex: 1;
   word-break: break-all;
 }
@@ -456,7 +428,7 @@
   gap: 4px;
   font-size: 13px;
   font-weight: 600;
-  color: var(--color-nv-text-secondary);
+  color: var(--color-slate-400);
   white-space: nowrap;
 }
 
@@ -466,7 +438,7 @@
 
 .asset-detail__date {
   font-weight: 500;
-  color: var(--color-nv-text-tertiary);
+  color: var(--color-slate-500);
   margin-top: 4px;
 }
 
@@ -493,7 +465,7 @@
   padding: 12px 4px;
   font-size: 11px;
   font-weight: 500;
-  color: var(--color-nv-text-secondary);
+  color: var(--color-slate-400);
   transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
@@ -506,7 +478,7 @@
   justify-content: center;
   background: rgba(255, 255, 255, 0.04);
   border: 1px solid rgba(255, 255, 255, 0.06);
-  color: var(--color-nv-text-primary);
+  color: var(--color-slate-50);
   transition: inherit;
 }
 
@@ -519,7 +491,7 @@
 }
 
 .action-btn--danger .action-btn__icon {
-  color: var(--color-nv-danger);
+  color: var(--color-rose-500);
   background: rgba(244, 63, 94, 0.08);
   border-color: rgba(244, 63, 94, 0.15);
 }
@@ -541,7 +513,7 @@
 .palette-strip__label, .tag-list__label, .recent-searches__label, .color-palette-filter__label {
   font-size: 12px;
   font-weight: 600;
-  color: var(--color-nv-text-tertiary);
+  color: var(--color-slate-500);
   text-transform: uppercase;
   letter-spacing: 0.5px;
   margin-bottom: 0px; /* Reset for header flex */
@@ -550,7 +522,7 @@
 .ai-badge-text {
   font-size: 9px;
   font-weight: 800;
-  color: var(--color-nv-vivid);
+  color: var(--color-cyan-500);
   background: rgba(6, 182, 212, 0.1);
   padding: 1px 5px;
   border-radius: 4px;
@@ -599,7 +571,7 @@
   align-items: center;
   gap: 6px;
   background: rgba(255, 255, 255, 0.04);
-  color: var(--color-nv-text-tertiary);
+  color: var(--color-slate-500);
   font-size: 11px;
   font-weight: 600;
   transition: all 0.2s;
@@ -609,7 +581,7 @@
 
 .extract-btn:hover {
   background: rgba(255, 255, 255, 0.08);
-  color: var(--color-nv-primary);
+  color: var(--color-indigo-500);
   border-color: rgba(99, 102, 241, 0.3);
 }
 
@@ -618,13 +590,13 @@
 }
 
 .extract-btn.is-refined {
-  color: var(--color-nv-vivid);
+  color: var(--color-cyan-500);
   background: rgba(6, 182, 212, 0.1);
 }
 
 .extract-btn.is-loading {
   opacity: 0.6;
-  color: var(--color-nv-primary);
+  color: var(--color-indigo-500);
 }
 
 @keyframes spin {
@@ -649,7 +621,7 @@
   font-size: 12px;
   font-weight: 500;
   background: rgba(99, 102, 241, 0.1);
-  color: var(--color-nv-primary);
+  color: var(--color-indigo-500);
   border: 1px solid rgba(99, 102, 241, 0.15);
   transition: background 0.2s;
 }
@@ -717,14 +689,7 @@
   box-shadow: 0 0 100px rgba(0,0,0,0.5); /* Add depth on desktop */
 }
 
-/* Hide BottomTabs on Capture Screen */
-.mobile-shell:has(.capture-screen) .bottom-tabs {
-  display: none;
-}
 
-.mobile-shell:has(.capture-screen) .mobile-shell__content {
-  padding-bottom: 0;
-}
 
 .capture-screen__close {
   position: absolute;
@@ -777,7 +742,7 @@
   justify-content: center;
   padding: 40px;
   text-align: center;
-  color: var(--color-nv-text-secondary);
+  color: var(--color-slate-400);
   font-size: 14px;
   z-index: 5;
 }
@@ -816,7 +781,7 @@
   justify-content: center;
   border-radius: 50%;
   background: rgba(255, 255, 255, 0.05);
-  color: var(--color-nv-text-tertiary);
+  color: var(--color-slate-500);
 }
 
 .fallback-content h3 {
@@ -827,7 +792,7 @@
 
 .fallback-content p {
   font-size: 13px;
-  color: var(--color-nv-text-secondary);
+  color: var(--color-slate-400);
   line-height: 1.6;
   margin-bottom: 24px;
 }
@@ -839,7 +804,7 @@
   gap: 8px;
   width: 100%;
   padding: 14px;
-  background: var(--color-nv-primary);
+  background: var(--color-indigo-500);
   color: white;
   border-radius: 12px;
   font-size: 14px;
@@ -900,7 +865,7 @@
   position: absolute;
   width: 24px;
   height: 24px;
-  border-color: var(--color-nv-vivid);
+  border-color: var(--color-cyan-500);
   border-style: solid;
   border-width: 0;
 }
@@ -994,7 +959,7 @@
 }
 
 .capture-controls__option--on {
-  color: var(--color-nv-vivid);
+  color: var(--color-cyan-500);
 }
 
 /* ===================================================
@@ -1050,7 +1015,7 @@
 
 .upload-progress__bar {
   height: 100%;
-  background: linear-gradient(90deg, var(--color-nv-primary), var(--color-nv-vivid));
+  background: linear-gradient(90deg, var(--color-indigo-500), var(--color-cyan-500));
   transition: width 0.15s ease;
   border-radius: 0 2px 2px 0;
 }
@@ -1099,7 +1064,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  background: linear-gradient(135deg, var(--color-nv-primary), var(--color-nv-vivid));
+  background: linear-gradient(135deg, var(--color-indigo-500), var(--color-cyan-500));
   color: white;
 }
 
@@ -1110,7 +1075,7 @@
 
 .settings-screen__email {
   font-size: 12px;
-  color: var(--color-nv-text-tertiary);
+  color: var(--color-slate-500);
   margin-top: 2px;
 }
 
@@ -1124,7 +1089,7 @@
   font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 0.5px;
-  color: var(--color-nv-text-tertiary);
+  color: var(--color-slate-500);
   padding: 8px 0;
 }
 
@@ -1143,7 +1108,7 @@
 }
 
 .settings-item__icon {
-  color: var(--color-nv-text-secondary);
+  color: var(--color-slate-400);
   flex-shrink: 0;
 }
 
@@ -1159,12 +1124,12 @@
 
 .settings-item__sub {
   font-size: 12px;
-  color: var(--color-nv-text-tertiary);
+  color: var(--color-slate-500);
   margin-top: 2px;
 }
 
 .settings-item__arrow {
-  color: var(--color-nv-text-tertiary);
+  color: var(--color-slate-500);
 }
 
 
@@ -1172,7 +1137,7 @@
 .settings-version {
   text-align: center;
   font-size: 12px;
-  color: var(--color-nv-text-tertiary);
+  color: var(--color-slate-500);
   padding: 16px;
 }
 
@@ -1200,7 +1165,7 @@
 }
 
 .settings-item--highlight .settings-item__label {
-  color: var(--color-nv-primary);
+  color: var(--color-indigo-500);
   font-weight: 600;
 }
 
@@ -1236,19 +1201,9 @@
   to { transform: translateY(0); }
 }
 
-/* Adjust content padding when offline bar is visible */
-.mobile-shell:has(.network-status) .mobile-shell__content {
-  padding-top: calc(var(--safe-area-top, 0px) + 28px);
-}
 
-/* ===================================================
-   Desktop Shell & Dashboard
-   =================================================== */
-.desktop-shell {
-  min-height: 100vh;
-  background: var(--color-nv-bg);
-  color: var(--color-nv-text-primary);
-}
+
+
 
 .desktop-dashboard {
   display: flex;
@@ -1270,7 +1225,7 @@
 .sidebar-header .logo {
   font-size: 24px;
   font-weight: 800;
-  background: linear-gradient(135deg, var(--color-nv-primary), var(--color-nv-vivid));
+  background: linear-gradient(135deg, var(--color-indigo-500), var(--color-cyan-500));
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
@@ -1287,7 +1242,7 @@
 .nav-section-title {
   font-size: 11px;
   font-weight: 700;
-  color: var(--color-nv-text-tertiary);
+  color: var(--color-slate-500);
   text-transform: uppercase;
   letter-spacing: 1px;
   margin: 24px 12px 8px;
@@ -1298,22 +1253,22 @@
   border-radius: 10px;
   font-size: 14px;
   font-weight: 500;
-  color: var(--color-nv-text-secondary);
+  color: var(--color-slate-400);
   transition: all 0.2s;
 }
 
 .nav-item:hover {
   background: rgba(255, 255, 255, 0.05);
-  color: var(--color-nv-text-primary);
+  color: var(--color-slate-50);
 }
 
 .nav-item.active {
   background: rgba(99, 102, 241, 0.1);
-  color: var(--color-nv-primary);
+  color: var(--color-indigo-500);
 }
 
 .nav-item--ghost {
-  color: var(--color-nv-text-tertiary);
+  color: var(--color-slate-500);
   font-size: 13px;
   border: 1px dashed rgba(255, 255, 255, 0.1);
   margin-top: 8px;
@@ -1329,7 +1284,7 @@
 /* Settings/Profile Specific Scrolling */
 .settings-view-scroll {
   overflow-y: auto !important;
-  background: var(--color-nv-bg);
+  background: var(--color-slate-950);
 }
 
 .settings-container-outer {
@@ -1365,7 +1320,7 @@
 }
 
 .search-box:focus-within {
-  border-color: var(--color-nv-primary);
+  border-color: var(--color-indigo-500);
 }
 
 .search-box input {
@@ -1397,17 +1352,9 @@
 }
 
 /* ===================================================
-   Responsive Switching
+   Responsive Overrides
    =================================================== */
-/* Hide mobile shell on desktop sizes, vice versa */
 @media (min-width: 1024px) {
-  .mobile-shell {
-    display: none;
-  }
-  .desktop-shell {
-    display: block !important;
-  }
-
   .search-bar {
     width: 100%;
   }
@@ -1420,12 +1367,7 @@
   }
 }
 
-@media (max-width: 1023px) {
-  .desktop-shell {
-    display: none !important;
-  }
-  
-}
+
 
 /* ===================================================
    Asset Inspector (Desktop Col 3)
@@ -1444,7 +1386,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  color: var(--color-nv-text-tertiary);
+  color: var(--color-slate-500);
   text-align: center;
   padding: 40px;
 }
@@ -1470,11 +1412,11 @@
 .inspector-header h3 {
   font-size: 15px;
   font-weight: 700;
-  color: var(--color-nv-text-secondary);
+  color: var(--color-slate-400);
 }
 
 .inspector-close {
-  color: var(--color-nv-text-tertiary);
+  color: var(--color-slate-500);
   padding: 4px;
   border-radius: 6px;
   transition: all 0.2s;
@@ -1482,7 +1424,7 @@
 
 .inspector-close:hover {
   background: rgba(255, 255, 255, 0.05);
-  color: var(--color-nv-text-primary);
+  color: var(--color-slate-50);
 }
 
 /* Adjustments for Inspector version of Detail */
@@ -1546,7 +1488,7 @@
   border-radius: 10px;
   font-size: 14px;
   font-weight: 500;
-  color: var(--color-nv-text-secondary);
+  color: var(--color-slate-400);
   transition: all 0.2s;
   cursor: pointer;
 }
@@ -1557,12 +1499,12 @@
 
 .nav-item:hover {
   background: rgba(255, 255, 255, 0.05);
-  color: var(--color-nv-text-primary);
+  color: var(--color-slate-50);
 }
 
 .nav-item.active {
   background: rgba(99, 102, 241, 0.1);
-  color: var(--color-nv-primary);
+  color: var(--color-indigo-500);
 }
 
 .folder-tree {
@@ -1577,7 +1519,7 @@
 }
 
 .folder-tree__section-header .add-btn {
-  color: var(--color-nv-text-tertiary);
+  color: var(--color-slate-500);
   padding: 4px;
   border-radius: 6px;
   transition: all 0.2s;
@@ -1585,7 +1527,7 @@
 
 .folder-tree__section-header .add-btn:hover {
   background: rgba(255, 255, 255, 0.05);
-  color: var(--color-nv-primary);
+  color: var(--color-indigo-500);
 }
 
 .folder-tree__item {
@@ -1595,7 +1537,7 @@
   padding: 8px 12px;
   border-radius: 8px;
   font-size: 13px;
-  color: var(--color-nv-text-secondary);
+  color: var(--color-slate-400);
   cursor: pointer;
   transition: all 0.2s;
   position: relative;
@@ -1603,11 +1545,11 @@
 
 .folder-tree__item:hover {
   background: rgba(255, 255, 255, 0.03);
-  color: var(--color-nv-text-primary);
+  color: var(--color-slate-50);
 }
 
 .folder-tree__item.is-active {
-  color: var(--color-nv-primary);
+  color: var(--color-indigo-500);
   background: rgba(99, 102, 241, 0.05);
 }
 
@@ -1617,20 +1559,20 @@
   justify-content: center;
   width: 16px;
   height: 16px;
-  color: var(--color-nv-text-tertiary);
+  color: var(--color-slate-500);
   transition: color 0.15s;
 }
 
 .folder-tree__toggle:hover {
-  color: var(--color-nv-text-primary);
+  color: var(--color-slate-50);
 }
 
 .folder-tree__icon {
-  color: var(--color-nv-text-tertiary);
+  color: var(--color-slate-500);
 }
 
 .folder-tree__item.is-active .folder-tree__icon {
-  color: var(--color-nv-primary);
+  color: var(--color-indigo-500);
 }
 
 .folder-tree__name {
@@ -1646,7 +1588,7 @@
 
 .folder-tree__more {
   opacity: 0;
-  color: var(--color-nv-text-tertiary);
+  color: var(--color-slate-500);
   transition: opacity 0.2s;
 }
 
@@ -1658,7 +1600,7 @@
   width: 8px;
   height: 8px;
   border-radius: 50%;
-  background: var(--color-nv-vivid);
+  background: var(--color-cyan-500);
   box-shadow: 0 0 8px rgba(6, 182, 212, 0.4);
 }
 
@@ -1682,7 +1624,7 @@
   width: 100%;
   max-width: 600px;
   height: 400px;
-  border: 3px dashed var(--color-nv-primary);
+  border: 3px dashed var(--color-indigo-500);
   border-radius: 32px;
   background: rgba(11, 14, 20, 0.8);
   display: flex;
@@ -1690,7 +1632,7 @@
   align-items: center;
   justify-content: center;
   gap: 20px;
-  color: var(--color-nv-text-primary);
+  color: var(--color-slate-50);
   box-shadow: 0 0 50px rgba(99, 102, 241, 0.3);
   animation: scaleIn 0.3s cubic-bezier(0.23, 1, 0.32, 1);
 }
@@ -1703,7 +1645,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  color: var(--color-nv-primary);
+  color: var(--color-indigo-500);
   border: 1px solid rgba(99, 102, 241, 0.3);
 }
 
@@ -1713,7 +1655,7 @@
 }
 
 .global-dropzone__content p {
-  color: var(--color-nv-text-tertiary);
+  color: var(--color-slate-500);
   font-size: 16px;
 }
 
@@ -1733,7 +1675,7 @@
 
 /* Selected State for Card */
 .asset-card.is-selected {
-  outline: 2px solid var(--color-nv-primary);
+  outline: 2px solid var(--color-indigo-500);
   outline-offset: -2px;
 }
 
@@ -1765,14 +1707,14 @@
 
 .profile-placeholder:hover {
   background: rgba(255, 255, 255, 0.1);
-  border-color: var(--color-nv-primary);
+  border-color: var(--color-indigo-500);
 }
 
 .profile-dot {
   width: 12px;
   height: 12px;
   border-radius: 50%;
-  background: var(--color-nv-primary);
+  background: var(--color-indigo-500);
 }
 
 /* ===================================================
@@ -1784,7 +1726,7 @@
   z-index: 100;
   margin: 10px 20px -50px; /* Float on top of content */
   height: 56px;
-  background: var(--color-nv-primary);
+  background: var(--color-indigo-500);
   border-radius: 16px;
   display: flex;
   align-items: center;
@@ -1804,7 +1746,7 @@
 
 .selection-info .count {
   background: #fff;
-  color: var(--color-nv-primary);
+  color: var(--color-indigo-500);
   padding: 2px 8px;
   border-radius: 10px;
   font-size: 12px;
@@ -1829,7 +1771,7 @@
 
 .selection-btn--primary {
   background: #fff;
-  color: var(--color-nv-primary);
+  color: var(--color-indigo-500);
 }
 
 .selection-btn--primary:hover {
@@ -1873,7 +1815,7 @@
 }
 
 .sidebar-toggle {
-  color: var(--color-nv-text-tertiary);
+  color: var(--color-slate-500);
   padding: 8px;
   border-radius: 8px;
   transition: all 0.2s;
@@ -1884,7 +1826,7 @@
 
 .sidebar-toggle:hover {
   background: rgba(255, 255, 255, 0.05);
-  color: var(--color-nv-primary);
+  color: var(--color-indigo-500);
 }
 
 .sidebar-collapsed .nav-item {
@@ -1909,18 +1851,18 @@
 
 /* Smart Folder Icon in Sidebar */
 .smart-folder-icon {
-  color: var(--color-nv-text-tertiary);
+  color: var(--color-slate-500);
   transition: all 0.2s;
 }
 
 .smart-folder-icon.is-active {
-  color: var(--color-nv-primary);
+  color: var(--color-indigo-500);
   filter: drop-shadow(0 0 4px rgba(99, 102, 241, 0.4));
 }
 
 .nav-item:hover .smart-folder-icon,
 .folder-tree__item:hover .smart-folder-icon {
-  color: var(--color-nv-primary);
+  color: var(--color-indigo-500);
 }
 
 .sidebar-collapsed .folder-tree__icon,
@@ -1957,7 +1899,7 @@
    Advanced Search Filter Bar
    =================================================== */
 .search-icon {
-  color: var(--color-nv-text-tertiary);
+  color: var(--color-slate-500);
 }
 
 .search-box input {
@@ -1965,7 +1907,7 @@
 }
 
 .filter-toggle-btn {
-  color: var(--color-nv-text-tertiary);
+  color: var(--color-slate-500);
   width: 32px;
   height: 32px;
   border-radius: 8px;
@@ -1977,105 +1919,15 @@
 
 .filter-toggle-btn:hover {
   background: rgba(255, 255, 255, 0.05);
-  color: var(--color-nv-text-primary);
+  color: var(--color-slate-50);
 }
 
 .filter-toggle-btn.active {
   background: rgba(99, 102, 241, 0.1);
-  color: var(--color-nv-primary);
+  color: var(--color-indigo-500);
 }
 
-.advanced-filter-bar {
-  display: flex;
-  align-items: center;
-  gap: 16px;
-  padding: 12px 32px;
-  background: rgba(255, 255, 255, 0.02);
-  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
-  flex-wrap: wrap;
-  animation: slideDown 0.2s ease-out;
-}
 
-.filter-group {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  background: rgba(0, 0, 0, 0.2);
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  border-radius: 12px;
-  padding: 6px 12px;
-  transition: all 0.2s;
-}
-
-.filter-group:focus-within {
-  border-color: var(--color-nv-primary);
-  background: rgba(0, 0, 0, 0.4);
-}
-
-.filter-icon {
-  color: var(--color-nv-text-tertiary);
-}
-
-.filter-select {
-  background: transparent;
-  border: none;
-  color: var(--color-nv-text-secondary);
-  font-size: 13px;
-  outline: none;
-  cursor: pointer;
-  appearance: none;
-  padding-right: 16px;
-}
-
-.filter-select option {
-  background: var(--color-nv-bg-secondary);
-  color: var(--color-nv-text-primary);
-}
-
-.filter-input {
-  background: transparent;
-  border: none;
-  color: var(--color-nv-text-primary);
-  font-size: 13px;
-  outline: none;
-  width: 140px;
-}
-
-.filter-input::placeholder {
-  color: var(--color-nv-text-tertiary);
-}
-
-.filter-actions {
-  margin-left: auto;
-  display: flex;
-  gap: 8px;
-}
-
-.filter-btn {
-  padding: 6px 14px;
-  border-radius: 8px;
-  font-size: 13px;
-  font-weight: 500;
-  transition: all 0.2s;
-}
-
-.filter-btn--reset {
-  color: var(--color-nv-text-secondary);
-  background: rgba(255, 255, 255, 0.05);
-}
-
-.filter-btn--reset:hover {
-  background: rgba(255, 255, 255, 0.1);
-}
-
-.filter-btn--apply {
-  background: var(--color-nv-primary);
-  color: white;
-}
-
-.filter-btn--apply:hover {
-  filter: brightness(1.1);
-}
 
 /* ===================================================
    Sidebar Profile & Footer
@@ -2115,12 +1967,12 @@
 }
 
 .profile-item.active .profile-placeholder {
-  border-color: var(--color-nv-primary);
+  border-color: var(--color-indigo-500);
   background: rgba(99, 102, 241, 0.2);
 }
 
 .profile-item.active .profile-name {
-  color: var(--color-nv-primary);
+  color: var(--color-indigo-500);
 }
 
 .profile-info {
@@ -2132,7 +1984,7 @@
 .profile-name {
   font-size: 13px;
   font-weight: 600;
-  color: var(--color-nv-text-primary);
+  color: var(--color-slate-50);
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -2140,7 +1992,7 @@
 
 .profile-email {
   font-size: 11px;
-  color: var(--color-nv-text-tertiary);
+  color: var(--color-slate-500);
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -2158,23 +2010,4 @@
   width: 100%;
 }
 
-/* -------------------------------------------------------------------------
-   DESIGN SYSTEM FALLBACKS
-   Placed at the bottom to ensure maximum specificity/precedence
-   ------------------------------------------------------------------------- */
-.nv-btn-danger {
-  background-color: rgba(244, 63, 94, 0.12) !important;
-  border: 1px solid rgba(244, 63, 94, 0.3) !important;
-  color: #F43F5E !important;
-  fill: #F43F5E !important;
-}
 
-.nv-btn-danger:hover {
-  background-color: #F43F5E !important;
-  color: #FFFFFF !important;
-  border-color: #F43F5E !important;
-}
-
-.nv-btn-danger svg {
-  color: inherit !important;
-}

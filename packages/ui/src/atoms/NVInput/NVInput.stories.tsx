@@ -19,15 +19,15 @@ export const Sizes: Story = {
   render: () => (
     <div className="flex flex-col gap-6 w-full max-w-md">
       <div className="flex flex-col gap-2">
-        <span className="text-xs text-nv-text-tertiary font-mono">Size: SM</span>
+        <span className="text-xs text-slate-500 font-mono">Size: SM</span>
         <NVInput size="sm" placeholder="Small input..." icon={<Search size={14} />} />
       </div>
       <div className="flex flex-col gap-2">
-        <span className="text-xs text-nv-text-tertiary font-mono">Size: MD (Default)</span>
+        <span className="text-xs text-slate-500 font-mono">Size: MD (Default)</span>
         <NVInput size="md" placeholder="Medium input..." icon={<Search size={16} />} />
       </div>
       <div className="flex flex-col gap-2">
-        <span className="text-xs text-nv-text-tertiary font-mono">Size: LG</span>
+        <span className="text-xs text-slate-500 font-mono">Size: LG</span>
         <NVInput size="lg" placeholder="Large input..." icon={<Search size={18} />} />
       </div>
     </div>
@@ -45,7 +45,7 @@ export const Icons: Story = {
         icon={<Search size={16} />}
         defaultValue="Searching for something..."
         rightElement={
-          <button className="p-1 text-nv-text-tertiary hover:text-nv-text-primary">
+          <button className="p-1 text-slate-500 hover:text-slate-50">
             <X size={14} />
           </button>
         }

@@ -36,9 +36,9 @@ export const NVAssetCard: React.FC<NVAssetCardProps> = ({
   return (
     <div 
       className={`
-        group relative flex flex-col shrink-0 w-full overflow-hidden rounded-2xl bg-nv-surface border border-white/5
+        group relative flex flex-col shrink-0 w-full overflow-hidden rounded-2xl bg-slate-900 border border-white/5
         transition-all duration-300 hover:shadow-[0_0_24px_rgba(99,102,241,0.15)] active:scale-[0.98]
-        ${isSelected ? 'border-nv-primary ring-1 ring-nv-primary/50' : ''}
+        ${isSelected ? 'border-indigo-500 ring-1 ring-nv-primary/50' : ''}
         ${isCompact ? 'max-w-[160px]' : ''}
         ${className}
       `.replace(/\s+/g, ' ').trim()}
@@ -75,7 +75,7 @@ export const NVAssetCard: React.FC<NVAssetCardProps> = ({
               className={`
                 flex h-5 w-5 items-center justify-center rounded-md border-2 transition-all
                 ${isSelected 
-                  ? 'bg-nv-primary border-nv-primary scale-110' 
+                  ? 'bg-indigo-500 border-indigo-500 scale-110' 
                   : 'border-white/50 hover:border-white hover:scale-110'
                 }
               `}
@@ -93,7 +93,7 @@ export const NVAssetCard: React.FC<NVAssetCardProps> = ({
                 className={`
                   flex h-7 w-7 items-center justify-center rounded-full backdrop-blur-md transition-all
                   ${isFavorite 
-                    ? 'bg-nv-primary/80 text-white' 
+                    ? 'bg-indigo-500/80 text-white' 
                     : 'bg-black/40 text-white/80 hover:bg-black/60 hover:text-white'
                   }
                 `}
@@ -129,7 +129,7 @@ export const NVAssetCard: React.FC<NVAssetCardProps> = ({
             />
           ))}
         </div>
-        <p className={`truncate font-medium transition-colors ${isCompact ? 'text-[10px]' : 'text-[11px]'} text-nv-text-secondary group-hover:text-nv-text-primary`}>
+        <p className={`truncate font-medium transition-colors ${isCompact ? 'text-[10px]' : 'text-[11px]'} text-slate-400 group-hover:text-slate-50`}>
           {nameWithoutExt}
         </p>
       </div>

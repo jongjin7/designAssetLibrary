@@ -23,8 +23,8 @@ export const NVEmptyState: React.FC<NVEmptyStateProps> = ({
       `.replace(/\s+/g, ' ').trim()}
     >
       {icon && <div className="mb-4 text-5xl">{icon}</div>}
-      <h3 className="mb-2 text-lg font-semibold text-nv-text-primary">{title}</h3>
-      {description && <p className="mb-6 text-sm text-nv-text-tertiary">{description}</p>}
+      <h3 className="mb-2 text-lg font-semibold text-slate-50">{title}</h3>
+      {description && <p className="mb-6 text-sm text-slate-500">{description}</p>}
       {action && <div>{action}</div>}
     </div>
   );

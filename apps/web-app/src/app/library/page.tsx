@@ -20,19 +20,21 @@ export default function UnifiedLibraryPage() {
 
   if (isDesktop) {
     return (
-      <div className="desktop-shell">
+      <div className="min-h-screen bg-slate-950 text-slate-50">
         <DashboardView />
       </div>
     );
   }
 
   return (
-    <div className="mobile-shell">
+    <div className="flex flex-col min-h-[100dvh] max-w-[760px] mx-auto relative has-[.capture-screen]:pb-0">
       <NetworkStatus />
-      <div className="mobile-shell__content">
+      <div className="flex-1 overflow-y-auto pb-[calc(72px+env(safe-area-inset-bottom,0px))] has-[.capture-screen]:pb-0 has-[.network-status]:pt-[calc(var(--safe-area-top,0px)+28px)]">
         <MobileLibraryView />
       </div>
-      <BottomTabs />
+      <div className="has-[.capture-screen]:hidden">
+        <BottomTabs />
+      </div>
     </div>
   );
 }

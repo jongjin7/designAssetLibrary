@@ -79,7 +79,7 @@ export function InstallBanner({ showClose = true, className }: InstallBannerProp
           {installMsg || (isPromptReady ? '홈 화면에 추가하여 빠르게 실행' : '설치 준비 중...')}
         </p>
       </div>
-      <button className="install-banner__btn bg-nv-primary/20 text-nv-primary px-3 py-1.5 rounded-lg text-xs font-bold hover:bg-nv-primary hover:text-white transition-colors" onClick={handleInstall}>
+      <button className="install-banner__btn bg-indigo-500/20 text-indigo-500 px-3 py-1.5 rounded-lg text-xs font-bold hover:bg-indigo-500 hover:text-white transition-colors" onClick={handleInstall}>
         설치
       </button>
       {showClose && (

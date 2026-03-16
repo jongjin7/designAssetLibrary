@@ -23,7 +23,7 @@ export const NVInput: React.FC<NVInputProps> = ({
 
   const containerClasses = `
     flex items-center bg-white/5 border border-white/10 rounded-xl
-    transition-all focus-within:border-nv-primary focus-within:bg-white/10
+    transition-all focus-within:border-indigo-500 focus-within:bg-white/10
     relative
     has-[:disabled]:opacity-40 has-[:disabled]:pointer-events-none
     ${sizeStyles[size]}
@@ -32,14 +32,14 @@ export const NVInput: React.FC<NVInputProps> = ({
 
 
   const inputClasses = `
-    bg-transparent border-none text-nv-text-primary outline-none w-full
-    placeholder:text-nv-text-tertiary
+    bg-transparent border-none text-slate-50 outline-none w-full
+    placeholder:text-slate-500
     ${className}
   `.replace(/\s+/g, ' ').trim();
 
   return (
     <div className={containerClasses}>
-      {icon && <div className="text-nv-text-tertiary flex-shrink-0">{icon}</div>}
+      {icon && <div className="text-slate-500 flex-shrink-0">{icon}</div>}
       <input className={inputClasses} {...props} />
       {rightElement && <div className="flex items-center gap-1 flex-shrink-0">{rightElement}</div>}
     </div>

@@ -34,7 +34,7 @@ export const NVSearchBar: React.FC<NVSearchBarProps> = ({
     <>
       {value && !readOnly && (
         <button
-          className="p-1.5 text-nv-text-tertiary hover:text-nv-text-primary transition-colors"
+          className="p-1.5 text-slate-500 hover:text-slate-50 transition-colors"
           onClick={handleClear}
           aria-label="입력 초기화"
         >
@@ -43,7 +43,7 @@ export const NVSearchBar: React.FC<NVSearchBarProps> = ({
       )}
       {showFilter && (
         <button
-          className="p-1.5 text-nv-text-tertiary hover:text-nv-primary transition-colors border-l border-white/10 ml-1 pl-2"
+          className="p-1.5 text-slate-500 hover:text-indigo-500 transition-colors border-l border-white/10 ml-1 pl-2"
           onClick={(e) => {
             e.stopPropagation();
             onFilterClick?.(e);

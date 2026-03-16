@@ -28,7 +28,7 @@ export function AdvancedFilter({ onApply, onReset, className = '', isMobile = fa
   };
 
   const content = (
-    <div className={`advanced-filter-content flex flex-wrap items-center gap-3 ${isMobile ? 'flex-col items-stretch p-4' : ''}`}>
+    <div className={`flex flex-wrap items-center gap-3 ${isMobile ? 'flex-col items-stretch p-4' : ''}`}>
       <NVSelect
         icon={<Palette size={14} />}
         className={isMobile ? 'w-full' : 'w-[160px]'}
@@ -65,7 +65,7 @@ export function AdvancedFilter({ onApply, onReset, className = '', isMobile = fa
         ]}
       />
 
-      <div className={`filter-actions flex gap-2 ${isMobile ? 'mt-2 justify-end' : 'ml-auto'}`}>
+      <div className={`flex gap-2 ${isMobile ? 'mt-2 justify-end' : 'ml-auto'}`}>
         <NVButton 
           variant="ghost"
           size="sm"
@@ -89,9 +89,9 @@ export function AdvancedFilter({ onApply, onReset, className = '', isMobile = fa
 
   if (isMobile) {
     return (
-      <NVCard className={`mx-4 mb-4 !p-0 overflow-hidden border-nv-primary/20 ${className}`} hoverEffect={false}>
-        <div className="bg-nv-primary/10 px-4 py-2 border-bottom border-white/5">
-          <span className="text-xs font-bold text-nv-primary uppercase tracking-wider">상세 필터</span>
+      <NVCard className={`mx-4 mb-4 !p-0 overflow-hidden border-indigo-500/20 ${className}`} hoverEffect={false}>
+        <div className="bg-indigo-500/10 px-4 py-2 border-bottom border-white/5">
+          <span className="text-xs font-bold text-indigo-500 uppercase tracking-wider">상세 필터</span>
         </div>
         {content}
       </NVCard>
@@ -99,7 +99,7 @@ export function AdvancedFilter({ onApply, onReset, className = '', isMobile = fa
   }
 
   return (
-    <div className={`advanced-filter-bar w-full bg-white/[0.02] border-b border-white/[0.06] px-8 py-3 animate-in fade-in slide-in-from-top-2 duration-300 ${className}`}>
+    <div className={`w-full bg-white/[0.02] border-b border-white/[0.06] px-8 py-3 animate-in fade-in slide-in-from-top-2 duration-300 ${className}`}>
       {content}
     </div>
   );

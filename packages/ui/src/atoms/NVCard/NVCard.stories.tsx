@@ -16,7 +16,7 @@ export const Default: Story = {
     children: (
       <div className="space-y-4">
         <h3 className="text-xl font-bold text-white">Card Title</h3>
-        <p className="text-nv-text-secondary">This is a premium glassmorphic card component used for assets and sections.</p>
+        <p className="text-slate-400">This is a premium glassmorphic card component used for assets and sections.</p>
       </div>
     ),
   },

@@ -29,10 +29,10 @@ export const NVChip: React.FC<NVChipProps> = ({
 
   const variantStyles = {
     filter: isActive 
-      ? 'bg-nv-primary/20 border-nv-primary text-nv-primary shadow-[0_4px_12px_rgba(99,102,241,0.2)]'
-      : 'bg-white/5 border-white/10 text-nv-text-secondary hover:bg-white/10 hover:border-white/20 hover:text-nv-text-primary',
-    tag: 'bg-white/5 border-transparent text-nv-text-tertiary hover:bg-white/10',
-    status: 'bg-nv-vivid/10 border-nv-vivid/20 text-nv-vivid'
+      ? 'bg-indigo-500/20 border-indigo-500 text-indigo-500 shadow-[0_4px_12px_rgba(99,102,241,0.2)]'
+      : 'bg-white/5 border-white/10 text-slate-400 hover:bg-white/10 hover:border-white/20 hover:text-slate-50',
+    tag: 'bg-white/5 border-transparent text-slate-500 hover:bg-white/10',
+    status: 'bg-cyan-500/10 border-nv-vivid/20 text-cyan-500'
   };
 
   return (
