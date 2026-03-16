@@ -4,15 +4,17 @@ import { useState } from 'react';
 import { useRouter, usePathname } from 'next/navigation';
 import { useFolders } from '../../hooks/useFolders';
 import { FolderTree } from '../navigation/FolderTree';
-import { Grid, Star, Clock, Menu } from 'lucide-react';
+import { Grid, Star, Clock, Menu, PanelLeft,  } from 'lucide-react';
 
 import { NVIconButton } from '@nova/ui';
+import { cn } from '../../lib/utils';
 
 interface DesktopShellProps {
   children: React.ReactNode;
+  onSearchToggle?: () => void;
 }
 
-export function DesktopShell({ children }: DesktopShellProps) {
+export function DesktopShell({ children, onSearchToggle }: DesktopShellProps) {
   const router = useRouter();
   const pathname = usePathname();
   const { folders, createFolder } = useFolders();
@@ -29,23 +31,34 @@ export function DesktopShell({ children }: DesktopShellProps) {
     <div className="min-h-screen flex h-screen bg-slate-950 overflow-hidden">
       {/* Column 1: Sidebar */}
       <aside 
-        className={`flex flex-col bg-white/[0.02] border-r border-white/[0.06] transition-all duration-300 ease-in-out ${isSidebarCollapsed ? 'w-20' : 'w-[260px]'}`}
+        className={cn(
+          "flex flex-col bg-white/[0.02] border-r border-white/[0.06] transition-all duration-300 ease-in-out",
+          isSidebarCollapsed ? 'w-21' : 'w-[260px]'
+        )}
+        style={{ WebkitAppRegion: 'drag' } as any}
       >
-        <div className="p-6 flex items-center justify-between">
+        {/* Window Controls Space (for Electron) + Visual Dots for Web */}
+        <div className="h-12 shrink-0 flex items-center gap-2 pl-3.5">
+          <div className="w-3.5 h-3.5 rounded-full bg-[#FEBC2E] shadow-inner" />
+          <div className="w-3.5 h-3.5 rounded-full bg-[#28C840] shadow-inner" />
+          <div className="w-3.5 h-3.5 rounded-full bg-[#FF5F57] shadow-inner" />
+        </div>
+
+        <div className="flex justify-between items-center">
           {!isSidebarCollapsed && (
-            <h1 className="text-2xl font-black bg-gradient-to-br from-indigo-500 to-cyan-500 bg-clip-text text-transparent tracking-tighter">
+            <h1 className="pl-5 text-2xl font-black bg-gradient-to-br from-indigo-500 to-cyan-500 bg-clip-text text-transparent tracking-tighter">
               NOVA
             </h1>
           )}
+
           <NVIconButton
-            icon={Menu}
+            icon={PanelLeft}
             variant="ghost"
-            size="sm"
-            className={isSidebarCollapsed ? 'mx-auto' : ''}
+            size="md"
+            className={isSidebarCollapsed ? 'mx-auto' : 'mx-1'}
             onClick={() => setIsSidebarCollapsed(!isSidebarCollapsed)}
             title={isSidebarCollapsed ? "메뉴 확장" : "메뉴 축소"}
-          />
-
+          /> 
         </div>
         
         <nav className="flex-1 px-3 py-2 flex flex-col gap-1 overflow-y-auto">
@@ -64,11 +77,13 @@ export function DesktopShell({ children }: DesktopShellProps) {
             return (
               <div 
                 key={item.id}
-                className={`group flex items-center gap-3 px-4 py-2.5 rounded-xl text-sm font-medium transition-all cursor-pointer
-                  ${isActive 
+                className={cn(
+                  "group flex items-center gap-3 px-4 py-2.5 rounded-xl text-sm font-medium transition-all cursor-pointer",
+                  isActive 
                     ? 'bg-indigo-500/10 text-indigo-500' 
-                    : 'text-slate-400 hover:bg-white/[0.05] hover:text-slate-50'}
-                  ${isSidebarCollapsed ? 'justify-center px-0' : ''}`} 
+                    : 'text-slate-400 hover:bg-white/[0.05] hover:text-slate-50',
+                  isSidebarCollapsed && 'justify-center px-0'
+                )} 
                 onClick={() => handleNavClick(item.id)} 
                 title={isSidebarCollapsed ? item.label : undefined}
               >
@@ -94,22 +109,29 @@ export function DesktopShell({ children }: DesktopShellProps) {
 
         <div className={`p-4 border-t border-white/[0.06] ${isSidebarCollapsed ? 'flex justify-center' : ''}`}>
           <div 
-            className={`flex items-center gap-3 p-2 rounded-xl cursor-pointer transition-all border border-transparent
-              ${pathname === '/profile' 
+            className={cn(
+              "flex items-center gap-3 p-2 rounded-xl cursor-pointer transition-all border border-transparent",
+              pathname === '/profile' 
                 ? 'bg-indigo-500/10 border-indigo-500/30' 
-                : 'hover:bg-white/[0.05]'}
-              ${isSidebarCollapsed ? 'w-10 h-10 p-0 justify-center' : ''}`}
+                : 'hover:bg-white/[0.05]',
+              isSidebarCollapsed && 'w-10 h-10 p-0 justify-center'
+            )}
             title={isSidebarCollapsed ? "설정" : undefined}
             onClick={() => router.push('/profile')}
           >
-            <div className={`flex-shrink-0 w-10 h-10 rounded-full bg-white/[0.05] border border-white/10 flex items-center justify-center transition-all
-              ${pathname === '/profile' ? 'border-indigo-500/50 bg-indigo-500/20' : ''}
-              ${isSidebarCollapsed ? 'w-full h-full' : ''}`}>
+            <div className={cn(
+              "flex-shrink-0 w-10 h-10 rounded-full bg-white/[0.05] border border-white/10 flex items-center justify-center transition-all",
+              pathname === '/profile' && 'border-indigo-500/50 bg-indigo-500/20',
+              isSidebarCollapsed && 'w-full h-full'
+            )}>
               <div className="w-3 h-3 rounded-full bg-indigo-500 shadow-[0_0_8px_rgba(99,102,241,0.6)]" />
             </div>
             {!isSidebarCollapsed && (
               <div className="flex flex-col min-w-0">
-                <span className={`text-[13px] font-bold truncate ${pathname === '/profile' ? 'text-indigo-500' : 'text-slate-50'}`}>
+                <span className={cn(
+                  "text-[13px] font-bold truncate",
+                  pathname === '/profile' ? 'text-indigo-500' : 'text-slate-50'
+                )}>
                   NOVA Designer
                 </span>
                 <span className="text-[11px] text-slate-500 truncate">user@nova.design</span>

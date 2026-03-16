@@ -3,6 +3,7 @@
 import { Palette, Calendar, Tag, X, Check, RotateCcw } from 'lucide-react';
 import { NVCard, NVButton, NVInput, NVSelect } from '@nova/ui';
 import { useState } from 'react';
+import { cn } from '../../lib/utils';
 
 interface AdvancedFilterProps {
   onApply?: (filters: any) => void;
@@ -28,7 +29,7 @@ export function AdvancedFilter({ onApply, onReset, className = '', isMobile = fa
   };
 
   const content = (
-    <div className={`flex flex-wrap items-center gap-3 ${isMobile ? 'flex-col items-stretch p-4' : ''}`}>
+    <div className={cn("flex flex-wrap items-center gap-3", isMobile && 'flex-col items-stretch p-4')}>
       <NVSelect
         icon={<Palette size={14} />}
         className={isMobile ? 'w-full' : 'w-[160px]'}
@@ -65,7 +66,7 @@ export function AdvancedFilter({ onApply, onReset, className = '', isMobile = fa
         ]}
       />
 
-      <div className={`flex gap-2 ${isMobile ? 'mt-2 justify-end' : 'ml-auto'}`}>
+      <div className={cn("flex gap-2", isMobile ? 'mt-2 justify-end' : 'ml-auto')}>
         <NVButton 
           variant="ghost"
           size="sm"
@@ -89,7 +90,7 @@ export function AdvancedFilter({ onApply, onReset, className = '', isMobile = fa
 
   if (isMobile) {
     return (
-      <NVCard className={`mx-4 mb-4 !p-0 overflow-hidden border-indigo-500/20 ${className}`} hoverEffect={false}>
+      <NVCard className={cn("mx-4 mb-4 !p-0 overflow-hidden border-indigo-500/20", className)} hoverEffect={false}>
         <div className="bg-indigo-500/10 px-4 py-2 border-bottom border-white/5">
           <span className="text-xs font-bold text-indigo-500 uppercase tracking-wider">상세 필터</span>
         </div>
@@ -99,7 +100,7 @@ export function AdvancedFilter({ onApply, onReset, className = '', isMobile = fa
   }
 
   return (
-    <div className={`w-full bg-white/[0.02] border-b border-white/[0.06] px-8 py-3 animate-in fade-in slide-in-from-top-2 duration-300 ${className}`}>
+    <div className={cn("w-full bg-white/[0.02] border-b border-white/[0.06] px-8 py-3 animate-in fade-in slide-in-from-top-2 duration-300", className)}>
       {content}
     </div>
   );

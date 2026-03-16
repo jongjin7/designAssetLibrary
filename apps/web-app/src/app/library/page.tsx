@@ -1,7 +1,7 @@
 'use client';
 
 import { useIsDesktop } from '../../hooks/useIsDesktop';
-import DashboardView from '../(desktop)/library/DesktopLibraryView';
+import DesktopLibraryView from '../(desktop)/library/DesktopLibraryView';
 import MobileLibraryView from '../(mobile)/library/MobileLibraryView';
 import { MobileShell } from '../../components/layout/MobileShell';
 import { usePathname } from 'next/navigation';
@@ -11,6 +11,7 @@ import { useState } from 'react';
 import { useAssets } from '../../hooks/useAssets';
 import { useLibraryFilters } from '../../hooks/useLibraryFilters';
 import { useAssetSelection } from '../../hooks/useAssetSelection';
+import { SearchPalette } from '../../components/library/SearchPalette';
 
 export default function UnifiedLibraryPage() {
 
@@ -24,19 +25,30 @@ export default function UnifiedLibraryPage() {
   } = useLibraryFilters(assets);
   const { selectedIds, setSelectedIds } = useAssetSelection();
   const [isSelectionMode, setIsSelectionMode] = useState(false);
+  const [isSearchVisible, setIsSearchVisible] = useState(false);
 
   if (isDesktop === null) return null;
 
   const commonProps = {
     assets, loading, filter, setFilter, selectedAsset, openDetail, closeDetail, deleteAsset, updateAsset, addAsset,
     selectedIds, setSelectedIds,
-    searchText, setSearchText, isFilterOpen, setIsFilterOpen, filteredAssets, handleFilterApply, handleFilterReset
+    searchText, setSearchText, isFilterOpen, setIsFilterOpen, filteredAssets, handleFilterApply, handleFilterReset,
+    isSearchVisible, setIsSearchVisible
   };
 
   if (isDesktop) {
     return (
-      <DesktopShell>
-        <DashboardView {...commonProps} />
+      <DesktopShell onSearchToggle={() => setIsSearchVisible(!isSearchVisible)}>
+        <DesktopLibraryView 
+          {...commonProps} 
+          onSearchToggle={() => setIsSearchVisible(!isSearchVisible)} 
+        />
+        <SearchPalette 
+          isOpen={isSearchVisible} 
+          onClose={() => setIsSearchVisible(false)}
+          value={searchText}
+          onChange={setSearchText}
+        />
       </DesktopShell>
     );
   }

@@ -33,12 +33,15 @@ interface DesktopLibraryViewProps {
   filteredAssets: Asset[];
   handleFilterApply: (f: any) => void;
   handleFilterReset: () => void;
+  isSearchVisible?: boolean;
+  onSearchToggle?: () => void;
 }
 
 export default function DesktopLibraryView({
   assets, loading, filter, setFilter, selectedAsset, openDetail, closeDetail, deleteAsset, updateAsset, addAsset,
   selectedIds, setSelectedIds,
-  searchText, setSearchText, isFilterOpen, setIsFilterOpen, filteredAssets, handleFilterApply, handleFilterReset
+  searchText, setSearchText, isFilterOpen, setIsFilterOpen, filteredAssets, handleFilterApply, handleFilterReset,
+  isSearchVisible, onSearchToggle
 }: DesktopLibraryViewProps) {
   
   const handleAssetTap = (asset: Asset, e: React.MouseEvent) => {
@@ -101,6 +104,8 @@ export default function DesktopLibraryView({
           onFilterToggle={() => setIsFilterOpen(!isFilterOpen)}
           onFilterApply={handleFilterApply}
           onFilterReset={handleFilterReset}
+          isSearchVisible={isSearchVisible}
+          onSearchToggle={onSearchToggle}
         />
 
 
