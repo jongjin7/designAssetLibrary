@@ -70,33 +70,12 @@ export default function MobileLibraryView({
     }
   };
 
-  const handleToggleSelectionMode = () => {
-    if (isSelectionMode) {
-      setSelectedIds(new Set());
-      setIsSelectionMode(false);
-    } else {
-      setIsSelectionMode(true);
-    }
-  };
-
+  
 
 
   return (
     <>
-      <TopBar 
-        rightElement={
-          <button 
-            onClick={handleToggleSelectionMode}
-            className={`text-sm font-bold px-3 py-1 rounded-full transition-all ${
-              isSelectionMode 
-              ? 'bg-indigo-500 text-white shadow-lg shadow-indigo-500/30' 
-              : 'text-slate-400 hover:text-white'
-            }`}
-          >
-            {isSelectionMode ? '완료' : '선택'}
-          </button>
-        }
-      />
+      <TopBar />
 
       <section className="library-screen">
         <LibraryControls 

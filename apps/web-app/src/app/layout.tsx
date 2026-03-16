@@ -1,29 +1,4 @@
-import type { Metadata, Viewport } from "next";
 import "./globals.css";
-
-export const metadata: Metadata = {
-  title: "NOVA | Design Asset Library",
-  description: "Capture and organize design assets instantly.",
-  manifest: "/manifest.json",
-  appleWebApp: {
-    capable: true,
-    statusBarStyle: "black-translucent",
-    title: "NOVA",
-  },
-  icons: {
-    apple: "/icon-192.png",
-  },
-};
-
-export const viewport: Viewport = {
-  themeColor: "#0a0a0b",
-  width: "device-width",
-  initialScale: 1,
-  maximumScale: 1,
-  userScalable: false,
-  viewportFit: "cover",
-};
-
 import { PWAHandler } from "../components/shared/PWAHandler";
 
 export default function RootLayout({
@@ -32,33 +7,39 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="ko" suppressHydrationWarning>
+    <html lang="ko">
       <head>
+        <title>NOVA | Design Asset Library</title>
+        <meta name="description" content="Capture and organize design assets instantly." />
+        <link rel="manifest" href="/manifest.json" />
+        <meta name="theme-color" content="#0a0a0b" />
+        <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, viewport-fit=cover, user-scalable=no" />
+        <meta name="mobile-web-app-capable" content="yes" />
+        <meta name="apple-mobile-web-app-capable" content="yes" />
+        <meta name="apple-mobile-web-app-title" content="NOVA" />
+        <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+        <link rel="apple-touch-icon" href="/icon-192.png" />
         {/* beforeinstallprompt를 번들 로드 전에 최우선으로 캐치 */}
         <script
           dangerouslySetInnerHTML={{
             __html: `
-              if (typeof window !== 'undefined') {
-                window.__pwaPrompt = window.__pwaPrompt || null;
-                if (!window.__pwaListenerAdded) {
-                  window.addEventListener('beforeinstallprompt', function(e) {
-                    console.log('[PWA] Global Capture: beforeinstallprompt received');
-                    window.__pwaPrompt = e;
-                    window.dispatchEvent(new Event('pwa-prompt-ready'));
-                  });
-                  window.addEventListener('appinstalled', function() {
-                    console.log('[PWA] Global Capture: appinstalled');
-                    window.__pwaPrompt = null;
-                    window.dispatchEvent(new Event('pwa-prompt-ready'));
-                  });
-                  window.__pwaListenerAdded = true;
-                }
+              window.__pwaPrompt = window.__pwaPrompt || null;
+              if (!window.__pwaListenerAdded) {
+                window.addEventListener('beforeinstallprompt', function(e) {
+                  window.__pwaPrompt = e;
+                  window.dispatchEvent(new Event('pwa-prompt-ready'));
+                });
+                window.addEventListener('appinstalled', function() {
+                  window.__pwaPrompt = null;
+                  window.dispatchEvent(new Event('pwa-prompt-ready'));
+                });
+                window.__pwaListenerAdded = true;
               }
             `,
           }}
         />
       </head>
-      <body suppressHydrationWarning>
+      <body>
         <PWAHandler />
         {children}
       </body>

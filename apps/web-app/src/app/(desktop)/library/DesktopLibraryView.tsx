@@ -1,13 +1,10 @@
 'use client';
 
-import { useState } from 'react';
-import { useAssets } from '../../../hooks/useAssets';
 import { processFileToAsset } from '../../../lib/assetProcessor';
 import { AssetGrid } from '../../../components/library/AssetGrid';
 import { AssetInspector } from '../../../components/detail/AssetInspector';
 import { DropZone } from '../../../components/shared/DropZone';
 import { FilterChips } from '../../../components/library/FilterChips';
-import { useLibraryFilters } from '../../../hooks/useLibraryFilters';
 import { LibraryControls } from '../../../components/library/LibraryControls';
 import { AssetSelectionBar } from '../../../components/library/AssetSelectionBar';
 import { Asset } from '../../../types/asset';
