@@ -41,22 +41,31 @@ export default function DesktopLibraryView({
   searchText, setSearchText, isFilterOpen, setIsFilterOpen, filteredAssets, handleFilterApply, handleFilterReset
 }: DesktopLibraryViewProps) {
   
-  const handleSelect = (id: string, e: React.MouseEvent) => {
+  const handleAssetTap = (asset: Asset, e: React.MouseEvent) => {
     // Selection mode: Cmd/Ctrl or Shift or if we already have a selection
     if (e.metaKey || e.ctrlKey || e.shiftKey || selectedIds.size > 0) {
       const newSelected = new Set(selectedIds);
-      if (newSelected.has(id)) {
-        newSelected.delete(id);
+      if (newSelected.has(asset.id)) {
+        newSelected.delete(asset.id);
       } else {
-        newSelected.add(id);
+        newSelected.add(asset.id);
       }
       setSelectedIds(newSelected);
       return;
     }
     
     // Default mode: open inspector
-    const asset = assets.find(a => a.id === id);
-    if (asset) openDetail(asset);
+    openDetail(asset);
+  };
+
+  const handleSelect = (id: string, e: React.MouseEvent) => {
+    const newSelected = new Set(selectedIds);
+    if (newSelected.has(id)) {
+      newSelected.delete(id);
+    } else {
+      newSelected.add(id);
+    }
+    setSelectedIds(newSelected);
   };
 
   const handleBulkDelete = () => {
@@ -116,7 +125,7 @@ export default function DesktopLibraryView({
             ) : (
               <AssetGrid 
                 assets={filteredAssets} 
-                onAssetTap={openDetail} 
+                onAssetTap={handleAssetTap} 
                 selectedIds={selectedIds}
                 onSelect={handleSelect}
               />

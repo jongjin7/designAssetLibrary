@@ -3,12 +3,14 @@ import { Asset } from '../../types/asset';
 
 interface AssetCardProps {
   asset: Asset;
-  onTap: (asset: Asset) => void;
+  onTap: (asset: Asset, e: React.MouseEvent) => void;
   isSelected?: boolean;
   onSelect?: (id: string, e: React.MouseEvent) => void;
+  onAssetTap?: (asset: Asset, e: React.MouseEvent) => void;
+  isMobile?: boolean;
 }
 
-export function AssetCard({ asset, onTap, isSelected, onSelect }: AssetCardProps) {
+export function AssetCard({ asset, onTap, isSelected, onSelect, onAssetTap, isMobile }: AssetCardProps) {
   const handleSelect = (e: React.MouseEvent) => {
     e.stopPropagation();
     onSelect?.(asset.id, e);
@@ -23,12 +25,13 @@ export function AssetCard({ asset, onTap, isSelected, onSelect }: AssetCardProps
       palette={asset.palette}
       isFavorite={asset.isFavorite}
       isSelected={isSelected}
-      onTap={() => onTap(asset)}
+      isMobile={isMobile}
+      onTap={(e) => onTap(asset, e)}
       onSelect={handleSelect}
       onFavoriteToggle={() => {
         // Handle favorite toggle (would need action in app)
       }}
-      onMaximize={() => onTap(asset)}
+      onMaximize={(e) => onTap(asset, e)}
     />
   );
 }

@@ -10,7 +10,8 @@ export interface NVAssetCardProps {
   isFavorite?: boolean;
   isSelected?: boolean;
   isCompact?: boolean;
-  onTap?: () => void;
+  isMobile?: boolean;
+  onTap?: (e: React.MouseEvent) => void;
   onSelect?: (e: React.MouseEvent) => void;
   onFavoriteToggle?: (e: React.MouseEvent) => void;
   onMaximize?: (e: React.MouseEvent) => void;
@@ -25,6 +26,7 @@ export const NVAssetCard: React.FC<NVAssetCardProps> = ({
   isFavorite,
   isSelected,
   isCompact = false,
+  isMobile = false,
   onTap,
   onSelect,
   onFavoriteToggle,
@@ -68,7 +70,7 @@ export const NVAssetCard: React.FC<NVAssetCardProps> = ({
             absolute inset-0 flex flex-col justify-between p-3
             bg-gradient-to-b from-black/40 via-transparent to-black/40
             transition-opacity duration-200
-            ${isSelected ? 'opacity-100' : 'opacity-0 group-hover:opacity-100'}
+            ${isSelected ? 'opacity-100' : isMobile ? 'opacity-100' : 'opacity-0 group-hover:opacity-100'}
           `}>
             {/* Checkbox */}
             <button 
@@ -76,7 +78,7 @@ export const NVAssetCard: React.FC<NVAssetCardProps> = ({
                 flex h-5 w-5 items-center justify-center rounded-md border-2 transition-all
                 ${isSelected 
                   ? 'bg-indigo-500 border-indigo-500 scale-110' 
-                  : 'border-white/50 hover:border-white hover:scale-110'
+                  : isMobile ? 'border-white/30 bg-black/20' : 'border-white/50 hover:border-white hover:scale-110'
                 }
               `}
               onClick={(e) => {

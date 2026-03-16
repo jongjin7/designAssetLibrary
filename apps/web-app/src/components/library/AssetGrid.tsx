@@ -4,12 +4,13 @@ import { AssetCard } from './AssetCard';
 
 interface AssetGridProps {
   assets: Asset[];
-  onAssetTap: (asset: Asset) => void;
+  onAssetTap: (asset: Asset, e: React.MouseEvent) => void;
   selectedIds?: Set<string>;
   onSelect?: (id: string, e: React.MouseEvent) => void;
+  isMobile?: boolean;
 }
 
-export function AssetGrid({ assets, onAssetTap, selectedIds, onSelect }: AssetGridProps) {
+export function AssetGrid({ assets, onAssetTap, selectedIds, onSelect, isMobile }: AssetGridProps) {
   if (assets.length === 0) {
     return (
       <NVEmptyState
@@ -29,6 +30,8 @@ export function AssetGrid({ assets, onAssetTap, selectedIds, onSelect }: AssetGr
           onTap={onAssetTap} 
           isSelected={selectedIds?.has(asset.id)}
           onSelect={onSelect}
+          onAssetTap={onAssetTap}
+          isMobile={isMobile}
         />
       ))}
     </NVAssetGrid>

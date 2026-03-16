@@ -55,7 +55,7 @@ export default function MobileLibraryView({
     else setIsSelectionMode(false);
   };
 
-  const handleAssetTap = (asset: any) => {
+  const handleAssetTap = (asset: any, e: React.MouseEvent) => {
     if (isSelectionMode || selectedIds.size > 0) {
       handleSelect(asset.id);
       return;
@@ -110,6 +110,7 @@ export default function MobileLibraryView({
             onAssetTap={handleAssetTap} 
             selectedIds={selectedIds}
             onSelect={(id) => handleSelect(id)}
+            isMobile={true}
           />
         )}
       </section>
