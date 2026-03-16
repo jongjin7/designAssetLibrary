@@ -1,4 +1,7 @@
-# NOVA 문서 작성 및 커밋 규칙 (Documentation Contribution Guide)
+# 문서 작성 규칙 (Documentation Contribution Guide)
+
+> [!TIP]
+> 커밋 메시지 규칙 등 공통 프로젝트 관례는 [CONTRIBUTING.md](./CONTRIBUTING.md)을 참조하십시오.
 
 이 문서는 NOVA 프로젝트의 `docs` 디렉토리 내 문서를 작성하고 수정할 때 준수해야 할 규칙을 정의합니다. 특히 에이전트(LLM)와 사람(개발자) 간의 협업 효율을 극대화하는 데 초점을 맞춥니다.
 
@@ -27,24 +30,7 @@
 English description here for better agent alignment.
 ```
 
-## 3. 커밋 메시지 규칙 (Commit Convention)
-
-모든 커밋 메시지는 에이전트와 개발자가 동시에 명확히 이해할 수 있도록 다음 규칙을 따릅니다. **작업 상세 내용(Subject)은 반드시 한글로 작성**함을 원칙으로 합니다.
-
-- **기본 형식**: `type(scope): 한글로 작업 내용 요약` (scope는 생략 가능)
-- **사용 가능한 프리픽스 (Type)**:
-  - `docs:`: 문서 추가 및 수정
-  - `docs(design):`: 디자인 시스템 관련 문서 수정
-  - `docs(feat):`: 기능 명세서 수정
-  - `docs(setup):`: 설정 및 가이드 수정
-  - `feat:`: 새로운 기능 개발 (코드)
-  - `fix:`: 버그 및 오류 수정 (코드/환경)
-  - `refactor:`: 코드 리팩토링
-
-**예시:** `docs(design): design-tokens.md에 글래스모피즘 토큰 추가`
-**예시:** `fix: 캡처 화면의 React 타입 호환성 오류 해결`
-
-## 4. 기술적 정밀성 유지
+## 3. 기술적 정밀성 유지
 
 - **Performance Target**: 성능 관련 수치(예: 0.2s, 100ms)는 반드시 영문 명세에 명시합니다.
 - **Code Reference**: `@source`, `globals.css` 등 코드와 연관된 파일 경로나 기술 용어는 번역하지 않고 원문을 유지합니다.

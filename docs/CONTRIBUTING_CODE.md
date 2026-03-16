@@ -1,4 +1,7 @@
-# 개발 코드 구현 가이드: 원자적 분할 및 비대화 방지 (Coding Implementation Guide: Atomic Granularity & Anti-Bloat)
+# 개발 코드 구현 가이드: 원자적 분할 및 비대화 방지 (Coding Implementation Guide)
+
+> [!TIP]
+> 커밋 메시지 규칙 등 공통 프로젝트 관례는 [CONTRIBUTING.md](./CONTRIBUTING.md)을 참조하십시오.
 
 한 페이지 혹은 하나의 파일에 방대한 코드를 작성하여 비대해지는 것을 방지하고, 작고 명확한 단위로 코드를 분할하여 유지보수성과 가독성을 극대화하는 것을 원칙으로 합니다.
 
