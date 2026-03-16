@@ -23,9 +23,9 @@ export default function UnifiedProfilePage() {
     // 데스크탑 레이아웃 쉘 (사이드바 포함)
     return (
       <DesktopShell>
-        <div className="desktop-dashboard__content settings-view-scroll">
-          <div className="settings-container-outer">
-            <div className="settings-container-inner">
+        <div className="flex-1 flex flex-col overflow-hidden bg-slate-950 overflow-y-auto">
+          <div className="flex justify-center p-6 lg:p-10 min-h-full">
+            <div className="w-full max-w-[1200px]">
               {content}
             </div>
           </div>
@@ -36,12 +36,13 @@ export default function UnifiedProfilePage() {
 
   // 모바일 레이아웃 쉘 (default)
   return (
-    <div className="mobile-shell">
+    <div className="h-screen flex flex-col bg-slate-950 overflow-hidden">
       <NetworkStatus />
-      <main className="mobile-shell__content" style={{ flex: 1, overflowY: 'auto' }}>
+      <main className="flex-1 overflow-y-auto pb-20">
         {content}
       </main>
       <BottomTabs />
     </div>
   );
 }
+

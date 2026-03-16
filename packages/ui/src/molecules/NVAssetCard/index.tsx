@@ -38,7 +38,7 @@ export const NVAssetCard: React.FC<NVAssetCardProps> = ({
       className={`
         group relative flex flex-col shrink-0 w-full overflow-hidden rounded-2xl bg-slate-900 border border-white/5
         transition-all duration-300 hover:shadow-[0_0_24px_rgba(99,102,241,0.15)] active:scale-[0.98]
-        ${isSelected ? 'border-indigo-500 ring-1 ring-nv-primary/50' : ''}
+        ${isSelected ? 'border-indigo-500 ring-1 ring-indigo-500/50' : ''}
         ${isCompact ? 'max-w-[160px]' : ''}
         ${className}
       `.replace(/\s+/g, ' ').trim()}

@@ -24,9 +24,10 @@ export function NetworkStatus() {
   if (!isOffline) return null;
 
   return (
-    <div className="network-status">
+    <div className="fixed top-[env(safe-area-inset-top,0)] left-0 right-0 h-7 bg-amber-500/90 backdrop-blur-md text-slate-950 flex items-center justify-center gap-1.5 text-[11px] font-bold z-[2000] animate-in slide-in-from-top duration-300">
       <WifiOff size={14} />
       <span>오프라인 모드: 로컬에만 저장됩니다</span>
     </div>
   );
 }
+

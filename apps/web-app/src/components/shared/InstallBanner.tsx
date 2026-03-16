@@ -36,18 +36,22 @@ export function InstallBanner({ showClose = true, className }: InstallBannerProp
   if (isStandalone || dismissed || platform === null) return null;
 
   // iOS Safari: 홈 화면 추가 안내 배너
+  // iOS Safari: 홈 화면 추가 안내 배너
   if (platform === 'ios-safari' && !isInstallable) {
     return (
-      <NVCard className={`install-banner flex items-center !p-4 !rounded-xl ${className || ''}`.trim()} hoverEffect={false}>
-        <div className="install-banner__icon">
+      <NVCard 
+        className={`fixed bottom-20 left-3 right-3 z-90 flex items-center gap-3 !p-3 !bg-slate-950/90 !border-indigo-500/40 !backdrop-blur-xl shadow-[0_8px_32px_rgba(0,0,0,0.4),0_0_0_1px_rgba(99,102,241,0.1)] animate-in fade-in slide-in-from-bottom-4 duration-300 ${className || ''}`.trim()} 
+        hoverEffect={false}
+      >
+        <div className="w-9 h-9 flex-shrink-0 rounded-xl bg-indigo-500/15 flex items-center justify-center text-indigo-500">
           <Share size={18} />
         </div>
-        <div className="install-banner__text ml-3 flex-1">
-          <p className="install-banner__title font-bold text-sm">홈 화면에 추가하기</p>
-          <p className="install-banner__sub text-xs opacity-60">공유(□↑) → &apos;홈 화면에 추가&apos; 선택</p>
+        <div className="flex-1 min-w-0">
+          <p className="text-[13px] font-semibold text-slate-50">홈 화면에 추가하기</p>
+          <p className="text-[11px] text-slate-500 mt-0.5 whitespace-nowrap overflow-hidden text-ellipsis">공유(□↑) → &apos;홈 화면에 추가&apos; 선택</p>
         </div>
         {showClose && (
-          <button className="install-banner__close p-1 ml-2 opacity-40 hover:opacity-100" onClick={() => setDismissed(true)} aria-label="닫기">
+          <button className="flex-shrink-0 p-1.5 text-slate-500 hover:text-slate-300 transition-colors" onClick={() => setDismissed(true)} aria-label="닫기">
             <X size={16} />
           </button>
         )}
@@ -59,7 +63,8 @@ export function InstallBanner({ showClose = true, className }: InstallBannerProp
   if (platform === 'ios-other') return null;
 
   // Android / Desktop: isInstallable이면 배너 표시 (새로고침 후에도 유지)
-  if (!isInstallable) return null;
+  // 단, 인라인(static)으로 배치된 경우 데스크탑에서도 항상 노출되도록 허용
+  if (!isInstallable && !className?.includes('static')) return null;
 
   const handleInstall = async () => {
     const result = await install();
@@ -69,24 +74,31 @@ export function InstallBanner({ showClose = true, className }: InstallBannerProp
   };
 
   return (
-    <NVCard className={`install-banner flex items-center !p-4 !rounded-xl ${className || ''}`.trim()} hoverEffect={false}>
-      <div className="install-banner__icon">
+    <NVCard 
+      className={`fixed bottom-20 left-3 right-3 z-90 flex items-center gap-3 !p-3 !bg-slate-950/90 !border-indigo-500/40 !backdrop-blur-xl shadow-[0_8px_32px_rgba(0,0,0,0.4),0_0_0_1px_rgba(99,102,241,0.1)] animate-in fade-in slide-in-from-bottom-4 duration-300 ${className || ''}`.trim()} 
+      hoverEffect={false}
+    >
+      <div className="w-9 h-9 flex-shrink-0 rounded-xl bg-indigo-500/15 flex items-center justify-center text-indigo-500">
         <Download size={18} />
       </div>
-      <div className="install-banner__text ml-3 flex-1">
-        <p className="install-banner__title font-bold text-sm">NOVA 앱 설치</p>
-        <p className="install-banner__sub text-xs opacity-60">
+      <div className="flex-1 min-w-0">
+        <p className="text-[13px] font-semibold text-slate-50">NOVA 앱 설치</p>
+        <p className="text-[11px] text-slate-500 mt-0.5 whitespace-nowrap overflow-hidden text-ellipsis">
           {installMsg || (isPromptReady ? '홈 화면에 추가하여 빠르게 실행' : '설치 준비 중...')}
         </p>
       </div>
-      <button className="install-banner__btn bg-indigo-500/20 text-indigo-500 px-3 py-1.5 rounded-lg text-xs font-bold hover:bg-indigo-500 hover:text-white transition-colors" onClick={handleInstall}>
+      <button 
+        className="px-3.5 py-1.5 rounded-lg bg-indigo-500 text-white text-[13px] font-bold flex-shrink-0 active:scale-95 transition-all hover:bg-indigo-400 active:bg-indigo-600 shadow-lg shadow-indigo-500/20" 
+        onClick={handleInstall}
+      >
         설치
       </button>
       {showClose && (
-        <button className="install-banner__close p-1 ml-2 opacity-40 hover:opacity-100" onClick={() => setDismissed(true)} aria-label="닫기">
+        <button className="flex-shrink-0 p-1.5 text-slate-500 hover:text-slate-300 transition-colors" onClick={() => setDismissed(true)} aria-label="닫기">
           <X size={16} />
         </button>
       )}
     </NVCard>
   );
 }
+

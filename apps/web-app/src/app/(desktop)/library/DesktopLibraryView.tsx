@@ -77,10 +77,10 @@ export default function DesktopLibraryView() {
 
   return (
     <DesktopShell>
-      <div className="desktop-dashboard__content">
+      <div className="flex-1 flex flex-col overflow-hidden">
         <DropZone onDrop={handleDrop} />
         
-        <header className="content-header">
+        <header className="h-16 px-8 flex items-center border-bottom border-white/5 bg-slate-950/50 backdrop-blur-md sticky top-0 z-20">
           <SearchBar 
             value={searchText}
             onChange={setSearchText}
@@ -91,40 +91,57 @@ export default function DesktopLibraryView() {
         </header>
 
         {isFilterOpen && (
-          <AdvancedFilter 
-            onApply={handleFilterApply}
-            onReset={handleFilterReset}
-          />
+          <div className="bg-slate-900 border-b border-white/5">
+            <AdvancedFilter 
+              onApply={handleFilterApply}
+              onReset={handleFilterReset}
+            />
+          </div>
         )}
 
         <div className="px-8 mt-4">
           <FilterChips active={filter} onChange={(f) => setFilter(f as any)} />
         </div>
 
-        <div className="scroll-area">
+        <div className="flex-1 overflow-y-auto p-8 relative">
           {selectedIds.size > 0 && (
-            <div className="multi-select-bar">
-              <div className="selection-info">
-                <span className="count">{selectedIds.size}</span>
-                <span>개의 항목 선택됨</span>
+            <div className="sticky top-0 z-30 mb-6 flex items-center justify-between p-4 rounded-2xl bg-indigo-500/10 border border-indigo-500/30 backdrop-blur-xl animate-in slide-in-from-top-4 duration-300">
+              <div className="flex items-center gap-2">
+                <span className="flex items-center justify-center w-6 h-6 rounded-full bg-indigo-500 text-[11px] font-bold text-white">
+                  {selectedIds.size}
+                </span>
+                <span className="text-sm font-semibold text-indigo-100">개의 항목 선택됨</span>
               </div>
-              <div className="selection-actions">
-                <button className="selection-btn" onClick={() => setSelectedIds(new Set())}>취소</button>
-                <button className="selection-btn selection-btn--primary">폴더 이동</button>
-                <button className="selection-btn selection-btn--danger" onClick={() => {
-                  if (window.confirm(`${selectedIds.size}개의 에셋을 삭제하시겠습니까?`)) {
-                    // Bulk delete logic
-                    setSelectedIds(new Set());
-                  }
-                }}>삭제</button>
+              <div className="flex items-center gap-2">
+                <button 
+                  className="px-4 py-1.5 rounded-lg text-xs font-semibold text-slate-400 hover:text-white hover:bg-white/5 transition-all"
+                  onClick={() => setSelectedIds(new Set())}
+                >
+                  취소
+                </button>
+                <button className="px-4 py-1.5 rounded-lg text-xs font-semibold bg-white/5 text-slate-200 hover:bg-white/10 transition-all border border-white/5">
+                  폴더 이동
+                </button>
+                <button 
+                  className="px-4 py-1.5 rounded-lg text-xs font-semibold bg-rose-500/20 text-rose-500 hover:bg-rose-500 hover:text-white transition-all border border-rose-500/30"
+                  onClick={() => {
+                    if (window.confirm(`${selectedIds.size}개의 에셋을 삭제하시겠습니까?`)) {
+                      setSelectedIds(new Set());
+                    }
+                  }}
+                >
+                  삭제
+                </button>
               </div>
             </div>
           )}
 
-          <div className="content-inner">
-            <h2 className="page-title">라이브러리</h2>
+          <div className="max-w-[1400px] mx-auto">
+            <h2 className="text-2xl font-bold text-white mb-8 tracking-tight">라이브러리</h2>
             {loading ? (
-              <p>로딩 중...</p>
+              <div className="flex items-center justify-center py-20">
+                <p className="text-slate-500 animate-pulse">에셋 로딩 중...</p>
+              </div>
             ) : (
               <AssetGrid 
                 assets={filteredAssets} 
@@ -136,6 +153,7 @@ export default function DesktopLibraryView() {
           </div>
         </div>
       </div>
+
 
       <AssetInspector 
         asset={selectedAsset} 
