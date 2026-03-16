@@ -1,30 +1,43 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useIsDesktop } from '../../hooks/useIsDesktop';
 import DashboardView from '../(desktop)/library/DesktopLibraryView';
 import MobileLibraryView from '../(mobile)/library/MobileLibraryView';
 import { MobileShell } from '../../components/layout/MobileShell';
 import { usePathname } from 'next/navigation';
+import { DesktopShell } from '../../components/layout/DesktopShell';
+
+import { useState } from 'react';
+import { useAssets } from '../../hooks/useAssets';
+import { useLibraryFilters } from '../../hooks/useLibraryFilters';
+import { useAssetSelection } from '../../hooks/useAssetSelection';
 
 export default function UnifiedLibraryPage() {
+
   const pathname = usePathname();
-  const [isDesktop, setIsDesktop] = useState<boolean | null>(null);
-
-
-  useEffect(() => {
-    const checkIsDesktop = () => setIsDesktop(window.innerWidth >= 1024);
-    checkIsDesktop();
-    window.addEventListener('resize', checkIsDesktop);
-    return () => window.removeEventListener('resize', checkIsDesktop);
-  }, []);
+  const isDesktop = useIsDesktop();
+  
+  // Lifted state to persist across mobile <-> desktop transitions
+  const { assets, loading, filter, setFilter, selectedAsset, openDetail, closeDetail, deleteAsset, updateAsset, addAsset } = useAssets();
+  const { 
+    searchText, setSearchText, isFilterOpen, setIsFilterOpen, filteredAssets, handleFilterApply, handleFilterReset 
+  } = useLibraryFilters(assets);
+  const { selectedIds, setSelectedIds } = useAssetSelection();
+  const [isSelectionMode, setIsSelectionMode] = useState(false);
 
   if (isDesktop === null) return null;
 
+  const commonProps = {
+    assets, loading, filter, setFilter, selectedAsset, openDetail, closeDetail, deleteAsset, updateAsset, addAsset,
+    selectedIds, setSelectedIds,
+    searchText, setSearchText, isFilterOpen, setIsFilterOpen, filteredAssets, handleFilterApply, handleFilterReset
+  };
+
   if (isDesktop) {
     return (
-      <div className="min-h-screen bg-slate-950 text-slate-50">
-        <DashboardView />
-      </div>
+      <DesktopShell>
+        <DashboardView {...commonProps} />
+      </DesktopShell>
     );
   }
 
@@ -32,7 +45,12 @@ export default function UnifiedLibraryPage() {
     <MobileShell 
       showTabs={!pathname.includes('/capture')}
     >
-      <MobileLibraryView />
+      <MobileLibraryView 
+        {...commonProps} 
+        isSelectionMode={isSelectionMode} 
+        setIsSelectionMode={setIsSelectionMode} 
+      />
     </MobileShell>
   );
 }
+

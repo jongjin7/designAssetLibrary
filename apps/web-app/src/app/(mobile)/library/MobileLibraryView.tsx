@@ -1,74 +1,124 @@
 'use client';
 
-import { useState, useMemo } from 'react';
+import { useState } from 'react';
+import { useLibraryFilters } from '../../../hooks/useLibraryFilters';
 import { TopBar } from '../../../components/layout/TopBar';
-import { SearchBar } from '../../../components/shared/SearchBar';
-import { AdvancedFilter } from '../../../components/library/AdvancedFilter';
+import { LibraryControls } from '../../../components/library/LibraryControls';
+import { AssetSelectionBar } from '../../../components/library/AssetSelectionBar';
 import { FilterChips } from '../../../components/library/FilterChips';
 import { AssetGrid } from '../../../components/library/AssetGrid';
 import { AssetDetail } from '../../../components/detail/AssetDetail';
-import { useAssets } from '../../../hooks/useAssets';
+import { Asset } from '../../../types/asset';
 
-export default function LibraryPage() {
-  const { assets, loading, filter, setFilter, selectedAsset, openDetail, closeDetail, deleteAsset, updateAsset } = useAssets();
-  const [searchText, setSearchText] = useState('');
-  const [isFilterOpen, setIsFilterOpen] = useState(false);
-  const [activeFilters, setActiveFilters] = useState<any>(null);
+interface MobileLibraryViewProps {
+  assets: Asset[];
+  loading: boolean;
+  filter: string;
+  setFilter: (f: any) => void;
+  selectedAsset: any;
+  openDetail: (asset: any) => void;
+  closeDetail: () => void;
+  deleteAsset: (id: string) => Promise<void>;
+  updateAsset: (id: string, data: any) => Promise<void>;
+  
+  // Selection
+  selectedIds: Set<string>;
+  setSelectedIds: (s: Set<string>) => void;
+  isSelectionMode: boolean;
+  setIsSelectionMode: (m: boolean) => void;
+  
+  // Filtering
+  searchText: string;
+  setSearchText: (v: string) => void;
+  isFilterOpen: boolean;
+  setIsFilterOpen: (v: boolean) => void;
+  filteredAssets: Asset[];
+  handleFilterApply: (f: any) => void;
+  handleFilterReset: () => void;
+}
 
-  // Inline filtering for text search
-  const filteredAssets = useMemo(() => {
-    let result = assets;
-    if (searchText) {
-      const term = searchText.toLowerCase();
-      result = result.filter(a => 
-        a.fileName.toLowerCase().includes(term) ||
-        a.tags.some(t => t.toLowerCase().includes(term))
-      );
+export default function MobileLibraryView({
+  assets, loading, filter, setFilter, selectedAsset, openDetail, closeDetail, deleteAsset, updateAsset,
+  selectedIds, setSelectedIds, isSelectionMode, setIsSelectionMode,
+  searchText, setSearchText, isFilterOpen, setIsFilterOpen, filteredAssets, handleFilterApply, handleFilterReset
+}: MobileLibraryViewProps) {
+
+  const handleSelect = (id: string) => {
+    const newSelected = new Set(selectedIds);
+    if (newSelected.has(id)) {
+      newSelected.delete(id);
+    } else {
+      newSelected.add(id);
     }
-    if (activeFilters) {
-      if (activeFilters.color) {
-        // Simple color matching based on tags or future palette analysis
-        result = result.filter(a => 
-          a.tags.some(t => t.toLowerCase().includes(activeFilters.color.toLowerCase())) ||
-          a.palette?.some(p => p.toLowerCase().includes(activeFilters.color.toLowerCase()))
-        );
-      }
-      if (activeFilters.tags) {
-        const tagTerm = activeFilters.tags.toLowerCase().replace('#', '');
-        result = result.filter(a => a.tags.some(t => t.toLowerCase().includes(tagTerm)));
-      }
-    }
-    return result;
-  }, [assets, searchText, activeFilters]);
-
-  const handleFilterApply = (filters: any) => {
-    setActiveFilters(filters);
+    setSelectedIds(newSelected);
+    if (newSelected.size > 0) setIsSelectionMode(true);
+    else setIsSelectionMode(false);
   };
 
-  const handleFilterReset = () => {
-    setActiveFilters(null);
+  const handleAssetTap = (asset: any) => {
+    if (isSelectionMode || selectedIds.size > 0) {
+      handleSelect(asset.id);
+      return;
+    }
+    openDetail(asset);
   };
+
+  const handleBulkDelete = () => {
+    if (window.confirm(`${selectedIds.size}개의 에셋을 삭제하시겠습니까?`)) {
+      setSelectedIds(new Set());
+      setIsSelectionMode(false);
+    }
+  };
+
+  const handleToggleSelectionMode = () => {
+    if (isSelectionMode) {
+      setSelectedIds(new Set());
+      setIsSelectionMode(false);
+    } else {
+      setIsSelectionMode(true);
+    }
+  };
+
+
 
   return (
     <>
-      <TopBar />
+      <TopBar 
+        rightElement={
+          <button 
+            onClick={handleToggleSelectionMode}
+            className={`text-sm font-bold px-3 py-1 rounded-full transition-all ${
+              isSelectionMode 
+              ? 'bg-indigo-500 text-white shadow-lg shadow-indigo-500/30' 
+              : 'text-slate-400 hover:text-white'
+            }`}
+          >
+            {isSelectionMode ? '완료' : '선택'}
+          </button>
+        }
+      />
 
       <section className="library-screen">
-        <SearchBar 
-          value={searchText}
-          onChange={setSearchText}
-          onFilterClick={() => setIsFilterOpen(!isFilterOpen)}
-          placeholder="에셋 이름, 태그로 검색..." 
+        <LibraryControls 
+          isMobile={true}
+          searchText={searchText}
+          onSearchChange={setSearchText}
+          isFilterOpen={isFilterOpen}
+          onFilterToggle={() => setIsFilterOpen(!isFilterOpen)}
+          onFilterApply={handleFilterApply}
+          onFilterReset={handleFilterReset}
+        />
+
+        <AssetSelectionBar 
+          isMobile={true}
+          selectedCount={selectedIds.size}
+          onCancel={() => {
+            setSelectedIds(new Set());
+            setIsSelectionMode(false);
+          }}
+          onDelete={handleBulkDelete}
         />
         
-        {isFilterOpen && (
-          <AdvancedFilter 
-            isMobile={true}
-            onApply={handleFilterApply}
-            onReset={handleFilterReset}
-          />
-        )}
-
         <FilterChips active={filter} onChange={(f) => setFilter(f as any)} />
         
         {loading ? (
@@ -76,11 +126,24 @@ export default function LibraryPage() {
             <p>자산을 불러오는 중...</p>
           </div>
         ) : (
-          <AssetGrid assets={filteredAssets} onAssetTap={openDetail} />
+          <AssetGrid 
+            assets={filteredAssets} 
+            onAssetTap={handleAssetTap} 
+            selectedIds={selectedIds}
+            onSelect={(id) => handleSelect(id)}
+          />
         )}
       </section>
 
-      <AssetDetail asset={selectedAsset} onClose={closeDetail} onDelete={deleteAsset} />
+
+
+      <AssetDetail 
+        asset={selectedAsset} 
+        onClose={closeDetail} 
+        onDelete={deleteAsset} 
+        onUpdate={updateAsset}
+      />
     </>
   );
 }
+

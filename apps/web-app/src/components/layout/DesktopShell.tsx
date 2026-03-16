@@ -26,7 +26,7 @@ export function DesktopShell({ children }: DesktopShellProps) {
   };
 
   return (
-    <div className="flex h-screen bg-slate-950 overflow-hidden">
+    <div className="min-h-screen flex h-screen bg-slate-950 overflow-hidden">
       {/* Column 1: Sidebar */}
       <aside 
         className={`flex flex-col bg-white/[0.02] border-r border-white/[0.06] transition-all duration-300 ease-in-out ${isSidebarCollapsed ? 'w-20' : 'w-[260px]'}`}

@@ -1,19 +1,14 @@
 'use client';
 
-import { SettingsContent } from '../../components/shared/profile/SettingsContent';
+import { SettingsContent } from '../../components/shared/settings/SettingsContent';
 import { DesktopShell } from '../../components/layout/DesktopShell';
 import { MobileShell } from '../../components/layout/MobileShell';
-import { useEffect, useState } from 'react';
+import { useIsDesktop } from '../../hooks/useIsDesktop';
 
-export default function UnifiedProfilePage() {
-  const [isDesktop, setIsDesktop] = useState(false);
+export default function ProfileSettingsPage() {
 
-  useEffect(() => {
-    const checkIsDesktop = () => setIsDesktop(window.innerWidth >= 1024);
-    checkIsDesktop();
-    window.addEventListener('resize', checkIsDesktop);
-    return () => window.removeEventListener('resize', checkIsDesktop);
-  }, []);
+  const isDesktop = useIsDesktop();
+
 
   // 공통 설정 화면
   const content = <SettingsContent isMobile={!isDesktop} onLogout={() => console.log('Logout')} />;
