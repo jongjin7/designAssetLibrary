@@ -2,7 +2,11 @@
 
 import Link from 'next/link';
 
-export function TopBar() {
+interface TopBarProps {
+  rightElement?: React.ReactNode;
+}
+
+export function TopBar({ rightElement }: TopBarProps) {
   return (
     <header className="sticky top-0 z-20 flex items-center justify-between px-6 py-3.5 bg-slate-950/80 backdrop-blur-xl border-b border-white/5">
       <Link href="/library" className="group">
@@ -10,7 +14,8 @@ export function TopBar() {
           NOVA
         </h1>
       </Link>
+      {rightElement && <div>{rightElement}</div>}
     </header>
-
   );
 }
+
