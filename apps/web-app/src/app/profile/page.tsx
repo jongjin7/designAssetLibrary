@@ -1,9 +1,8 @@
 'use client';
 
 import { SettingsContent } from '../../components/shared/profile/SettingsContent';
-import { BottomTabs } from '../../components/layout/BottomTabs';
-import { NetworkStatus } from '../../components/shared/NetworkStatus';
 import { DesktopShell } from '../../components/layout/DesktopShell';
+import { MobileShell } from '../../components/layout/MobileShell';
 import { useEffect, useState } from 'react';
 
 export default function UnifiedProfilePage() {
@@ -36,13 +35,9 @@ export default function UnifiedProfilePage() {
 
   // 모바일 레이아웃 쉘 (default)
   return (
-    <div className="h-screen flex flex-col bg-slate-950 overflow-hidden">
-      <NetworkStatus />
-      <main className="flex-1 overflow-y-auto pb-20">
-        {content}
-      </main>
-      <BottomTabs />
-    </div>
+    <MobileShell>
+      {content}
+    </MobileShell>
   );
 }
 

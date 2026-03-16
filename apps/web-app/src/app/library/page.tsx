@@ -3,11 +3,13 @@
 import { useEffect, useState } from 'react';
 import DashboardView from '../(desktop)/library/DesktopLibraryView';
 import MobileLibraryView from '../(mobile)/library/MobileLibraryView';
-import { NetworkStatus } from '../../components/shared/NetworkStatus';
-import { BottomTabs } from '../../components/layout/BottomTabs';
+import { MobileShell } from '../../components/layout/MobileShell';
+import { usePathname } from 'next/navigation';
 
 export default function UnifiedLibraryPage() {
+  const pathname = usePathname();
   const [isDesktop, setIsDesktop] = useState<boolean | null>(null);
+
 
   useEffect(() => {
     const checkIsDesktop = () => setIsDesktop(window.innerWidth >= 1024);
@@ -27,14 +29,10 @@ export default function UnifiedLibraryPage() {
   }
 
   return (
-    <div className="flex flex-col min-h-[100dvh] max-w-[760px] mx-auto relative has-[.capture-screen]:pb-0">
-      <NetworkStatus />
-      <div className="flex-1 overflow-y-auto pb-[calc(72px+env(safe-area-inset-bottom,0px))] has-[.capture-screen]:pb-0 has-[.network-status]:pt-[calc(var(--safe-area-top,0px)+28px)]">
-        <MobileLibraryView />
-      </div>
-      <div className="has-[.capture-screen]:hidden">
-        <BottomTabs />
-      </div>
-    </div>
+    <MobileShell 
+      showTabs={!pathname.includes('/capture')}
+    >
+      <MobileLibraryView />
+    </MobileShell>
   );
 }
