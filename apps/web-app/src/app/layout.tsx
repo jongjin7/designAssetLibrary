@@ -33,7 +33,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="ko" suppressHydrationWarning>
-      <body suppressHydrationWarning>
+      <head>
         {/* beforeinstallprompt를 번들 로드 전에 최우선으로 캐치 */}
         <script
           dangerouslySetInnerHTML={{
@@ -57,6 +57,8 @@ export default function RootLayout({
             `,
           }}
         />
+      </head>
+      <body suppressHydrationWarning>
         <PWAHandler />
         {children}
       </body>

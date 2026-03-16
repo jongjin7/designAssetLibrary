@@ -10,7 +10,7 @@ export const NVAssetGrid: React.FC<NVAssetGridProps> = ({ children, className = 
     <div 
       className={`
         grid grid-cols-2 md:grid-cols-3 lg:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-5
-        gap-6 px-4 md:px-8
+        gap-6  
         ${className}
       `.replace(/\s+/g, ' ').trim()}
     >
