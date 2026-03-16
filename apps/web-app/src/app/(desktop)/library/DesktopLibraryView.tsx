@@ -7,8 +7,8 @@ import { AssetGrid } from '../../../components/library/AssetGrid';
 import { AssetInspector } from '../../../components/detail/AssetInspector';
 import { DropZone } from '../../../components/shared/DropZone';
 import { SearchBar } from '../../../components/shared/SearchBar';
+import { AdvancedFilter } from '../../../components/library/AdvancedFilter';
 import { DesktopShell } from '../../../components/layout/DesktopShell';
-import { Palette, Calendar, Tag } from 'lucide-react';
 import { useState, useMemo } from 'react';
 
 export default function DesktopLibraryView() {
@@ -18,6 +18,7 @@ export default function DesktopLibraryView() {
   const [searchText, setSearchText] = useState('');
   const [selectedIds, setSelectedIds] = useState<Set<string>>(new Set());
   const [isFilterOpen, setIsFilterOpen] = useState(false);
+  const [activeFilters, setActiveFilters] = useState<any>(null);
 
   const filteredAssets = useMemo(() => {
     let result = assets;
@@ -28,8 +29,28 @@ export default function DesktopLibraryView() {
         a.tags.some(t => t.toLowerCase().includes(term))
       );
     }
+    if (activeFilters) {
+      if (activeFilters.color) {
+        result = result.filter(a => 
+          a.tags.some(t => t.toLowerCase().includes(activeFilters.color.toLowerCase())) ||
+          a.palette?.some(p => p.toLowerCase().includes(activeFilters.color.toLowerCase()))
+        );
+      }
+      if (activeFilters.tags) {
+        const tagTerm = activeFilters.tags.toLowerCase().replace('#', '');
+        result = result.filter(a => a.tags.some(t => t.toLowerCase().includes(tagTerm)));
+      }
+    }
     return result;
-  }, [assets, searchText]);
+  }, [assets, searchText, activeFilters]);
+
+  const handleFilterApply = (filters: any) => {
+    setActiveFilters(filters);
+  };
+
+  const handleFilterReset = () => {
+    setActiveFilters(null);
+  };
 
   const handleSelect = (id: string, e: React.MouseEvent) => {
     const newSelected = new Set(selectedIds);
@@ -71,34 +92,10 @@ export default function DesktopLibraryView() {
         </header>
 
         {isFilterOpen && (
-          <div className="advanced-filter-bar">
-            <div className="filter-group">
-              <Palette size={14} className="filter-icon" />
-              <select className="filter-select">
-                <option value="">모든 색상</option>
-                <option value="red">Red</option>
-                <option value="blue">Blue</option>
-                <option value="green">Green</option>
-              </select>
-            </div>
-            <div className="filter-group">
-              <Tag size={14} className="filter-icon" />
-              <input type="text" className="filter-input input-tags" placeholder="태그 입력 (예: #ui, #web)" />
-            </div>
-            <div className="filter-group">
-              <Calendar size={14} className="filter-icon" />
-              <select className="filter-select">
-                <option value="">모든 기간</option>
-                <option value="today">오늘</option>
-                <option value="week">최근 7일</option>
-                <option value="month">최근 30일</option>
-              </select>
-            </div>
-            <div className="filter-actions">
-              <button className="filter-btn filter-btn--reset">초기화</button>
-              <button className="filter-btn filter-btn--apply">적용</button>
-            </div>
-          </div>
+          <AdvancedFilter 
+            onApply={handleFilterApply}
+            onReset={handleFilterReset}
+          />
         )}
 
         <div className="scroll-area">
