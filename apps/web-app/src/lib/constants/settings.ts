@@ -1,17 +1,17 @@
 import { User, Bell, Shield, Palette, HelpCircle, LayoutGrid, Database, LucideIcon } from 'lucide-react';
 
-export interface ProfileItem {
+export interface SettingsItemType {
   icon: LucideIcon;
   label: string;
   sub?: string;
 }
 
-export interface ProfileGroup {
+export interface SettingsGroup {
   title: string;
-  items: ProfileItem[];
+  items: SettingsItemType[];
 }
 
-export const PROFILE_GROUPS: ProfileGroup[] = [
+export const SETTINGS_GROUPS: SettingsGroup[] = [
   {
     title: '워크스페이스',
     items: [

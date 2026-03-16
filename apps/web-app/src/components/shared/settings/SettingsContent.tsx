@@ -2,9 +2,10 @@
 
 import { LogOut } from 'lucide-react';
 import { NVButton } from '@nova/ui';
-import { PROFILE_GROUPS } from '../../../lib/constants/profile';
-import { ProfileSection, ProfileItem, ProfileHeader } from './ProfileComponents';
+import { SETTINGS_GROUPS } from '../../../lib/constants/settings';
+import { SettingsSection, SettingsItem } from './SettingsComponents';
 import { InstallBanner } from '../InstallBanner';
+import { ProfileCard } from './ProfileCard';
 
 interface SettingsContentProps {
   isMobile?: boolean;
@@ -22,7 +23,7 @@ export function SettingsContent({ isMobile = false, onLogout }: SettingsContentP
       </header>
 
       <div className={`px-5 ${!isMobile ? 'w-full mb-2' : ''}`}>
-        <ProfileHeader
+        < ProfileCard
           name="NOVA Designer"
           email="user@nova.design"
         />
@@ -33,23 +34,23 @@ export function SettingsContent({ isMobile = false, onLogout }: SettingsContentP
       </div>
 
       <div className={`px-5 ${!isMobile ? 'grid grid-cols-1 lg:grid-cols-2 gap-x-6' : 'flex flex-col gap-1'}`}>
-        {PROFILE_GROUPS.map((group, index) => (
+        {SETTINGS_GROUPS.map((group, index) => (
           <div 
             key={group.title} 
             className={`${!isMobile ? 'h-full flex flex-col animate-in fade-in slide-in-from-bottom-4 duration-500 fill-mode-both' : ''}`}
             style={!isMobile ? { animationDelay: `${(index + 1) * 100}ms` } : undefined}
           >
-            <ProfileSection title={group.title} className="h-full">
+            <SettingsSection title={group.title} className="h-full">
 
               {group.items.map(item => (
-                <ProfileItem
+                <SettingsItem
                   key={item.label}
                   icon={item.icon}
                   label={item.label}
                   sub={item.sub}
                 />
               ))}
-            </ProfileSection>
+            </SettingsSection>
           </div>
         ))}
       </div>
@@ -66,6 +67,7 @@ export function SettingsContent({ isMobile = false, onLogout }: SettingsContentP
           로그아웃
         </NVButton>
       </div>
+
 
       <p className={`text-center text-xs text-slate-500 p-4 mt-4 ${!isMobile ? 'opacity-50' : ''}`}>
         NOVA v1.1.0 {isMobile ? '(Mobile Optimized)' : '(Desktop View)'}
