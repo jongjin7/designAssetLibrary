@@ -154,7 +154,7 @@ export function AdvancedFilter({ onApply, onReset, className = '', isMobile = fa
 
   return (
     <div className={cn(
-      "w-full bg-slate-950/20 backdrop-blur-md overflow-hidden  rounded-lg",
+      "w-full bg-slate-950/20 backdrop-blur-md overflow-hidden",
       className
     )}>
       {content}

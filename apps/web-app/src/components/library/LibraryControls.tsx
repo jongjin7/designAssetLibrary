@@ -68,7 +68,7 @@ export function LibraryControls({
       {isFilterOpen && (
         <div className="px-5 py-1.5 border-b border-white/5 bg-white/[0.01]">
             <AdvancedFilter 
-              className={isFilterOpen ? "!bg-white/3" : ""}
+              className={isFilterOpen ? "!bg-white/3 rounded-lg" : ""}
               isMobile={isMobile}
               onApply={onFilterApply}
               onReset={onFilterReset}
@@ -113,12 +113,13 @@ export function LibraryControls({
 
         <div className="flex-1 max-w-[320px] mx-auto px-4" style={{ WebkitAppRegion: 'no-drag' } as any}>
           <SearchBar 
-              size="sm"
-              value={searchText}
-              onChange={onSearchChange}
-              placeholder="에셋 이름, 태그로 검색..."
-              showFilter={true}
-              onFilterClick={onFilterToggle}
+            size="sm"
+            value={searchText}
+            onChange={onSearchChange}
+            placeholder="에셋 이름, 태그로 검색..."
+            showFilter={true}
+            onFilterClick={onFilterToggle}
+            isFilterActive={isFilterOpen}
           />
         </div>
 
@@ -158,6 +159,7 @@ export function LibraryControls({
 
       {isFilterOpen && (
         <AdvancedFilter 
+          className={isFilterOpen ? "!bg-white/3" : ""}
           isMobile={false}
           onApply={onFilterApply}
           onReset={onFilterReset}

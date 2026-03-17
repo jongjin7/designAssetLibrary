@@ -13,7 +13,7 @@ interface SearchBarProps {
   inputRef?: React.RefObject<HTMLInputElement | null>;
   showFilter?: boolean;
   isFilterActive?: boolean;
-  size?: 'xs' | 'sm' | 'md' | 'lg';
+  size?: 'sm' | 'md' | 'lg';
 }
 
 export function SearchBar(props: SearchBarProps) {
