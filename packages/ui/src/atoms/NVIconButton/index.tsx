@@ -16,8 +16,14 @@ export const NVIconButton: React.FC<NVIconButtonProps> = ({
   className = '', 
   ...props 
 }) => {
-  const baseStyles = 'inline-flex items-center justify-center transition-all duration-200 active:scale-90 disabled:opacity-40 disabled:pointer-events-none rounded-xl [&_svg]:text-inherit';
+  const baseStyles = 'inline-flex items-center justify-center transition-all duration-200 active:scale-90 disabled:opacity-40 disabled:pointer-events-none [&_svg]:text-inherit';
   
+  const roundedStyles = {
+    sm: 'rounded-lg',
+    md: 'rounded-lg',
+    lg: 'rounded-xl'
+  };
+
   const variants = {
     primary: 'bg-gradient-to-br from-indigo-500 to-indigo-700 text-white shadow-[0_8px_20px_-6px_rgba(79,70,229,0.5)] hover:shadow-[0_12px_24px_-6px_rgba(79,70,229,0.6)] hover:-translate-y-0.5',
     secondary: 'bg-white/5 border border-white/10 text-slate-400 hover:text-white hover:bg-white/10 hover:border-white/20',
@@ -40,7 +46,7 @@ export const NVIconButton: React.FC<NVIconButtonProps> = ({
   };
 
   const finalIconSize = iconSize || defaultIconSizes[size];
-  const combinedClasses = `${baseStyles} ${variants[variant]} ${sizes[size]} ${className}`;
+  const combinedClasses = `${baseStyles} ${variants[variant]} ${sizes[size]} ${roundedStyles[size]} ${className}`;
 
   return (
     <button className={combinedClasses} {...props}>

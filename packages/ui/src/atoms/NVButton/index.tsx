@@ -12,7 +12,13 @@ export const NVButton: React.FC<NVButtonProps> = ({
   className = '', 
   ...props 
 }) => {
-  const baseStyles = 'inline-flex items-center justify-center font-semibold transition-all duration-200 active:scale-95 disabled:opacity-40 disabled:pointer-events-none rounded-xl tracking-tight [&_svg]:text-inherit';
+  const baseStyles = 'inline-flex items-center justify-center font-semibold transition-all duration-200 active:scale-95 disabled:opacity-40 disabled:pointer-events-none tracking-tight [&_svg]:text-inherit';
+  
+  const roundedStyles = {
+    sm: 'rounded-lg',
+    md: 'rounded-lg',
+    lg: 'rounded-xl'
+  };
   
   const variants = {
     // Premium Indigo Gradient
@@ -40,7 +46,7 @@ export const NVButton: React.FC<NVButtonProps> = ({
     lg: 'px-8 py-4 text-base gap-2.5'
   };
 
-  const combinedClasses = `${baseStyles} ${variants[variant]} ${sizes[size]} ${className}`;
+  const combinedClasses = `${baseStyles} ${variants[variant]} ${sizes[size]} ${roundedStyles[size]} ${className}`;
 
   return (
     <button className={combinedClasses} {...props}>

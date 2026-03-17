@@ -24,8 +24,14 @@ export const NVSelect: React.FC<NVSelectProps> = ({
     lg: 'px-5 py-4 text-base gap-3'
   };
 
+  const roundedStyles = {
+    sm: 'rounded-lg',
+    md: 'rounded-lg',
+    lg: 'rounded-xl'
+  };
+
   const containerClasses = `
-    flex items-center bg-white/5 border border-white/10 rounded-xl
+    flex items-center bg-white/5 border border-white/10 ${roundedStyles[size]}
     transition-all focus-within:border-indigo-500 focus-within:bg-white/10
     relative
     has-[:disabled]:opacity-40 has-[:disabled]:pointer-events-none
