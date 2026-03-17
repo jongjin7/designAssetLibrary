@@ -4,12 +4,6 @@ import { SearchBar } from '../shared/SearchBar';
 import { AdvancedFilter } from './AdvancedFilter';
 import { LibraryFilters } from '../../hooks/useLibraryFilters';
 import { 
-  NVPopover, 
-  NVPopoverTrigger, 
-  NVPopoverContent 
-} from '@nova/ui';
-import { ViewOptionsPopover } from './ViewOptionsPopover';
-import { 
   ArrowLeftRight, Plus,
   ChevronRight, ChevronLeft, 
   Cloud, 
@@ -17,10 +11,14 @@ import {
   LayoutGrid, 
   Filter, 
   Pin,
-  Search,
-  ChevronDown
 } from 'lucide-react';
-import { NVIconButton } from '@nova/ui';
+import { ViewOptionsPopover } from './ViewOptionsPopover';
+import { 
+  NVPopover, 
+  NVPopoverTrigger, 
+  NVPopoverContent,
+  NVIconButton,
+} from '@nova/ui';
 
 interface LibraryControlsProps {
   searchText: string;
@@ -46,20 +44,16 @@ export function LibraryControls({
   onSearchToggle
 }: LibraryControlsProps) {
   const [zoom, setZoom] = useState(50);
-  const [isViewOptionsOpen, setIsViewOptionsOpen] = useState(false);
-  const inputRef = React.useRef<HTMLInputElement>(null);
 
-
-  React.useEffect(() => {
-    if (isSearchVisible && inputRef.current) {
-      inputRef.current.focus();
-    }
-  }, [isSearchVisible]);
+  const handleSearchChange = (value: string) => {
+    onSearchChange(value);
+    onSearchToggle?.();
+  };
 
   if (isMobile) {
     return (
       <div className="flex flex-col w-full">
-        <div className="">
+        <div className="p-5">
           <SearchBar 
             value={searchText}
             onChange={onSearchChange}
@@ -70,7 +64,7 @@ export function LibraryControls({
         </div>
 
         {isFilterOpen && (
-          <div className="">
+          <div className="p-5">
             <AdvancedFilter 
               isMobile={isMobile}
               onApply={onFilterApply}
@@ -86,20 +80,20 @@ export function LibraryControls({
     <div className="flex flex-col w-full select-none">
       {/* Premium Desktop Toolbar (macOS Style) */}
       <header 
-        className="h-12 flex items-center px-4 bg-slate-950/40 backdrop-blur-2xl border-b border-white/[0.05] sticky top-0 z-30"
+        className="h-12 flex items-center justify-between px-4 bg-slate-950/40 backdrop-blur-2xl border-b border-white/[0.05] sticky top-0 z-30"
         style={{ WebkitAppRegion: 'drag' } as any}
       >
         <div className="flex items-center gap-0 ml-2">
           <NVIconButton icon={Plus} variant="ghost" size="sm" className="text-slate-400 hover:text-white" />
           <NVIconButton icon={ArrowLeftRight} variant="ghost" size="sm" className="text-slate-400 hover:text-white" onClick={onSearchToggle}
-            title="검색 (Cmd+F)" />
+            title="이동 (Cmd+F)" />
           <NVIconButton icon={ChevronLeft} variant="ghost" size="sm" className="text-slate-600" />
           <NVIconButton icon={ChevronRight} variant="ghost" size="sm" className="text-slate-600" />
         </div>
 
         {/* Title */}
-        <div className="ml-4 text-[13px] font-semibold text-slate-300 tracking-tight">
-          InteriorDesign
+        <div className="ml-4 text-sm font-semibold text-slate-300 tracking-tight">
+          현재 선택될 폴더
         </div>
 
         {/* Zoom Slider */}
@@ -114,9 +108,15 @@ export function LibraryControls({
           />
         </div>
 
+        <SearchBar 
+            value={searchText}
+            
+            placeholder="에셋 이름, 태그로 검색..."
+            showFilter={true}
+        />
+
         {/* Right Actions */}
-        <div className="ml-auto flex items-center gap-0.5 relative" style={{ WebkitAppRegion: 'no-drag' } as any}>
-          
+        <div className="flex items-center gap-0.5 pl-6 relative" style={{ WebkitAppRegion: 'no-drag' } as any}>
           <NVPopover>
             <NVPopoverTrigger asChild>
               <NVIconButton 
@@ -144,22 +144,6 @@ export function LibraryControls({
             className={isFilterOpen ? 'text-indigo-400 bg-indigo-500/10' : 'text-slate-400'} 
             onClick={onFilterToggle}
           />
-          
-          {/* Integrated Search Bar (Toggleable on Desktop) */}
-          <div className={`relative ml-2 overflow-hidden transition-all duration-300 ease-in-out flex items-center ${isSearchVisible ? 'w-56 opacity-100' : 'w-0 opacity-0'}`} style={{ WebkitAppRegion: 'no-drag' } as any}>
-            <div className="absolute left-2.5 top-1/2 -translate-y-1/2 flex items-center gap-1 text-slate-500 pointer-events-none">
-              <Search size={13} />
-              <ChevronDown size={10} className="opacity-50" />
-            </div>
-            <input 
-              ref={inputRef}
-              type="text"
-              value={searchText}
-              onChange={(e) => onSearchChange(e.target.value)}
-              placeholder="Search assets..."
-              className="w-full h-7 bg-white/[0.05] border border-white/[0.1] rounded-md pl-10 pr-3 text-[12px] text-slate-200 placeholder:text-slate-600 focus:outline-none focus:border-indigo-500/50 transition-all shadow-inner"
-            />
-          </div>
 
           <NVIconButton icon={Pin} variant="ghost" size="sm" className="ml-1 text-slate-500 hover:text-slate-300" />
         </div>

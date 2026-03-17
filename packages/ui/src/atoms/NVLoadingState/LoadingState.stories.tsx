@@ -1,6 +1,8 @@
 import React from 'react';
 import type { Meta, StoryObj } from '@storybook/react';
+import { ImageIcon, Wand2 } from 'lucide-react';
 import { NVLoadingState } from './index';
+
 
 const meta: Meta<typeof NVLoadingState> = {
   title: 'Atoms/NVLoadingState',
@@ -9,6 +11,10 @@ const meta: Meta<typeof NVLoadingState> = {
   argTypes: {
     message: { control: 'text' },
     fullHeight: { control: 'boolean' },
+    mode: {
+      control: 'select',
+      options: ['loading', 'syncing', 'success', 'error', 'empty'],
+    },
   },
   parameters: {
     layout: 'centered',
@@ -20,14 +26,53 @@ type Story = StoryObj<typeof NVLoadingState>;
 
 export const Default: Story = {
   args: {
-    message: '자산을 불러오는 중...',
+    mode: 'loading',
+  },
+};
+
+export const Syncing: Story = {
+  args: {
+    mode: 'syncing',
+  },
+};
+
+export const Success: Story = {
+  args: {
+    mode: 'success',
+  },
+};
+
+export const Error: Story = {
+  args: {
+    mode: 'error',
+  },
+};
+
+export const Empty: Story = {
+  args: {
+    mode: 'empty',
   },
 };
 
 export const CustomMessage: Story = {
   args: {
-    message: '데이터를 동기화하고 있습니다...',
+    mode: 'loading',
+    message: '새로운 에셋을 가공하고 있습니다...',
   },
+};
+
+// iconAs: 컴포넌트 레퍼런스 전달 — 모드 색상·size=48 자동 적용
+export const CustomIconComponent: Story = {
+  render: () => (
+    <NVLoadingState mode="syncing" message="에셋을 가져오는 중..." iconAs={ImageIcon} />
+  ),
+};
+
+// icon: 렌더된 JSX 직접 전달
+export const CustomIconNode: Story = {
+  render: () => (
+    <NVLoadingState mode="loading" message="마법을 부리는 중..." icon={<Wand2 size={48} color="#A78BFA" strokeWidth={1.5} />} />
+  ),
 };
 
 export const FullHeight: Story = {
