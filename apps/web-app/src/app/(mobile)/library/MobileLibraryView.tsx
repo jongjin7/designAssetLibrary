@@ -75,9 +75,8 @@ export default function MobileLibraryView({
 
   return (
     <>
-      <TopBar />
-
-      <section className="library-screen">
+      <div className="sticky top-0 z-[60] bg-slate-950/80 backdrop-blur-3xl border-b border-white/[0.08] shadow-2xl">
+        <TopBar sticky={false} className="bg-transparent backdrop-blur-none border-none px-5" />
         <LibraryControls 
           isMobile={true}
           searchText={searchText}
@@ -87,7 +86,7 @@ export default function MobileLibraryView({
           onFilterApply={handleFilterApply}
           onFilterReset={handleFilterReset}
         />
-
+        <FilterChips active={filter} onChange={(f) => setFilter(f as any)} />
         <AssetSelectionBar 
           isMobile={true}
           selectedCount={selectedIds.size}
@@ -97,9 +96,9 @@ export default function MobileLibraryView({
           }}
           onDelete={handleBulkDelete}
         />
-        
-        <FilterChips active={filter} onChange={(f) => setFilter(f as any)} />
-        
+      </div>
+
+      <section className="px-5">
         {loading ? (
           <div className="library-loading" style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', padding: '40px', color: 'var(--color-slate-400)' }}>
             <p>자산을 불러오는 중...</p>
@@ -114,8 +113,6 @@ export default function MobileLibraryView({
           />
         )}
       </section>
-
-
 
       <AssetDetail 
         asset={selectedAsset} 

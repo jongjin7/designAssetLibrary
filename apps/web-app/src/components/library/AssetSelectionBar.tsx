@@ -1,4 +1,5 @@
 import React from 'react';
+import { cn } from '../../lib/utils';
 
 interface AssetSelectionBarProps {
   selectedCount: number;
@@ -22,12 +23,10 @@ export function AssetSelectionBar({
   if (selectedCount === 0) return null;
 
   return (
-    <div className={`
-      sticky z-30 flex items-center justify-between p-4 rounded-2xl 
-      bg-indigo-500/10 border border-indigo-500/30 backdrop-blur-xl 
-      animate-in slide-in-from-top-4 duration-300
-      ${isMobile ? 'top-[64px] mx-5 mt-2 mb-4 p-3 shadow-2xl shadow-black/50' : 'top-0 mb-6'}
-    `}>
+    <div className={cn(
+      "flex items-center justify-between p-4 rounded-2xl bg-indigo-500/10 border border-indigo-500/30 backdrop-blur-xl animate-in slide-in-from-top-4 duration-300",
+      isMobile ? "relative mx-5 mt-1 mb-3 p-3 shadow-2xl shadow-black/50" : "sticky z-30 top-0 mb-6"
+    )}>
 
       <div className="flex items-center gap-2">
         <span className="flex items-center justify-center min-w-[24px] h-6 px-1.5 rounded-full bg-indigo-500 text-[11px] font-extrabold text-white">

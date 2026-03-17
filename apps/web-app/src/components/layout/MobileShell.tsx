@@ -22,10 +22,10 @@ export function MobileShell({
   className = ''
 }: MobileShellProps) {
   return (
-    <div className={`flex flex-col min-h-[100dvh] max-w-[760px] mx-auto relative bg-slate-950 overflow-hidden ${className}`}>
+    <div className={`flex flex-col h-[100dvh] max-w-[760px] mx-auto relative bg-slate-950 overflow-hidden ${className}`}>
       {showNetwork && <NetworkStatus />}
       
-      <main className="flex-1 overflow-y-auto pb-[calc(72px+env(safe-area-inset-bottom,0px))] scroll-smooth">
+      <main className="flex-1 overflow-y-auto pb-[calc(72px+env(safe-area-inset-bottom,0px))] scroll-smooth overscroll-none">
         {children}
       </main>
 
