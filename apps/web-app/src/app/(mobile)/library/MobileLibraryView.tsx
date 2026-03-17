@@ -7,6 +7,7 @@ import { LibraryControls } from '../../../components/library/LibraryControls';
 import { AssetSelectionBar } from '../../../components/library/AssetSelectionBar';
 import { FilterChips } from '../../../components/library/FilterChips';
 import { AssetGrid } from '../../../components/library/AssetGrid';
+import { NVLoadingState } from '@nova/ui';
 import { AssetDetail } from '../../../components/detail/AssetDetail';
 import { Asset } from '../../../types/asset';
 
@@ -99,9 +100,7 @@ export default function MobileLibraryView({
 
       <section className="px-5">
         {loading ? (
-          <div className="library-loading" style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', padding: '40px', color: 'var(--color-slate-400)' }}>
-            <p>자산을 불러오는 중...</p>
-          </div>
+          <NVLoadingState fullHeight />
         ) : (
           <AssetGrid 
             assets={filteredAssets} 

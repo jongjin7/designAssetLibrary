@@ -7,6 +7,7 @@ export * from './atoms/NVChip';
 export * from './atoms/NVEmptyState';
 export * from './atoms/NVIconButton';
 export * from './atoms/NVSwitch';
+export * from './atoms/NVLoadingState';
 export * from './atoms/NVPopover';
 
 // Molecules
