@@ -13,6 +13,7 @@ NOVA 디자인 시스템(@nova/ui)에 새로운 컴포넌트를 추가하거나 
     - `Sizes`: 모든 크기 변종 (`sm`, `md`, `lg`) 표시.
     - `Variants`: 주요 시각적 변형 (Icons, Colors 등).
     - `States`: 상호작용 상태 (Active, Disabled, Loading 등).
+    - **중요**: 스토리 파일 작성 시 최상단에 `import React from 'react';`를 반드시 포함하십시오.
 3.  **디자인 문서 업데이트**: `docs/design` 내의 관련 문서를 반드시 업데이트합니다.
     - `components-phase1.md`: 새로운 컴포넌트의 사양 및 동작 정의 추가.
     - `design-tokens.md`: 새로운 토큰이나 표준 사이즈 규격이 추가된 경우 반영.
