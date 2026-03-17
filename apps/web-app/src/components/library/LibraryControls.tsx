@@ -1,7 +1,14 @@
 import React, { useState } from 'react';
+import { cn } from '../../lib/utils';
 import { SearchBar } from '../shared/SearchBar';
 import { AdvancedFilter } from './AdvancedFilter';
 import { LibraryFilters } from '../../hooks/useLibraryFilters';
+import { 
+  NVPopover, 
+  NVPopoverTrigger, 
+  NVPopoverContent 
+} from '@nova/ui';
+import { ViewOptionsPopover } from './ViewOptionsPopover';
 import { 
   ArrowLeftRight, Plus,
   ChevronRight, ChevronLeft, 
@@ -39,7 +46,9 @@ export function LibraryControls({
   onSearchToggle
 }: LibraryControlsProps) {
   const [zoom, setZoom] = useState(50);
+  const [isViewOptionsOpen, setIsViewOptionsOpen] = useState(false);
   const inputRef = React.useRef<HTMLInputElement>(null);
+
 
   React.useEffect(() => {
     if (isSearchVisible && inputRef.current) {
@@ -82,8 +91,8 @@ export function LibraryControls({
       >
         <div className="flex items-center gap-0 ml-2">
           <NVIconButton icon={Plus} variant="ghost" size="sm" className="text-slate-400 hover:text-white" />
-            <NVIconButton icon={ArrowLeftRight} variant="ghost" size="sm" className="text-slate-400 hover:text-white" onClick={onSearchToggle}
-              title="검색 (Cmd+F)" />
+          <NVIconButton icon={ArrowLeftRight} variant="ghost" size="sm" className="text-slate-400 hover:text-white" onClick={onSearchToggle}
+            title="검색 (Cmd+F)" />
           <NVIconButton icon={ChevronLeft} variant="ghost" size="sm" className="text-slate-600" />
           <NVIconButton icon={ChevronRight} variant="ghost" size="sm" className="text-slate-600" />
         </div>
@@ -106,10 +115,28 @@ export function LibraryControls({
         </div>
 
         {/* Right Actions */}
-        <div className="ml-auto flex items-center gap-0.5" style={{ WebkitAppRegion: 'no-drag' } as any}>
-          <NVIconButton icon={Cloud} variant="ghost" size="sm" className="text-slate-400" />
-          <NVIconButton icon={Zap} variant="ghost" size="sm" className="text-slate-400" />
-          <NVIconButton icon={LayoutGrid} variant="ghost" size="sm" className="text-slate-400" />
+        <div className="ml-auto flex items-center gap-0.5 relative" style={{ WebkitAppRegion: 'no-drag' } as any}>
+          
+          <NVPopover>
+            <NVPopoverTrigger asChild>
+              <NVIconButton 
+                icon={LayoutGrid} 
+                variant="ghost" 
+                size="sm" 
+                className="data-[state=open]:text-white"
+                title="보기 옵션"
+              />
+            </NVPopoverTrigger>
+            
+            <NVPopoverContent 
+              align="end" 
+              sideOffset={8}
+              className="z-[9999]"
+            >
+              <ViewOptionsPopover />
+            </NVPopoverContent>
+          </NVPopover>
+          
           <NVIconButton 
             icon={Filter} 
             variant="ghost" 

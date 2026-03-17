@@ -121,6 +121,7 @@ export default function DesktopLibraryView({
             onDelete={handleBulkDelete}
           />
 
+          
           <div className="max-w-[1400px] mx-auto">
             <h2 className="text-2xl font-bold text-white mb-8 tracking-tight">라이브러리</h2>
             {loading ? (
