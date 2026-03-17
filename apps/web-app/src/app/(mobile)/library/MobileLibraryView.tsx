@@ -75,8 +75,7 @@ export default function MobileLibraryView({
 
   return (
     <>
-      <div className="sticky top-0 z-[60] bg-slate-950/80 backdrop-blur-3xl border-b border-white/[0.08] shadow-2xl">
-        <TopBar sticky={false} className="bg-transparent backdrop-blur-none border-none px-5" />
+      <TopBar className="mb-0">
         <LibraryControls 
           isMobile={true}
           searchText={searchText}
@@ -96,7 +95,7 @@ export default function MobileLibraryView({
           }}
           onDelete={handleBulkDelete}
         />
-      </div>
+      </TopBar>
 
       <section className="px-5">
         {loading ? (
