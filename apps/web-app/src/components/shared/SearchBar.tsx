@@ -12,6 +12,8 @@ interface SearchBarProps {
   autoFocus?: boolean;
   inputRef?: React.RefObject<HTMLInputElement | null>;
   showFilter?: boolean;
+  isFilterActive?: boolean;
+  size?: 'xs' | 'sm' | 'md' | 'lg';
 }
 
 export function SearchBar(props: SearchBarProps) {

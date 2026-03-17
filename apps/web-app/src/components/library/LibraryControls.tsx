@@ -53,25 +53,28 @@ export function LibraryControls({
   if (isMobile) {
     return (
       <div className="flex flex-col w-full">
-        <div className="p-5">
-          <SearchBar 
-            value={searchText}
-            onChange={onSearchChange}
-            onFilterClick={onFilterToggle}
-            placeholder="에셋 이름, 태그로 검색..."
-            showFilter={true}
-          />
-        </div>
+      <div className="px-5 py-0.5">
+        <SearchBar 
+          size="sm"
+          value={searchText}
+          onChange={onSearchChange}
+          onFilterClick={onFilterToggle}
+          placeholder="에셋 이름, 태그로 검색..."
+          showFilter={true}
+          isFilterActive={isFilterOpen}
+        />
+      </div>
 
-        {isFilterOpen && (
-          <div className="p-5">
+      {isFilterOpen && (
+        <div className="px-5 py-1.5 border-b border-white/5 bg-white/[0.01]">
             <AdvancedFilter 
+              className={isFilterOpen ? "!bg-white/3" : ""}
               isMobile={isMobile}
               onApply={onFilterApply}
               onReset={onFilterReset}
             />
-          </div>
-        )}
+        </div>
+      )}
       </div>
     );
   }
@@ -108,12 +111,16 @@ export function LibraryControls({
           />
         </div>
 
-        <SearchBar 
-            value={searchText}
-            
-            placeholder="에셋 이름, 태그로 검색..."
-            showFilter={true}
-        />
+        <div className="flex-1 max-w-[320px] mx-auto px-4" style={{ WebkitAppRegion: 'no-drag' } as any}>
+          <SearchBar 
+              size="sm"
+              value={searchText}
+              onChange={onSearchChange}
+              placeholder="에셋 이름, 태그로 검색..."
+              showFilter={true}
+              onFilterClick={onFilterToggle}
+          />
+        </div>
 
         {/* Right Actions */}
         <div className="flex items-center gap-0.5 pl-6 relative" style={{ WebkitAppRegion: 'no-drag' } as any}>
@@ -150,13 +157,11 @@ export function LibraryControls({
       </header>
 
       {isFilterOpen && (
-        <div className="bg-slate-900/50 backdrop-blur-md border-b border-white/5 animate-in slide-in-from-top-1 duration-200">
-          <AdvancedFilter 
-            isMobile={false}
-            onApply={onFilterApply}
-            onReset={onFilterReset}
-          />
-        </div>
+        <AdvancedFilter 
+          isMobile={false}
+          onApply={onFilterApply}
+          onReset={onFilterReset}
+        />
       )}
     </div>
   );

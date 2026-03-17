@@ -1,7 +1,9 @@
 import React from 'react';
-import { Search, X, SlidersHorizontal } from 'lucide-react';
+import { Search, X, SlidersHorizontal, ChevronUp } from 'lucide-react';
 import { NVIconButton } from '../../atoms/NVIconButton';
 import { NVInput } from '../../atoms/NVInput';
+import { cn } from '../../lib/utils';
+import { NVButton } from '../../atoms/NVButton';
 
 export interface NVSearchBarProps {
   value?: string;
@@ -13,6 +15,8 @@ export interface NVSearchBarProps {
   showFilter?: boolean;
   className?: string;
   autoFocus?: boolean;
+  size?: 'sm' | 'md' | 'lg';
+  isFilterActive?: boolean;
 }
 
 export const NVSearchBar: React.FC<NVSearchBarProps> = ({
@@ -23,8 +27,10 @@ export const NVSearchBar: React.FC<NVSearchBarProps> = ({
   onClick,
   onFilterClick,
   showFilter = true,
+  isFilterActive = false,
   className = '',
-  autoFocus
+  autoFocus,
+  size = 'md'
 }) => {
   const handleClear = (e: React.MouseEvent) => {
     e.stopPropagation();
@@ -32,30 +38,34 @@ export const NVSearchBar: React.FC<NVSearchBarProps> = ({
   };
 
   const rightElement = (
-    <div className="flex items-center gap-0.5 mr-0.5">
+    <div className="flex items-center gap-1">
       {value && !readOnly && (
         <NVIconButton
           icon={X}
           variant="ghost"
-          size="sm"
+          className="!h-5 !w-5"
+          size={size}
           onClick={handleClear}
           title="검색어 지우기"
           aria-label="입력 초기화"
         />
       )}
       {showFilter && (
-        <NVIconButton
-          icon={SlidersHorizontal}
-          variant="ghost"
-          size="sm"
-          className="border-l border-white/10 rounded-none h-5 ml-1 pl-1"
+        <NVButton
+          variant="glass"
+          size={size==='sm' ? 'xs' : size==='md' ? 'sm' : 'lg'} 
           onClick={(e: React.MouseEvent) => {
             e.stopPropagation();
             onFilterClick?.(e);
           }}
+          className={cn(
+            isFilterActive ? "!text-indigo-400 !bg-indigo-500/10 !border-indigo-500/40 " : "!border-transparent !text-white/80"
+          )}
           title="상세 필터"
           aria-label="필터 설정"
-        />
+        >
+          상세 검색
+        </NVButton>
       )}
     </div>
   );
@@ -63,7 +73,8 @@ export const NVSearchBar: React.FC<NVSearchBarProps> = ({
 
   return (
     <NVInput
-      icon={<Search size={18} />}
+      icon={<Search size={size === 'sm' ? 14 : 18} />}
+      size={size}
       value={value}
       onChange={(e) => onChange?.(e.target.value)}
       placeholder={placeholder}
@@ -71,7 +82,8 @@ export const NVSearchBar: React.FC<NVSearchBarProps> = ({
       autoFocus={autoFocus}
       onClick={readOnly ? onClick : undefined}
       rightElement={rightElement}
-      containerClassName={className}
+      containerClassName={cn(className, isFilterActive ? "!opacity-100 !pointer-events-auto" : "")}
+      disabled={isFilterActive}
     />
   );
 };

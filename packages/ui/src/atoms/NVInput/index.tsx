@@ -4,7 +4,7 @@ export interface NVInputProps extends Omit<React.InputHTMLAttributes<HTMLInputEl
   icon?: React.ReactNode;
   rightElement?: React.ReactNode;
   containerClassName?: string;
-  size?: 'sm' | 'md' | 'lg';
+  size?: 'xs' | 'sm' | 'md' | 'lg';
 }
 
 export const NVInput: React.FC<NVInputProps> = ({ 
@@ -16,12 +16,14 @@ export const NVInput: React.FC<NVInputProps> = ({
   ...props 
 }) => {
   const sizeStyles = {
+    xs: 'px-2 py-0.5 text-[10px] gap-1',
     sm: 'px-3 py-1.5 text-xs gap-1.5',
     md: 'px-3.5 py-2.5 text-sm gap-2',
     lg: 'px-5 py-4 text-base gap-3'
   };
 
   const roundedStyles = {
+    xs: 'rounded-md',
     sm: 'rounded-lg',
     md: 'rounded-lg',
     lg: 'rounded-xl'

@@ -4,7 +4,7 @@ import { LucideIcon } from 'lucide-react';
 interface NVIconButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
   icon: LucideIcon;
   variant?: 'primary' | 'secondary' | 'vivid' | 'danger' | 'ghost' | 'glass';
-  size?: 'sm' | 'md' | 'lg';
+  size?: 'xs' | 'sm' | 'md' | 'lg';
   iconSize?: number;
 }
 
@@ -19,6 +19,7 @@ export const NVIconButton: React.FC<NVIconButtonProps> = ({
   const baseStyles = 'inline-flex items-center justify-center transition-all duration-200 active:scale-90 disabled:opacity-40 disabled:pointer-events-none [&_svg]:text-inherit';
   
   const roundedStyles = {
+    xs: 'rounded-md',
     sm: 'rounded-lg',
     md: 'rounded-lg',
     lg: 'rounded-xl'
@@ -34,12 +35,14 @@ export const NVIconButton: React.FC<NVIconButtonProps> = ({
   };
 
   const sizes = {
+    xs: 'w-7 h-7',
     sm: 'w-9 h-9',
     md: 'w-11 h-11',
     lg: 'w-13 h-13'
   };
 
   const defaultIconSizes = {
+    xs: 14,
     sm: 16,
     md: 18,
     lg: 20

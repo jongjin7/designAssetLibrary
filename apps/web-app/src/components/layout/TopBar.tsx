@@ -19,15 +19,25 @@ export function TopBar({ rightElement, className, sticky = true, children }: Top
       !sticky && "bg-transparent",
       className
     )}>
-      <div className="flex items-center justify-between px-6 pt-[calc(14px+env(safe-area-inset-top,0px))] pb-3.5">
+      <div className="flex items-center justify-between px-5 pt-[calc(10px+env(safe-area-inset-top,0px))] pb-2">
         <Link href="/library" className="group">
-          <h1 className="text-2xl font-black tracking-tighter bg-gradient-to-br from-indigo-500 to-cyan-500 bg-clip-text text-transparent group-hover:opacity-80 transition-opacity">
+          <h1 className="text-lg font-extrabold tracking-tighter bg-gradient-to-r from-indigo-500 to-cyan-400 bg-clip-text text-transparent group-hover:opacity-80 transition-opacity">
             NOVA
           </h1>
         </Link>
-        {rightElement && <div>{rightElement}</div>}
+        {rightElement ? (
+          <div className="flex items-center gap-3">
+            {rightElement}
+          </div>
+        ) : (
+          <div className="w-8 h-8 rounded-full bg-white/5 border border-white/10 flex items-center justify-center">
+             <div className="w-4 h-4 rounded-full bg-indigo-500/20 border border-indigo-500/40" />
+          </div>
+        )}
       </div>
-      {children}
+      <div className="flex flex-col gap-0.5">
+        {children}
+      </div>
     </header>
   );
 }

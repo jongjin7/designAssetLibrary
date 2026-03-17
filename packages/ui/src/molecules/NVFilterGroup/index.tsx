@@ -11,13 +11,15 @@ export interface NVFilterGroupProps {
   activeKey: string;
   onChange: (key: string) => void;
   className?: string;
+  size?: 'sm' | 'md';
 }
 
 export const NVFilterGroup: React.FC<NVFilterGroupProps> = ({
   options,
   activeKey,
   onChange,
-  className = ''
+  className = '',
+  size = 'md'
 }) => {
   return (
     <div className={`flex items-center gap-2 overflow-x-auto scrollbar-hide py-1 ${className}`}>
@@ -28,6 +30,7 @@ export const NVFilterGroup: React.FC<NVFilterGroupProps> = ({
           isActive={activeKey === option.key}
           onClick={() => onChange(option.key)}
           variant="filter"
+          size={size}
         />
       ))}
     </div>

@@ -98,7 +98,7 @@ export default function MobileLibraryView({
         />
       </TopBar>
 
-      <section className="px-5">
+      <section className="px-5 py-6">
         {loading ? (
           <NVLoadingState fullHeight />
         ) : (

@@ -16,11 +16,12 @@ const filters = [
 
 export function FilterChips({ active, onChange, className = '' }: FilterChipsProps) {
   return (
-    <div className={`px-5 desktop:px-0 ${className}`}>
+    <div className={`px-5 py-1 desktop:px-0 ${className}`}>
       <NVFilterGroup
         options={filters}
         activeKey={active}
         onChange={onChange}
+        size="sm"
       />
     </div>
   );
