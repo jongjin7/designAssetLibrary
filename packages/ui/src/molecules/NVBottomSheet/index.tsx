@@ -77,7 +77,7 @@ export function NVBottomSheet({ isOpen, onClose, children, className = '' }: NVB
       <div
         ref={sheetRef}
         className={cn(
-          "w-full max-w-[430px] max-h-[85dvh] bg-slate-900 rounded-t-[20px] overflow-y-auto overscroll-behavior-y-contain",
+          "w-full max-w-[760px] max-h-[85dvh] bg-slate-900 rounded-t-[20px] overflow-y-auto overscroll-behavior-y-contain",
           "transition-transform duration-300 cubic-bezier(0.23, 1, 0.32, 1)",
           isClosing ? "translate-y-full" : "translate-y-0",
           className

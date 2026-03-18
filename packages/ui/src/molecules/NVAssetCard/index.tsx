@@ -62,8 +62,7 @@ export const NVAssetCard: React.FC<NVAssetCardProps> = ({
     <div 
       className={cn(
         "group relative flex flex-col shrink-0 w-full overflow-hidden transition-all duration-500",
-        "bg-transparent rounded-lg",
-        "aspect-square active:scale-[0.96]",
+        "bg-transparent rounded-lg active:scale-[0.96] break-inside-avoid mb-4",
         isLongPressing ? "scale-[0.98] brightness-75 transition-all duration-200" : "",
         isSelected ? "ring-2 ring-indigo-500 ring-offset-2 ring-offset-slate-950" : "",
         isCompact ? "max-w-[140px]" : "",
@@ -80,7 +79,7 @@ export const NVAssetCard: React.FC<NVAssetCardProps> = ({
     >
       {/* 1. Main Content: No borders, just the image */}
       <div className={cn(
-        "absolute inset-0 w-full h-full bg-slate-900 rounded-lg overflow-hidden transition-transform duration-300",
+        "w-full bg-slate-900 rounded-lg overflow-hidden transition-transform duration-300",
         isLongPressing ? "scale-[0.98]" : ""
       )}>
         {thumbnail ? (
@@ -88,11 +87,11 @@ export const NVAssetCard: React.FC<NVAssetCardProps> = ({
             src={thumbnail} 
             alt={fileName} 
             loading="lazy" 
-            className="h-full w-full object-cover transition-transform duration-1000 group-hover:scale-110" 
+            className="w-full h-auto object-contain transition-transform duration-1000 group-hover:scale-105" 
           />
         ) : (
           <div 
-            className="h-full w-full opacity-40" 
+            className="aspect-square w-full opacity-40" 
             style={{ background: thumbnailGradient }} 
           />
         )}
