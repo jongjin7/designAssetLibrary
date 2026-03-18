@@ -1,5 +1,6 @@
 import React from 'react';
 import { Star, Maximize2, Check } from 'lucide-react';
+import { cn } from '../../lib/utils';
 
 export interface NVAssetCardProps {
   id: string;
@@ -34,106 +35,121 @@ export const NVAssetCard: React.FC<NVAssetCardProps> = ({
   className = ''
 }) => {
   const nameWithoutExt = fileName.split('.').slice(0, -1).join('.') || fileName;
+  const [isLongPressing, setIsLongPressing] = React.useState(false);
+  const timerRef = React.useRef<NodeJS.Timeout | null>(null);
+
+  const startPress = (e: React.MouseEvent | React.TouchEvent) => {
+    if (!isMobile) return;
+    
+    setIsLongPressing(true);
+    timerRef.current = setTimeout(() => {
+      onSelect?.(e as any);
+      setIsLongPressing(false);
+      // Vibrate if supported
+      if ('vibrate' in navigator) navigator.vibrate(50);
+    }, 500);
+  };
+
+  const endPress = () => {
+    if (timerRef.current) {
+      clearTimeout(timerRef.current);
+      timerRef.current = null;
+    }
+    setIsLongPressing(false);
+  };
 
   return (
     <div 
-      className={`
-        group relative flex flex-col shrink-0 w-full overflow-hidden rounded-2xl bg-slate-900 border border-white/5
-        transition-all duration-300 hover:shadow-[0_0_24px_rgba(99,102,241,0.15)] active:scale-[0.98]
-        ${isSelected ? 'border-indigo-500 ring-1 ring-indigo-500/50' : ''}
-        ${isCompact ? 'max-w-[160px]' : ''}
-        ${className}
-      `.replace(/\s+/g, ' ').trim()}
+      className={cn(
+        "group relative flex flex-col shrink-0 w-full overflow-hidden transition-all duration-500",
+        "bg-transparent rounded-lg",
+        "aspect-square active:scale-[0.96]",
+        isLongPressing ? "scale-[0.98] brightness-75 transition-all duration-200" : "",
+        isSelected ? "ring-2 ring-indigo-500 ring-offset-2 ring-offset-slate-950" : "",
+        isCompact ? "max-w-[140px]" : "",
+        className
+      )}
       onClick={onTap}
+      onMouseDown={startPress}
+      onMouseUp={endPress}
+      onMouseLeave={endPress}
+      onTouchStart={startPress}
+      onTouchEnd={endPress}
       role="button"
       tabIndex={0}
     >
-      {/* Thumbnail Area */}
-      <div className={`relative w-full overflow-hidden bg-white/5 ${isCompact ? 'aspect-[4/3]' : 'aspect-square'}`}>
+      {/* 1. Main Content: No borders, just the image */}
+      <div className={cn(
+        "absolute inset-0 w-full h-full bg-slate-900 rounded-lg overflow-hidden transition-transform duration-300",
+        isLongPressing ? "scale-[0.98]" : ""
+      )}>
         {thumbnail ? (
           <img 
             src={thumbnail} 
             alt={fileName} 
             loading="lazy" 
-            className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-110" 
+            className="h-full w-full object-cover transition-transform duration-1000 group-hover:scale-110" 
           />
         ) : (
           <div 
-            className="h-full w-full" 
+            className="h-full w-full opacity-40" 
             style={{ background: thumbnailGradient }} 
           />
         )}
+      </div>
 
-        {/* Hover/Selection Overlay */}
-        {!isCompact && (
-          <div className={`
-            absolute inset-0 flex flex-col justify-between p-3
-            bg-gradient-to-b from-black/40 via-transparent to-black/40
-            transition-opacity duration-200
-            ${isSelected ? 'opacity-100' : isMobile ? 'opacity-100' : 'opacity-0 group-hover:opacity-100'}
-          `}>
-            {/* Checkbox */}
-            <button 
-              className={`
-                flex h-5 w-5 items-center justify-center rounded-md border-2 transition-all
-                ${isSelected 
-                  ? 'bg-indigo-500 border-indigo-500 scale-110' 
-                  : isMobile ? 'border-white/30 bg-black/20' : 'border-white/50 hover:border-white hover:scale-110'
-                }
-              `}
+      {/* 2. Seamless Overlay: No visible box boundaries */}
+      <div className={cn(
+        "absolute inset-0 flex flex-col justify-between p-2.5 transition-all duration-300",
+        "bg-gradient-to-b from-black/30 via-transparent to-black/60",
+        isSelected || isMobile ? "opacity-100" : "opacity-0 group-hover:opacity-100"
+      )}>
+        {/* Top: Minimal Floating Tags/Actions */}
+        <div className="flex items-start justify-between">
+           {/* Selection Indicator (No background box) */}
+           <div 
+              className={cn(
+                "flex h-5 w-5 items-center justify-center rounded-full transition-all border",
+                isSelected 
+                  ? "bg-indigo-500 border-indigo-500 scale-100 text-white shadow-[0_0_12px_rgba(99,102,241,0.5)]" 
+                  : "border-white/30 bg-black/10 backdrop-blur-sm opacity-60 group-hover:opacity-100 text-white/50"
+              )}
               onClick={(e) => {
                 e.stopPropagation();
                 onSelect?.(e);
               }}
             >
-              {isSelected && <Check size={12} className="text-white" />}
-            </button>
+              <Check size={12} strokeWidth={isSelected ? 4 : 2} />
+           </div>
 
-            {/* Quick Actions */}
-            <div className="flex justify-end gap-2">
-              <button 
-                className={`
-                  flex h-7 w-7 items-center justify-center rounded-full backdrop-blur-md transition-all
-                  ${isFavorite 
-                    ? 'bg-indigo-500/80 text-white' 
-                    : 'bg-black/40 text-white/80 hover:bg-black/60 hover:text-white'
-                  }
-                `}
-                onClick={(e) => {
-                  e.stopPropagation();
-                  onFavoriteToggle?.(e);
-                }}
-              >
-                <Star size={14} fill={isFavorite ? "currentColor" : "none"} />
-              </button>
-              <button 
-                className="flex h-7 w-7 items-center justify-center rounded-full bg-black/40 text-white/80 backdrop-blur-md transition-all hover:bg-black/60 hover:text-white"
-                onClick={(e) => {
-                  e.stopPropagation();
-                  onMaximize?.(e);
-                }}
-              >
-                <Maximize2 size={14} />
-              </button>
-            </div>
-          </div>
-        )}
-      </div>
-
-      {/* Footer Info */}
-      <div className={`bg-white/[0.03] backdrop-blur-md ${isCompact ? 'p-2' : 'p-3'}`}>
-        <div className={`flex gap-1 ${isCompact ? 'mb-1' : 'mb-1.5'}`}>
-          {palette.slice(0, isCompact ? 2 : 3).map((color, i) => (
-            <div 
-              key={i} 
-              className={`${isCompact ? 'h-2 w-2' : 'h-2.5 w-2.5'} rounded-full border border-white/10`} 
-              style={{ backgroundColor: color }} 
-            />
-          ))}
+           {/* Quick Star (Simple Icon with shadow) */}
+           <button 
+              className={cn(
+                "p-1 transition-all drop-shadow-lg scale-100 active:scale-95",
+                isFavorite ? "text-indigo-400" : "text-white/60 hover:text-white"
+              )}
+              onClick={(e) => {
+                e.stopPropagation();
+                onFavoriteToggle?.(e);
+              }}
+            >
+              <Star size={16} fill={isFavorite ? "currentColor" : "none"} />
+           </button>
         </div>
-        <p className={`truncate font-medium transition-colors ${isCompact ? 'text-[10px]' : 'text-[11px]'} text-slate-400 group-hover:text-slate-50`}>
-          {nameWithoutExt}
-        </p>
+
+        {/* Bottom: Frameless Metadata (Floating Text) */}
+        <div className="flex flex-col gap-1.5 translate-y-1 group-hover:translate-y-0 transition-all duration-500">
+          <p className="text-xs font-medium text-white/60 group-hover:text-white/90 truncate drop-shadow-sm px-0.5 tracking-tight transition-colors">
+            {nameWithoutExt}
+          </p>
+          
+          {/* Subtle Color Line */}
+          <div className="flex h-0.5 w-8 rounded-full overflow-hidden opacity-40 group-hover:opacity-70 transition-opacity ml-0.5">
+            {palette.slice(0, 3).map((color, i) => (
+              <div key={i} className="h-full flex-1" style={{ backgroundColor: color }} />
+            ))}
+          </div>
+        </div>
       </div>
     </div>
   );

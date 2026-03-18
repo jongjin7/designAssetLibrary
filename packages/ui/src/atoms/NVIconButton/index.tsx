@@ -1,11 +1,12 @@
 import React from 'react';
-import { LucideIcon } from 'lucide-react';
+import { LucideIcon, LucideProps } from 'lucide-react';
 
 interface NVIconButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
   icon: LucideIcon;
   variant?: 'primary' | 'secondary' | 'vivid' | 'danger' | 'ghost' | 'glass';
   size?: 'xs' | 'sm' | 'md' | 'lg';
   iconSize?: number;
+  iconProps?: LucideProps;
 }
 
 export const NVIconButton: React.FC<NVIconButtonProps> = ({ 
@@ -13,6 +14,7 @@ export const NVIconButton: React.FC<NVIconButtonProps> = ({
   variant = 'secondary', 
   size = 'md', 
   iconSize,
+  iconProps,
   className = '', 
   ...props 
 }) => {
@@ -53,7 +55,7 @@ export const NVIconButton: React.FC<NVIconButtonProps> = ({
 
   return (
     <button className={combinedClasses} {...props}>
-      <Icon size={finalIconSize} strokeWidth={2.2} />
+      <Icon size={finalIconSize} {...iconProps} />
     </button>
   );
 };

@@ -38,7 +38,7 @@ export const NVSearchBar: React.FC<NVSearchBarProps> = ({
   };
 
   const rightElement = (
-    <div className="flex items-center gap-1">
+    <div className="flex items-center gap-1 -mr-1">
       {value && !readOnly && (
         <NVIconButton
           icon={X}
@@ -61,8 +61,6 @@ export const NVSearchBar: React.FC<NVSearchBarProps> = ({
           className={cn(
             isFilterActive ? "!text-indigo-400 !bg-indigo-500/10 !border-indigo-500/40 " : "!border-transparent !text-white/80"
           )}
-          title="상세 필터"
-          aria-label="필터 설정"
         >
           상세 검색
         </NVButton>

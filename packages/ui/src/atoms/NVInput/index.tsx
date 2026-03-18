@@ -16,10 +16,10 @@ export const NVInput: React.FC<NVInputProps> = ({
   ...props 
 }) => {
   const sizeStyles = {
-    xs: 'px-2 py-0.5 text-[10px] gap-1',
-    sm: 'px-3 py-1.5 text-xs gap-1.5',
-    md: 'px-3.5 py-2.5 text-sm gap-2',
-    lg: 'px-5 py-4 text-base gap-3'
+    xs: 'px-2 py-0.5 md:text-xs text-base gap-1',
+    sm: 'px-3 py-1.5 md:text-sm text-base gap-1.5',
+    md: 'px-3.5 py-2.5 text-base gap-2',
+    lg: 'px-5 py-4 text-lg gap-3'
   };
 
   const roundedStyles = {

@@ -6,7 +6,7 @@ export interface NVChipProps {
   onClick?: () => void;
   className?: string;
   variant?: 'filter' | 'tag' | 'status';
-  size?: 'sm' | 'md';
+  size?: 'sm' | 'md' | 'lg';
   disabled?: boolean;
 }
 
@@ -24,7 +24,8 @@ export const NVChip: React.FC<NVChipProps> = ({
   
   const sizeStyles = {
     sm: 'px-3 py-1 text-[11px] gap-1',
-    md: 'px-4 py-1.5 text-sm gap-1.5'
+    md: 'px-4 py-1.5 text-sm gap-1.5',
+    lg: 'px-5 py-2 text-base gap-2'
   };
 
   const variantStyles = {

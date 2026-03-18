@@ -11,7 +11,7 @@ export interface NVFilterGroupProps {
   activeKey: string;
   onChange: (key: string) => void;
   className?: string;
-  size?: 'sm' | 'md';
+  size?: 'sm' | 'md' | 'lg';
 }
 
 export const NVFilterGroup: React.FC<NVFilterGroupProps> = ({
@@ -22,7 +22,7 @@ export const NVFilterGroup: React.FC<NVFilterGroupProps> = ({
   size = 'md'
 }) => {
   return (
-    <div className={`flex items-center gap-2 overflow-x-auto scrollbar-hide py-1 ${className}`}>
+    <div className={`flex items-center gap-2 overflow-x-auto scrollbar-hide ${className}`}>
       {options.map((option) => (
         <NVChip
           key={option.key}
