@@ -33,7 +33,7 @@ export async function processFileToAsset(file: File): Promise<Partial<Asset>> {
         fileName: file.name,
         fileSize: fileSize,
         mimeType: file.type,
-        thumbnailGradient: 'linear-gradient(135deg, #6366F1 0%, #06B6D4 100%)',
+        thumbnailGradient: `linear-gradient(135deg, ${palette[0]} 0%, ${palette[1] || palette[0]} 100%)`,
         thumbnail: dataUrl,
         palette: palette,
         tags: ['uploaded', 'new'],

@@ -4,59 +4,84 @@
  */
 
 export async function extractColors(imageUrl: string, count: number = 5): Promise<string[]> {
-  return new Promise((resolve, reject) => {
+  return new Promise((resolve) => {
     const img = new Image();
     img.crossOrigin = 'Anonymous';
-    img.src = imageUrl;
+    
+    // Fallback timer to prevent hanging
+    const timeout = setTimeout(() => {
+      resolve(['#6366F1', '#06B6D4', '#F8FAFC']); // Project defaults
+    }, 3000);
 
     img.onload = () => {
+      clearTimeout(timeout);
       const canvas = document.createElement('canvas');
-      const ctx = canvas.getContext('2d');
+      const ctx = canvas.getContext('2d', { willReadFrequently: true });
       if (!ctx) {
-        reject(new Error('Could not get canvas context'));
+        resolve(['#6366F1', '#06B6D4', '#F8FAFC']);
         return;
       }
 
-      // Resize for performance
-      const size = 100;
+      // Small sample size for performance
+      const size = 64;
       canvas.width = size;
       canvas.height = size;
       ctx.drawImage(img, 0, 0, size, size);
 
-      const imageData = ctx.getImageData(0, 0, size, size).data;
-      const colors: Record<string, number> = {};
+      try {
+        const imageData = ctx.getImageData(0, 0, size, size).data;
+        const colorCounts: Record<string, number> = {};
 
-      // Sample pixels
-      for (let i = 0; i < imageData.length; i += 4) {
-        const r = imageData[i];
-        const g = imageData[i + 1];
-        const b = imageData[i + 2];
-        const a = imageData[i + 3];
+        // Sample pixels with higher density but skipping some for speed
+        for (let i = 0; i < imageData.length; i += 16) { // every 4th pixel
+          const r = imageData[i];
+          const g = imageData[i + 1];
+          const b = imageData[i + 2];
+          const a = imageData[i + 3];
 
-        // Ignore highly transparent pixels
-        if (a < 128) continue;
+          // Skip transparent or too dark/light pixels
+          if (a < 128) continue;
+          
+          // Slight grouping to avoid noise but keep fidelity
+          // Group by 4 instead of 10 for more accurate capture
+          const gr = Math.floor(r / 4) * 4;
+          const gg = Math.floor(g / 4) * 4;
+          const gb = Math.floor(b / 4) * 4;
 
-        // Simplify colors to reduce count (group similar colors)
-        const simplifiedR = Math.round(r / 10) * 10;
-        const simplifiedG = Math.round(g / 10) * 10;
-        const simplifiedB = Math.round(b / 10) * 10;
+          const hex = `#${gr.toString(16).padStart(2, '0')}${gg.toString(16).padStart(2, '0')}${gb.toString(16).padStart(2, '0')}`.toUpperCase();
+          colorCounts[hex] = (colorCounts[hex] || 0) + 1;
+        }
 
-        const hex = rgbToHex(simplifiedR, simplifiedG, simplifiedB);
-        colors[hex] = (colors[hex] || 0) + 1;
+        // Sort by frequency
+        let sorted = Object.entries(colorCounts)
+          .sort((a, b) => b[1] - a[1])
+          .map(([hex]) => hex);
+
+        // Filter out redundant near-white/near-black if we have other options
+        if (sorted.length > count) {
+          const filtered = sorted.filter(c => c !== '#000000' && c !== '#FFFFFF' && c !== '#FBFBFB' && c !== '#040404');
+          if (filtered.length >= count) sorted = filtered;
+        }
+
+        const result = sorted.slice(0, count);
+        
+        if (result.length === 0) {
+          resolve(['#6366F1', '#06B6D4', '#F8FAFC']);
+        } else {
+          resolve(result);
+        }
+      } catch (e) {
+        console.error('Color extraction processing error:', e);
+        resolve(['#6366F1', '#06B6D4', '#F8FAFC']);
       }
-
-      // Sort by frequency and take top ones
-      const sortedColors = Object.entries(colors)
-        .sort((a, b) => b[1] - a[1])
-        .slice(0, count)
-        .map(([hex]) => hex);
-
-      resolve(sortedColors);
     };
 
     img.onerror = () => {
-      reject(new Error('Failed to load image for color extraction'));
+      clearTimeout(timeout);
+      resolve(['#6366F1', '#06B6D4', '#F8FAFC']);
     };
+
+    img.src = imageUrl;
   });
 }
 
