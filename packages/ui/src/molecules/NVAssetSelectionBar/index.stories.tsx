@@ -1,10 +1,10 @@
 import type { Meta, StoryObj } from '@storybook/react';
-import { AssetSelectionBar } from './AssetSelectionBar';
+import { NVAssetSelectionBar } from './index';
 import React from 'react';
 
-const meta: Meta<typeof AssetSelectionBar> = {
-  title: 'Library/AssetSelectionBar',
-  component: AssetSelectionBar,
+const meta: Meta<typeof NVAssetSelectionBar> = {
+  title: 'Molecules/NVAssetSelectionBar',
+  component: NVAssetSelectionBar,
   parameters: {
     layout: 'fullscreen',
   },
@@ -45,11 +45,6 @@ export const Mobile: Story = {
   args: {
     isMobile: true,
     theme: 'light',
-  },
-  parameters: {
-    viewport: {
-      defaultViewport: 'mobile1',
-    },
   },
 };
 

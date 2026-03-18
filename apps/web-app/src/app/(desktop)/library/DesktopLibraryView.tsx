@@ -5,8 +5,7 @@ import { AssetGrid } from '../../../components/library/AssetGrid';
 import { AssetInspector } from '../../../components/detail/AssetInspector';
 import { DropZone } from '../../../components/shared/DropZone';
 import { LibraryControls } from '../../../components/library/LibraryControls';
-import { AssetSelectionBar } from '../../../components/library/AssetSelectionBar';
-import { NVLoadingState } from '@nova/ui';
+import { NVLoadingState, NVAssetSelectionBar } from '@nova/ui';
 import { Asset } from '../../../types/asset';
 
 interface DesktopLibraryViewProps {
@@ -111,7 +110,7 @@ export default function DesktopLibraryView({
         />
 
         <div className="flex-1 overflow-y-auto p-8 relative">
-          <AssetSelectionBar
+          <NVAssetSelectionBar
             selectedCount={selectedIds.size}
             onCancel={() => setSelectedIds(new Set())}
             onMove={() => {}}

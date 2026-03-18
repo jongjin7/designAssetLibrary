@@ -6,9 +6,8 @@ import { useLibraryFilters } from '../../../hooks/useLibraryFilters';
 import { TopBar } from '../../../components/layout/TopBar';
 import { LibraryControls } from '../../../components/library/LibraryControls';
 import { FilterChips } from '../../../components/library/FilterChips';
-import { AssetSelectionBar } from '../../../components/library/AssetSelectionBar';
 import { AssetGrid } from '../../../components/library/AssetGrid';
-import { NVLoadingState, NVIconButton } from '@nova/ui';
+import { NVLoadingState, NVIconButton, NVAssetSelectionBar } from '@nova/ui';
 import { AssetDetail } from '../../../components/detail/AssetDetail';
 import { Asset } from '../../../types/asset';
 
@@ -117,7 +116,7 @@ export default function MobileLibraryView({
         </div>
       </TopBar>
 
-      <AssetSelectionBar
+      <NVAssetSelectionBar
         isMobile={true}
         selectedCount={selectedIds.size}
         onCancel={() => {

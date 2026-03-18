@@ -1,27 +1,29 @@
 import React from 'react';
 import { cn } from '../../lib/utils';
-import { NVButton } from '@nova/ui';
+import { NVButton } from '../../atoms/NVButton';
 
-interface AssetSelectionBarProps {
+interface NVAssetSelectionBarProps {
   selectedCount: number;
   onCancel: () => void;
   onMove?: () => void;
   onDelete: () => void;
   isMobile?: boolean;
   theme?: 'light' | 'dark';
+  className?: string;
 }
 
 /**
- * AssetSelectionBar provides actions for multiple selected assets.
+ * NVAssetSelectionBar provides actions for multiple selected assets.
  */
-export function AssetSelectionBar({
+export function NVAssetSelectionBar({
   selectedCount,
   onCancel,
   onMove,
   onDelete,
   isMobile = false,
-  theme = 'light' // Default to light for high-end pop
-}: AssetSelectionBarProps) {
+  theme = 'light',
+  className = ''
+}: NVAssetSelectionBarProps) {
   if (selectedCount === 0) return null;
 
   const isLight = theme === 'light';
@@ -35,7 +37,8 @@ export function AssetSelectionBar({
         : "bg-black/60 border-white/10",
       isMobile 
         ? "fixed bottom-8 left-1/2 -translate-x-1/2 w-[92%] max-w-sm z-50 p-2 rounded-2xl" 
-        : "sticky top-4 z-40 mx-auto w-fit min-w-[400px] p-2 rounded-2xl mb-8"
+        : "sticky top-4 z-40 mx-auto w-fit min-w-[400px] p-2 rounded-2xl mb-8",
+      className
     )}>
 
       {/* Selected Indicator */}
@@ -57,19 +60,18 @@ export function AssetSelectionBar({
       
       {/* Action Buttons */}
       <div className="flex items-center gap-2 ml-6">
-        <NVButton 
-          variant="ghost"
-          size={isMobile ? "xs" : "sm"}
+        <button 
           onClick={onCancel}
-          className="text-slate-400 font-bold hover:text-white h-9 px-4"
+          className="text-slate-400 font-bold hover:text-white transition-colors h-9 px-4 text-xs"
         >
           취소
-        </NVButton>
+        </button>
         
         {onMove && (
           <NVButton 
             variant="glass-neutral"
             size={isMobile ? "xs" : "sm"}
+            onClick={onMove}
             className="font-bold h-9"
           >
             이동

@@ -15,6 +15,7 @@ export * from './atoms/NVGlassPanel';
 export * from './molecules/NVFilterGroup';
 export * from './molecules/NVSearchBar';
 export * from './molecules/NVAssetCard';
+export * from './molecules/NVAssetSelectionBar';
 
 // Organisms
 export * from './organisms/NVAssetGrid';
