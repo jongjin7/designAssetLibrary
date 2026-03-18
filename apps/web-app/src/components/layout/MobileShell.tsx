@@ -25,9 +25,9 @@ export function MobileShell({
     <div className={`flex flex-col h-[100dvh] max-w-[760px] mx-auto relative bg-slate-950 overflow-hidden ${className}`}>
       {showNetwork && <NetworkStatus />}
       
-      <main className="flex-1 overflow-y-auto pb-[calc(72px+env(safe-area-inset-bottom,0px))] scroll-smooth overscroll-none">
+      <div className="flex-1 overflow-y-auto pb-[calc(72px+env(safe-area-inset-bottom,0px))] scroll-smooth overscroll-none">
         {children}
-      </main>
+      </div>
 
       {showTabs && (
         <div className="flex-shrink-0">

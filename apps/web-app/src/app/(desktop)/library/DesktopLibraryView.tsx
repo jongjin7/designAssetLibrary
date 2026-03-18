@@ -4,7 +4,6 @@ import { processFileToAsset } from '../../../lib/assetProcessor';
 import { AssetGrid } from '../../../components/library/AssetGrid';
 import { AssetInspector } from '../../../components/detail/AssetInspector';
 import { DropZone } from '../../../components/shared/DropZone';
-import { FilterChips } from '../../../components/library/FilterChips';
 import { LibraryControls } from '../../../components/library/LibraryControls';
 import { AssetSelectionBar } from '../../../components/library/AssetSelectionBar';
 import { NVLoadingState } from '@nova/ui';
@@ -107,12 +106,9 @@ export default function DesktopLibraryView({
           onFilterReset={handleFilterReset}
           isSearchVisible={isSearchVisible}
           onSearchToggle={onSearchToggle}
+          activeFilter={filter}
+          onFilterChange={(f) => setFilter(f as any)}
         />
-
-
-        <div className="px-8 mt-4">
-          <FilterChips active={filter} onChange={(f) => setFilter(f as any)} />
-        </div>
 
         <div className="flex-1 overflow-y-auto p-8 relative">
           <AssetSelectionBar
@@ -124,7 +120,6 @@ export default function DesktopLibraryView({
 
           
           <div className="max-w-[1400px] mx-auto">
-            <h2 className="text-2xl font-bold text-white mb-8 tracking-tight">라이브러리</h2>
             {loading ? (
               <NVLoadingState className="py-20" />
             ) : (

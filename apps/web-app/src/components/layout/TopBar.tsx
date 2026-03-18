@@ -15,13 +15,13 @@ export function TopBar({ rightElement, className, sticky = true, children }: Top
   return (
     <header className={cn(
       "z-[60] flex flex-col w-full",
-      sticky && "sticky top-0 bg-slate-950/80 backdrop-blur-3xl border-b border-white/[0.08] shadow-2xl",
+      sticky && "sticky top-0 bg-slate-950/80 backdrop-blur-3xl  shadow-2xl",
       !sticky && "bg-transparent",
       className
     )}>
-      <div className="flex items-center justify-between px-5 pt-[calc(10px+env(safe-area-inset-top,0px))] pb-2">
+      <div className="flex items-center justify-between px-5 pt-[calc(10px+env(safe-area-inset-top,0px))] pb-2 border-b border-white/[0.08]">
         <Link href="/library" className="group">
-          <h1 className="text-lg font-extrabold tracking-tighter bg-gradient-to-r from-indigo-500 to-cyan-400 bg-clip-text text-transparent group-hover:opacity-80 transition-opacity">
+          <h1 className="text-2xl font-extrabold tracking-tighter bg-gradient-to-r from-indigo-500 to-cyan-400 bg-clip-text text-transparent group-hover:opacity-80 transition-opacity">
             NOVA
           </h1>
         </Link>
@@ -35,7 +35,7 @@ export function TopBar({ rightElement, className, sticky = true, children }: Top
           </div>
         )}
       </div>
-      <div className="flex flex-col gap-0.5">
+      <div>
         {children}
       </div>
     </header>
