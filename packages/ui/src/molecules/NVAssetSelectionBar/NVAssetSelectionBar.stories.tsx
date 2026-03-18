@@ -13,6 +13,7 @@ const meta: Meta<typeof NVAssetSelectionBar> = {
     onCancel: () => console.log('Cancelled'),
     onMove: () => console.log('Move triggered'),
     onDelete: () => console.log('Delete triggered'),
+    className: 'mx-auto w-fit min-w-[400px]',
   },
   decorators: [
     (Story) => (
@@ -40,11 +41,11 @@ export const DarkTheme: Story = {
     selectedCount: 12,
   },
 };
-
 export const Mobile: Story = {
   args: {
     isMobile: true,
     theme: 'light',
+    className: 'fixed bottom-8 left-1/2 -translate-x-1/2 w-[92%] max-w-sm',
   },
 };
 

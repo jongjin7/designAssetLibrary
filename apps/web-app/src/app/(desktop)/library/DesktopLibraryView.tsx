@@ -112,6 +112,7 @@ export default function DesktopLibraryView({
         <div className="flex-1 overflow-y-auto p-8 relative">
           <NVAssetSelectionBar
             selectedCount={selectedIds.size}
+            className="sticky top-4 z-40 mx-auto w-fit min-w-[400px] mb-8"
             onCancel={() => setSelectedIds(new Set())}
             onMove={() => {}}
             onDelete={handleBulkDelete}

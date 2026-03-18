@@ -1,6 +1,7 @@
 import React from 'react';
 import { cn } from '../../lib/utils';
 import { NVButton } from '../../atoms/NVButton';
+import { NVGlassPanel } from '../../atoms/NVGlassPanel';
 
 interface NVAssetSelectionBarProps {
   selectedCount: number;
@@ -29,20 +30,19 @@ export function NVAssetSelectionBar({
   const isLight = theme === 'light';
 
   return (
-    <div className={cn(
-      "flex items-center justify-between transition-all duration-700 animate-in slide-in-from-top-4",
-      "backdrop-blur-3xl border shadow-[0_32px_64px_-16px_rgba(0,0,0,0.6)]",
-      isLight 
-        ? "bg-white/[0.08] border-white/20" 
-        : "bg-black/60 border-white/10",
-      isMobile 
-        ? "fixed bottom-8 left-1/2 -translate-x-1/2 w-[92%] max-w-sm z-50 p-2 rounded-2xl" 
-        : "sticky top-4 z-40 mx-auto w-fit min-w-[400px] p-2 rounded-2xl mb-8",
-      className
-    )}>
+    <NVGlassPanel
+      theme={theme}
+      noPadding
+      blur="xl"
+      className={cn(
+        "flex items-center justify-between transition-all duration-700 animate-in slide-in-from-top-4",
+        "p-2 shadow-[0_32px_64px_-16px_rgba(0,0,0,0.6)]",
+        className
+      )}
+    >
 
       {/* Selected Indicator */}
-      <div className={cn("flex items-center gap-2", isMobile ? "px-2" : "px-4")}>
+      <div className="flex items-center gap-2 px-2">
         <div className="relative flex items-center justify-center h-5 w-5 mr-1">
           <div className="absolute inset-0 bg-indigo-500 blur-[8px] opacity-40 rounded-full animate-pulse" />
           <span className="relative text-[10px] font-black text-white/90">
@@ -87,6 +87,6 @@ export function NVAssetSelectionBar({
           {isMobile ? '삭제' : '항목 삭제'}
         </NVButton>
       </div>
-    </div>
+    </NVGlassPanel>
   );
 }
