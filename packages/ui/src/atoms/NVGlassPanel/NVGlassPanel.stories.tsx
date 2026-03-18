@@ -5,7 +5,7 @@ import React from 'react';
 import showcaseBg from '../../assets/images/glass_showcase_bg.png';
 
 const meta: Meta<typeof NVGlassPanel> = {
-  title: 'Atoms/NVGlassPanel',
+  title: 'Atoms/GlassPanel',
   component: NVGlassPanel,
   tags: ['autodocs'],
   parameters: {

@@ -4,12 +4,17 @@ import { Search, Tag, Mail, X } from 'lucide-react';
 import React from 'react';
 
 const meta: Meta<typeof NVInput> = {
-  title: 'Atoms/NVInput',
+  title: 'Atoms/Input',
   component: NVInput,
+  tags: ['autodocs'],
   parameters: {
     layout: 'centered',
+    docs: {
+      description: {
+        component: '사용자 입력을 받기 위한 텍스트 필드 컴포넌트입니다. 좌측 아이콘과 우측 요소를 자유롭게 추가할 수 있는 유연한 구조를 가지고 있습니다.',
+      },
+    },
   },
-  tags: ['autodocs'],
 };
 
 export default meta;

@@ -3,10 +3,16 @@ import { NVAssetSelectionBar } from './index';
 import React from 'react';
 
 const meta: Meta<typeof NVAssetSelectionBar> = {
-  title: 'Molecules/NVAssetSelectionBar',
+  title: 'Molecules/AssetSelectionBar',
   component: NVAssetSelectionBar,
+  tags: ['autodocs'],
   parameters: {
     layout: 'fullscreen',
+    docs: {
+      description: {
+        component: '다수의 에셋을 선택했을 때 나타나는 일괄 관리 도구 바입니다. 선택 해제, 이동, 삭제 등의 액션을 제공하며 데스크탑과 모바일 환경을 모두 지원합니다.',
+      },
+    },
   },
   args: {
     selectedCount: 3,
@@ -29,6 +35,13 @@ export default meta;
 type Story = StoryObj<typeof meta>;
 
 export const LightTheme: Story = {
+  parameters: {
+    docs: {
+      description: {
+        story: '밝은 테마 환경에 맞춘 유리판 스타일입니다.',
+      },
+    },
+  },
   args: {
     theme: 'light',
     selectedCount: 5,
@@ -36,12 +49,26 @@ export const LightTheme: Story = {
 };
 
 export const DarkTheme: Story = {
+  parameters: {
+    docs: {
+      description: {
+        story: '어두운 테마 환경에 맞춘 다크 글래스 스타일입니다.',
+      },
+    },
+  },
   args: {
     theme: 'dark',
     selectedCount: 12,
   },
 };
 export const Mobile: Story = {
+  parameters: {
+    docs: {
+      description: {
+        story: '모바일 환경에서 화면 하단에 고정되는 레이아웃입니다. 너비가 화면에 맞게 조정됩니다.',
+      },
+    },
+  },
   args: {
     isMobile: true,
     theme: 'light',
@@ -50,6 +77,13 @@ export const Mobile: Story = {
 };
 
 export const SingleSelected: Story = {
+  parameters: {
+    docs: {
+      description: {
+        story: '에셋이 하나만 선택되었을 때의 표시 형태입니다.',
+      },
+    },
+  },
   args: {
     selectedCount: 1,
     theme: 'light',

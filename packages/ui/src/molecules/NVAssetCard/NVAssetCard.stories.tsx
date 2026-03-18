@@ -3,7 +3,7 @@ import { NVAssetCard } from './index';
 import React from 'react';
 
 const meta: Meta<typeof NVAssetCard> = {
-  title: 'Molecules/NVAssetCard',
+  title: 'Molecules/AssetCard',
   component: NVAssetCard,
   parameters: {
     layout: 'centered',

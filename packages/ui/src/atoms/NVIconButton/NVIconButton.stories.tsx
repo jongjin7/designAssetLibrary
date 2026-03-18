@@ -4,9 +4,16 @@ import { NVIconButton } from './index';
 import { Menu, Star, Search, Settings, X, Plus } from 'lucide-react';
 
 const meta: Meta<typeof NVIconButton> = {
-  title: 'Atoms/NVIconButton',
+  title: 'Atoms/IconButton',
   component: NVIconButton,
   tags: ['autodocs'],
+  parameters: {
+    docs: {
+      description: {
+        component: '원형 또는 정사각 형태의 버튼 내부에 아이콘만 표시하는 컴포넌트입니다. 툴바, 닫기 버튼, 부가 액션 등에 사용됩니다.',
+      },
+    },
+  },
   argTypes: {
     variant: {
       control: 'select',

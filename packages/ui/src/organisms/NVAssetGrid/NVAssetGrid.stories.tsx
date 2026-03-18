@@ -4,9 +4,16 @@ import { NVAssetCard } from '../../molecules/NVAssetCard';
 import React from 'react';
 
 const meta: Meta<typeof NVAssetGrid> = {
-  title: 'Organisms/NVAssetGrid',
+  title: 'Organisms/AssetGrid',
   component: NVAssetGrid,
   tags: ['autodocs'],
+  parameters: {
+    docs: {
+      description: {
+        component: '에셋 카드들을 반응형 그리드 레이아웃으로 배치하는 컨테이너 컴포넌트입니다.',
+      },
+    },
+  },
 };
 
 export default meta;

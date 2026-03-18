@@ -2,12 +2,17 @@ import type { Meta, StoryObj } from '@storybook/react';
 import { NVSearchBar } from './index';
 
 const meta: Meta<typeof NVSearchBar> = {
-  title: 'Molecules/NVSearchBar',
+  title: 'Molecules/SearchBar',
   component: NVSearchBar,
+  tags: ['autodocs'],
   parameters: {
     layout: 'padded',
+    docs: {
+      description: {
+        component: '검색 기능과 필터 토글 버튼이 결합된 상단 검색 바입니다.',
+      },
+    },
   },
-  tags: ['autodocs'],
 };
 
 export default meta;

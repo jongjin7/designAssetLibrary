@@ -4,12 +4,17 @@ import { Palette, Calendar, Filter } from 'lucide-react';
 import React from 'react';
 
 const meta: Meta<typeof NVSelect> = {
-  title: 'Atoms/NVSelect',
+  title: 'Atoms/Select',
   component: NVSelect,
+  tags: ['autodocs'],
   parameters: {
     layout: 'centered',
+    docs: {
+      description: {
+        component: '단일 값을 선택할 때 사용되는 드롭다운 컴포넌트입니다. 커스텀 아이콘과 다양한 크기를 지원합니다.',
+      },
+    },
   },
-  tags: ['autodocs'],
 };
 
 export default meta;

@@ -5,7 +5,7 @@ import { LogOut, Download, Plus, Zap, Heart } from 'lucide-react';
 import React from 'react';
 
 const meta: Meta<typeof NVButton> = {
-  title: 'Atoms/NVButton',
+  title: 'Atoms/Button',
   component: NVButton,
   tags: ['autodocs'],
   parameters: {

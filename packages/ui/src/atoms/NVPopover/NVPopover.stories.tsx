@@ -4,9 +4,16 @@ import { NVPopover, NVPopoverTrigger, NVPopoverContent } from './index';
 import { NVButton } from '../NVButton';
 
 const meta: Meta<typeof NVPopover> = {
-  title: 'Atoms/NVPopover',
+  title: 'Atoms/Popover',
   component: NVPopover,
   tags: ['autodocs'],
+  parameters: {
+    docs: {
+      description: {
+        component: '특정 요소 클릭 시 나타나는 플로팅 영역입니다. Radix UI를 기반으로 하며, 글래스모피즘 스타일이 적용되어 있습니다.',
+      },
+    },
+  },
 };
 
 export default meta;

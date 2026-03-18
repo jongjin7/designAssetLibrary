@@ -5,7 +5,7 @@ import { NVLoadingState } from './index';
 
 
 const meta: Meta<typeof NVLoadingState> = {
-  title: 'Atoms/NVLoadingState',
+  title: 'Atoms/LoadingState',
   component: NVLoadingState,
   tags: ['autodocs'],
   argTypes: {
@@ -18,6 +18,11 @@ const meta: Meta<typeof NVLoadingState> = {
   },
   parameters: {
     layout: 'centered',
+    docs: {
+      description: {
+        component: '로딩, 동기화, 성공, 오류, 빈 데이터 등 애플리케이션의 다양한 상태를 일관된 디자인으로 표시하는 컴포넌트입니다.',
+      },
+    },
   },
 };
 
