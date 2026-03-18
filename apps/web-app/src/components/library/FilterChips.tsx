@@ -6,6 +6,7 @@ interface FilterChipsProps {
   active: string;
   onChange: (filter: string) => void;
   className?: string;
+  size?: 'sm' | 'md' | 'lg';
 }
 
 const filters = [
@@ -14,15 +15,14 @@ const filters = [
   { key: 'favorites', label: '즐겨찾기' },
 ];
 
-export function FilterChips({ active, onChange, className = '' }: FilterChipsProps) {
+export function FilterChips({ active, onChange, className = '', size = 'md' }: FilterChipsProps) {
   return (
-    <div className={`px-5 py-1 desktop:px-0 ${className}`}>
-      <NVFilterGroup
+    <NVFilterGroup
         options={filters}
         activeKey={active}
         onChange={onChange}
-        size="sm"
+        size={size}
+        className={className}
       />
-    </div>
   );
 }

@@ -1,7 +1,7 @@
 'use client';
 
 import { Palette, Calendar, Tag, X, Check, RotateCcw, Search } from 'lucide-react';
-import { NVCard, NVButton, NVInput, NVSelect } from '@nova/ui';
+import { NVCard, NVButton, NVInput, NVSelect, NVIconButton } from '@nova/ui';
 import React, { useState } from 'react';
 import { cn } from '../../lib/utils';
 
@@ -49,7 +49,7 @@ export function AdvancedFilter({ onApply, onReset, className = '', isMobile = fa
   const content = (
     <div className={cn(
       "w-full flex flex-col",
-      isMobile ? "gap-2 px-5 py-2" : "gap-4 px-8 py-2.5"
+      isMobile ? "gap-4 px-4 pt-2 pb-4" : "gap-4 px-8 py-2.5"
     )}>
       {/* Top Row: Color & Period */}
       <div className={cn(
@@ -57,15 +57,15 @@ export function AdvancedFilter({ onApply, onReset, className = '', isMobile = fa
         isMobile ? "flex-col items-start" : "flex-wrap items-center justify-between"
       )}>
         {/* Color Palette Section */}
-        <div className="flex flex-col gap-1.5">
-          <span className="text-xs text-slate-500/60 ml-0.5">색상 팔레트</span>
+        <div className="flex flex-col gap-2">
+          <span className="text-sm text-slate-500/60 ml-0.5">색상 팔레트</span>
           <div className="flex flex-wrap items-center gap-2 px-0.5">
             {colors.map((c) => (
               <button
                 key={c.value}
                 onClick={() => setFilters({ ...filters, color: c.value })}
                 className={cn(
-                  "w-4 h-4 rounded-full transition-all duration-300 relative",
+                  "w-5 h-5 rounded-full transition-all duration-300 relative",
                   c.hex,
                   filters.color === c.value 
                     ? "ring-1 ring-white ring-offset-1 ring-offset-slate-950 scale-110 shadow-lg" 
@@ -84,15 +84,15 @@ export function AdvancedFilter({ onApply, onReset, className = '', isMobile = fa
         </div>
 
         {/* Time Period Section */}
-        <div className="flex flex-col gap-1.5 items-start">
-          <span className="text-xs text-slate-500/60 ml-0.5">기간 설정</span>
-          <div className="flex p-0.5 bg-white/[0.03] border border-white/[0.05] rounded-lg items-center">
+        <div className="flex flex-col gap-2 items-start">
+          <span className="text-sm text-slate-500/60 ml-0.5">기간 설정</span>
+          <div className="flex px-1 py-1 bg-white/3 border border-white/5 rounded-lg items-center">
             {periods.map((p) => (
               <button
                 key={p.value}
                 onClick={() => setFilters({ ...filters, date: p.value })}
                 className={cn(
-                  "px-3 py-1 text-[10px] font-bold rounded-md transition-all",
+                  "px-3 py-1 text-sm rounded-md transition-all", 
                   filters.date === p.value 
                     ? "bg-indigo-600 text-white shadow-sm" 
                     : "text-slate-500 hover:text-slate-300"
@@ -103,39 +103,39 @@ export function AdvancedFilter({ onApply, onReset, className = '', isMobile = fa
             ))}
             <div className="w-[1px] h-3 bg-white/10 mx-1.5" />
             <button 
-              className="p-1.5 text-slate-600 hover:text-indigo-400"
+              className="p-1.5 mr-1 text-slate-600 hover:text-white"
               title="날짜 직접 선택"
             >
-              <Calendar size={13} strokeWidth={2.5} />
+              <Calendar size={16} strokeWidth={2.5} />
             </button>
           </div>
         </div>
       </div>
 
       {/* Bottom Row: Tag Input Expansion */}
-      <div className="flex flex-col gap-1.5">
-        <span className="text-xs text-slate-500/60 ml-0.5">태그 및 검색어</span>
-        <div className="relative group">
-          <div className="absolute inset-y-0 left-3 flex items-center pointer-events-none">
-            <Tag size={12} className="text-slate-500 group-focus-within:text-indigo-400 transition-colors" />
-          </div>
-          <input
-            type="text"
-            className="w-full bg-white/[0.02] border border-white/[0.05] focus:border-indigo-500/30 focus:bg-white/[0.04] rounded-lg py-1.5 pl-9 pr-10 text-[11px] text-slate-200 placeholder:text-slate-600 outline-none transition-all"
-            placeholder="에셋 태그 입력..."
-            value={filters.tags}
-            onChange={(e) => setFilters({ ...filters, tags: e.target.value })}
-          />
-          <button 
-            onClick={handleReset}
-            className="absolute inset-y-0 right-3 flex items-center text-slate-600 hover:text-white transition-colors"
-          >
-            <RotateCcw size={11} />
-          </button>
-        </div>
+      <div className="flex flex-col gap-2">
+        <span className="text-sm text-slate-500/60 ml-0.5">태그 및 검색어</span>
+        <NVInput
+          size="sm"
+          icon={<Tag size={14} />}
+          placeholder="에셋 태그 입력..."
+          value={filters.tags}
+          onChange={(e) => setFilters({ ...filters, tags: e.target.value })}
+          rightElement=
+            {
+              filters.tags && (<NVIconButton
+                icon={X}
+                variant="ghost"
+                size="xs"
+                className="!h-5 !w-5"
+                onClick={handleReset}
+                title="태그 초기화"
+              aria-label="입력 초기화"
+              />)}
+        /> 
       </div>
 
-      <div className={cn("flex justify-end pt-3 border-t border-white/5 mt-2")}>
+      <div className={cn("flex justify-end pt-3 border-t border-white/5 ")}>
         <NVButton 
           variant="glass" 
           size="sm" 
