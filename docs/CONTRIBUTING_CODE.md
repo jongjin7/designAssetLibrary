@@ -43,7 +43,7 @@ The NOVA project follows a philosophy of **Atomic Granularity**. We strictly avo
 
 - **Tailwind CSS First**: 개별 컴포넌트의 기본 레이아웃, 간격, 폰트 스타일은 Tailwind CSS 클래스를 사용합니다.
 - **Custom Classes for Complex Effects**: 그라데이션, 복잡한 Shadow(layered), 다단계 트랜지션 등 Tailwind로 표현하기에 코드 가독성을 해치는 복잡한 시각 효과는 `globals.css`에 의미 있는 이름의 커스텀 클래스로 정의하여 사용합니다. (예: `.nv-glass-panel-premium`)
-- **Storybook UI**: 반복적으로 사용되는 원자적(Atomic) UI 패턴이나 공통 컴포넌트는 `packages/ui/`에서 관리하며, Storybook을 통해 독립적으로 개발 및 품질을 검증합니다.
+- **Storybook UI**: 반복적으로 사용되는 원자적(Atomic) UI 패턴이나 공통 컴포넌트는 `packages/ui/`에서 관리하며, Storybook을 통해 독립적으로 개발 및 품질을 검증합니다. 모든 스토리 파일은 컴포넌트 수준의 개요와 개별 스토리별 요약 설명을 반드시 포함해야 합니다.
 - **Documentation Sync (New)**: 디자인 시스템에 새로운 컴포넌트가 추가되거나 기존 사양이 변경될 경우, 반드시 `docs/design/` 내 관련 문서를 즉시 업데이트해야 합니다. 이는 AI 에이전트와 인간 개발자 간의 지식 동기화를 위한 핵심 절차입니다. 세부 규칙은 `.agent/workflows/design-system.md`를 참조하십시오.
 - **Style Isolation**: 전역 CSS 클래스보다는 컴포넌트 수준의 스타일링을 지향하되, 공통 시각 효과는 커스텀 유틸리티 클래스를 통해 재사용합니다.
 
@@ -69,5 +69,5 @@ The NOVA project follows a philosophy of **Atomic Granularity**. We strictly avo
 - [ ] 파일 하나가 200줄을 초과하고 있지는 않은가? (초과 시 반드시 분할)
 - [ ] 컴포넌트 내부에 비즈니스 로직(수학적 계산, 복잡한 조건문 등)이 직접 포함되어 있는가? (**Hook으로 추출**)
 - [ ] UI 요소 중 다른 곳에서도 쓰일 법한 부분이 있는가? (**Atom 단위로 추출**)
-- [ ] **디자인 시스템 작업 후 `docs/design/` 문서와 스토리북을 업데이트하였는가?**
+- [ ] **디자인 시스템 작업 후 `docs/design/` 문서와 스토리북을 업데이트하였는가? (개요/요약 정보 포함 필수)**
 - [ ] 이 파일을 에이전트(AI)에게 주었을 때 한눈에 전체 구조를 파악할 수 있을 정도로 간결한가?
