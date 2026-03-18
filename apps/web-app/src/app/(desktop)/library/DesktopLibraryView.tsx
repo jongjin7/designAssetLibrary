@@ -2,11 +2,11 @@
 
 import { processFileToAsset } from '../../../lib/assetProcessor';
 import { AssetGrid } from '../../../components/library/AssetGrid';
-import { AssetInspector } from '../../../components/detail/AssetInspector';
-import { DropZone } from '../../../components/shared/DropZone';
 import { LibraryControls } from '../../../components/library/LibraryControls';
-import { NVLoadingState, NVAssetSelectionBar } from '@nova/ui';
-import { Asset } from '../../../types/asset';
+import { DropZone } from '../../../components/shared/DropZone';
+import { NVLoadingState, NVAssetSelectionBar, NVAssetInspector, Asset } from '@nova/ui';
+import { extractColors } from '../../../lib/colorExtractor';
+import { extractColorsAI } from '../../../lib/colorExtractorAI';
 
 interface DesktopLibraryViewProps {
   assets: Asset[];
@@ -112,7 +112,7 @@ export default function DesktopLibraryView({
         <div className="flex-1 overflow-y-auto p-8 relative">
           <NVAssetSelectionBar
             selectedCount={selectedIds.size}
-            className="sticky top-4 z-40 mx-auto w-fit min-w-[400px] mb-8"
+            className="fixed bottom-4 z-40 left-1/2 -translate-x-1/2"
             onCancel={() => setSelectedIds(new Set())}
             onMove={() => {}}
             onDelete={handleBulkDelete}
@@ -135,11 +135,13 @@ export default function DesktopLibraryView({
       </div>
 
 
-      <AssetInspector 
+      <NVAssetInspector 
         asset={selectedAsset} 
         onClose={closeDetail} 
         onDelete={deleteAsset} 
         onUpdate={updateAsset} 
+        onExtractAI={extractColorsAI}
+        onExtractBasic={extractColors}
       />
     </>
   );

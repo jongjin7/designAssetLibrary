@@ -7,9 +7,9 @@ import { TopBar } from '../../../components/layout/TopBar';
 import { LibraryControls } from '../../../components/library/LibraryControls';
 import { FilterChips } from '../../../components/library/FilterChips';
 import { AssetGrid } from '../../../components/library/AssetGrid';
-import { NVLoadingState, NVIconButton, NVAssetSelectionBar } from '@nova/ui';
-import { AssetDetail } from '../../../components/detail/AssetDetail';
-import { Asset } from '../../../types/asset';
+import { NVLoadingState, NVIconButton, NVAssetSelectionBar, NVAssetDetail, Asset } from '@nova/ui';
+import { extractColors } from '../../../lib/colorExtractor';
+import { extractColorsAI } from '../../../lib/colorExtractorAI';
 
 interface MobileLibraryViewProps {
   assets: Asset[];
@@ -119,7 +119,7 @@ export default function MobileLibraryView({
       <NVAssetSelectionBar
         isMobile={true}
         selectedCount={selectedIds.size}
-        className="fixed bottom-8 left-1/2 -translate-x-1/2 w-[92%] max-w-sm z-50"
+        className="fixed bottom-20 z-40 left-1/2 -translate-x-1/2"
         onCancel={() => {
           setSelectedIds(new Set());
           setIsSelectionMode(false);
@@ -142,11 +142,13 @@ export default function MobileLibraryView({
         )}
       </main>
 
-      <AssetDetail 
+      <NVAssetDetail 
         asset={selectedAsset} 
         onClose={closeDetail} 
         onDelete={deleteAsset} 
         onUpdate={updateAsset}
+        onExtractAI={extractColorsAI}
+        onExtractBasic={extractColors}
       />
     </>
   );
