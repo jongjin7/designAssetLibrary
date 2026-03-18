@@ -94,6 +94,7 @@ export default function MobileLibraryView({
             setSelectedIds(new Set());
             setIsSelectionMode(false);
           }}
+          onMove={() => {}}
           onDelete={handleBulkDelete}
         />
       </TopBar>
