@@ -1,13 +1,14 @@
 'use client';
 
 import { useState } from 'react';
+import { Search, X } from 'lucide-react';
 import { useLibraryFilters } from '../../../hooks/useLibraryFilters';
 import { TopBar } from '../../../components/layout/TopBar';
 import { LibraryControls } from '../../../components/library/LibraryControls';
-import { AssetSelectionBar } from '../../../components/library/AssetSelectionBar';
 import { FilterChips } from '../../../components/library/FilterChips';
+import { AssetSelectionBar } from '../../../components/library/AssetSelectionBar';
 import { AssetGrid } from '../../../components/library/AssetGrid';
-import { NVLoadingState } from '@nova/ui';
+import { NVLoadingState, NVIconButton } from '@nova/ui';
 import { AssetDetail } from '../../../components/detail/AssetDetail';
 import { Asset } from '../../../types/asset';
 
@@ -43,6 +44,15 @@ export default function MobileLibraryView({
   selectedIds, setSelectedIds, isSelectionMode, setIsSelectionMode,
   searchText, setSearchText, isFilterOpen, setIsFilterOpen, filteredAssets, handleFilterApply, handleFilterReset
 }: MobileLibraryViewProps) {
+  const [isSearchOpen, setIsSearchOpen] = useState(false);
+
+  const handleSearchToggle = () => {
+    if (isSearchOpen) {
+      setSearchText('');
+      setIsFilterOpen(false);
+    }
+    setIsSearchOpen(!isSearchOpen);
+  };
 
   const handleSelect = (id: string) => {
     const newSelected = new Set(selectedIds);
@@ -76,42 +86,61 @@ export default function MobileLibraryView({
 
   return (
     <>
-      <TopBar className="mb-0">
-        <LibraryControls 
-          isMobile={true}
-          searchText={searchText}
-          onSearchChange={setSearchText}
-          isFilterOpen={isFilterOpen}
-          onFilterToggle={() => setIsFilterOpen(!isFilterOpen)}
-          onFilterApply={handleFilterApply}
-          onFilterReset={handleFilterReset}
-        />
-        <FilterChips active={filter} onChange={(f) => setFilter(f as any)} />
-        <AssetSelectionBar 
-          isMobile={true}
-          selectedCount={selectedIds.size}
-          onCancel={() => {
-            setSelectedIds(new Set());
-            setIsSelectionMode(false);
-          }}
-          onMove={() => {}}
-          onDelete={handleBulkDelete}
-        />
+      <TopBar
+        rightElement={
+          <NVIconButton
+            icon={isSearchOpen ? X : Search}
+            variant="ghost"
+            size="sm"
+            iconSize={28} 
+            onClick={handleSearchToggle}
+            className={isSearchOpen ? 'text-white' : 'text-slate-400 hover:text-white'}
+          />
+        }
+      >
+        {/* 검색 영역: 아이콘 탭 후 접근 */}
+        {isSearchOpen && (
+          <LibraryControls
+              isMobile={true}
+              searchText={searchText}
+              onSearchChange={setSearchText}
+              isFilterOpen={isFilterOpen}
+              onFilterToggle={() => setIsFilterOpen(!isFilterOpen)}
+              onFilterApply={handleFilterApply}
+              onFilterReset={handleFilterReset}
+              className="px-5 py-2"
+            />
+        )}
+
+        <div className="px-5 py-2 shadow-md shadow-black/20">
+          <FilterChips active={filter} onChange={(f) => setFilter(f as any)} />
+        </div>
       </TopBar>
 
-      <section className="px-5 py-6">
+      <AssetSelectionBar
+        isMobile={true}
+        selectedCount={selectedIds.size}
+        onCancel={() => {
+          setSelectedIds(new Set());
+          setIsSelectionMode(false);
+        }}
+        onMove={() => {}}
+        onDelete={handleBulkDelete}
+      />
+      
+      <main className="px-5 py-6">
         {loading ? (
           <NVLoadingState fullHeight />
         ) : (
-          <AssetGrid 
-            assets={filteredAssets} 
-            onAssetTap={handleAssetTap} 
-            selectedIds={selectedIds}
-            onSelect={(id) => handleSelect(id)}
-            isMobile={true}
-          />
+            <AssetGrid 
+              assets={filteredAssets} 
+              onAssetTap={handleAssetTap} 
+              selectedIds={selectedIds}
+              onSelect={(id) => handleSelect(id)}
+              isMobile={true}
+            />
         )}
-      </section>
+      </main>
 
       <AssetDetail 
         asset={selectedAsset} 

@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { cn } from '../../lib/utils';
 import { SearchBar } from '../shared/SearchBar';
 import { AdvancedFilter } from './AdvancedFilter';
+import { FilterChips } from './FilterChips';
 import { LibraryFilters } from '../../hooks/useLibraryFilters';
 import { 
   ArrowLeftRight, Plus,
@@ -30,6 +31,9 @@ interface LibraryControlsProps {
   isMobile?: boolean;
   isSearchVisible?: boolean;
   onSearchToggle?: () => void;
+  activeFilter?: string;
+  onFilterChange?: (filter: string) => void;
+  className?: string;
 }
 
 export function LibraryControls({
@@ -41,7 +45,10 @@ export function LibraryControls({
   onFilterReset,
   isMobile = false,
   isSearchVisible = false,
-  onSearchToggle
+  onSearchToggle,
+  activeFilter = 'all',
+  onFilterChange,
+  className,
 }: LibraryControlsProps) {
   const [zoom, setZoom] = useState(50);
 
@@ -52,35 +59,31 @@ export function LibraryControls({
 
   if (isMobile) {
     return (
-      <div className="flex flex-col w-full">
-      <div className="px-5 py-0.5">
-        <SearchBar 
-          size="sm"
-          value={searchText}
-          onChange={onSearchChange}
-          onFilterClick={onFilterToggle}
-          placeholder="에셋 이름, 태그로 검색..."
-          showFilter={true}
-          isFilterActive={isFilterOpen}
-        />
-      </div>
+      <div className={cn("flex flex-col w-full select-none gap-2", className)}>
+        <SearchBar
+            size="sm"
+            value={searchText}
+            onChange={onSearchChange}
+            onFilterClick={onFilterToggle}
+            placeholder="에셋 이름, 태그로 검색..."
+            showFilter={true}
+            isFilterActive={isFilterOpen}
+          />
 
-      {isFilterOpen && (
-        <div className="px-5 py-1.5 border-b border-white/5 bg-white/[0.01]">
-            <AdvancedFilter 
-              className={isFilterOpen ? "!bg-white/3 rounded-lg" : ""}
-              isMobile={isMobile}
+        {isFilterOpen && (
+          <AdvancedFilter
+              className="!bg-white/3 rounded-lg"
+              isMobile={true}
               onApply={onFilterApply}
               onReset={onFilterReset}
             />
-        </div>
-      )}
+        )}
       </div>
     );
   }
 
   return (
-    <div className="flex flex-col w-full select-none">
+    <div className={cn("flex flex-col w-full select-none", className)}>
       {/* Premium Desktop Toolbar (macOS Style) */}
       <header 
         className="h-12 flex items-center justify-between px-4 bg-slate-950/40 backdrop-blur-2xl border-b border-white/[0.05] sticky top-0 z-30"
@@ -157,8 +160,12 @@ export function LibraryControls({
         </div>
       </header>
 
+      <div className="px-8 py-2 border-b border-white/[0.05]">
+        <FilterChips active={activeFilter} onChange={onFilterChange ?? (() => {})} />
+      </div>
+
       {isFilterOpen && (
-        <AdvancedFilter 
+        <AdvancedFilter
           className={isFilterOpen ? "!bg-white/3" : ""}
           isMobile={false}
           onApply={onFilterApply}
