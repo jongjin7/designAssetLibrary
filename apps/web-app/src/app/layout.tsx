@@ -1,5 +1,6 @@
 import "./globals.css";
 import { PWAHandler } from "../components/shared/PWAHandler";
+import { NVToastProvider } from "@nova/ui";
 
 export default function RootLayout({
   children,
@@ -40,8 +41,10 @@ export default function RootLayout({
         />
       </head>
       <body>
-        <PWAHandler />
-        {children}
+        <NVToastProvider>
+          <PWAHandler />
+          {children}
+        </NVToastProvider>
       </body>
     </html>
   );

@@ -2,6 +2,7 @@
 
 import React from 'react';
 import { cn } from '../../lib/utils';
+import { useToast } from '../NVToast';
 
 interface NVPaletteStripProps {
   colors: string[];
@@ -16,13 +17,15 @@ export function NVPaletteStrip({
   onColorCopy,
   className = '' 
 }: NVPaletteStripProps) {
+  const { toast } = useToast();
+
   const copyToClipboard = (color: string) => {
     if (onColorCopy) {
       onColorCopy(color);
       return;
     }
     navigator.clipboard.writeText(color);
-    // Generic alert handled in UI library if needed, but usually parent handles feedback
+    toast(`${color} 색상 코드가 복사되었습니다.`, { type: 'success' });
   };
 
   return (
