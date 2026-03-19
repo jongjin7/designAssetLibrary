@@ -36,7 +36,7 @@ export const NVAssetCard: React.FC<NVAssetCardProps> = ({
 }) => {
   const nameWithoutExt = fileName.split('.').slice(0, -1).join('.') || fileName;
   const [isLongPressing, setIsLongPressing] = React.useState(false);
-  const timerRef = React.useRef<NodeJS.Timeout | null>(null);
+  const timerRef = React.useRef<ReturnType<typeof setTimeout> | null>(null);
 
   const startPress = (e: React.MouseEvent | React.TouchEvent) => {
     if (!isMobile) return;
