@@ -29,12 +29,12 @@ export function NVAssetInspector({
 }: NVAssetInspectorProps) {
   if (!asset) {
     return (
-      <aside className={cn("w-80 bg-white/[0.02] border-l border-white/[0.06] flex items-center justify-center p-10 text-center animate-in fade-in duration-300", className)}>
-        <div className="flex flex-col items-center gap-4">
-          <div className="w-12 h-12 rounded-2xl bg-white/[0.03] border border-white/5 flex items-center justify-center text-slate-600">
-            <Sparkles size={24} />
+      <aside className={cn("w-[360px] h-full bg-[#0A0C13] border-l border-white/[0.04] flex items-center justify-center p-10 text-center", className)}>
+        <div className="flex flex-col items-center gap-4 opacity-40">
+          <div className="w-16 h-16 rounded-3xl bg-white/[0.02] border border-white/5 flex items-center justify-center text-slate-400">
+            <Sparkles size={32} strokeWidth={1} />
           </div>
-          <p className="text-sm leading-relaxed text-slate-500 font-medium">
+          <p className="text-sm leading-relaxed text-slate-500 font-medium max-w-[180px]">
             에셋을 선택하여 상세 정보를 확인하세요.
           </p>
         </div>
@@ -43,7 +43,7 @@ export function NVAssetInspector({
   }
 
   return (
-    <aside className={cn("w-80 bg-white/[0.02] border-l border-white/[0.06] flex flex-col overflow-y-auto animate-in slide-in-from-right-4 fade-in duration-300", className)}>
+    <aside className={cn("w-[360px] h-full bg-[#0A0C13] border-l border-white/[0.04] flex flex-col overflow-hidden", className)}> 
       <NVAssetDetailContent 
         asset={asset} 
         onClose={onClose} 
@@ -53,6 +53,7 @@ export function NVAssetInspector({
         onExtractAI={onExtractAI}
         onExtractBasic={onExtractBasic}
         isInspector={true}
+        className="h-full"
       />
     </aside>
   );

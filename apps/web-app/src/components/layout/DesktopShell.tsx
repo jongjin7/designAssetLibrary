@@ -30,7 +30,7 @@ export function DesktopShell({ children, onSearchToggle }: DesktopShellProps) {
   return (
     <div className="min-h-screen flex h-screen bg-slate-950 overflow-hidden">
       {/* Column 1: Sidebar */}
-      <aside 
+      <nav 
         className={cn(
           "flex flex-col bg-white/[0.02] border-r border-white/[0.06] transition-all duration-300 ease-in-out",
           isSidebarCollapsed ? 'w-21' : 'w-[260px]'
@@ -139,7 +139,7 @@ export function DesktopShell({ children, onSearchToggle }: DesktopShellProps) {
             )}
           </div>
         </div>
-      </aside>
+      </nav>
 
       {/* Column 2 & 3: Content Area (Main + Inspector) */}
       <div className="flex-1 flex overflow-hidden">

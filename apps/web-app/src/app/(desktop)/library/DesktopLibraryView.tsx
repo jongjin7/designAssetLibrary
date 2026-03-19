@@ -92,8 +92,8 @@ export default function DesktopLibraryView({
 
 
   return (
-    <>
-      <div className="flex-1 flex flex-col overflow-hidden">
+    <div className="flex h-full w-full overflow-hidden bg-[#0A0C13]">
+      <div className="flex-1 flex flex-col overflow-hidden relative">
         <DropZone onDrop={handleDrop} />
         
         <LibraryControls
@@ -112,14 +112,13 @@ export default function DesktopLibraryView({
         <div className="flex-1 overflow-y-auto p-8 relative">
           <NVAssetSelectionBar
             selectedCount={selectedIds.size}
-            className="fixed bottom-4 z-40 left-1/2 -translate-x-1/2"
+            className="fixed bottom-4 z-40 left-[calc(50%-180px)] -translate-x-1/2"
             onCancel={() => setSelectedIds(new Set())}
             onMove={() => {}}
             onDelete={handleBulkDelete}
           />
 
-          
-          <div className="max-w-[1400px] mx-auto">
+          <div className="mx-auto">
             {loading ? (
               <NVLoadingState className="py-20" />
             ) : (
@@ -134,7 +133,7 @@ export default function DesktopLibraryView({
         </div>
       </div>
 
-
+      {/* Desktop Sidebar Inspector */}
       <NVAssetInspector 
         asset={selectedAsset} 
         onClose={closeDetail} 
@@ -143,6 +142,6 @@ export default function DesktopLibraryView({
         onExtractAI={extractColorsAI}
         onExtractBasic={extractColors}
       />
-    </>
+    </div>
   );
 }

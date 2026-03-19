@@ -95,7 +95,11 @@ export function NVAssetDetailContent({
 
 
   return (
-    <div className={cn("flex flex-col bg-[#0A0C13] max-h-[90vh]", className)}>
+    <div className={cn(
+      "flex flex-col bg-[#0A0C13]", 
+      isInspector ? "h-full" : "max-h-[90vh]", 
+      className
+    )}>
       {isInspector && (
         <header className="flex items-center justify-between px-6 py-2 border-b border-white/[0.04] shrink-0">
           <h3 className="text-[11px] font-bold tracking-widest uppercase text-slate-500">Asset Detail</h3>
@@ -195,7 +199,10 @@ export function NVAssetDetailContent({
       </div>
 
       {/* Balanced Icon-only Actions Section */}
-      <footer className="shrink-0 pb-[env(safe-area-inset-bottom,28px)] border-t border-white/[0.04] bg-[#0A0C13]">
+      <footer className={cn(
+        "shrink-0 border-t border-white/[0.04] bg-[#0A0C13]",
+        isInspector ? "pb-6" : "pb-[env(safe-area-inset-bottom,28px)]"
+      )}>
         <div className="flex items-center justify-center gap-14 p-3 mx-auto">
           <NVIconButton 
             icon={Share2}
