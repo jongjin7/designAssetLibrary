@@ -104,18 +104,21 @@ export const NVAssetCard: React.FC<NVAssetCardProps> = ({
       {/* 2. Seamless Overlay: No visible box boundaries */}
       <div className={cn(
         "absolute inset-0 flex flex-col justify-between p-2.5 transition-all duration-300",
-        "bg-gradient-to-b from-black/30 via-transparent to-black/60",
-        isSelected || isMobile ? "opacity-100" : "opacity-0 group-hover:opacity-100"
+        "bg-gradient-to-b from-black/20 via-transparent to-black/50 group-hover:from-black/40 group-hover:to-black/70",
+        "opacity-100"
       )}>
         {/* Top: Minimal Floating Tags/Actions */}
-        <div className="flex items-start justify-between">
+        <div className={cn(
+          "flex items-start justify-between transition-opacity duration-300",
+          isSelected || isMobile ? "opacity-100" : "opacity-0 group-hover:opacity-100"
+        )}>
            {/* Selection Indicator (No background box) */}
            <div 
               className={cn(
                 "flex h-5 w-5 items-center justify-center rounded-full transition-all border",
                 isSelected 
                   ? "bg-indigo-500 border-indigo-500 scale-100 text-white shadow-[0_0_12px_rgba(99,102,241,0.5)]" 
-                  : "border-white/30 bg-black/10 backdrop-blur-sm opacity-60 group-hover:opacity-100 text-white/50"
+                  : "border-white/30 bg-black/10 backdrop-blur-sm group-hover:opacity-100 text-white/50"
               )}
               onClick={(e) => {
                 e.stopPropagation();
@@ -141,8 +144,11 @@ export const NVAssetCard: React.FC<NVAssetCardProps> = ({
         </div>
 
         {/* Bottom: Frameless Metadata (Floating Text) */}
-        <div className="flex flex-col gap-1.5 translate-y-1 group-hover:translate-y-0 transition-all duration-500">
-          <p className="text-xs font-medium text-white/60 group-hover:text-white/90 truncate drop-shadow-sm px-0.5 tracking-tight transition-colors">
+        <div className={cn(
+          "flex flex-col gap-1.5 transition-all duration-500",
+          isMobile ? "translate-y-0" : "translate-y-1 group-hover:translate-y-0"
+        )}>
+          <p className="text-xs font-medium text-white/70 group-hover:text-white truncate drop-shadow-sm px-0.5 tracking-tight transition-colors">
             {nameWithoutExt}
           </p>
           
