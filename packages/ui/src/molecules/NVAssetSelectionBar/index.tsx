@@ -32,57 +32,45 @@ export function NVAssetSelectionBar({
   return (
     <NVGlassPanel
       theme={theme}
-      noPadding
-      blur="xl"
       className={cn(
-        "flex items-center justify-between transition-all duration-700 animate-in slide-in-from-top-4",
-        "p-2 shadow-[0_32px_64px_-16px_rgba(0,0,0,0.6)]",
+        "w-[340px] flex items-center justify-between transition-all duration-700 animate-in slide-in-from-top-4 !p-2",
         className
       )}
     >
-
       {/* Selected Indicator */}
-      <div className="flex items-center gap-2 px-2">
-        <div className="relative flex items-center justify-center h-5 w-5 mr-1">
-          <div className="absolute inset-0 bg-indigo-500 blur-[8px] opacity-40 rounded-full animate-pulse" />
-          <span className="relative text-[10px] font-black text-white/90">
-            {selectedCount}
-          </span>
-        </div>
-        <span className={cn(
-          "font-bold tracking-tight",
-          isLight ? "text-white" : "text-slate-300",
-          isMobile ? "text-[11px]" : "text-xs"
-        )}>
-          개의 항목 선택됨
+      <div className="flex items-center gap-0.5 shrink-0 ">
+        <span className="relative rounded-full flex items-center justify-center bg-white/20 w-6 h-6 tracking-tight font-semibold">
+          {selectedCount}
+        </span>
+        <span className="tracking-tight text-sm text-slate-600 text-semibold">
+          개 항목 선택
         </span>
       </div>
       
       {/* Action Buttons */}
-      <div className="flex items-center gap-2 ml-6">
-        <button 
+      <div className="flex shrink-0 items-center gap-1 ml-6">
+        <NVButton 
+          variant='ghost'
+          size="sm"
           onClick={onCancel}
-          className="text-slate-400 font-bold hover:text-white transition-colors h-9 px-4 text-xs"
         >
           취소
-        </button>
+        </NVButton>
         
         {onMove && (
           <NVButton 
             variant="glass-neutral"
-            size={isMobile ? "xs" : "sm"}
+            size="sm"
             onClick={onMove}
-            className="font-bold h-9"
           >
             이동
           </NVButton>
         )}
         
         <NVButton 
-          variant="glass-danger"
-          size={isMobile ? "xs" : "sm"}
+          variant="danger"
+          size="sm"
           onClick={onDelete}
-          className="font-bold h-9"
         >
           {isMobile ? '삭제' : '항목 삭제'}
         </NVButton>

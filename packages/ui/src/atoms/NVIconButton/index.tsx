@@ -7,6 +7,7 @@ interface NVIconButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement
   size?: 'xs' | 'sm' | 'md' | 'lg';
   iconSize?: number;
   iconProps?: LucideProps;
+  strokeWidth?: number;
 }
 
 export const NVIconButton: React.FC<NVIconButtonProps> = ({ 
@@ -16,6 +17,7 @@ export const NVIconButton: React.FC<NVIconButtonProps> = ({
   iconSize,
   iconProps,
   className = '', 
+  strokeWidth=2,
   ...props 
 }) => {
   const baseStyles = 'inline-flex items-center justify-center transition-all duration-200 active:scale-90 disabled:opacity-40 disabled:pointer-events-none [&_svg]:text-inherit';
@@ -55,7 +57,7 @@ export const NVIconButton: React.FC<NVIconButtonProps> = ({
 
   return (
     <button className={combinedClasses} {...props}>
-      <Icon size={finalIconSize} {...iconProps} />
+      <Icon size={finalIconSize} {...iconProps} strokeWidth={strokeWidth}/>
     </button>
   );
 };

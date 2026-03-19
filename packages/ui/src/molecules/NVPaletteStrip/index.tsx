@@ -46,8 +46,8 @@ export function NVPaletteStrip({
   };
 
   return (
-    <div className={cn("px-5 py-2", className)}>
-      <div className="flex items-center gap-2 mb-2.5">
+    <div className={cn("", className)}>
+      <div className="flex items-center gap-2 mb-1.5">
         <p className="text-xs font-semibold text-slate-500 uppercase tracking-wider">
           추출된 핵심 컬러
         </p>

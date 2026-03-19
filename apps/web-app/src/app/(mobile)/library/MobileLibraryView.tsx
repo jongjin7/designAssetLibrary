@@ -7,7 +7,7 @@ import { TopBar } from '../../../components/layout/TopBar';
 import { LibraryControls } from '../../../components/library/LibraryControls';
 import { FilterChips } from '../../../components/library/FilterChips';
 import { AssetGrid } from '../../../components/library/AssetGrid';
-import { NVLoadingState, NVIconButton, NVAssetSelectionBar, NVAssetDetail, Asset } from '@nova/ui';
+import { NVLoadingState, NVIconButton, NVAssetSelectionBar, NVAssetDetail, Asset, NVButton } from '@nova/ui';
 import { extractColors } from '../../../lib/colorExtractor';
 import { extractColorsAI } from '../../../lib/colorExtractorAI';
 
@@ -91,7 +91,7 @@ export default function MobileLibraryView({
             icon={isSearchOpen ? X : Search}
             variant="ghost"
             size="sm"
-            iconSize={28} 
+            iconSize={24} 
             onClick={handleSearchToggle}
             className={isSearchOpen ? 'text-white' : 'text-slate-400 hover:text-white'}
           />
@@ -117,7 +117,8 @@ export default function MobileLibraryView({
       </TopBar>
 
       <NVAssetSelectionBar
-        isMobile={true}
+
+        isMobile={true} 
         selectedCount={selectedIds.size}
         className="fixed bottom-20 z-40 left-1/2 -translate-x-1/2"
         onCancel={() => {

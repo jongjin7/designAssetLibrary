@@ -40,7 +40,7 @@ const styleMap: Record<NVGlassPanelTheme, Record<NVGlassPanelVariant, string>> =
 
 const textMap: Record<NVGlassPanelTheme, string> = {
   dark:  'text-white',
-  light: 'text-slate-900',
+  light: 'text-slate-800',
 };
 
 export const NVGlassPanel: React.FC<NVGlassPanelProps> = ({

@@ -1,5 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/react';
-import { NVPaletteStrip, useToast, NVToastProvider } from './index';
+import { NVPaletteStrip } from './index';
+import { NVToastProvider } from '../NVToast';
 import React from 'react';
 
 const meta: Meta<typeof NVPaletteStrip> = {
