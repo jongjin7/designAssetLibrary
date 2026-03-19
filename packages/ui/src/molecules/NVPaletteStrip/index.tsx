@@ -19,13 +19,30 @@ export function NVPaletteStrip({
 }: NVPaletteStripProps) {
   const { toast } = useToast();
 
-  const copyToClipboard = (color: string) => {
+  const copyToClipboard = async (color: string) => {
     if (onColorCopy) {
       onColorCopy(color);
       return;
     }
-    navigator.clipboard.writeText(color);
-    toast(`${color} 색상 코드가 복사되었습니다.`, { type: 'success' });
+
+    try {
+      if (navigator.clipboard && window.isSecureContext) {
+        await navigator.clipboard.writeText(color);
+      } else {
+        const textArea = document.createElement("textarea");
+        textArea.value = color;
+        textArea.style.position = "absolute";
+        textArea.style.opacity = "0";
+        document.body.appendChild(textArea);
+        textArea.select();
+        document.execCommand('copy');
+        document.body.removeChild(textArea);
+      }
+      toast(`${color} 색상 코드가 복사되었습니다.`, { type: 'success' });
+    } catch (err) {
+      console.error('Failed to copy color:', err);
+      toast('색상 코드 복사에 실패했습니다.', { type: 'error' });
+    }
   };
 
   return (

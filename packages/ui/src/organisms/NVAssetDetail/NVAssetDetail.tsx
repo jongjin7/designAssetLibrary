@@ -24,12 +24,25 @@ export function NVAssetDetail({
   onExtractAI,
   onExtractBasic
 }: NVAssetDetailProps) {
-  if (!asset) return null;
+  const [lastAsset, setLastAsset] = React.useState<Asset | null>(asset);
+
+  React.useEffect(() => {
+    if (asset) {
+      setLastAsset(asset);
+    } else {
+      // Clear after the transition time (300~400ms) to unmount
+      const timer = setTimeout(() => setLastAsset(null), 500);
+      return () => clearTimeout(timer);
+    }
+  }, [asset]);
+
+  // Keep rendering if we have a lastAsset, letting NVBottomSheet handle the transition based on isOpen prop
+  if (!asset && !lastAsset) return null;
 
   return (
     <NVBottomSheet isOpen={!!asset} onClose={onClose}>
       <NVAssetDetailContent 
-        asset={asset} 
+        asset={asset || lastAsset!} 
         onClose={onClose} 
         onDelete={onDelete} 
         onMove={onMove} 

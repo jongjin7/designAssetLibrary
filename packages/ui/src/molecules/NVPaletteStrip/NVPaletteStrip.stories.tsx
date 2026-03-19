@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/react';
-import { NVPaletteStrip } from './index';
+import { NVPaletteStrip, useToast, NVToastProvider } from './index';
 import React from 'react';
 
 const meta: Meta<typeof NVPaletteStrip> = {
@@ -20,9 +20,11 @@ const meta: Meta<typeof NVPaletteStrip> = {
   },
   decorators: [
     (Story) => (
-      <div className="w-[400px] p-10 bg-slate-950 rounded-2xl">
-        <Story />
-      </div>
+      <NVToastProvider>
+        <div className="w-[400px] p-10 bg-slate-950 rounded-2xl">
+          <Story />
+        </div>
+      </NVToastProvider>
     ),
   ],
 };

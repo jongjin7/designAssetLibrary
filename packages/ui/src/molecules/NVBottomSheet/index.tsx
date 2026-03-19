@@ -12,6 +12,7 @@ interface NVBottomSheetProps {
 
 export function NVBottomSheet({ isOpen, onClose, children, className = '' }: NVBottomSheetProps) {
   const [shouldRender, setShouldRender] = useState(isOpen);
+  const [isVisible, setIsVisible] = useState(false);
   const [isClosing, setIsClosing] = useState(false);
   const [dragY, setDragY] = useState(0);
   const [isDragging, setIsDragging] = useState(false);
@@ -26,12 +27,20 @@ export function NVBottomSheet({ isOpen, onClose, children, className = '' }: NVB
       setIsClosing(false);
       setDragY(0);
       document.body.style.overflow = 'hidden';
+      // Use double requestAnimationFrame to ensure DOM mount and initial style are registered
+      const frameId = requestAnimationFrame(() => {
+        requestAnimationFrame(() => {
+          setIsVisible(true);
+        });
+      });
+      return () => cancelAnimationFrame(frameId);
     } else {
+      setIsVisible(false);
       setIsClosing(true);
       const timer = setTimeout(() => {
         setShouldRender(false);
         setIsClosing(false);
-      }, 300);
+      }, 400); // 400ms for slightly smoother exit
       document.body.style.overflow = '';
       return () => clearTimeout(timer);
     }
@@ -70,16 +79,14 @@ export function NVBottomSheet({ isOpen, onClose, children, className = '' }: NVB
     <div 
       className={cn(
         "fixed inset-0 z-[100] bg-black/60 flex items-end justify-center transition-opacity duration-300",
-        isOpen && !isClosing ? "opacity-100" : "opacity-0"
+        isVisible && !isClosing ? "opacity-100" : "opacity-0"
       )}
       onClick={onClose}
     >
       <div
         ref={sheetRef}
         className={cn(
-          "w-full max-w-[760px] max-h-[85dvh] bg-slate-900 rounded-t-[20px] overflow-y-auto overscroll-behavior-y-contain",
-          "transition-transform duration-300 cubic-bezier(0.23, 1, 0.32, 1)",
-          isClosing ? "translate-y-full" : "translate-y-0",
+          "w-full max-w-[760px] max-h-[85dvh] bg-slate-900 rounded-t-3xl overflow-y-auto overscroll-behavior-y-contain shadow-2xl",
           className
         )}
         onClick={e => e.stopPropagation()}
@@ -87,12 +94,12 @@ export function NVBottomSheet({ isOpen, onClose, children, className = '' }: NVB
         onTouchMove={handleTouchMove}
         onTouchEnd={handleTouchEnd}
         style={{
-          transform: isClosing ? 'translateY(100%)' : `translateY(${dragY}px)`,
-          transition: isDragging ? 'none' : 'transform 0.3s cubic-bezier(0.2, 0.8, 0.2, 1)',
+          transform: !isVisible || isClosing ? 'translateY(100%)' : `translateY(${dragY}px)`,
+          transition: isDragging ? 'none' : 'transform 0.35s cubic-bezier(0.23, 1, 0.32, 1)',
           touchAction: dragY > 0 ? 'none' : 'pan-y'
         }}
       >
-        <div className="w-9 h-1 rounded-full bg-white/20 mx-auto my-3 touch-none" />
+        <div className="w-10 h-1.5 rounded-full bg-white/20 mx-auto my-4 touch-none shrink-0" />
         {children}
       </div>
     </div>
