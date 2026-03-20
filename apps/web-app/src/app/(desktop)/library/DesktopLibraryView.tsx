@@ -150,6 +150,7 @@ export default function DesktopLibraryView({
           activeFilter={filter}
           onFilterChange={(f) => setFilter(f as any)}
           isSidebarVisible={isSidebarVisible}
+          onAddAsset={addAsset}
         />
 
         {/* Floating Sidebar Toggle - Fixed to FAR RIGHT Edge of Browser */}

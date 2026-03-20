@@ -10,6 +10,7 @@ export * from './atoms/NVSwitch';
 export * from './atoms/NVLoadingState';
 export * from './atoms/NVPopover';
 export * from './atoms/NVGlassPanel';
+export * from './atoms/NVFormGroup';
 // Molecules
 export * from './molecules/NVFilterGroup';
 export * from './molecules/NVSearchBar';

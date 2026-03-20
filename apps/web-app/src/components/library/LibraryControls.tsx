@@ -12,8 +12,10 @@ import {
   LayoutGrid, 
   Filter, 
   Pin,
+  Image as ImageIcon,
 } from 'lucide-react';
 import { ViewOptionsPopover } from './ViewOptionsPopover';
+import { DesktopAssetForm } from './DesktopAssetForm';
 import { 
   NVPopover, 
   NVPopoverTrigger, 
@@ -35,6 +37,7 @@ interface LibraryControlsProps {
   onFilterChange?: (filter: string) => void;
   className?: string;
   isSidebarVisible?: boolean;
+  onAddAsset?: (data: any, file?: File) => Promise<void>;
 }
 
 export function LibraryControls({
@@ -51,8 +54,10 @@ export function LibraryControls({
   onFilterChange,
   className,
   isSidebarVisible = false,
+  onAddAsset,
 }: LibraryControlsProps) {
   const [zoom, setZoom] = useState(50);
+  const [isAddOpen, setIsAddOpen] = useState(false);
 
   const handleSearchChange = (value: string) => {
     onSearchChange(value);
@@ -91,8 +96,24 @@ export function LibraryControls({
         className="h-12 flex items-center justify-between px-4 bg-slate-950/40 backdrop-blur-2xl border-b border-white/[0.05] sticky top-0 z-30"
         style={{ WebkitAppRegion: 'drag' } as any}
       >
-        <div className="flex items-center gap-0 ml-2">
-          <NVIconButton icon={Plus} variant="ghost" size="sm" className="text-slate-400 hover:text-white" />
+        <div className="flex items-center gap-0 ml-2" style={{ WebkitAppRegion: 'no-drag' } as any}>
+          <NVPopover open={isAddOpen} onOpenChange={setIsAddOpen}>
+            <NVPopoverTrigger asChild>
+              <NVIconButton 
+                icon={Plus} 
+                variant="ghost" 
+                size="sm" 
+                className={cn("text-slate-400 hover:text-white transition-colors", isAddOpen && "text-indigo-400 bg-indigo-500/10")} 
+                title="새 에셋 등록"
+              />
+            </NVPopoverTrigger>
+            <NVPopoverContent align="start" sideOffset={8} className="p-0 border-white/10 shadow-2xl z-[100]">
+              <DesktopAssetForm 
+                onAdd={onAddAsset ?? (async () => {})} 
+                onClose={() => setIsAddOpen(false)} 
+              />
+            </NVPopoverContent>
+          </NVPopover>
           <NVIconButton icon={ArrowLeftRight} variant="ghost" size="sm" className="text-slate-400 hover:text-white" onClick={onSearchToggle}
             title="이동 (Cmd+F)" />
           <NVIconButton icon={ChevronLeft} variant="ghost" size="sm" className="text-slate-600" />
