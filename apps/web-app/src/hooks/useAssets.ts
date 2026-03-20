@@ -11,10 +11,11 @@ export function useAssets() {
   const [loading, setLoading] = useState(true);
   const [mounted, setMounted] = useState(false);
   const [filter, setFilter] = useState<FilterType>('all');
-  const [selectedAsset, setSelectedAsset] = useState<Asset | null>(null);
+  const [selectedAssetId, setSelectedAssetId] = useState<string | null>(null);
 
   const refreshAssets = useCallback(async () => {
-    setLoading(true);
+    // We don't want to set loading to true every time on resize if we already have data
+    if (assets.length === 0) setLoading(true);
     try {
       const data = await assetRepository.getAssets();
       setAssets(data);
@@ -23,12 +24,16 @@ export function useAssets() {
     } finally {
       setLoading(false);
     }
-  }, []);
+  }, [assets.length]);
 
   useEffect(() => {
     setMounted(true);
     refreshAssets();
   }, [refreshAssets]);
+
+  const selectedAsset = useMemo(() => 
+    assets.find(a => a.id === selectedAssetId) || null
+  , [assets, selectedAssetId]);
 
   const addAsset = useCallback(async (asset: Partial<Asset>, file?: Blob) => {
     try {
@@ -40,7 +45,9 @@ export function useAssets() {
   }, [refreshAssets]);
 
   const filteredAssets = useMemo(() => {
+    // On SSR or initial hydration, we might want to show nothing or a skeleton
     if (!mounted) return [];
+    
     switch (filter) {
       case 'recent':
         return [...assets].sort((a, b) =>
@@ -54,22 +61,23 @@ export function useAssets() {
   }, [assets, filter, mounted]);
 
   const openDetail = useCallback((asset: Asset) => {
-    setSelectedAsset(asset);
+    setSelectedAssetId(asset.id);
   }, []);
 
   const closeDetail = useCallback(() => {
-    setSelectedAsset(null);
+    setSelectedAssetId(null);
   }, []);
 
   const deleteAsset = useCallback(async (id: string) => {
     try {
       await assetRepository.deleteAsset(id);
+      if (selectedAssetId === id) setSelectedAssetId(null);
       await refreshAssets();
     } catch (error) {
       console.error('Failed to delete asset:', error);
     }
-  }, [refreshAssets]);
-
+  }, [refreshAssets, selectedAssetId]);
+  
   const updateAsset = useCallback(async (id: string, updates: Partial<Asset>) => {
     try {
       await assetRepository.updateAsset(id, updates);

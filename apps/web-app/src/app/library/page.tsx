@@ -7,7 +7,7 @@ import { MobileShell } from '../../components/layout/MobileShell';
 import { usePathname } from 'next/navigation';
 import { DesktopShell } from '../../components/layout/DesktopShell';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useAssets } from '../../hooks/useAssets';
 import { useLibraryFilters } from '../../hooks/useLibraryFilters';
 import { useAssetSelection } from '../../hooks/useAssetSelection';
@@ -20,6 +20,7 @@ export default function UnifiedLibraryPage() {
   
   // Lifted state to persist across mobile <-> desktop transitions
   const { assets, loading, filter, setFilter, selectedAsset, openDetail, closeDetail, deleteAsset, updateAsset, addAsset } = useAssets();
+
   const { 
     searchText, setSearchText, isFilterOpen, setIsFilterOpen, filteredAssets, handleFilterApply, handleFilterReset 
   } = useLibraryFilters(assets);
@@ -27,21 +28,36 @@ export default function UnifiedLibraryPage() {
   const [isSelectionMode, setIsSelectionMode] = useState(false);
   const [isSearchVisible, setIsSearchVisible] = useState(false);
 
-  if (isDesktop === null) return null;
+  // Reset all transient UI states when switching between mobile and desktop as per user UX preference
+  useEffect(() => {
+    if (isDesktop !== null) {
+      closeDetail();
+      setSelectedIds(new Set());
+      setIsSelectionMode(false);
+      setIsSearchVisible(false);
+      setIsFilterOpen(false);
+      setSearchText('');
+      setFilter('all');
+      handleFilterReset();
+    }
+  }, [isDesktop, closeDetail, setSelectedIds, setIsSelectionMode, setIsSearchVisible, setIsFilterOpen, setSearchText, setFilter, handleFilterReset]);
 
   const commonProps = {
     assets, loading, filter, setFilter, selectedAsset, openDetail, closeDetail, deleteAsset, updateAsset, addAsset,
     selectedIds, setSelectedIds,
     searchText, setSearchText, isFilterOpen, setIsFilterOpen, filteredAssets, handleFilterApply, handleFilterReset,
-    isSearchVisible, setIsSearchVisible
+    isSearchVisible, 
+    onSearchToggle: () => setIsSearchVisible(!isSearchVisible)
   };
 
-  if (isDesktop) {
+  // Prevent full unmount during brief null states of useIsDesktop
+  const showDesktop = isDesktop === true;
+
+  if (showDesktop) {
     return (
       <DesktopShell onSearchToggle={() => setIsSearchVisible(!isSearchVisible)}>
         <DesktopLibraryView 
           {...commonProps} 
-          onSearchToggle={() => setIsSearchVisible(!isSearchVisible)} 
         />
         <SearchPalette 
           isOpen={isSearchVisible} 

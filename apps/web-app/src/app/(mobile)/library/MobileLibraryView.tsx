@@ -36,21 +36,23 @@ interface MobileLibraryViewProps {
   filteredAssets: Asset[];
   handleFilterApply: (f: any) => void;
   handleFilterReset: () => void;
+  isSearchVisible?: boolean;
+  onSearchToggle?: () => void;
 }
 
 export default function MobileLibraryView({
   assets, loading, filter, setFilter, selectedAsset, openDetail, closeDetail, deleteAsset, updateAsset,
   selectedIds, setSelectedIds, isSelectionMode, setIsSelectionMode,
-  searchText, setSearchText, isFilterOpen, setIsFilterOpen, filteredAssets, handleFilterApply, handleFilterReset
+  searchText, setSearchText, isFilterOpen, setIsFilterOpen, filteredAssets, handleFilterApply, handleFilterReset,
+  isSearchVisible = false, onSearchToggle
 }: MobileLibraryViewProps) {
-  const [isSearchOpen, setIsSearchOpen] = useState(false);
 
   const handleSearchToggle = () => {
-    if (isSearchOpen) {
+    if (isSearchVisible) {
       setSearchText('');
       setIsFilterOpen(false);
     }
-    setIsSearchOpen(!isSearchOpen);
+    onSearchToggle?.();
   };
 
   const handleSelect = (id: string) => {
@@ -88,17 +90,17 @@ export default function MobileLibraryView({
       <MobileTopBar
         rightElement={
           <NVIconButton
-            icon={isSearchOpen ? X : Search}
+            icon={isSearchVisible ? X : Search}
             variant="ghost"
             size="sm"
             iconSize={24} 
             onClick={handleSearchToggle}
-            className={isSearchOpen ? 'text-white' : 'text-slate-400 hover:text-white'}
+            className={isSearchVisible ? 'text-white' : 'text-slate-400 hover:text-white'}
           />
         }
       >
         {/* 검색 영역: 아이콘 탭 후 접근 */}
-        {isSearchOpen && (
+        {isSearchVisible && (
           <LibraryControls
               isMobile={true}
               searchText={searchText}

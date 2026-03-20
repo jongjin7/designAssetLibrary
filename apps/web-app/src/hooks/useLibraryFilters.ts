@@ -1,5 +1,5 @@
-import { useState, useMemo } from 'react';
-import { Asset } from '../lib/assetProcessor';
+import { useState, useMemo, useCallback } from 'react';
+import { Asset } from '../types/asset';
 
 export interface LibraryFilters {
   color?: string;
@@ -40,15 +40,17 @@ export function useLibraryFilters(assets: Asset[]) {
     return result;
   }, [assets, searchText, activeFilters]);
 
-  const handleFilterApply = (filters: LibraryFilters) => {
+  const handleFilterApply = useCallback((filters: LibraryFilters) => {
     setActiveFilters(filters);
-  };
+  }, []);
 
-  const handleFilterReset = () => {
+  const handleFilterReset = useCallback(() => {
     setActiveFilters(null);
-  };
+  }, []);
 
-  const toggleFilter = () => setIsFilterOpen(!isFilterOpen);
+  const toggleFilter = useCallback(() => {
+    setIsFilterOpen(prev => !prev);
+  }, []);
 
   return {
     searchText,

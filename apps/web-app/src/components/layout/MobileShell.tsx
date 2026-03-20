@@ -2,7 +2,7 @@
 
 import React from 'react';
 import { NetworkStatus } from '../shared/NetworkStatus';
-import { BottomTabs } from './BottomTabs';
+import { MobileBottomNav as BottomTabs } from './MobileBottomNav';
 
 interface MobileShellProps {
   children: React.ReactNode;
