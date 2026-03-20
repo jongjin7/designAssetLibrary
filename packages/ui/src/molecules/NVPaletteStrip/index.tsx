@@ -48,7 +48,7 @@ export function NVPaletteStrip({
   return (
     <div className={cn("", className)}>
       <div className="flex items-center gap-2 mb-1.5">
-        <p className="text-xs font-semibold text-slate-500 uppercase tracking-wider">
+        <p className="text-[11px] font-bold text-slate-500 uppercase tracking-widest leading-none">
           추출된 핵심 컬러
         </p>
         {isAiRefined && (
@@ -61,11 +61,20 @@ export function NVPaletteStrip({
         {colors.map((color, i) => (
           <button 
             key={i} 
-            className="w-9 h-9 rounded-xl border border-white/10 transition-transform active:scale-125 hover:scale-115" 
+            className={cn(
+              "w-9 h-9 rounded-xl border transition-all duration-300 hover:scale-110 active:scale-125 hover:z-10 group relative",
+              isAiRefined 
+                ? "border-cyan-500/30 shadow-[0_0_15px_rgba(6,182,212,0.15)]" 
+                : "border-white/10 hover:border-white/30"
+            )}
             style={{ background: color }} 
             onClick={() => copyToClipboard(color)}
             title={`클릭하여 복사: ${color}`}
-          />
+          >
+            {isAiRefined && (
+              <div className="absolute inset-0 rounded-xl bg-gradient-to-tr from-white/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
+            )}
+          </button>
         ))}
       </div>
     </div>

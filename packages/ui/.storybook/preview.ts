@@ -19,6 +19,11 @@ const preview: Preview = {
         },
       ],
     },
+    options: {
+      storySort: {
+        order: ['Foundations', ['ColorPalette', 'TypographyGuide'], 'Atoms', 'Molecules', 'Organisms'],
+      },
+    },
   },
 };
 

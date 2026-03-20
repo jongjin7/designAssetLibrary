@@ -24,6 +24,12 @@ export * from './molecules/NVToast';
 export * from './organisms/NVAssetGrid';
 export * from './organisms/NVAssetDetail';
 
+// Foundations (Design Specs)
+export * from './foundations/NVColorPalette';
+export * from './foundations/NVTypographyGuide';
+export * from './foundations/NVSpacingGuide';
+export * from './foundations/NVIconGuide';
+
 // Types
 export * from './types/asset';
 
