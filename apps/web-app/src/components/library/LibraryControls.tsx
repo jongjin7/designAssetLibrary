@@ -155,23 +155,11 @@ export function LibraryControls({
               <ViewOptionsPopover />
             </NVPopoverContent>
           </NVPopover>
-          
-          <NVIconButton 
-            icon={Filter} 
-            variant="ghost" 
-            size="sm" 
-            className={isFilterOpen ? 'text-indigo-400 bg-indigo-500/10' : 'text-slate-400'} 
-            onClick={onFilterToggle}
-          />
 
           <NVIconButton icon={Pin} variant="ghost" size="sm" className="ml-1 text-slate-500 hover:text-slate-300" />
         </div>
       </header>
-
-      <div className="px-8 py-2 border-b border-white/[0.05]">
-        <FilterChips active={activeFilter} onChange={onFilterChange ?? (() => {})} />
-      </div>
-
+      
       {isFilterOpen && (
         <AdvancedFilter
           className={isFilterOpen ? "!bg-white/3" : ""}
@@ -180,6 +168,12 @@ export function LibraryControls({
           onReset={onFilterReset}
         />
       )}
+
+      <div className="px-8 py-2 border-b border-white/[0.05]">
+        <FilterChips active={activeFilter} onChange={onFilterChange ?? (() => {})} />
+      </div>
+
+      
     </div>
   );
 }
