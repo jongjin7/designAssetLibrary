@@ -36,6 +36,7 @@ export const NVAssetCard: React.FC<NVAssetCardProps> = ({
 }) => {
   const nameWithoutExt = fileName.split('.').slice(0, -1).join('.') || fileName;
   const [isLongPressing, setIsLongPressing] = React.useState(false);
+  const [isLoaded, setIsLoaded] = React.useState(false);
   const timerRef = React.useRef<ReturnType<typeof setTimeout> | null>(null);
 
   const startPress = (e: React.MouseEvent | React.TouchEvent) => {
@@ -81,19 +82,45 @@ export const NVAssetCard: React.FC<NVAssetCardProps> = ({
       tabIndex={0}
       style={{ WebkitTouchCallout: 'none' }}
     >
+      <style>{`
+        @keyframes nv-shimmer {
+          0% { background-position: -200% 0; }
+          100% { background-position: 200% 0; }
+        }
+      `}</style>
+      
       {/* 1. Main Content: No borders, just the image */}
       <div className={cn(
-        "w-full bg-slate-900 rounded-lg overflow-hidden transition-transform duration-300",
-        isLongPressing ? "scale-[0.98]" : ""
+        "w-full bg-slate-900 rounded-lg overflow-hidden transition-all duration-500 relative",
+        isLongPressing ? "scale-[0.98]" : "",
+        !isLoaded ? "aspect-square" : ""
       )}>
-        {thumbnail ? (
+        {/* Shimmer Skeleton (shown until loaded) */}
+        {!isLoaded && (
+          <div 
+            className="absolute inset-0 opacity-40 animate-pulse" 
+            style={{ 
+              background: thumbnailGradient || 'linear-gradient(90deg, transparent 0%, rgba(255,255,255,0.05) 50%, transparent 100%)',
+              backgroundSize: '200% 100%',
+              animation: 'nv-shimmer 2.5s infinite linear'
+            }} 
+          />
+        )}
+
+        {thumbnail && (
           <img 
             src={thumbnail} 
             alt={fileName} 
             loading="lazy" 
-            className="w-full h-auto object-contain transition-transform duration-1000 group-hover:scale-105" 
+            onLoad={() => setIsLoaded(true)}
+            className={cn(
+              "w-full h-auto object-contain transition-all duration-1000 group-hover:scale-105",
+              isLoaded ? "opacity-100 scale-100" : "opacity-0 scale-100"
+            )} 
           />
-        ) : (
+        )}
+        
+        {!thumbnail && !isLoaded && (
           <div 
             className="aspect-square w-full opacity-40" 
             style={{ background: thumbnailGradient }} 
