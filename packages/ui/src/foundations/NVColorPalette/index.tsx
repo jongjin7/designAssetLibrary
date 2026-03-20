@@ -111,7 +111,7 @@ export function NVColorPalette() {
   const brandTokens = tokens.filter(t => t.group === "Brand Identity");
 
   return (
-    <div className="flex flex-col max-w-6xl mx-auto py-8">
+    <div className="flex flex-col max-w-6xl mx-auto py-10">
       <FoundationHeader 
         title="Color Foundations" 
         description="NOVA의 컬러 시스템은 실용적인 개발 사양과 시각적 정체성을 동시에 제공합니다. 스와치를 통해 무드를 확인하고 유틸리티 클래스를 참조하여 일관된 색감을 유지하세요." 

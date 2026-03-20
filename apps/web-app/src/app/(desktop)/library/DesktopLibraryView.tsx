@@ -1,10 +1,11 @@
-'use client';
-
+import { useState, useEffect, useRef } from 'react';
+import { PanelRightOpen, PanelRightClose } from 'lucide-react';
 import { processFileToAsset } from '../../../lib/assetProcessor';
 import { AssetGrid } from '../../../components/library/AssetGrid';
 import { LibraryControls } from '../../../components/library/LibraryControls';
 import { DropZone } from '../../../components/shared/DropZone';
-import { NVLoadingState, NVAssetSelectionBar, NVAssetDetailSidebar, Asset } from '@nova/ui';
+import { NVLoadingState, NVAssetSelectionBar, NVAssetDetailSidebar, Asset, NVIconButton } from '@nova/ui';
+import { cn } from '../../../lib/utils';
 import { extractColors } from '../../../lib/colorExtractor';
 import { extractColorsAI } from '../../../lib/colorExtractorAI';
 
@@ -43,6 +44,41 @@ export default function DesktopLibraryView({
   isSearchVisible, onSearchToggle
 }: DesktopLibraryViewProps) {
   
+  const [isSidebarVisible, setIsSidebarVisible] = useState(false);
+
+  // Automatically show sidebar when a new asset is selected
+  useEffect(() => {
+    if (selectedAsset) {
+      // Only auto-open if we have enough screen space
+      if (window.innerWidth >= 760) {
+        setIsSidebarVisible(true);
+      }
+    }
+  }, [selectedAsset]);
+
+  const lastWidthRef = typeof window !== 'undefined' ? useRef(window.innerWidth) : { current: 1024 };
+
+  // Handle automatic collapse on resize CROSSING the 1024px threshold
+  useEffect(() => {
+    const handleResize = () => {
+      const currentWidth = window.innerWidth;
+      const wasAbove = lastWidthRef.current >= 1024;
+      const nowBelow = currentWidth < 1024;
+
+      if (wasAbove && nowBelow) {
+        setIsSidebarVisible(false);
+      }
+      
+      lastWidthRef.current = currentWidth;
+    };
+    
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
+
+  const handleToggleSidebar = () => {
+    setIsSidebarVisible(!isSidebarVisible);
+  };
   const handleAssetTap = (asset: Asset, e: React.MouseEvent) => {
     // Selection mode: Cmd/Ctrl or Shift or if we already have a selection
     if (e.metaKey || e.ctrlKey || e.shiftKey || selectedIds.size > 0) {
@@ -58,6 +94,7 @@ export default function DesktopLibraryView({
     
     // Default mode: open inspector
     openDetail(asset);
+    setIsSidebarVisible(true);
   };
 
   const handleSelect = (id: string, e: React.MouseEvent) => {
@@ -103,13 +140,25 @@ export default function DesktopLibraryView({
           onFilterToggle={() => setIsFilterOpen(!isFilterOpen)}
           onFilterApply={handleFilterApply}
           onFilterReset={handleFilterReset}
-          isSearchVisible={isSearchVisible}
           onSearchToggle={onSearchToggle}
           activeFilter={filter}
           onFilterChange={(f) => setFilter(f as any)}
+          rightElement={
+             <NVIconButton 
+               icon={isSidebarVisible ? PanelRightClose : PanelRightOpen}
+               variant="ghost" 
+               size="sm"
+               onClick={handleToggleSidebar}
+               className={cn(
+                 "transition-colors",
+                 isSidebarVisible ? "text-indigo-400 hover:text-indigo-300" : "text-slate-500 hover:text-slate-300"
+               )}
+               title={isSidebarVisible ? "사이드바 닫기" : "사이드바 열기 (상세 정보)"}
+             />
+          }
         />
 
-        <div className="flex-1 overflow-y-auto p-8 relative">
+        <div className="flex-1 overflow-y-auto p-8 relative cursor-default">
           <NVAssetSelectionBar
             selectedCount={selectedIds.size}
             className="fixed bottom-4 z-40 left-[calc(50%-180px)] -translate-x-1/2"
@@ -133,15 +182,23 @@ export default function DesktopLibraryView({
         </div>
       </div>
 
-      {/* Desktop Sidebar Inspector */}
-      <NVAssetDetailSidebar 
-        asset={selectedAsset} 
-        onClose={closeDetail} 
-        onDelete={deleteAsset} 
-        onUpdate={updateAsset} 
-        onExtractAI={extractColorsAI}
-        onExtractBasic={extractColors}
-      />
+      {/* Desktop Sidebar Inspector with Slide-in Transition */}
+      <div 
+        className={cn(
+          "h-full overflow-hidden transition-all duration-300 ease-in-out border-l border-white/[0.04] bg-[#0A0C13]",
+          isSidebarVisible ? "w-[380px] opacity-100" : "w-0 opacity-0 border-l-0"
+        )}
+      >
+        <NVAssetDetailSidebar 
+          asset={selectedAsset} 
+          onClose={handleToggleSidebar} 
+          onDelete={deleteAsset} 
+          onUpdate={updateAsset} 
+          onExtractAI={extractColorsAI}
+          onExtractBasic={extractColors}
+          className="w-[380px]"
+        />
+      </div>
     </div>
   );
 }

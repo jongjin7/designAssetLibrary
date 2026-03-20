@@ -34,8 +34,9 @@ export function NVAssetDetailSidebar({
           <div className="w-16 h-16 rounded-3xl bg-white/[0.02] border border-white/5 flex items-center justify-center text-slate-400">
             <Sparkles size={32} strokeWidth={1} />
           </div>
+          <p className="text-[11px] font-bold tracking-widest uppercase text-slate-500 mb-2">Inspector</p>
           <p className="text-sm leading-relaxed text-slate-500 font-medium max-w-[180px]">
-            에셋을 선택하여 상세 정보를 확인하세요.
+            기능을 확인하려면 에셋을 먼저 선택해 주세요.
           </p>
         </div>
       </aside>

@@ -34,6 +34,7 @@ interface LibraryControlsProps {
   activeFilter?: string;
   onFilterChange?: (filter: string) => void;
   className?: string;
+  rightElement?: React.ReactNode;
 }
 
 export function LibraryControls({
@@ -49,6 +50,7 @@ export function LibraryControls({
   activeFilter = 'all',
   onFilterChange,
   className,
+  rightElement,
 }: LibraryControlsProps) {
   const [zoom, setZoom] = useState(50);
 
@@ -98,12 +100,12 @@ export function LibraryControls({
         </div>
 
         {/* Title */}
-        <div className="ml-4 text-sm font-semibold text-slate-300 tracking-tight">
+        <div className="ml-4 text-sm font-semibold text-slate-300 tracking-tight whitespace-nowrap truncate min-w-0 flex-shrink">
           현재 선택될 폴더
         </div>
 
         {/* Zoom Slider */}
-        <div className="flex items-center gap-3 px-6" style={{ WebkitAppRegion: 'no-drag' } as any}>
+        <div className="flex-shrink-0 flex items-center gap-3 px-6" style={{ WebkitAppRegion: 'no-drag' } as any}>
           <input 
             type="range" 
             min="0" 
@@ -157,6 +159,12 @@ export function LibraryControls({
           />
 
           <NVIconButton icon={Pin} variant="ghost" size="sm" className="ml-1 text-slate-500 hover:text-slate-300" />
+          
+          {rightElement && (
+            <div className="ml-2 pl-2 border-l border-white/5">
+              {rightElement}
+            </div>
+          )}
         </div>
       </header>
 

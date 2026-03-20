@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { useRouter, usePathname } from 'next/navigation';
 import { useFolders } from '../../hooks/useFolders';
 import { FolderTree } from '../navigation/FolderTree';
@@ -19,12 +19,52 @@ export function DesktopShell({ children, onSearchToggle }: DesktopShellProps) {
   const pathname = usePathname();
   const { folders, createFolder } = useFolders();
   const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(false);
+  
+  const lastWidthRef = useRef(typeof window !== 'undefined' ? window.innerWidth : 1024);
+
+  // Handle automatic collapse/expand on resize CROSSING 1024px
+  useEffect(() => {
+    const checkInitialState = () => {
+       if (window.innerWidth < 1024) {
+         setIsSidebarCollapsed(true);
+       } else {
+         setIsSidebarCollapsed(false);
+       }
+    };
+
+    const handleResize = () => {
+      const currentWidth = window.innerWidth;
+      const wasAbove = lastWidthRef.current >= 1024;
+      const nowBelow = currentWidth < 1024;
+      
+      const wasBelow = lastWidthRef.current < 1024;
+      const nowAbove = currentWidth >= 1024;
+
+      if (wasAbove && nowBelow) {
+        setIsSidebarCollapsed(true);
+      } else if (wasBelow && nowAbove) {
+        setIsSidebarCollapsed(false);
+      }
+      
+      lastWidthRef.current = currentWidth;
+    };
+    
+    // Check state on mount
+    checkInitialState();
+
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
 
   const activeNav = pathname === '/library' ? 'all' : pathname.split('/')[1];
 
   const handleNavClick = (nav: string) => {
     if (nav === 'all') router.push('/library');
     else router.push(`/${nav}`);
+  };
+
+  const handleToggleSidebar = () => {
+    setIsSidebarCollapsed(!isSidebarCollapsed);
   };
 
   return (
@@ -56,7 +96,7 @@ export function DesktopShell({ children, onSearchToggle }: DesktopShellProps) {
             variant="ghost"
             size="md"
             className={isSidebarCollapsed ? 'mx-auto' : 'mx-1'}
-            onClick={() => setIsSidebarCollapsed(!isSidebarCollapsed)}
+            onClick={handleToggleSidebar}
             title={isSidebarCollapsed ? "메뉴 확장" : "메뉴 축소"}
           /> 
         </div>
