@@ -13,8 +13,8 @@ interface NVAssetDetailPreviewProps {
 export function NVAssetDetailPreview({ asset, isInspector = false, className = '' }: NVAssetDetailPreviewProps) {
   return (
     <div className={cn(
-      "relative w-full overflow-hidden bg-black shrink-0", 
-      isInspector ? "max-h-[55vh] min-h-[360px]" : "max-h-[45vh] aspect-[9/16]",
+      "relative w-full overflow-hidden bg-black flex items-center justify-center shrink-0", 
+      isInspector ? "max-h-[55vh] min-h-[360px]" : "max-h-[44vh] aspect-[9/16]",
       className
     )}>
       {asset.thumbnail ? (
