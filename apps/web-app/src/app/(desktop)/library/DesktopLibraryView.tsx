@@ -77,7 +77,13 @@ export default function DesktopLibraryView({
   }, []);
 
   const handleToggleSidebar = () => {
-    setIsSidebarVisible(!isSidebarVisible);
+    const nextVisible = !isSidebarVisible;
+    setIsSidebarVisible(nextVisible);
+    
+    // If we are closing the sidebar, also clear the current asset selection
+    if (!nextVisible) {
+      closeDetail();
+    }
   };
   const handleAssetTap = (asset: Asset, e: React.MouseEvent) => {
     // Selection mode: Cmd/Ctrl or Shift or if we already have a selection
@@ -143,20 +149,23 @@ export default function DesktopLibraryView({
           onSearchToggle={onSearchToggle}
           activeFilter={filter}
           onFilterChange={(f) => setFilter(f as any)}
-          rightElement={
-             <NVIconButton 
-               icon={isSidebarVisible ? PanelRightClose : PanelRightOpen}
-               variant="ghost" 
-               size="sm"
-               onClick={handleToggleSidebar}
-               className={cn(
-                 "transition-colors",
-                 isSidebarVisible ? "text-indigo-400 hover:text-indigo-300" : "text-slate-500 hover:text-slate-300"
-               )}
-               title={isSidebarVisible ? "사이드바 닫기" : "사이드바 열기 (상세 정보)"}
-             />
-          }
+          isSidebarVisible={isSidebarVisible}
         />
+
+        {/* Floating Sidebar Toggle - Fixed to FAR RIGHT Edge of Browser */}
+        <div className="fixed top-2 h-8 right-1 z-50 flex items-center pl-2 border-l border-white/10">
+           <NVIconButton 
+             icon={isSidebarVisible ? PanelRightClose : PanelRightOpen}
+             variant="ghost" 
+             size="sm"
+             onClick={handleToggleSidebar}
+             className={cn(
+               "transition-colors",
+               isSidebarVisible ? "text-indigo-400 hover:text-indigo-300" : "text-slate-500 hover:text-white"
+             )}
+             title={isSidebarVisible ? "사이드바 닫기" : "사이드바 열기 (상세 정보)"}
+           />
+        </div>
 
         <div className="flex-1 overflow-y-auto p-8 relative cursor-default">
           <NVAssetSelectionBar

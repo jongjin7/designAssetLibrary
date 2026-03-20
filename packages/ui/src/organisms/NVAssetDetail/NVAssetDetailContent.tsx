@@ -58,17 +58,22 @@ export function NVAssetDetailContent({
         <NVAssetDetailHeader title="Asset Detail" onClose={onClose} />
       )}
 
-      <div className="flex-1 overflow-y-auto overscroll-contain pb-3">
-        <NVAssetDetailPreview asset={asset} isInspector={isInspector} />
-        <NVAssetDetailInfo asset={asset} />
-        <div className="h-px bg-white/[0.04] mx-5 mb-2" />
-        <NVAssetDetailColors 
-          palette={palette} 
-          isAiRefined={isAiRefined} 
-          isExtracting={isExtracting} 
-          onExtractAI={handleAIExtraction} 
-        />
-        <NVAssetDetailTags tags={asset.tags} />
+      <div className="flex-1 overflow-y-auto overscroll-contain">
+        <div className={cn(
+          "min-h-full flex flex-col",
+          isInspector ? "justify-center py-12" : "pb-3"
+        )}>
+          <NVAssetDetailPreview asset={asset} isInspector={isInspector} />
+          <NVAssetDetailInfo asset={asset} />
+          <div className="h-px bg-white/[0.04] mx-5 mb-3" />
+          <NVAssetDetailColors 
+            palette={palette} 
+            isAiRefined={isAiRefined} 
+            isExtracting={isExtracting} 
+            onExtractAI={handleAIExtraction} 
+          />
+          <NVAssetDetailTags tags={asset.tags} />
+        </div>
       </div>
 
       <NVAssetDetailFooter 

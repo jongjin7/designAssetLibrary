@@ -34,7 +34,7 @@ interface LibraryControlsProps {
   activeFilter?: string;
   onFilterChange?: (filter: string) => void;
   className?: string;
-  rightElement?: React.ReactNode;
+  isSidebarVisible?: boolean;
 }
 
 export function LibraryControls({
@@ -50,7 +50,7 @@ export function LibraryControls({
   activeFilter = 'all',
   onFilterChange,
   className,
-  rightElement,
+  isSidebarVisible = false,
 }: LibraryControlsProps) {
   const [zoom, setZoom] = useState(50);
 
@@ -129,7 +129,13 @@ export function LibraryControls({
         </div>
 
         {/* Right Actions */}
-        <div className="flex items-center gap-0.5 pl-6 relative" style={{ WebkitAppRegion: 'no-drag' } as any}>
+        <div 
+          className={cn(
+            "flex items-center gap-0.5 pl-6 relative transition-all duration-300",
+            isSidebarVisible ? "pr-2" : "pr-10"
+          )} 
+          style={{ WebkitAppRegion: 'no-drag' } as any}
+        >
           <NVPopover>
             <NVPopoverTrigger asChild>
               <NVIconButton 
@@ -159,12 +165,6 @@ export function LibraryControls({
           />
 
           <NVIconButton icon={Pin} variant="ghost" size="sm" className="ml-1 text-slate-500 hover:text-slate-300" />
-          
-          {rightElement && (
-            <div className="ml-2 pl-2 border-l border-white/5">
-              {rightElement}
-            </div>
-          )}
         </div>
       </header>
 

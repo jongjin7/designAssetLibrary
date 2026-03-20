@@ -86,7 +86,7 @@ export function NVBottomSheet({ isOpen, onClose, children, className = '' }: NVB
       <div
         ref={sheetRef}
         className={cn(
-          "w-full max-w-[760px] max-h-[85dvh] bg-slate-900 rounded-t-3xl overflow-y-auto overscroll-behavior-y-contain shadow-2xl",
+          "w-full max-w-[760px] max-h-[90dvh] bg-slate-900 rounded-t-3xl overflow-y-auto overscroll-behavior-y-contain shadow-2xl",
           className
         )}
         onClick={e => e.stopPropagation()}
@@ -99,7 +99,7 @@ export function NVBottomSheet({ isOpen, onClose, children, className = '' }: NVB
           touchAction: dragY > 0 ? 'none' : 'pan-y'
         }}
       >
-        <div className="w-10 h-1.5 rounded-full bg-white/20 mx-auto my-4 touch-none shrink-0" />
+        <div className="w-10 h-1.5 rounded-full bg-white/20 mx-auto my-2 touch-none shrink-0" />
         {children}
       </div>
     </div>

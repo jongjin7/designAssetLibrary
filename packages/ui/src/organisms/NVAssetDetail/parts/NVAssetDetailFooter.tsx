@@ -30,10 +30,10 @@ export function NVAssetDetailFooter({
         <NVIconButton 
           icon={Share2}
           variant="secondary"
-          size="lg"
+          size="md"
           className="!rounded-2xl"
-          iconSize={24}
-          strokeWidth={1}
+          iconSize={22}
+          strokeWidth={1.5}
           onClick={onShare}
           aria-label="공유"
         />
@@ -41,10 +41,10 @@ export function NVAssetDetailFooter({
         <NVIconButton 
           icon={FolderInput}
           variant="secondary"
-          size="lg"
+          size="md"
           className="!rounded-2xl"
-          iconSize={24}
-          strokeWidth={1}
+          iconSize={22}
+          strokeWidth={1.5}
           onClick={onMove}
           aria-label="이동"
         />
@@ -52,10 +52,10 @@ export function NVAssetDetailFooter({
         <NVIconButton 
           icon={Trash2}
           variant="danger"
-          size="lg"
+          size="md"
           className="!rounded-2xl"
-          iconSize={24}
-          strokeWidth={1}
+          iconSize={22}
+          strokeWidth={1.5}
           onClick={onDelete}
           aria-label="삭제"
         />

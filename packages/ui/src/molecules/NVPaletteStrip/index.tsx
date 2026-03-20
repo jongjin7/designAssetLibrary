@@ -47,15 +47,10 @@ export function NVPaletteStrip({
 
   return (
     <div className={cn("", className)}>
-      <div className="flex items-center gap-2 mb-1.5">
-        <p className="text-[11px] font-bold text-slate-500 uppercase tracking-widest leading-none">
+      <div className="flex items-center gap-2 mb-2">
+        <p className="text-xs text-slate-600 font-semibold uppercase tracking-widest leading-none">
           추출된 핵심 컬러
         </p>
-        {isAiRefined && (
-          <span className="text-[9px] font-extrabold text-cyan-500 bg-cyan-500/10 px-1.5 py-0.5 rounded uppercase tracking-wider">
-            AI Refined
-          </span>
-        )}
       </div>
       <div className="flex gap-2">
         {colors.map((color, i) => (

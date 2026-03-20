@@ -1,5 +1,7 @@
 import React from 'react';
 
+import { cn } from '../../lib/utils';
+
 export interface NVAssetGridProps {
   children: React.ReactNode;
   className?: string;
@@ -8,13 +10,17 @@ export interface NVAssetGridProps {
 export const NVAssetGrid: React.FC<NVAssetGridProps> = ({ children, className = '' }) => {
   return (
     <div 
-      className={`
-        columns-2 md:columns-3 lg:columns-2 xl:columns-3 2xl:columns-5
-        gap-4 space-y-4
-        ${className}
-      `.replace(/\s+/g, ' ').trim()}
+      className={cn(
+        "columns-[180px] sm:columns-[220px] md:columns-[240px]",
+        "gap-4 space-y-4 px-1",
+        className
+      )}
     >
-      {children}
+      {React.Children.map(children, child => (
+        <div className="break-inside-avoid mb-4">
+          {child}
+        </div>
+      ))}
     </div>
   );
 };

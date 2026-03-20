@@ -7,7 +7,7 @@ import { MobileShell } from '../../components/layout/MobileShell';
 import { usePathname } from 'next/navigation';
 import { DesktopShell } from '../../components/layout/DesktopShell';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { useAssets } from '../../hooks/useAssets';
 import { useLibraryFilters } from '../../hooks/useLibraryFilters';
 import { useAssetSelection } from '../../hooks/useAssetSelection';
@@ -29,9 +29,21 @@ export default function UnifiedLibraryPage() {
   const [isSelectionMode, setIsSelectionMode] = useState(false);
   const [isSearchVisible, setIsSearchVisible] = useState(false);
 
-  // Reset all transient UI states when switching between mobile and desktop as per user UX preference
+  const prevIsDesktopRef = useRef<boolean | null>(null);
+
+  // Reset all transient UI states ONLY when switching between mobile and desktop
   useEffect(() => {
-    if (isDesktop !== null) {
+    // Skip if isDesktop is still null
+    if (isDesktop === null) return;
+    
+    // Initial mount: set the ref and skip reset if it's already in the correct state
+    if (prevIsDesktopRef.current === null) {
+      prevIsDesktopRef.current = isDesktop;
+      return;
+    }
+
+    // Only reset if the mode has actually changed
+    if (prevIsDesktopRef.current !== isDesktop) {
       closeDetail();
       setSelectedIds(new Set());
       setIsSelectionMode(false);
@@ -40,6 +52,8 @@ export default function UnifiedLibraryPage() {
       setSearchText('');
       setFilter('all');
       handleFilterReset();
+      
+      prevIsDesktopRef.current = isDesktop;
     }
   }, [isDesktop, closeDetail, setSelectedIds, setIsSelectionMode, setIsSearchVisible, setIsFilterOpen, setSearchText, setFilter, handleFilterReset]);
 

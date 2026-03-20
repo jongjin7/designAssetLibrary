@@ -13,7 +13,7 @@ interface NVTagListProps {
 export function NVTagList({ tags, className = '' }: NVTagListProps) {
   return (
     <div className={cn("", className)}>
-      <p className="text-[11px] font-bold text-slate-500 uppercase tracking-widest mb-1.5">태그</p>
+      <p className="text-xs text-slate-600 font-semibold uppercase tracking-widest leading-none mb-2">태그</p>
       <div className="flex flex-wrap gap-2">
         {tags.map(tag => (
           <NVChip 

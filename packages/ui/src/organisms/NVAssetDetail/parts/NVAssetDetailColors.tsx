@@ -28,7 +28,7 @@ export function NVAssetDetailColors({
         <div className="transition-transform active:scale-95">
           <button 
             className={cn(
-              "h-9 px-3.5 rounded-xl flex items-center justify-center gap-1.5 text-[11px] font-bold transition-all border relative overflow-hidden",
+              "h-9 px-3.5 rounded-xl flex items-center justify-center gap-1.5 text-sm font-medium transition-all border relative overflow-hidden",
               isAiRefined 
                 ? "bg-cyan-500/5 border-cyan-500/20 text-cyan-500 shadow-sm" 
                 : "bg-white/[0.02] border-white/10 text-slate-500 hover:bg-white/10 hover:text-slate-200",
