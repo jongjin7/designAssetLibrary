@@ -12,6 +12,7 @@ import { useAssets } from '../../hooks/useAssets';
 import { useLibraryFilters } from '../../hooks/useLibraryFilters';
 import { useAssetSelection } from '../../hooks/useAssetSelection';
 import { SearchPalette } from '../../components/library/SearchPalette';
+import { NVLoadingState } from '@nova/ui';
 
 export default function UnifiedLibraryPage() {
 
@@ -42,6 +43,15 @@ export default function UnifiedLibraryPage() {
     }
   }, [isDesktop, closeDetail, setSelectedIds, setIsSelectionMode, setIsSearchVisible, setIsFilterOpen, setSearchText, setFilter, handleFilterReset]);
 
+  // Prevent flash of wrong view before isDesktop is detected on mount
+  if (isDesktop === null) {
+     return (
+       <div className="fixed inset-0 flex items-center justify-center bg-slate-950 z-[100]">
+         <NVLoadingState message="NOVA 라이브러리 준비 중..." />
+       </div>
+     );
+  }
+
   const commonProps = {
     assets, loading, filter, setFilter, selectedAsset, openDetail, closeDetail, deleteAsset, updateAsset, addAsset,
     selectedIds, setSelectedIds,
@@ -50,10 +60,7 @@ export default function UnifiedLibraryPage() {
     onSearchToggle: () => setIsSearchVisible(!isSearchVisible)
   };
 
-  // Prevent full unmount during brief null states of useIsDesktop
-  const showDesktop = isDesktop === true;
-
-  if (showDesktop) {
+  if (isDesktop) {
     return (
       <DesktopShell onSearchToggle={() => setIsSearchVisible(!isSearchVisible)}>
         <DesktopLibraryView 
