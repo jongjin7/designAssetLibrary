@@ -5,7 +5,7 @@ import { Asset } from '../../types/asset';
 import { NVBottomSheet } from '../../molecules/NVBottomSheet';
 import { NVAssetDetailContent } from './NVAssetDetailContent';
 
-interface NVAssetDetailProps {
+interface NVAssetDetailSheetProps {
   asset: Asset | null;
   onClose: () => void;
   onDelete?: (id: string) => void;
@@ -15,7 +15,7 @@ interface NVAssetDetailProps {
   onExtractBasic?: (imageUrl: string) => Promise<string[]>;
 }
 
-export function NVAssetDetail({ 
+export function NVAssetDetailSheet({ 
   asset, 
   onClose, 
   onDelete, 
@@ -23,7 +23,7 @@ export function NVAssetDetail({
   onUpdate,
   onExtractAI,
   onExtractBasic
-}: NVAssetDetailProps) {
+}: NVAssetDetailSheetProps) {
   const [lastAsset, setLastAsset] = React.useState<Asset | null>(asset);
 
   React.useEffect(() => {

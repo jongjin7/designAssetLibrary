@@ -6,7 +6,7 @@ import { Asset } from '../../types/asset';
 import { NVAssetDetailContent } from './NVAssetDetailContent';
 import { cn } from '../../lib/utils';
 
-interface NVAssetInspectorProps {
+interface NVAssetDetailSidebarProps {
   asset: Asset | null;
   onClose: () => void;
   onDelete?: (id: string) => void;
@@ -17,7 +17,7 @@ interface NVAssetInspectorProps {
   className?: string;
 }
 
-export function NVAssetInspector({ 
+export function NVAssetDetailSidebar({ 
   asset, 
   onClose, 
   onDelete, 
@@ -26,10 +26,10 @@ export function NVAssetInspector({
   onExtractAI,
   onExtractBasic,
   className = ''
-}: NVAssetInspectorProps) {
+}: NVAssetDetailSidebarProps) {
   if (!asset) {
     return (
-      <aside className={cn("w-[360px] h-full bg-[#0A0C13] border-l border-white/[0.04] flex items-center justify-center p-10 text-center", className)}>
+      <aside className={cn("w-[380px] h-full bg-[#0A0C13] border-l border-white/[0.04] flex items-center justify-center p-10 text-center", className)}>
         <div className="flex flex-col items-center gap-4 opacity-40">
           <div className="w-16 h-16 rounded-3xl bg-white/[0.02] border border-white/5 flex items-center justify-center text-slate-400">
             <Sparkles size={32} strokeWidth={1} />
@@ -43,7 +43,7 @@ export function NVAssetInspector({
   }
 
   return (
-    <aside className={cn("w-[360px] h-full bg-[#0A0C13] border-l border-white/[0.04] flex flex-col overflow-hidden", className)}> 
+    <aside className={cn("w-[380px] h-full bg-[#0A0C13] border-l border-white/[0.04] flex flex-col overflow-hidden", className)}> 
       <NVAssetDetailContent 
         asset={asset} 
         onClose={onClose} 

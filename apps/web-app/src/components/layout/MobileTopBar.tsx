@@ -4,14 +4,14 @@ import Link from 'next/link';
 
 import { cn } from '../../lib/utils';
 
-interface TopBarProps {
+interface MobileTopBarProps {
   rightElement?: React.ReactNode;
   className?: string;
   sticky?: boolean;
   children?: React.ReactNode;
 }
 
-export function TopBar({ rightElement, className, sticky = true, children }: TopBarProps) {
+export function MobileTopBar({ rightElement, className, sticky = true, children }: MobileTopBarProps) {
   return (
     <header className={cn(
       "z-[60] flex flex-col w-full",

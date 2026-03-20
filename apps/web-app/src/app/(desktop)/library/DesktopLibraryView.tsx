@@ -4,7 +4,7 @@ import { processFileToAsset } from '../../../lib/assetProcessor';
 import { AssetGrid } from '../../../components/library/AssetGrid';
 import { LibraryControls } from '../../../components/library/LibraryControls';
 import { DropZone } from '../../../components/shared/DropZone';
-import { NVLoadingState, NVAssetSelectionBar, NVAssetInspector, Asset } from '@nova/ui';
+import { NVLoadingState, NVAssetSelectionBar, NVAssetDetailSidebar, Asset } from '@nova/ui';
 import { extractColors } from '../../../lib/colorExtractor';
 import { extractColorsAI } from '../../../lib/colorExtractorAI';
 
@@ -134,7 +134,7 @@ export default function DesktopLibraryView({
       </div>
 
       {/* Desktop Sidebar Inspector */}
-      <NVAssetInspector 
+      <NVAssetDetailSidebar 
         asset={selectedAsset} 
         onClose={closeDetail} 
         onDelete={deleteAsset} 

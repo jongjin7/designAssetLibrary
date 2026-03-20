@@ -1,3 +1,3 @@
-export * from './NVAssetDetail';
+export * from './NVAssetDetailSheet';
 export * from './NVAssetDetailContent';
-export * from './NVAssetInspector';
+export * from './NVAssetDetailSidebar';

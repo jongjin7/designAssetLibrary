@@ -1,4 +1,4 @@
-import { BottomTabs } from '../../components/layout/BottomTabs';
+import { MobileBottomNav } from '../../components/layout/MobileBottomNav';
 import { NetworkStatus } from '../../components/shared/NetworkStatus';
 
 export default function MobileLayout({ children }: { children: React.ReactNode }) {
@@ -9,7 +9,7 @@ export default function MobileLayout({ children }: { children: React.ReactNode }
         {children}
       </main>
       <div className="has-[.capture-screen]:hidden">
-        <BottomTabs />
+        <MobileBottomNav />
       </div>
     </div>
   );

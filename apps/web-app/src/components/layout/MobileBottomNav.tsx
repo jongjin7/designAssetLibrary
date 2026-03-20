@@ -10,7 +10,7 @@ const tabs = [
   { label: 'Profile', icon: User, href: '/profile' },
 ];
 
-export function BottomTabs() {
+export function MobileBottomNav() {
   const pathname = usePathname();
 
   if (pathname === '/capture') return null;

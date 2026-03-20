@@ -3,11 +3,11 @@
 import { useState } from 'react';
 import { Search, X } from 'lucide-react';
 import { useLibraryFilters } from '../../../hooks/useLibraryFilters';
-import { TopBar } from '../../../components/layout/TopBar';
+import { MobileTopBar } from '../../../components/layout/MobileTopBar';
 import { LibraryControls } from '../../../components/library/LibraryControls';
 import { FilterChips } from '../../../components/library/FilterChips';
 import { AssetGrid } from '../../../components/library/AssetGrid';
-import { NVLoadingState, NVIconButton, NVAssetSelectionBar, NVAssetDetail, Asset, NVButton } from '@nova/ui';
+import { NVLoadingState, NVIconButton, NVAssetSelectionBar, NVAssetDetailSheet, Asset, NVButton } from '@nova/ui';
 import { extractColors } from '../../../lib/colorExtractor';
 import { extractColorsAI } from '../../../lib/colorExtractorAI';
 
@@ -85,7 +85,7 @@ export default function MobileLibraryView({
 
   return (
     <>
-      <TopBar
+      <MobileTopBar
         rightElement={
           <NVIconButton
             icon={isSearchOpen ? X : Search}
@@ -114,10 +114,9 @@ export default function MobileLibraryView({
         <div className="px-5 py-2 shadow-md shadow-black/20">
           <FilterChips active={filter} onChange={(f) => setFilter(f as any)} />
         </div>
-      </TopBar>
+      </MobileTopBar>
 
       <NVAssetSelectionBar
-
         isMobile={true} 
         selectedCount={selectedIds.size}
         className="fixed bottom-20 z-40 left-1/2 -translate-x-1/2"
@@ -143,7 +142,7 @@ export default function MobileLibraryView({
         )}
       </main>
 
-      <NVAssetDetail 
+      <NVAssetDetailSheet 
         asset={selectedAsset} 
         onClose={closeDetail} 
         onDelete={deleteAsset} 
