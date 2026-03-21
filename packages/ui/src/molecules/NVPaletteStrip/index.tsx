@@ -2,7 +2,7 @@
 
 import React from 'react';
 import { cn } from '../../lib/utils';
-import { useToast } from '../NVToast';
+import { useToast } from '../../atoms/NVToast';
 
 interface NVPaletteStripProps {
   colors: string[];
@@ -46,32 +46,21 @@ export function NVPaletteStrip({
   };
 
   return (
-    <div className={cn("", className)}>
-      <div className="flex items-center gap-2 mb-2">
-        <p className="text-xs text-slate-600 font-semibold uppercase tracking-widest leading-none">
-          추출된 핵심 컬러
-        </p>
-      </div>
-      <div className="flex gap-2">
-        {colors.map((color, i) => (
-          <button 
-            key={i} 
-            className={cn(
-              "w-9 h-9 rounded-xl border transition-all duration-300 hover:scale-110 active:scale-125 hover:z-10 group relative",
-              isAiRefined 
-                ? "border-cyan-500/30 shadow-[0_0_15px_rgba(6,182,212,0.15)]" 
-                : "border-white/10 hover:border-white/30"
-            )}
-            style={{ background: color }} 
-            onClick={() => copyToClipboard(color)}
-            title={`클릭하여 복사: ${color}`}
-          >
-            {isAiRefined && (
-              <div className="absolute inset-0 rounded-xl bg-gradient-to-tr from-white/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
-            )}
-          </button>
-        ))}
-      </div>
+    <div className={cn("flex gap-2", className)}>
+      {colors.map((color, i) => (
+        <button 
+          key={i} 
+          className={cn(
+            "w-9 h-9 rounded-xl border transition-all duration-300 hover:scale-110 active:scale-125 hover:z-10 group relative",
+            isAiRefined 
+              ? "border-cyan-500/30 shadow-[0_0_15px_rgba(6,182,212,0.15)]" 
+              : "border-white/10 hover:border-white/30"
+          )}
+          style={{ background: color }} 
+          onClick={() => copyToClipboard(color)}
+          title={`클릭하여 복사: ${color}`}
+       />   
+      ))}
     </div>
   );
 }

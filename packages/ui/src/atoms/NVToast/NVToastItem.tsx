@@ -43,7 +43,7 @@ export function NVToastItem({ toast, onClose }: NVToastItemProps) {
   return (
     <div 
       className={cn(
-        "flex items-center gap-3 rounded-2xl border backdrop-blur-xl shadow-2xl animate-in slide-in-from-bottom-2 fade-in duration-300",
+        "flex items-center gap-3 rounded-xl border backdrop-blur-2xl shadow-2xl animate-in slide-in-from-bottom-2 fade-in duration-300",
         size === 'sm' && "px-3 py-2.5 min-w-[200px] max-w-[280px]",
         size === 'md' && "px-4 py-3.5 min-w-[280px] max-w-[400px]",
         size === 'lg' && "px-5 py-4 w-full md:min-w-[400px] max-w-[600px]",

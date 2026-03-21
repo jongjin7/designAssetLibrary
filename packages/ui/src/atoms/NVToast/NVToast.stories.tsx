@@ -1,37 +1,42 @@
 import type { Meta, StoryObj } from '@storybook/react';
 import { NVToastProvider, useToast, NVToastItem } from './index';
 import React from 'react';
+import { NVButton } from '../NVButton';
 
 const ToastDemo = () => {
   const { toast } = useToast();
   return (
     <div className="p-10 flex flex-wrap gap-4 items-center justify-center">
-      <button 
+      <NVButton 
+        variant="secondary"
         onClick={() => toast('정보 메시지입니다. 시스템 상태를 확인하세요.', { type: 'info' })}
-        className="px-5 py-2.5 bg-indigo-500/10 text-indigo-400 border border-indigo-500/20 rounded-xl font-bold hover:bg-indigo-500/20 transition-colors"
       >
         Show Info Toast
-      </button>
+      </NVButton>
       
-      <button 
+      <NVButton 
+        variant="primary"
+        className="bg-emerald-600 hover:bg-emerald-500 text-white border-none"
         onClick={() => toast('에셋이 성공적으로 저장되었습니다.', { type: 'success' })}
-        className="px-5 py-2.5 bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 rounded-xl font-bold hover:bg-emerald-500/20 transition-colors"
       >
         Show Success Toast
-      </button>
+      </NVButton>
       
-      <button 
+      <NVButton 
+        variant="primary"
+        className="bg-rose-600 hover:bg-rose-500 text-white border-none"
         onClick={() => toast('서버 연결에 실패했습니다. 다시 시도해주세요.', { type: 'error' })}
-        className="px-5 py-2.5 bg-rose-500/10 text-rose-400 border border-rose-500/20 rounded-xl font-bold hover:bg-rose-500/20 transition-colors"
       >
         Show Error Toast
-      </button>
+      </NVButton>
     </div>
   );
 };
 
+import showcaseBg from '../../assets/images/glass_showcase_bg.png';
+
 const meta: Meta = {
-  title: 'Molecules/Toast',
+  title: 'Atoms/Toast',
   tags: ['autodocs'],
   parameters: {
     layout: 'centered',
@@ -43,10 +48,17 @@ const meta: Meta = {
   },
   decorators: [
     (Story) => (
-      <div className="bg-slate-950 min-h-[100px] w-full flex items-center justify-center p-10 rounded-3xl border border-white/5">
-        <NVToastProvider>
-          <Story />
-        </NVToastProvider>
+      <div className="bg-slate-950 min-h-[400px] w-[800px] relative overflow-hidden flex items-center justify-center p-20 rounded-[40px] border border-white/5">
+        <div 
+          className="absolute inset-0 bg-cover bg-center opacity-60" 
+          style={{ backgroundImage: `url(${showcaseBg})` }} 
+        />
+        <div className="absolute inset-0 bg-gradient-to-br from-indigo-500/10 via-transparent to-purple-500/10 opacity-30" />
+        <div className="relative z-10 w-full flex flex-col items-center justify-center">
+          <NVToastProvider>
+            <Story />
+          </NVToastProvider>
+        </div>
       </div>
     ),
   ],
@@ -104,10 +116,15 @@ export const States: Story = {
   render: () => {
     const { toast } = useToast();
     return (
-      <div className="flex flex-col gap-4">
-        <button onClick={() => toast('수동으로 닫기 전까지 유지됩니다.', { duration: Infinity })} className="px-5 py-2.5 bg-white/5 text-white border border-white/10 rounded-xl font-bold hover:bg-white/10 transition-colors">Persistent Toast</button>
-        <button onClick={() => toast('1초 만에 사라집니다.', { duration: 1000 })} className="px-5 py-2.5 bg-white/5 text-white border border-white/10 rounded-xl font-bold hover:bg-white/10 transition-colors">Short Duration</button>
+      <div className="flex flex-row gap-4">
+        <NVButton variant="secondary" onClick={() => toast('수동으로 닫기 전까지 유지됩니다.', { duration: Infinity })}>
+          Persistent Toast
+        </NVButton>
+        <NVButton variant="secondary" onClick={() => toast('1초 만에 사라집니다.', { duration: 1000 })}>
+          Short Duration
+        </NVButton>
       </div>
     );
   }
 };
+

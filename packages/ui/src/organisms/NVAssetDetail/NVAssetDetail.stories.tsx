@@ -1,9 +1,14 @@
 import type { Meta, StoryObj } from '@storybook/react';
-import { NVAssetDetail } from './NVAssetDetail';
+import { NVAssetDetailSheet } from './NVAssetDetailSheet';
 import { NVAssetDetailContent } from './NVAssetDetailContent';
-import { NVAssetInspector } from './NVAssetInspector';
+import { NVAssetDetailSidebar } from './NVAssetDetailSidebar';
 import { Asset } from '../../types/asset';
+import { NVToastProvider } from '../../atoms/NVToast';
+import { NVGlassPanel } from '../../atoms/NVGlassPanel';
+import { NVButton } from '../../atoms/NVButton';
 import React, { useState } from 'react';
+
+import showcaseBg from '../../assets/images/glass_showcase_bg.png';
 
 const mockAsset: Asset = {
   id: 'asset-123',
@@ -18,9 +23,9 @@ const mockAsset: Asset = {
   isFavorite: true,
 };
 
-const meta: Meta<typeof NVAssetDetail> = {
-  title: 'Organisms/AssetDetail',
-  component: NVAssetDetail,
+const meta: Meta<typeof NVAssetDetailSheet> = {
+  title: 'Composition/AssetDetail',
+  component: NVAssetDetailSheet,
   tags: ['autodocs'],
   parameters: {
     layout: 'fullscreen',
@@ -30,11 +35,18 @@ const meta: Meta<typeof NVAssetDetail> = {
       },
     },
   },
+  decorators: [
+    (Story) => (
+      <NVToastProvider>
+        <Story />
+      </NVToastProvider>
+    ),
+  ],
 };
 
 export default meta;
 
-export const MobileSheet: StoryObj<typeof NVAssetDetail> = {
+export const MobileSheet: StoryObj<typeof NVAssetDetailSheet> = {
   name: 'Mobile Detail (Bottom Sheet)',
   parameters: {
     docs: {
@@ -44,19 +56,31 @@ export const MobileSheet: StoryObj<typeof NVAssetDetail> = {
     },
   },
   render: () => {
-    const [asset, setAsset] = useState<Asset | null>(null);
+    const [asset, setAsset] = useState<Asset | null>(mockAsset);
     return (
-      <div className="p-10 flex flex-col items-center justify-center min-h-[400px] bg-slate-950">
-        <button 
-          onClick={() => setAsset(mockAsset)}
-          className="px-6 py-3 bg-indigo-600 text-white rounded-xl font-bold"
-        >
-          Open Asset Detail
-        </button>
-        <NVAssetDetail 
+      <div className="flex flex-col items-center justify-center min-h-[500px] bg-slate-950 relative overflow-hidden p-10">
+        <div 
+          className="absolute inset-0 bg-cover bg-center opacity-60" 
+          style={{ backgroundImage: `url(${showcaseBg})` }} 
+        />
+        <div className="absolute inset-0 bg-gradient-to-t from-slate-950/80 to-transparent" />
+        
+        <div className="relative z-10 flex flex-col items-center gap-6">
+          <NVButton 
+            variant="primary"
+            size="md"
+            onClick={() => setAsset(mockAsset)}
+            className="px-8 h-12 rounded-2xl font-bold shadow-2xl shadow-indigo-500/20 active:scale-95 transition-all"
+          >
+            Show Asset Detail
+          </NVButton>
+          <p className="text-slate-400 text-sm font-medium">하단 시트의 글래스 투과 효과를 확인해 보세요.</p>
+        </div>
+        
+        <NVAssetDetailSheet 
           asset={asset} 
           onClose={() => setAsset(null)}
-          onExtractAI={async () => ['#FF0000', '#00FF00', '#0000FF']}
+          onExtractAI={async () => ['#FF3D00', '#FFD600', '#00E676']}
           onExtractBasic={async () => ['#FFFFFF', '#000000']}
         />
       </div>
@@ -64,7 +88,7 @@ export const MobileSheet: StoryObj<typeof NVAssetDetail> = {
   }
 };
 
-export const DesktopInspector: StoryObj<typeof NVAssetInspector> = {
+export const DesktopInspector: StoryObj<typeof NVAssetDetailSidebar> = {
   name: 'Desktop Detail (Inspector Sidebar)',
   parameters: {
     docs: {
@@ -76,26 +100,41 @@ export const DesktopInspector: StoryObj<typeof NVAssetInspector> = {
   render: () => {
     const [asset, setAsset] = useState<Asset | null>(mockAsset);
     return (
-      <div className="flex h-[600px] bg-slate-950 overflow-hidden border border-white/10 rounded-xl">
-        <div className="flex-1 p-10 flex flex-col gap-4 items-center justify-center border-r border-white/5">
-          <p className="text-slate-500 text-sm">메인 그리드 영역 시뮬레이션</p>
-          <button 
-            onClick={() => setAsset(mockAsset)}
-            className="px-4 py-2 bg-white/5 text-white rounded-lg text-xs"
-          >
-            에셋 선택
-          </button>
-          <button 
-            onClick={() => setAsset(null)}
-            className="px-4 py-2 text-slate-500 text-xs"
-          >
-            선택 해제
-          </button>
+      <div className="flex h-[600px] bg-slate-950 overflow-hidden border border-white/10 rounded-2xl relative">
+        <div className="flex-1 p-10 flex flex-col gap-6 items-center justify-center border-r border-white/10 relative overflow-hidden">
+          <div 
+            className="absolute inset-0 bg-cover bg-center opacity-40 grayscale-[0.5]" 
+            style={{ backgroundImage: `url(${showcaseBg})` }} 
+          />
+          <div className="absolute inset-0 bg-[linear-gradient(to_right,#ffffff25_1.5px,transparent_1.5px),linear-gradient(to_bottom,#ffffff25_1.5px,transparent_1.5px)] bg-[size:50px_50px] opacity-30" />
+          
+          <div className="relative z-10 flex flex-col items-center gap-4 text-center">
+            <p className="text-white/60 text-sm font-bold tracking-widest uppercase">Canvas Simulation</p>
+            <div className="flex gap-3">
+              <NVButton 
+                variant="primary"
+                size="sm"
+                onClick={() => setAsset(mockAsset)}
+                className="px-5 font-bold shadow-lg"
+              >
+                에셋 선택
+              </NVButton>
+              <NVButton 
+                variant="secondary"
+                size="sm"
+                onClick={() => setAsset(null)}
+                className="px-5 font-bold"
+              >
+                선택 해제
+              </NVButton>
+            </div>
+            <p className="text-slate-500 text-xs mt-2">사이드바의 리얼타임 글래스 효과를 인스펙터에서 확인하세요.</p>
+          </div>
         </div>
-        <NVAssetInspector 
+        <NVAssetDetailSidebar 
           asset={asset} 
           onClose={() => setAsset(null)}
-          onExtractAI={async () => ['#FF0000', '#00FF00', '#0000FF']}
+          onExtractAI={async () => ['#FF3D00', '#FFD600', '#00E676']}
           onExtractBasic={async () => ['#FFFFFF', '#000000']}
         />
       </div>
@@ -113,12 +152,18 @@ export const CoreContent: StoryObj<typeof NVAssetDetailContent> = {
     },
   },
   render: () => (
-    <div className="max-w-md mx-auto bg-slate-950 border border-white/10 rounded-2xl overflow-hidden my-10">
-      <NVAssetDetailContent 
-        asset={mockAsset}
-        onExtractAI={async () => ['#FF0000', '#00FF00', '#0000FF']}
-        onExtractBasic={async () => ['#FFFFFF', '#000000']}
+    <div className="flex items-center justify-center p-20 bg-slate-950 relative overflow-hidden rounded-[40px]">
+      <div 
+        className="absolute inset-0 bg-cover bg-center opacity-70" 
+        style={{ backgroundImage: `url(${showcaseBg})` }} 
       />
+      <NVGlassPanel variant="modal" noPadding className="relative z-10 max-w-md w-full shadow-3xl">
+        <NVAssetDetailContent 
+          asset={mockAsset}
+          onExtractAI={async () => ['#FF3D00', '#FFD600', '#00E676']}
+          onExtractBasic={async () => ['#FFFFFF', '#000000']}
+        />
+      </NVGlassPanel>
     </div>
   )
 };

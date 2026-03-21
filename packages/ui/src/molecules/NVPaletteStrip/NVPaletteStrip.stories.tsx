@@ -1,7 +1,7 @@
 import type { Meta, StoryObj } from '@storybook/react';
 import { NVPaletteStrip } from './index';
-import { NVToastProvider } from '../NVToast';
-import React from 'react';
+import { NVToastProvider } from '../../atoms/NVToast';
+import React from 'react'; 
 
 const meta: Meta<typeof NVPaletteStrip> = {
   title: 'Molecules/PaletteStrip',
@@ -43,15 +43,3 @@ export const Default: Story = {
   },
 };
 
-export const AIRefined: Story = {
-  parameters: {
-    docs: {
-      description: {
-        story: 'AI로 정제된 컬러임을 나타내는 배지가 활성화된 상태입니다.',
-      },
-    },
-  },
-  args: {
-    isAiRefined: true,
-  },
-};
