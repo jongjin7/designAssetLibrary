@@ -53,9 +53,9 @@ export const NVButton: React.FC<NVButtonProps> = ({
   }; 
 
   const sizes = {
-    xs: 'px-2 py-1 text-xs gap-1',
+    xs: 'px-2.5 py-1 text-[11px] gap-1',
     sm: 'px-4 py-2 text-xs gap-1.5',
-    md: 'px-6 py-3 text-sm gap-2',
+    md: 'px-5 py-2.5 text-sm gap-2',
     lg: 'px-8 py-4 text-base gap-2.5'
   };
 

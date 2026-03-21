@@ -91,9 +91,9 @@ export const ConfirmPattern: Story = {
               영향: 영구 삭제 시 팀원들과 공유 중인 모든 에셋 링크가 만료됩니다.
             </NVNotice>
           </NVDialogBody>
-          <NVDialogFooter className="py-4">
-            <NVButton variant="secondary" size="md">아니오, 보관하겠습니다</NVButton>
-            <NVButton variant="primary" size="md" className="bg-rose-600 hover:bg-rose-500 text-white border-none shadow-lg shadow-rose-500/10">네, 삭제합니다</NVButton>
+          <NVDialogFooter>
+            <NVButton variant="secondary" size="sm">아니오, 보관하겠습니다</NVButton>
+            <NVButton variant="primary" size="sm" className="bg-rose-600 hover:bg-rose-500 text-white border-none shadow-lg shadow-rose-500/10">네, 삭제합니다</NVButton>
           </NVDialogFooter>
         </StaticDialogContainer>
       </div>
@@ -135,7 +135,7 @@ export const FormPattern: Story = {
               </NVFormGroup>
             </div>
           </NVDialogBody>
-          <NVDialogFooter className="py-4">
+          <NVDialogFooter>
             <NVButton variant="ghost" size="sm" className="mr-auto text-slate-500">나중에 하기</NVButton>
             <NVButton variant="secondary" size="sm">임시 저장</NVButton>
             <NVButton variant="primary" size="sm" className="px-5">등록 완료</NVButton>
@@ -190,7 +190,7 @@ export const LargePattern: Story = {
           </NVDialogBody>
           
           <NVDialogFooter className="px-8 py-8 border-none bg-transparent">
-             <NVButton variant="primary" className="w-full h-14 rounded-2xl text-lg font-bold shadow-2xl shadow-indigo-500/20 active:scale-95 transition-all">
+             <NVButton variant="primary" size="lg" className="w-full rounded-2xl font-bold shadow-2xl shadow-indigo-500/20 active:scale-95 transition-all">
                 업데이트 시작하기
              </NVButton>
           </NVDialogFooter>
@@ -206,37 +206,38 @@ export const LargePattern: Story = {
 export const AlertStates: Story = {
   render: () => {
     const states = [
-      { id: 'info', icon: Info, bgColor: 'bg-indigo-500/10', iconColor: 'text-indigo-400', title: '정보 안내', desc: '새로운 에셋 업데이트가 있습니다.' },
-      { id: 'success', icon: CheckCircle2, bgColor: 'bg-emerald-500/10', iconColor: 'text-emerald-400', title: '처리 완료', desc: '에셋 등록이 완료되었습니다.' },
-      { id: 'warning', icon: AlertCircle, bgColor: 'bg-amber-500/10', iconColor: 'text-amber-400', title: '주의 사항', desc: '라이브러리 용량이 부족합니다.' },
-      { id: 'error', icon: Trash2, bgColor: 'bg-rose-500/10', iconColor: 'text-rose-400', title: '오류 발생', desc: '지원하지 않는 파일 형식입니다.' },
+      { id: 'info', icon: Info, bgColor: 'bg-indigo-500/10', iconColor: 'text-indigo-400', title: '정보 안내', desc: '새로운 에셋 업데이트 소식이 있습니다.' },
+      { id: 'success', icon: CheckCircle2, bgColor: 'bg-emerald-500/10', iconColor: 'text-emerald-400', title: '처리 완료', desc: '에셋 등록이 안전하게 완료되었습니다.' },
+      { id: 'warning', icon: AlertCircle, bgColor: 'bg-amber-500/10', iconColor: 'text-amber-400', title: '주의 사항', desc: '라이브러리 공간이 거의 가득 찼습니다.' },
+      { id: 'error', icon: Trash2, bgColor: 'bg-rose-500/10', iconColor: 'text-rose-400', title: '오류 발생', desc: '지원하지 않는 파일 형식입니다. (EPS)' },
     ];
 
     return (
-      <div className="grid grid-cols-2 gap-8 p-10 bg-slate-950 min-h-[600px] relative overflow-hidden">
+      <div className="grid grid-cols-2 gap-10 p-12 bg-slate-950 min-h-[650px] relative overflow-hidden rounded-[40px] border border-white/5">
         <div 
-          className="absolute inset-0 bg-cover bg-center" 
+          className="absolute inset-0 bg-cover bg-center opacity-60" 
           style={{ backgroundImage: `url(${showcaseBg})` }} 
         />
+        <div className="absolute inset-0 bg-gradient-to-b from-transparent via-slate-950/20 to-slate-950/60" />
+        
         {states.map(state => (
-          <div key={state.id} className="relative flex flex-col items-center">
-            <div className="w-full max-w-[280px] overflow-hidden text-center rounded-[32px] border border-white/15 bg-slate-950/60 backdrop-blur-2xl shadow-3xl">
-              <div className="p-6 pb-5 space-y-4">
-                <div className={`w-14 h-14 rounded-2xl ${state.bgColor} flex items-center justify-center ${state.iconColor} mx-auto mb-1`}>
-                  <state.icon size={28} />
+          <div key={state.id} className="relative flex flex-col items-center justify-center">
+            <div className="w-full max-w-[280px] overflow-hidden rounded-2xl border border-white/10 bg-slate-950/40 backdrop-blur-3xl shadow-2xl transition-all hover:translate-y-[-4px] hover:bg-slate-950/50">
+              <div className="p-7 pb-5 text-center">
+                <div className={`w-12 h-12 rounded-xl ${state.bgColor} flex items-center justify-center ${state.iconColor} mx-auto mb-5 shadow-lg shadow-black/20`}>
+                  <state.icon size={24} />
                 </div>
-                <div className="space-y-2">
-                  <h3 className="text-lg font-bold text-white tracking-tight">{state.title}</h3>
-                  <p className="text-[13px] text-slate-500 leading-relaxed px-2">
+                <div className="space-y-1.5 px-1">
+                  <h3 className="text-base font-bold text-white tracking-tight">{state.title}</h3>
+                  <p className="text-[13px] text-slate-500 leading-relaxed font-medium">
                     {state.desc}
                   </p>
                 </div>
               </div>
-              <div className="h-[1px] bg-white/10" />
-              <div className="p-2.5">
-                <button className={`w-full h-11 bg-white/5 hover:bg-white/10 text-slate-200 border-none rounded-2xl font-bold transition-all text-sm active:scale-95`}>
+              <div className="px-5 pb-5 pt-1">
+                <NVButton variant="secondary" size="sm" className="w-full font-bold bg-white/[0.03] border-white/5 hover:bg-white/10">
                   확인
-                </button>
+                </NVButton>
               </div>
             </div>
           </div>

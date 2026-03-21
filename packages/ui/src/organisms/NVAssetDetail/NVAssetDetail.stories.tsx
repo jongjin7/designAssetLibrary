@@ -106,7 +106,6 @@ export const DesktopInspector: StoryObj<typeof NVAssetDetailSidebar> = {
             className="absolute inset-0 bg-cover bg-center opacity-40 grayscale-[0.5]" 
             style={{ backgroundImage: `url(${showcaseBg})` }} 
           />
-          <div className="absolute inset-0 bg-[linear-gradient(to_right,#ffffff25_1.5px,transparent_1.5px),linear-gradient(to_bottom,#ffffff25_1.5px,transparent_1.5px)] bg-[size:50px_50px] opacity-30" />
           
           <div className="relative z-10 flex flex-col items-center gap-4 text-center">
             <p className="text-white/60 text-sm font-bold tracking-widest uppercase">Canvas Simulation</p>

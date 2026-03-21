@@ -41,8 +41,8 @@ export const NVIconButton: React.FC<NVIconButtonProps> = ({
   const sizes = {
     xs: 'w-7 h-7',
     sm: 'w-9 h-9',
-    md: 'w-11 h-11',
-    lg: 'w-13 h-13'
+    md: 'w-10 h-10',
+    lg: 'w-12 h-12'
   };
 
   const defaultIconSizes = {
