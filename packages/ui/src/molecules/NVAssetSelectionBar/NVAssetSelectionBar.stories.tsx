@@ -2,6 +2,8 @@ import type { Meta, StoryObj } from '@storybook/react';
 import { NVAssetSelectionBar } from './index';
 import React from 'react';
 
+import showcaseBg from '../../assets/images/glass_showcase_bg.png';
+
 const meta: Meta<typeof NVAssetSelectionBar> = {
   title: 'Molecules/AssetSelectionBar',
   component: NVAssetSelectionBar,
@@ -23,9 +25,14 @@ const meta: Meta<typeof NVAssetSelectionBar> = {
   },
   decorators: [
     (Story) => (
-      <div className="p-10 bg-slate-950 min-h-[300px] relative">
-        <div className="absolute inset-0 bg-gradient-to-br from-indigo-900/20 to-rose-900/20 opacity-50" />
-        <Story />
+      <div className="p-20 bg-slate-950 min-h-[400px] w-full relative overflow-hidden flex items-center justify-center rounded-3xl border border-white/5">
+        <div 
+          className="absolute inset-0 bg-cover bg-center" 
+          style={{ backgroundImage: `url(${showcaseBg})` }} 
+        />
+        <div className="relative z-10 w-full flex flex-col items-center">
+          <Story />
+        </div>
       </div>
     ),
   ],

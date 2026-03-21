@@ -86,7 +86,7 @@ export function NVBottomSheet({ isOpen, onClose, children, className = '' }: NVB
       <div
         ref={sheetRef}
         className={cn(
-          "w-full max-w-[760px] max-h-[90dvh] bg-slate-900 rounded-t-3xl overflow-y-auto overscroll-behavior-y-contain shadow-2xl",
+          "w-full max-w-[760px] max-h-[90dvh] bg-slate-950/80 backdrop-blur-2xl rounded-t-3xl border-t border-white/10 border-x border-white/5 overflow-y-auto overscroll-behavior-y-contain shadow-3xl text-slate-200",
           className
         )}
         onClick={e => e.stopPropagation()}

@@ -29,9 +29,9 @@ export function NVAssetDetailSidebar({
 }: NVAssetDetailSidebarProps) {
   if (!asset) {
     return (
-      <aside className={cn("w-[380px] h-full bg-[#0A0C13] border-l border-white/[0.04] flex items-center justify-center p-10 text-center", className)}>
+      <aside className={cn("w-[380px] h-full bg-slate-950/60 backdrop-blur-3xl border-l border-white/10 flex items-center justify-center p-10 text-center text-slate-200", className)}>
         <div className="flex flex-col items-center gap-4 opacity-40">
-          <div className="w-16 h-16 rounded-3xl bg-white/[0.02] border border-white/5 flex items-center justify-center text-slate-400">
+          <div className="w-16 h-16 rounded-3xl bg-white/[0.02] border border-white/5 flex items-center justify-center text-slate-400 shadow-inner">
             <Sparkles size={32} strokeWidth={1} />
           </div>
           <p className="text-[11px] font-bold tracking-widest uppercase text-slate-500 mb-2">Inspector</p>
@@ -44,7 +44,7 @@ export function NVAssetDetailSidebar({
   }
 
   return (
-    <aside className={cn("w-[380px] h-full bg-[#0A0C13] border-l border-white/[0.04] flex flex-col overflow-hidden", className)}> 
+    <aside className={cn("w-[380px] h-full bg-slate-950/60 backdrop-blur-3xl border-l border-white/10 flex flex-col overflow-hidden text-slate-200", className)}> 
       <NVAssetDetailContent 
         asset={asset} 
         onClose={onClose} 

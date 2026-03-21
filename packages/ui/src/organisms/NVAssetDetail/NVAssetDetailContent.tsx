@@ -60,8 +60,8 @@ export function NVAssetDetailContent({
 
       <div className="flex-1 overflow-y-auto overscroll-contain">
         <div className={cn(
-          "min-h-full flex flex-col",
-          isInspector ? "justify-center" : "pb-3"
+          "min-h-full flex flex-col pb-3",
+          isInspector ? "justify-center" : ""
         )}>
           <NVAssetDetailPreview asset={asset} isInspector={isInspector} />
           <NVAssetDetailInfo asset={asset} />
