@@ -1,4 +1,5 @@
 import React from 'react';
+import { cn } from '../../lib/utils';
 
 export type NVGlassPanelTheme = 'dark' | 'light';
 export type NVGlassPanelBlur = 'sm' | 'md' | 'lg' | 'xl';
@@ -27,19 +28,19 @@ const blurMap: Record<NVGlassPanelBlur, string> = {
 // theme × variant 조합별 배경/보더 스타일
 const styleMap: Record<NVGlassPanelTheme, Record<NVGlassPanelVariant, string>> = {
   dark: {
-    panel:  'bg-white/[0.07] border border-white/[0.12] shadow-xl shadow-black/30',
-    modal:  'bg-slate-900/80 border border-white/[0.10] shadow-2xl shadow-black/50',
-    subtle: 'bg-white/[0.03] border border-white/[0.07]',
+    panel:  'bg-slate-950/50 border border-white/10 shadow-xl shadow-black/20 backdrop-saturate-150',
+    modal:  'bg-slate-950/70 border border-white/10 shadow-2xl shadow-black/40 backdrop-saturate-150',
+    subtle: 'bg-white/[0.03] border border-white/[0.08] backdrop-saturate-100',
   },
   light: {
-    panel:  'bg-white/70 border border-black/[0.08] shadow-xl shadow-black/10',
-    modal:  'bg-white/85 border border-black/[0.06] shadow-2xl shadow-black/20',
-    subtle: 'bg-white/40 border border-black/[0.05]',
+    panel:  'bg-white/60 border border-black/[0.05] shadow-lg shadow-black/10 backdrop-saturate-150',
+    modal:  'bg-white/80 border border-black/[0.1] shadow-xl shadow-black/20 backdrop-saturate-150',
+    subtle: 'bg-white/40 border border-black/[0.04]',
   },
 };
 
 const textMap: Record<NVGlassPanelTheme, string> = {
-  dark:  'text-white',
+  dark:  'text-slate-200',
   light: 'text-slate-800',
 };
 
@@ -47,7 +48,7 @@ export const NVGlassPanel: React.FC<NVGlassPanelProps> = ({
   children,
   className = '',
   theme = 'dark',
-  blur = 'lg',
+  blur = 'xl',
   variant = 'panel',
   noPadding = false,
 }) => {
@@ -56,16 +57,20 @@ export const NVGlassPanel: React.FC<NVGlassPanelProps> = ({
   const textClass = textMap[theme];
   const paddingClass = noPadding ? '' : 'p-6';
 
+  // Transition
+  const transitionClass = "transition-all duration-300";
+
   return (
     <div
-      className={`
-        ${base}
-        ${blurClass}
-        ${textClass}
-        ${paddingClass}
-        rounded-2xl
-        ${className}
-      `.trim().replace(/\s+/g, ' ')}
+      className={cn(
+        base,
+        blurClass,
+        textClass,
+        paddingClass,
+        transitionClass,
+        "rounded-xl",
+        className
+      )}
     >
       {children}
     </div>

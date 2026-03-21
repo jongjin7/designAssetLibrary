@@ -15,17 +15,17 @@ export const NVCard: React.FC<NVCardProps> = ({
 }) => {
   const themeStyles =
     theme === 'light'
-      ? 'bg-white/70 backdrop-blur-md border border-black/8 shadow-black/5 text-slate-900'
-      : 'bg-white/5 backdrop-blur-md border border-white/10 text-white';
+      ? 'bg-white/60 backdrop-blur-2xl border border-black/[0.05] shadow-lg shadow-black/5 text-slate-800'
+      : 'bg-slate-950/60 backdrop-blur-2xl border border-white/10 shadow-xl shadow-black/20 text-slate-200';
 
   const hoverStyles = hoverEffect
     ? theme === 'light'
-      ? 'hover:scale-[1.02] hover:bg-white/80 transition-all duration-300'
-      : 'hover:scale-[1.02] hover:bg-white/[0.07] transition-all duration-300'
+      ? 'hover:scale-[1.01] hover:bg-white/70 transition-all duration-300'
+      : 'hover:scale-[1.01] hover:bg-slate-950/70 transition-all duration-300'
     : '';
 
   return (
-    <div className={`${themeStyles} rounded-2xl p-6 shadow-xl ${hoverStyles} ${className}`}>
+    <div className={`${themeStyles} rounded-xl p-6 ${hoverStyles} ${className}`}>
       {children}
     </div>
   );

@@ -198,11 +198,12 @@ export const ModalSimulationDark: Story = {
   },
   render: () => (
     <div className="relative flex items-center justify-center p-6 bg-slate-950 rounded-3xl min-h-[420px] overflow-hidden">
-      {/* 배경 이미지 */}
+      {/* 배경 이미지 (고대비 이미지로 교체) */}
       <div 
-        className="absolute inset-0 bg-center bg-cover opacity-80"
+        className="absolute inset-0 bg-cover bg-center" 
         style={{ backgroundImage: `url(${showcaseBg})` }}
       />
+      
       {/* 배경 레이어 (딤드 효과) */}
       <div className="absolute inset-0 bg-black/40" />
 
@@ -217,13 +218,13 @@ export const ModalSimulationDark: Story = {
           <div>
             <h3 className="text-xl font-bold">확인이 필요합니다</h3>
             <p className="text-sm text-white/60 mt-1">
-              이 작업은 되돌릴 수 없습니다. 계속하시겠습니까?
+              이제 표준 글래스 효과가 적용되었습니다. 배경의 굵은 격자와 색상이 블러를 통해 자연스럽게 비쳐 보입니다.
             </p>
           </div>
           <div className="h-px bg-white/10" />
           <div className="flex gap-3 justify-end">
             <NVButton variant="ghost" size="sm">취소</NVButton>
-            <NVButton variant="danger" size="sm">삭제</NVButton>
+            <NVButton variant="primary" size="sm">확인완료</NVButton>
           </div>
         </div>
       </NVGlassPanel>
@@ -236,19 +237,19 @@ export const ModalSimulationLight: Story = {
   parameters: {
     docs: {
       description: {
-        story: '밝은 테마 환경에서 모달로 사용될 때의 예시입니다. 콘텐츠 가독성을 위해 불투명도가 다크 모달보다 높게 설정됩니다.',
+        story: '밝은 테마 환경에서 모달로 사용될 때의 예시입니다. 배경에 강한 패턴과 색상을 배치하여 라이트 글래스의 투명도와 블러를 확인합니다.',
       },
     },
   },
   render: () => (
     <div className="relative flex items-center justify-center p-6 bg-slate-100 rounded-3xl min-h-[420px] overflow-hidden">
-      {/* 배경 이미지 */}
       <div 
-        className="absolute inset-0 bg-center bg-cover opacity-60"
+        className="absolute inset-0 bg-cover bg-center"
         style={{ backgroundImage: `url(${showcaseBg})` }}
       />
+      
       {/* 딤드 오버레이 */}
-      <div className="absolute inset-0 bg-white/30" />
+      <div className="absolute inset-0 bg-white/40" />
 
       {/* 모달 패널 */}
       <NVGlassPanel
@@ -259,15 +260,15 @@ export const ModalSimulationLight: Story = {
       >
         <div className="space-y-4">
           <div>
-            <h3 className="text-xl font-bold">파일 업로드</h3>
+            <h3 className="text-xl font-bold">파일 업로드 (Light)</h3>
             <p className="text-sm text-slate-500 mt-1">
-              지원 형식: PNG, JPG, SVG, PDF (최대 50MB)
+              배경의 생동감 넘치는 컬러가 라이트 글래스를 통해 부드럽게 확산되어 보입니다.
             </p>
           </div>
-          <div className="border-2 border-dashed border-slate-300 rounded-xl p-8 text-center">
-            <p className="text-slate-400 text-sm">여기에 파일을 드래그하거나 클릭하세요</p>
+          <div className="border-2 border-dashed border-slate-300 rounded-xl p-8 text-center bg-white/20">
+            <p className="text-slate-400 text-sm font-medium">여기에 파일을 드래그하세요</p>
           </div>
-          <div className="h-px bg-black/8" />
+          <div className="h-px bg-black/5" />
           <div className="flex gap-3 justify-end">
             <NVButton variant="ghost" size="sm">취소</NVButton>
             <NVButton variant="primary" size="sm">업로드</NVButton>
