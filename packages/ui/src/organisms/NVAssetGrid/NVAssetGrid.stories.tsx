@@ -4,7 +4,7 @@ import { NVAssetCard } from '../../molecules/NVAssetCard';
 import React from 'react';
 
 const meta: Meta<typeof NVAssetGrid> = {
-  title: 'Organisms/AssetGrid',
+  title: 'Composition/AssetGrid',
   component: NVAssetGrid,
   tags: ['autodocs'],
   parameters: {
