@@ -12,18 +12,15 @@ interface NVTagListProps {
 
 export function NVTagList({ tags, className = '' }: NVTagListProps) {
   return (
-    <div className={cn("", className)}>
-      <p className="text-xs text-slate-600 font-semibold uppercase tracking-widest leading-none mb-2">태그</p>
-      <div className="flex flex-wrap gap-2">
-        {tags.map(tag => (
-          <NVChip 
-            key={tag} 
-            label={`#${tag}`} 
-            variant="tag" 
-            size="sm" 
-          />
-        ))}
-      </div>
+    <div className={cn("flex flex-wrap gap-2", className)}>
+      {tags.map(tag => (
+        <NVChip 
+          key={tag} 
+          label={`#${tag}`} 
+          variant="tag" 
+          size="sm" 
+        />
+      ))}
     </div>
   );
 }
