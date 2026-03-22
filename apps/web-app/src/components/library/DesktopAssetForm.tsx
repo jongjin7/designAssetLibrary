@@ -7,7 +7,7 @@ import {
   NVButton, 
   NVInput, 
   NVChip,
-  NVFormGroup 
+  NVField 
 } from '@nova/ui';
 import { cn } from '../../lib/utils';
 
@@ -115,16 +115,16 @@ export function DesktopAssetForm({ onAdd, onClose }: DesktopAssetFormProps) {
           />
         </div>
 
-        <NVFormGroup label="에셋 이름">
+        <NVField label="에셋 이름">
           <NVInput 
             icon={<ImageIcon size={14} />}
             value={title}
             onChange={(e) => setTitle(e.target.value)}
             placeholder="캡처한 이미지 이름 입력..."
           />
-        </NVFormGroup>
+        </NVField>
 
-        <NVFormGroup label="태그 추가" spacing="md">
+        <NVField label="태그 추가" size="md">
           <NVInput 
             icon={<Tag size={14} />}
             value={tagInput}
@@ -144,7 +144,7 @@ export function DesktopAssetForm({ onAdd, onClose }: DesktopAssetFormProps) {
               ))}
             </div>
           )}
-        </NVFormGroup>
+        </NVField>
       </div>
 
       <div className="mt-8 flex gap-2">
