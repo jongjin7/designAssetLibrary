@@ -2,8 +2,7 @@
 
 import React, { useState } from 'react';
 import { cn } from '../../lib/utils';
-import { SearchBar } from '../shared/SearchBar';
-// Removed AdvancedFilter import
+import { NVSearchBar } from '@nova/ui';
 import { FilterChips } from './FilterChips';
 import { LibraryFilters } from '../../hooks/useLibraryFilters';
 import { 
@@ -25,8 +24,8 @@ import {
   NVIconButton,
   NVDialog,
   NVDialogContent,
-  NVDesktopSearchPanel,
   NVSearchPanel,
+  NVBottomSheet,
 } from '@nova/ui';
 
 interface LibraryControlsProps {
@@ -73,23 +72,28 @@ export function LibraryControls({
   if (isMobile) {
     return (
       <div className={cn("flex flex-col w-full select-none gap-2", className)}>
-        <SearchBar
-            size="sm"
+        <NVSearchBar
             value={searchText}
             onChange={onSearchChange}
-            onFilterClick={onFilterToggle}
-            placeholder="에셋 이름, 태그로 검색..."
-            showFilter={true}
+            onFilterClick={ onFilterToggle}
             isFilterActive={isFilterOpen}
+            placeholder="에셋 이름, 태그로 검색..."
           />
-
-        {isFilterOpen && (
-          <NVSearchPanel
-              className="!bg-white/3 rounded-xl mt-2 !backdrop-blur-xl"
-              onApply={onFilterApply}
+        <div className={cn(
+          "grid transition-all duration-300 ease-in-out px-1",
+          isFilterOpen ? "grid-rows-[1fr] opacity-100 my-2" : "grid-rows-[0fr] opacity-0 pointer-events-none"
+        )}>
+          <div className="overflow-hidden">
+            <NVSearchPanel
+              onApply={(filters) => {
+                onFilterApply(filters);
+                onFilterToggle();
+              }}
               onReset={onFilterReset}
+              onClose={onFilterToggle}
             />
-        )}
+          </div>
+        </div>
       </div>
     );
   }
@@ -143,7 +147,7 @@ export function LibraryControls({
         </div>
 
         <div className="flex-1 max-w-[320px] mx-auto px-4" style={{ WebkitAppRegion: 'no-drag' } as any}>
-          <SearchBar 
+          <NVSearchBar 
             size="sm"
             value={searchText}
             onChange={onSearchChange}
@@ -189,7 +193,7 @@ export function LibraryControls({
       {/* Desktop Advanced Filter Modal */}
       <NVDialog open={!isMobile && isFilterOpen} onOpenChange={onFilterToggle}>
         <NVDialogContent className="max-w-3xl p-0 border-none bg-transparent shadow-none">
-          <NVDesktopSearchPanel 
+          <NVSearchPanel 
             layout="desktop"
             onSearch={(filters) => {
               onFilterApply(filters);

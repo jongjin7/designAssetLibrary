@@ -1,2 +1,3 @@
 export * from './NVSearchPanel';
-export * from './NVDesktopSearchPanel';
+export { NVSearchPanel } from './NVSearchPanel';
+export * from './hooks/useSearchFilters';

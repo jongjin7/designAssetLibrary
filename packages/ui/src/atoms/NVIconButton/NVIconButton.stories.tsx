@@ -17,11 +17,11 @@ const meta: Meta<typeof NVIconButton> = {
   argTypes: {
     variant: {
       control: 'select',
-      options: ['primary', 'secondary', 'vivid', 'danger', 'ghost', 'glass'],
+      options: ['primary', 'secondary', 'vivid', 'danger', 'ghost', 'glass', 'glass-primary'],
     },
     size: {
       control: 'select',
-      options: ['sm', 'md', 'lg'],
+      options: ['xs', 'sm', 'md', 'lg', 'xl'],
     },
   },
 };
@@ -43,6 +43,7 @@ export const Variants: Story = {
       <NVIconButton icon={Search} variant="primary" title="Primary" />
       <NVIconButton icon={Menu} variant="secondary" title="Secondary" />
       <NVIconButton icon={Plus} variant="vivid" title="Vivid" />
+      <NVIconButton icon={Settings} variant="glass-primary" title="Glass Primary" />
       <NVIconButton icon={Settings} variant="glass" title="Glass" />
       <NVIconButton icon={X} variant="danger" title="Danger" />
       <NVIconButton icon={Star} variant="ghost" title="Ghost" />
@@ -51,11 +52,20 @@ export const Variants: Story = {
 };
 
 export const Sizes: Story = {
+  parameters: {
+    docs: {
+      description: {
+        story: 'xs(24px)부터 xl(52px)까지의 5가지 표준 크기를 지원합니다.',
+      },
+    },
+  },
   render: () => (
     <div className="flex items-end gap-4">
-      <NVIconButton icon={Search} size="sm" variant="primary" title="Small (36px)" />
-      <NVIconButton icon={Search} size="md" variant="primary" title="Medium (44px)" />
-      <NVIconButton icon={Search} size="lg" variant="primary" title="Large (52px)" />
+      <NVIconButton icon={Search} size="xs" variant="primary" title="X-Small (24px)" />
+      <NVIconButton icon={Search} size="sm" variant="primary" title="Small (28px)" />
+      <NVIconButton icon={Search} size="md" variant="primary" title="Medium (36px)" />
+      <NVIconButton icon={Search} size="lg" variant="primary" title="Large (44px)" />
+      <NVIconButton icon={Search} size="xl" variant="primary" title="X-Large (52px)" />
     </div>
   ),
 };

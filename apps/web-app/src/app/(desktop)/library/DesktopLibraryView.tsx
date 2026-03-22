@@ -8,12 +8,13 @@ import { NVLoadingState, NVAssetSelectionBar, NVAssetDetailSidebar, Asset, NVIco
 import { cn } from '../../../lib/utils';
 import { extractColors } from '../../../lib/colorExtractor';
 import { extractColorsAI } from '../../../lib/colorExtractorAI';
+import { LibraryFilters } from '../../../hooks/useLibraryFilters';
 
 interface DesktopLibraryViewProps {
   assets: Asset[];
   loading: boolean;
   filter: string;
-  setFilter: (f: any) => void;
+  setFilter: (f: string) => void;
   selectedAsset: any;
   openDetail: (asset: any) => void;
   closeDetail: () => void;
@@ -31,7 +32,7 @@ interface DesktopLibraryViewProps {
   isFilterOpen: boolean;
   setIsFilterOpen: (v: boolean) => void;
   filteredAssets: Asset[];
-  handleFilterApply: (f: any) => void;
+  handleFilterApply: (f: LibraryFilters) => void;
   handleFilterReset: () => void;
   isSearchVisible?: boolean;
   onSearchToggle?: () => void;

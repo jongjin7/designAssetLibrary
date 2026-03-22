@@ -1,12 +1,14 @@
 import React from 'react';
 import type { Meta, StoryObj } from '@storybook/react';
-import { NVDesktopSearchPanel } from './NVDesktopSearchPanel';
-import { Search } from 'lucide-react';
+import { NVSearchPanel } from './NVSearchPanel';
+import { Search, Settings2 } from 'lucide-react';
+import { NVButton } from '../../atoms/NVButton';
 import { NVIconButton } from '../../atoms/NVIconButton';
+import { NVPopover, NVPopoverTrigger, NVPopoverContent } from '../../atoms/NVPopover';
 
-const meta: Meta<typeof NVDesktopSearchPanel> = {
+const meta: Meta<typeof NVSearchPanel> = {
   title: 'Composition/NVSearchPanel',
-  component: NVDesktopSearchPanel,
+  component: NVSearchPanel,
   tags: ['autodocs'],
   parameters: {
     layout: 'centered',
@@ -19,7 +21,7 @@ const meta: Meta<typeof NVDesktopSearchPanel> = {
 };
 
 export default meta;
-type Story = StoryObj<typeof NVDesktopSearchPanel>;
+type Story = StoryObj<typeof NVSearchPanel>;
 
 /**
  * 기본형(Basic) 예시입니다. 레이블이 상단에 위치하여 모바일 대응이나 좁은 영역에 적합합니다.
@@ -30,7 +32,7 @@ export const Basic: Story = {
   },
   render: (args) => (
     <div className="w-[800px] flex justify-center py-10 bg-slate-900 rounded-3xl overflow-hidden relative">
-      <NVDesktopSearchPanel {...args} onClose={() => alert('Close clicked')} />
+      <NVSearchPanel {...args} onClose={() => alert('Close clicked')} />
     </div>
   ),
 };
@@ -44,7 +46,7 @@ export const DesktopOptimized: Story = {
   },
   render: (args) => (
     <div className="w-[850px] flex justify-center py-10 bg-slate-900 rounded-3xl overflow-hidden relative border border-white/5">
-      <NVDesktopSearchPanel {...args} onClose={() => alert('Close clicked')} />
+      <NVSearchPanel {...args} onClose={() => alert('Close clicked')} />
     </div>
   ),
 };
@@ -82,7 +84,7 @@ export const ToggleExample: Story = {
                 상세 검색
               </button>
             </div>
-            <NVIconButton icon={Search} size="md" variant="glass" />
+            <NVIconButton icon={Search} size="md" variant="glass-primary" />
           </div>
         </header>
         
@@ -97,7 +99,7 @@ export const ToggleExample: Story = {
           {/* Advanced Search Overlay */}
           {isOpen && (
             <div className="absolute top-6 left-1/2 -translate-x-1/2 animate-in fade-in zoom-in-95 duration-300 ease-out z-50">
-              <NVDesktopSearchPanel 
+              <NVSearchPanel 
                 layout="desktop"
                 onClose={() => setIsOpen(false)}
                 onSearch={() => setIsOpen(false)}
@@ -105,6 +107,36 @@ export const ToggleExample: Story = {
             </div>
           )}
         </main>
+      </div>
+    );
+  }
+};
+
+/**
+ * 팝업형(Popover) 예시입니다. macOS의 '보기 옵션(Show View Options)' 메뉴와 유사한 버티컬 레이아웃을 제공합니다.
+ * 좁은 공간에서도 모든 필터링 기능을 정교하게 사용할 수 있습니다.
+ */
+export const PopoverLayout: Story = {
+  render: () => {
+    const [isOpen, setIsOpen] = React.useState(false);
+    
+    return (
+      <div className="w-[800px] h-[500px] flex items-center justify-center bg-slate-900 rounded-3xl overflow-hidden relative border border-white/5">
+        <NVPopover open={isOpen} onOpenChange={setIsOpen}>
+          <NVPopoverTrigger asChild>
+            <NVButton variant={isOpen ? "glass-primary" : "glass"} className="gap-2">
+              <Settings2 size={16} />
+              보기 옵션 설정
+            </NVButton>
+          </NVPopoverTrigger>
+          <NVPopoverContent className="p-0 border-none bg-transparent shadow-none w-auto overflow-visible">
+            <NVSearchPanel 
+              layout="popover"
+              onClose={() => setIsOpen(false)}
+              onSearch={() => setIsOpen(false)}
+            />
+          </NVPopoverContent>
+        </NVPopover>
       </div>
     );
   }

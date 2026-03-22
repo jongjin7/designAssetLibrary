@@ -50,38 +50,37 @@ export const NVSearchBar: React.FC<NVSearchBarProps> = ({
           aria-label="입력 초기화"
         />
       )}
-      {showFilter && (
-        <NVButton
-          variant="glass"
-          size={size==='sm' ? 'xs' : size==='md' ? 'sm' : 'lg'} 
-          onClick={(e: React.MouseEvent) => {
-            e.stopPropagation();
-            onFilterClick?.(e);
-          }}
-          className={cn(
-            isFilterActive ? "!text-indigo-400 !bg-indigo-500/10 !border-indigo-500/40 " : "!border-transparent !text-white/80"
-          )}
-        >
-          상세 검색
-        </NVButton>
-      )}
     </div>
   );
 
 
   return (
-    <NVInput
-      icon={<Search size={size === 'sm' ? 14 : 18} />}
-      size={size}
-      value={value}
-      onChange={(e) => onChange?.(e.target.value)}
-      placeholder={placeholder}
-      readOnly={readOnly}
-      autoFocus={autoFocus}
-      onClick={readOnly ? onClick : undefined}
-      rightElement={rightElement}
-      containerClassName={cn(className, isFilterActive ? "!opacity-100 !pointer-events-auto" : "")}
-      disabled={isFilterActive}
-    />
+    <div className="flex items-center gap-2">
+      <NVInput
+        icon={<Search size={size === 'sm' ? 14 : 18} />}
+        size={size}
+        value={value}
+        onChange={(e) => onChange?.(e.target.value)}
+        placeholder={placeholder}
+        readOnly={readOnly}
+        autoFocus={autoFocus}
+        onClick={readOnly ? onClick : undefined}
+        rightElement={rightElement}
+        containerClassName={cn('flex-1', className)}
+        disabled={isFilterActive}
+      />
+      
+      <NVButton
+        variant={isFilterActive ? "glass-primary" : "secondary"}
+        size={size} 
+        onClick={(e: React.MouseEvent) => {
+          e.stopPropagation();
+          onFilterClick?.(e);
+        }}
+        className={cn(className)}
+      >
+        상세 검색
+      </NVButton> 
+    </div>
   );
 };

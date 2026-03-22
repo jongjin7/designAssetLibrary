@@ -15,26 +15,32 @@ const meta: Meta<typeof NVInput> = {
       },
     },
   },
+  argTypes: {
+    size: {
+      control: 'select',
+      options: ['xs', 'sm', 'md', 'lg', 'xl'],
+    },
+  },
 };
 
 export default meta;
 type Story = StoryObj<typeof NVInput>;
 
 export const Sizes: Story = {
+  parameters: {
+    docs: {
+      description: {
+        story: 'xs(24px)부터 xl(52px)까지의 5가지 표준 크기를 지원합니다.',
+      },
+    },
+  },
   render: () => (
-    <div className="flex flex-col gap-6 w-full max-w-md">
-      <div className="flex flex-col gap-2">
-        <span className="text-xs text-slate-500 font-mono">Size: SM</span>
-        <NVInput size="sm" placeholder="Small input..." icon={<Search size={14} />} />
-      </div>
-      <div className="flex flex-col gap-2">
-        <span className="text-xs text-slate-500 font-mono">Size: MD (Default)</span>
-        <NVInput size="md" placeholder="Medium input..." icon={<Search size={16} />} />
-      </div>
-      <div className="flex flex-col gap-2">
-        <span className="text-xs text-slate-500 font-mono">Size: LG</span>
-        <NVInput size="lg" placeholder="Large input..." icon={<Search size={18} />} />
-      </div>
+    <div className="flex flex-col gap-6 w-[400px]">
+      <NVInput size="xs" placeholder="X-Small (24px)" />
+      <NVInput size="sm" placeholder="Small (28px)" />
+      <NVInput size="md" placeholder="Medium (36px)" />
+      <NVInput size="lg" placeholder="Large (44px)" />
+      <NVInput size="xl" placeholder="X-Large (52px)" />
     </div>
   ),
 };
@@ -68,5 +74,3 @@ export const States: Story = {
     </div>
   ),
 };
-
-

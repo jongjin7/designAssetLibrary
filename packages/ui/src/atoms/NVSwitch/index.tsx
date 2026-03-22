@@ -4,7 +4,7 @@ interface NVSwitchProps {
   checked: boolean;
   onChange: (checked: boolean) => void;
   disabled?: boolean;
-  size?: 'sm' | 'md';
+  size?: 'xs' | 'sm' | 'md' | 'lg' | 'xl';
 }
 
 export const NVSwitch: React.FC<NVSwitchProps> = ({
@@ -14,15 +14,30 @@ export const NVSwitch: React.FC<NVSwitchProps> = ({
   size = 'md',
 }) => {
   const sizes = {
+    xs: {
+      track: 'w-6 h-[14px]',
+      thumb: 'w-[10px] h-[10px]',
+      translate: 'translate-x-[10px]',
+    },
     sm: {
-      track: 'w-7 h-4',
-      thumb: 'w-3 h-3',
+      track: 'w-7 h-[16px]',
+      thumb: 'w-[12px] h-[12px]',
       translate: 'translate-x-3',
     },
     md: {
       track: 'w-10 h-6',
       thumb: 'w-5 h-5',
       translate: 'translate-x-4',
+    },
+    lg: {
+      track: 'w-12 h-7',
+      thumb: 'w-6 h-6',
+      translate: 'translate-x-5',
+    },
+    xl: {
+      track: 'w-14 h-8',
+      thumb: 'w-7 h-7',
+      translate: 'translate-x-6',
     }
   };
 

@@ -18,11 +18,11 @@ const meta: Meta<typeof NVButton> = {
   argTypes: {
     variant: {
       control: 'select',
-      options: ['primary', 'secondary', 'vivid', 'danger', 'ghost', 'glass', 'glass-primary', 'glass-neutral', 'glass-danger'],
+      options: ['primary', 'secondary', 'vivid', 'danger', 'ghost', 'glass', 'glass-primary', 'glass-danger'],
     },
     size: {
       control: 'select',
-      options: ['xs', 'sm', 'md', 'lg'],
+      options: ['xs', 'sm', 'md', 'lg', 'xl'],
     },
   },
 };
@@ -126,12 +126,6 @@ export const GlassPrimary: Story = {
   },
 };
 
-export const GlassNeutral: Story = {
-  args: {
-    variant: 'glass-neutral',
-    children: 'Glass Neutral',
-  },
-};
 
 export const GlassDanger: Story = {
   args: {
@@ -155,7 +149,7 @@ export const OnGlassShowcase: Story = {
         <h4 className="font-bold mb-4">Dark Theme Panel</h4>
         <div className="flex gap-4">
           <NVButton variant="glass-primary" size="sm">Primary</NVButton>
-          <NVButton variant="glass-neutral" size="sm">Neutral</NVButton>
+          <NVButton variant="glass" size="sm">Neutral</NVButton>
           <NVButton variant="glass-danger" size="sm">Danger</NVButton>
         </div>
       </NVCard>
@@ -165,7 +159,7 @@ export const OnGlassShowcase: Story = {
         <h4 className="font-bold mb-4">Light Theme Panel</h4>
         <div className="flex gap-4">
           <NVButton variant="glass-primary" size="sm">Primary</NVButton>
-          <NVButton variant="glass-neutral" size="sm">Neutral</NVButton>
+          <NVButton variant="glass" size="sm">Neutral</NVButton>
           <NVButton variant="glass-danger" size="sm">Danger</NVButton>
         </div>
       </NVCard>
@@ -191,7 +185,7 @@ export const WithIcons: Story = {
         <Zap size={18} className="mr-2" />
         AI Feature
       </NVButton>
-      <NVButton variant="glass-neutral">
+      <NVButton variant="glass">
         <Heart size={18} className="mr-2" />
         Save
       </NVButton>
@@ -203,16 +197,17 @@ export const Sizes: Story = {
   parameters: {
     docs: {
       description: {
-        story: 'xs부터 lg까지 버튼의 4가지 크기를 비교합니다.',
+        story: 'xs(24px)부터 xl(52px)까지의 5가지 표준 크기를 지원합니다.',
       },
     },
   },
   render: () => (
     <div className="flex flex-wrap gap-4 items-end">
-      <NVButton size="xs" variant="primary">X-Small</NVButton>
-      <NVButton size="sm" variant="primary">Small</NVButton>
-      <NVButton size="md" variant="primary">Medium</NVButton>
-      <NVButton size="lg" variant="primary">Large</NVButton>
+      <NVButton size="xs" variant="primary">X-Small (24)</NVButton>
+      <NVButton size="sm" variant="primary">Small (28)</NVButton>
+      <NVButton size="md" variant="primary">Medium (36)</NVButton>
+      <NVButton size="lg" variant="primary">Large (44)</NVButton>
+      <NVButton size="xl" variant="primary">X-Large (52)</NVButton>
     </div>
   ),
 };

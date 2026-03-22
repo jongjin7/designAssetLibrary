@@ -15,6 +15,12 @@ const meta: Meta<typeof NVSelect> = {
       },
     },
   },
+  argTypes: {
+    size: {
+      control: 'select',
+      options: ['xs', 'sm', 'md', 'lg', 'xl'],
+    },
+  },
 };
 
 export default meta;
@@ -28,20 +34,20 @@ const options = [
 ];
 
 export const Sizes: Story = {
+  parameters: {
+    docs: {
+      description: {
+        story: 'xs(24px)부터 xl(52px)까지의 5가지 표준 크기를 지원합니다.',
+      },
+    },
+  },
   render: () => (
-    <div className="flex flex-col gap-6 w-full max-w-md">
-      <div className="flex flex-col gap-2">
-        <span className="text-xs text-slate-500 font-mono">Size: SM</span>
-        <NVSelect size="sm" options={options} icon={<Filter size={14} />} />
-      </div>
-      <div className="flex flex-col gap-2">
-        <span className="text-xs text-slate-500 font-mono">Size: MD (Default)</span>
-        <NVSelect size="md" options={options} icon={<Filter size={16} />} />
-      </div>
-      <div className="flex flex-col gap-2">
-        <span className="text-xs text-slate-500 font-mono">Size: LG</span>
-        <NVSelect size="lg" options={options} icon={<Filter size={18} />} />
-      </div>
+    <div className="flex flex-col gap-6 w-[400px]">
+      <NVSelect size="xs" options={options} />
+      <NVSelect size="sm" options={options} />
+      <NVSelect size="md" options={options} />
+      <NVSelect size="lg" options={options} />
+      <NVSelect size="xl" options={options} />
     </div>
   ),
 };
@@ -55,5 +61,3 @@ export const Variations: Story = {
     </div>
   ),
 };
-
-

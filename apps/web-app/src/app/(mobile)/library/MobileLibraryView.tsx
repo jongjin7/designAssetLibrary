@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 import { Search, X } from 'lucide-react';
-import { useLibraryFilters } from '../../../hooks/useLibraryFilters';
+import { useLibraryFilters, LibraryFilters } from '../../../hooks/useLibraryFilters';
 import { MobileTopBar } from '../../../components/layout/MobileTopBar';
 import { LibraryControls } from '../../../components/library/LibraryControls';
 import { FilterChips } from '../../../components/library/FilterChips';
@@ -15,7 +15,7 @@ interface MobileLibraryViewProps {
   assets: Asset[];
   loading: boolean;
   filter: string;
-  setFilter: (f: any) => void;
+  setFilter: (f: string) => void;
   selectedAsset: any;
   openDetail: (asset: any) => void;
   closeDetail: () => void;
@@ -34,7 +34,7 @@ interface MobileLibraryViewProps {
   isFilterOpen: boolean;
   setIsFilterOpen: (v: boolean) => void;
   filteredAssets: Asset[];
-  handleFilterApply: (f: any) => void;
+  handleFilterApply: (f: LibraryFilters) => void;
   handleFilterReset: () => void;
   isSearchVisible?: boolean;
   onSearchToggle?: () => void;

@@ -59,7 +59,7 @@ export function NVAssetSelectionBar({
         
         {onMove && (
           <NVButton 
-            variant="glass-neutral"
+            variant="glass"
             size="sm"
             onClick={onMove}
           >

@@ -8,7 +8,7 @@ export interface NVSelectOption {
 export interface NVSelectProps extends Omit<React.SelectHTMLAttributes<HTMLSelectElement>, 'size'> {
   icon?: React.ReactNode;
   options: NVSelectOption[];
-  size?: 'sm' | 'md' | 'lg';
+  size?: 'xs' | 'sm' | 'md' | 'lg' | 'xl';
 }
 
 export const NVSelect: React.FC<NVSelectProps> = ({ 
@@ -19,15 +19,19 @@ export const NVSelect: React.FC<NVSelectProps> = ({
   ...props 
 }) => {
   const sizeStyles = {
-    sm: 'px-3 py-1.5 text-xs gap-1.5',
-    md: 'px-3.5 py-2.5 text-sm gap-2',
-    lg: 'px-5 py-4 text-base gap-3'
+    xs: 'h-[24px] px-2 text-[10px] gap-1',
+    sm: 'h-[28px] px-2.5 text-[11px] gap-1',
+    md: 'h-[36px] px-3.5 text-sm gap-2',
+    lg: 'h-[44px] px-4 text-sm gap-2.5',
+    xl: 'h-[52px] px-5 text-base gap-3'
   };
 
   const roundedStyles = {
+    xs: 'rounded-md',
     sm: 'rounded-lg',
     md: 'rounded-lg',
-    lg: 'rounded-xl'
+    lg: 'rounded-xl',
+    xl: 'rounded-2xl'
   };
 
   const containerClasses = `
@@ -45,9 +49,11 @@ export const NVSelect: React.FC<NVSelectProps> = ({
   `.replace(/\s+/g, ' ').trim();
 
   const iconSizes = {
+    xs: 7,
     sm: 8,
     md: 10,
-    lg: 12
+    lg: 12,
+    xl: 14
   };
 
   return (

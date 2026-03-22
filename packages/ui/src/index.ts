@@ -28,7 +28,7 @@ export * from './molecules/NVBottomSheet';
 // Organisms / Combined Components
 export { NVAssetGrid } from './composition/NVAssetGrid';
 export { NVAssetDetailSheet, NVAssetDetailSidebar, NVAssetDetailContent } from './composition/NVAssetDetail';
-export { NVDesktopSearchPanel, NVSearchPanel } from './composition/NVSearchPanel';
+export * from './composition/NVSearchPanel';
 
 // Foundations
 export * from './foundations/NVColorPalette';
