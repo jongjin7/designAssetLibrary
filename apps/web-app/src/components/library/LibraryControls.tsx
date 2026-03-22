@@ -1,7 +1,9 @@
+'use client';
+
 import React, { useState } from 'react';
 import { cn } from '../../lib/utils';
 import { SearchBar } from '../shared/SearchBar';
-import { AdvancedFilter } from './AdvancedFilter';
+// Removed AdvancedFilter import
 import { FilterChips } from './FilterChips';
 import { LibraryFilters } from '../../hooks/useLibraryFilters';
 import { 
@@ -21,6 +23,10 @@ import {
   NVPopoverTrigger, 
   NVPopoverContent,
   NVIconButton,
+  NVDialog,
+  NVDialogContent,
+  NVDesktopSearchPanel,
+  NVSearchPanel,
 } from '@nova/ui';
 
 interface LibraryControlsProps {
@@ -78,9 +84,8 @@ export function LibraryControls({
           />
 
         {isFilterOpen && (
-          <AdvancedFilter
-              className="!bg-white/3 rounded-lg"
-              isMobile={true}
+          <NVSearchPanel
+              className="!bg-white/3 rounded-xl mt-2 !backdrop-blur-xl"
               onApply={onFilterApply}
               onReset={onFilterReset}
             />
@@ -181,14 +186,19 @@ export function LibraryControls({
         </div>
       </header>
       
-      {isFilterOpen && (
-        <AdvancedFilter
-          className={isFilterOpen ? "!bg-white/3" : ""}
-          isMobile={false}
-          onApply={onFilterApply}
-          onReset={onFilterReset}
-        />
-      )}
+      {/* Desktop Advanced Filter Modal */}
+      <NVDialog open={!isMobile && isFilterOpen} onOpenChange={onFilterToggle}>
+        <NVDialogContent className="max-w-3xl p-0 border-none bg-transparent shadow-none">
+          <NVDesktopSearchPanel 
+            layout="desktop"
+            onSearch={(filters) => {
+              onFilterApply(filters);
+              onFilterToggle();
+            }}
+            onClose={onFilterToggle}
+          />
+        </NVDialogContent>
+      </NVDialog>
 
       <div className="px-8 py-2 border-b border-white/[0.05]">
         <FilterChips active={activeFilter} onChange={onFilterChange ?? (() => {})} />

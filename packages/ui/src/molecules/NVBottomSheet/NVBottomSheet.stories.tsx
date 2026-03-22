@@ -2,7 +2,7 @@ import React from 'react';
 import type { Meta, StoryObj } from '@storybook/react';
 import { NVBottomSheet } from './index';
 import { cn } from '../../lib/utils';
-import showcaseBg from '../../assets/images/vibrant_glass_bg.png';
+import showcaseBg from '../../assets/images/glass_showcase_bg.png';
 
 const meta: Meta<typeof NVBottomSheet> = {
   title: 'Molecules/BottomSheet',

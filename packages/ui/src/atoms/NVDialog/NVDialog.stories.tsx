@@ -12,7 +12,7 @@ import {
 } from './index';
 import { NVButton } from '../NVButton';
 import { NVInput } from '../NVInput';
-import { NVFormGroup } from '../NVFormGroup';
+import { NVField } from '../NVField';
 import { NVNotice } from '../NVNotice';
 import { cn } from '../../lib/utils';
 import { 
@@ -104,7 +104,7 @@ export const ConfirmPattern: Story = {
 /**
  * 리소스 생성(Resource Creation) 패턴입니다. 
  * Shopify Polaris나 Atlassian 시스템의 폼 대화상자처럼 
- * NVFormGroup을 사용하여 정돈된 폼을 구성합니다.
+ * NVField를 사용하여 정돈된 폼을 구성합니다.
  */
 export const FormPattern: Story = {
   render: () => (
@@ -126,13 +126,13 @@ export const FormPattern: Story = {
             </div>
             
             <div className="grid grid-cols-1 gap-5 pt-2">
-              <NVFormGroup label="에셋 이름" spacing="sm">
+              <NVField label="에셋 이름" size="sm">
                 <NVInput placeholder="에셋 제목 입력..." className="w-full" size="md" />
-              </NVFormGroup>
+              </NVField>
               
-              <NVFormGroup label="태그 추가" spacing="sm">
+              <NVField label="태그 추가" size="sm">
                 <NVInput icon={<Tag size={14} />} placeholder="태그 입력 (Enter)" className="w-full" size="md" />
-              </NVFormGroup>
+              </NVField>
             </div>
           </NVDialogBody>
           <NVDialogFooter>

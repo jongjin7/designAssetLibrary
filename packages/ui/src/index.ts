@@ -14,6 +14,8 @@ export * from './atoms/NVField';
 export * from './atoms/NVNotice';
 export * from './atoms/NVDialog';
 export * from './atoms/NVToast';
+export * from './atoms/NVPowerTooltip';
+
 // Molecules
 export * from './molecules/NVFilterGroup';
 export * from './molecules/NVSearchBar';
@@ -23,18 +25,16 @@ export * from './molecules/NVPaletteStrip';
 export * from './molecules/NVTagList';
 export * from './molecules/NVBottomSheet';
 
-// Organisms
-export * from './composition/NVAssetGrid';
-export * from './composition/NVAssetDetail';
+// Organisms / Combined Components
+export { NVAssetGrid } from './composition/NVAssetGrid';
+export { NVAssetDetailSheet, NVAssetDetailSidebar, NVAssetDetailContent } from './composition/NVAssetDetail';
+export { NVDesktopSearchPanel, NVSearchPanel } from './composition/NVSearchPanel';
 
-// Foundations (Design Specs)
+// Foundations
 export * from './foundations/NVColorPalette';
 export * from './foundations/NVTypographyGuide';
 export * from './foundations/NVSpacingGuide';
 export * from './foundations/NVIconGuide';
 
-// Types
+// Common Types
 export * from './types/asset';
-
-// Layout
-// Exported as they are created
