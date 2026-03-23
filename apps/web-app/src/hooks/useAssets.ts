@@ -37,8 +37,9 @@ export function useAssets() {
 
   const addAsset = useCallback(async (asset: Partial<Asset>, file?: Blob) => {
     try {
-      await assetRepository.saveAsset(asset, file);
+      const newAsset = await assetRepository.saveAsset(asset, file);
       await refreshAssets();
+      return newAsset;
     } catch (error) {
       console.error('Failed to add asset:', error);
     }

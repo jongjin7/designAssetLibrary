@@ -20,7 +20,7 @@ interface DesktopLibraryViewProps {
   closeDetail: () => void;
   deleteAsset: (id: string) => Promise<void>;
   updateAsset: (id: string, data: any) => Promise<void>;
-  addAsset: (data: any) => Promise<void>;
+  addAsset: (data: any, file?: File | Blob) => Promise<any>;
   
   // Selection
   selectedIds: Set<string>;
@@ -127,7 +127,11 @@ export default function DesktopLibraryView({
       
       try {
         const assetData = await processFileToAsset(file);
-        await addAsset(assetData);
+        const newAsset = await addAsset(assetData);
+        if (newAsset) {
+          openDetail(newAsset);
+          setIsSidebarVisible(true);
+        }
       } catch (err) {
         console.error('Failed to process dropped file:', err);
       }
@@ -151,7 +155,13 @@ export default function DesktopLibraryView({
           activeFilter={filter}
           onFilterChange={(f) => setFilter(f as any)}
           isSidebarVisible={isSidebarVisible}
-          onAddAsset={addAsset}
+          onAddAsset={async (data, file) => {
+            const newAsset = await addAsset(data, file);
+            if (newAsset) {
+              openDetail(newAsset);
+              setIsSidebarVisible(true);
+            }
+          }}
         />
 
         {/* Floating Sidebar Toggle - Fixed to FAR RIGHT Edge of Browser */}
