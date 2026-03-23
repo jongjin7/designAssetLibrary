@@ -56,12 +56,12 @@ export const NVSearchPanel: React.FC<NVSearchPanelProps> = ({
       className={cn(
         "relative overflow-scroll scrollbar-hide border-white/10 shadow-[0_32px_80px_-16px_rgba(0,0,0,0.5)] transition-all duration-300",
         isDesktop ? "w-[780px] rounded-[32px] p-0" : 
-        isPopover ? "w-[280px] rounded-3xl p-0 ring-1 ring-white/5" : "w-full rounded-3xl p-5 max-h-[50vh]",
+        isPopover ? "w-[280px] rounded-3xl p-0 ring-1 ring-white/5" : "w-full rounded-3xl p-5",
         className
       )}
     >
       {/* Title Header (Mobile/Basic) */}
-      {(!isDesktop && !isPopover) && (
+      {/* {(!isDesktop && !isPopover) && (
         <div className="z-1 flex items-center justify-between mb-4">
           <h3 className="text-lg font-bold text-white tracking-tight leading-none">상세 옵션 검색</h3>
           {onClose && (
@@ -75,7 +75,7 @@ export const NVSearchPanel: React.FC<NVSearchPanelProps> = ({
             />
           )}
         </div>
-      )}
+      )} */}
 
       {/* Title Header (Popover/macOS) */}
       {isPopover && (
@@ -99,7 +99,7 @@ export const NVSearchPanel: React.FC<NVSearchPanelProps> = ({
           isDesktop && !isPopover ? "p-10 pr-6 border-r border-white/5" : 
           isPopover ? "p-5 pb-3" : ""
         )}>
-          <div className={cn(isPopover ? "space-y-6" : "space-y-5")}>
+          <div className={cn(isPopover ? "space-y-6" : "space-y-3.5")}>
             <NVField label="에셋 검색" size={(isPopover) ? "xs" : "sm"} row={isDesktop && !isPopover} labelWidth={isDesktop && !isPopover ? "120px" : undefined} labelClassName={isPopover ? "text-slate-500" : ""}>
               <NVSearchKeywordPart keyword={filters.keyword} setKeyword={setKeyword} isDesktop={isDesktop || isPopover} />
             </NVField>
@@ -139,7 +139,7 @@ export const NVSearchPanel: React.FC<NVSearchPanelProps> = ({
               <NVButton 
                 variant="primary" 
                 size={isPopover ? "sm" : "md"}
-                className="w-full justify-center shadow-lg shadow-indigo-500/10" 
+                className="w-full justify-center" 
                 onClick={handleApply}
               >
                 <Search size={isPopover ? 14 : 18} className="mr-2" /> 
@@ -157,9 +157,14 @@ export const NVSearchPanel: React.FC<NVSearchPanelProps> = ({
           </div>
 
           {(isDesktop && !isPopover) && onClose && (
-            <button onClick={onClose} className="text-[11px] font-bold text-slate-600 hover:text-slate-400 transition-colors uppercase tracking-widest text-center py-2">
+            <NVButton 
+              variant="ghost" 
+              size="xs" 
+              onClick={onClose} 
+              className="text-[10px] font-bold text-slate-500 hover:text-slate-400 transition-colors uppercase tracking-widest text-center py-2 w-full justify-center"
+            >
               ESC 닫기
-            </button>
+            </NVButton>
           )}
         </div>
       </div>

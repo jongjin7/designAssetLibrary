@@ -15,7 +15,7 @@ export function MobileTopBar({ rightElement, className, sticky = true, children 
   return (
     <header className={cn(
       "z-[60] flex flex-col w-full",
-      sticky && "sticky top-0 bg-slate-950/80 backdrop-blur-3xl  shadow-2xl",
+      sticky && "sticky top-0 bg-slate-950/80 backdrop-blur-3xl  shadow-xl shadow-black/30",
       !sticky && "bg-transparent",
       className
     )}>

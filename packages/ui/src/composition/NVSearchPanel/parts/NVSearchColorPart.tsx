@@ -1,6 +1,7 @@
 import React from 'react';
 import { Check } from 'lucide-react';
 import { cn } from '../../../lib/utils';
+import { NVIconButton } from '../../../atoms/NVIconButton';
 
 export const SEARCH_COLORS = [
   { value: 'red', label: 'R', hex: '#f43f5e', name: 'Rose' },
@@ -19,24 +20,29 @@ interface NVSearchColorPartProps {
 
 export const NVSearchColorPart = ({ colors, toggleColor, isDesktop = false }: NVSearchColorPartProps) => (
   <div className={cn("flex flex-wrap items-center", isDesktop ? "gap-2.5 py-1" : "gap-3 pl-1")}>
-    {SEARCH_COLORS.map((c) => (
-      <button
-        key={c.value}
-        onClick={() => toggleColor(c.value)}
-        className={cn(
-          "rounded-full transition-all duration-300 relative border flex items-center justify-center",
-          isDesktop ? "w-8 h-8" : "w-[26px] h-[26px]",
-          colors.includes(c.value) 
-            ? "border-white scale-110 shadow-[0_0_15px_rgba(255,255,255,0.3)] ring-2 ring-white/40 ring-offset-2 ring-offset-slate-950" 
-            : "border-transparent opacity-60 hover:opacity-100 hover:scale-[1.05]"
-        )}
-        style={{ backgroundColor: c.hex }}
-        title={c.name}
-      >
-        {colors.includes(c.value) && (
-          <Check size={isDesktop ? 14 : 12} className="text-white/90 drop-shadow-md" strokeWidth={3} />
-        )}
-      </button>
-    ))}
+    {SEARCH_COLORS.map((c) => {
+      const isActive = colors.includes(c.value);
+      return (
+        <NVIconButton
+          key={c.value}
+          icon={Check}
+          onClick={() => toggleColor(c.value)}
+          size={isDesktop ? "sm" : "xs"}
+          className={cn(
+            "!rounded-full transition-all duration-300 relative border-2",
+            isActive 
+              ? "border-white scale-110 ring-2 ring-white/20 ring-offset-2 ring-offset-slate-950" 
+              : "border-transparent opacity-60 hover:opacity-100 hover:scale-[1.05]"
+          )}
+          style={{ backgroundColor: c.hex }}
+          title={c.name}
+          iconClassName={cn(
+            "text-white transition-opacity",
+            isActive ? "opacity-100" : "opacity-0"
+          )}
+          strokeWidth={4}
+        />
+      );
+    })}
   </div>
 );

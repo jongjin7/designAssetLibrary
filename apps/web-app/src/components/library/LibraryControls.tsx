@@ -71,7 +71,7 @@ export function LibraryControls({
 
   if (isMobile) {
     return (
-      <div className={cn("flex flex-col w-full select-none gap-2", className)}>
+      <div className={cn("flex flex-col w-full select-none", className)}>
         <NVSearchBar
             value={searchText}
             onChange={onSearchChange}
@@ -80,8 +80,8 @@ export function LibraryControls({
             placeholder="에셋 이름, 태그로 검색..."
           />
         <div className={cn(
-          "grid transition-all duration-300 ease-in-out px-1",
-          isFilterOpen ? "grid-rows-[1fr] opacity-100 my-2" : "grid-rows-[0fr] opacity-0 pointer-events-none"
+          "grid transition-all duration-300 ease-in-out",
+          isFilterOpen ? "grid-rows-[1fr] opacity-100 mt-2" : "grid-rows-[0fr] opacity-0 pointer-events-none"
         )}>
           <div className="overflow-hidden">
             <NVSearchPanel
@@ -207,8 +207,6 @@ export function LibraryControls({
       <div className="px-8 py-2 border-b border-white/[0.05]">
         <FilterChips active={activeFilter} onChange={onFilterChange ?? (() => {})} />
       </div>
-
-      
     </div>
   );
 }

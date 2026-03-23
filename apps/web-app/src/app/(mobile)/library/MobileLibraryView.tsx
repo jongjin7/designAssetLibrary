@@ -113,9 +113,9 @@ export default function MobileLibraryView({
             />
         )}
 
-        <div className="px-5 py-2 shadow-md shadow-black/20">
+        {!isFilterOpen && <div className="px-5 py-2 shadow-md shadow-black/20">
           <FilterChips active={filter} onChange={(f) => setFilter(f as any)} />
-        </div>
+        </div>}
       </MobileTopBar>
 
       <NVAssetSelectionBar
@@ -130,7 +130,7 @@ export default function MobileLibraryView({
         onDelete={handleBulkDelete}
       />
       
-      <main className="px-5 py-6">
+      <main className="px-5 py-4">
         {loading ? (
           <NVLoadingState fullHeight />
         ) : (

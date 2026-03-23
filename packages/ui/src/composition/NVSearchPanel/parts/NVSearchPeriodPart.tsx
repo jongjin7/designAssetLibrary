@@ -1,6 +1,7 @@
 import React from 'react';
 import { Calendar } from 'lucide-react';
 import { cn } from '../../../lib/utils';
+import { NVButton } from '../../../atoms/NVButton';
 import { NVIconButton } from '../../../atoms/NVIconButton';
 
 export const SEARCH_PERIODS = [
@@ -18,32 +19,38 @@ interface NVSearchPeriodPartProps {
 
 export const NVSearchPeriodPart = ({ period, setPeriod, isDesktop = false }: NVSearchPeriodPartProps) => (
   <div className={cn(
-    "flex items-center justify-between shadow-inner w-full",
-    isDesktop ? "gap-2" : "bg-white/[0.03] border border-white/5 rounded-xl p-1.5"
+    "flex items-center justify-between w-full gap-1.5 pr-1"
   )}>
-    {SEARCH_PERIODS.map((p) => (
-      <button
-        key={p.value}
-        onClick={() => setPeriod(p.value)}
-        className={cn(
-          "transition-all text-center",
-          isDesktop 
-            ? "px-4 py-1.5 text-sm rounded-xl font-medium"
-            : "flex-1 py-1.5 text-[13px] font-bold rounded-lg",
-          period === p.value 
-            ? (isDesktop ? "bg-white/10 text-white shadow-sm ring-1 ring-white/20" : "bg-indigo-500 text-white shadow-md border border-indigo-500/50") 
-            : "text-slate-400 hover:text-slate-200 hover:bg-white/[0.02]"
-        )}
-      >
-        {p.label}
-      </button>
-    ))}
-    <div className={cn("w-[1px] bg-white/10", isDesktop ? "h-5 mx-1" : "h-4 mx-2")} />
+    <div className="flex-1 flex items-center gap-1.5">
+      {SEARCH_PERIODS.map((p) => {
+        const isActive = period === p.value;
+        return (
+          <NVButton
+            key={p.value}
+            size="sm"
+            variant={isActive ? (isDesktop ? "glass-primary" : "primary") : "glass"}
+            onClick={() => setPeriod(p.value)}
+            className={cn(
+              "transition-all text-center font-bold px-0",
+              isDesktop ? "min-w-[50px] rounded-xl" : "flex-1 rounded-lg",
+              !isActive && "text-slate-400 hover:text-slate-200 hover:bg-white/[0.04]"
+            )}
+          >
+            {p.label}
+          </NVButton>
+        );
+      })}
+    </div>
+    
+    <div className={cn("w-[1px] bg-white/5 ml-1", isDesktop ? "h-4" : "h-3")} />
+    
     <NVIconButton 
       icon={Calendar} 
       size="sm" 
+      iconSize={20}
+      strokeWidth={1.5}
       variant="ghost" 
-      className={cn("text-slate-400 hover:text-white shrink-0", isDesktop ? "" : "!w-8 !h-8")} 
+      className={cn("!w-6 text-slate-500 hover:text-white shrink-0")} 
       title="직접 선택"
     />
   </div>

@@ -61,7 +61,7 @@ export const NVSwitch: React.FC<NVSwitchProps> = ({
       <span
         aria-hidden="true"
         className={`
-          pointer-events-none inline-block transform rounded-full bg-white shadow ring-0 
+          pointer-events-none inline-block transform rounded-full bg-white ring-0 
           transition duration-200 ease-in-out
           ${currentSize.thumb}
           ${checked ? currentSize.translate : 'translate-x-0'}

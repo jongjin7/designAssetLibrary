@@ -23,15 +23,14 @@ export const NVButton: React.FC<NVButtonProps> = ({
   };
   
   const variants = {
-    // ... (rest of variants)
-    primary: 'bg-gradient-to-br from-indigo-500 to-indigo-700 text-white shadow-[0_8px_20px_-6px_rgba(79,70,229,0.5)] hover:shadow-[0_12px_24px_-6px_rgba(79,70,229,0.6)] hover:-translate-y-0.5',
-    secondary: 'bg-slate-900 text-slate-300 hover:text-white hover:bg-white/5',
-    vivid: 'bg-gradient-to-br from-cyan-400 to-cyan-600 text-white shadow-[0_8px_20px_-6px_rgba(6,182,212,0.5)] hover:shadow-[0_12px_24px_-6px_rgba(6,182,212,0.6)] hover:-translate-y-0.5',
-    danger: 'bg-rose-500/10 border border-rose-500/25 text-rose-500 hover:bg-rose-500 hover:text-white hover:border-rose-500 shadow-[0_4px_12px_rgba(244,63,94,0.15)] hover:shadow-[0_8px_20px_rgba(244,63,94,0.4)] hover:-translate-y-0.5',
+    primary: 'bg-gradient-to-br from-indigo-500 to-indigo-700 text-white hover:brightness-[1.2] hover:saturate-[1.1]',
+    secondary: 'bg-indigo-500/15 text-indigo-400 hover:bg-indigo-500/25 hover:text-indigo-300',
+    vivid: 'bg-gradient-to-br from-cyan-400 to-cyan-600 text-white hover:brightness-[1.1] hover:saturate-[1.1]',
+    danger: 'bg-rose-500/10 border border-rose-500/25 text-rose-500 hover:bg-rose-500 hover:text-white hover:border-rose-500',
     ghost: 'bg-transparent text-slate-500 hover:text-slate-50 hover:bg-white/5',
     glass: 'bg-gray-400/10 backdrop-blur-md border border-gray-400/20 text-gray-400 hover:bg-gray-400/40 hover:text-white hover:border-gray-400',
-    'glass-primary': 'bg-indigo-500/10 backdrop-blur-md border border-indigo-500/20 text-indigo-400 hover:bg-indigo-500/40 hover:text-white hover:border-indigo-500 shadow-[0_4px_12px_rgba(99,102,241,0.15)]',
-    'glass-danger': 'bg-rose-500/5 backdrop-blur-md border border-rose-500/20 text-rose-400 hover:bg-rose-500/40 hover:text-white hover:border-rose-500 shadow-[0_4px_12px_rgba(244,63,94,0.1)]'
+    'glass-primary': 'bg-indigo-500/10 backdrop-blur-md border border-indigo-500/20 text-indigo-400 hover:bg-indigo-500/40 hover:text-white hover:border-indigo-500',
+    'glass-danger': 'bg-rose-500/5 backdrop-blur-md border border-rose-500/20 text-rose-400 hover:bg-rose-500/40 hover:text-white hover:border-rose-500'
   }; 
 
   const sizes = {

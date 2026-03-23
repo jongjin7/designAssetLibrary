@@ -1,5 +1,6 @@
 import React from 'react';
 import { LucideIcon, LucideProps } from 'lucide-react';
+import { cn } from '../../lib/utils';
 
 interface NVIconButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
   icon: LucideIcon;
@@ -8,6 +9,7 @@ interface NVIconButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement
   iconSize?: number;
   iconProps?: LucideProps;
   strokeWidth?: number;
+  iconClassName?: string;
 }
 
 export const NVIconButton: React.FC<NVIconButtonProps> = ({ 
@@ -16,11 +18,12 @@ export const NVIconButton: React.FC<NVIconButtonProps> = ({
   size = 'md', 
   iconSize,
   iconProps,
+  iconClassName,
   className = '', 
   strokeWidth=2,
   ...props 
 }) => {
-  const baseStyles = 'inline-flex items-center justify-center transition-all duration-200 active:scale-90 disabled:opacity-40 disabled:pointer-events-none [&_svg]:text-inherit';
+  const baseStyles = 'inline-flex items-center justify-center transition-all duration-300 active:scale-[0.96] disabled:opacity-40 disabled:pointer-events-none [&_svg]:text-inherit';
   
   const roundedStyles = {
     xs: 'rounded-md',
@@ -31,14 +34,14 @@ export const NVIconButton: React.FC<NVIconButtonProps> = ({
   };
 
   const variants = {
-    primary: 'bg-gradient-to-br from-indigo-500 to-indigo-700 text-white shadow-[0_8px_20px_-6px_rgba(79,70,229,0.5)] hover:shadow-[0_12px_24px_-6px_rgba(79,70,229,0.6)] hover:-translate-y-0.5',
-    secondary: 'bg-white/5 text-slate-400 hover:text-white hover:bg-white/10',
-    vivid: 'bg-gradient-to-br from-cyan-400 to-cyan-600 text-white shadow-[0_8px_20px_-6px_rgba(6,182,212,0.5)] hover:shadow-[0_12px_24px_-6px_rgba(6,182,212,0.6)] hover:-translate-y-0.5',
-    danger: 'bg-rose-500/10 border border-rose-500/25 text-rose-500 hover:bg-rose-500 hover:text-white hover:border-rose-500 shadow-[0_4px_12px_rgba(244,63,94,0.15)] hover:shadow-[0_8px_20px_rgba(244,63,94,0.4)] hover:-translate-y-0.5',
+    primary: 'bg-gradient-to-br from-indigo-500 to-indigo-700 text-white hover:brightness-[1.2] hover:saturate-[1.1]',
+    secondary: 'bg-indigo-500/15 text-indigo-400 hover:bg-indigo-500/25 hover:text-indigo-300',
+    vivid: 'bg-gradient-to-br from-cyan-400 to-cyan-600 text-white hover:brightness-[1.1] hover:saturate-[1.1]',
+    danger: 'bg-rose-500/10 border border-rose-500/25 text-rose-500 hover:bg-rose-500 hover:text-white hover:border-rose-500',
     ghost: 'bg-transparent text-slate-500 hover:text-slate-50 hover:bg-white/5',
     glass: 'bg-white/5 backdrop-blur-md border border-white/10 text-white/80 hover:bg-white/10 hover:text-white hover:border-white/20',
-    'glass-primary': 'bg-indigo-500/10 backdrop-blur-md border border-indigo-500/30 text-indigo-400 hover:bg-indigo-500 hover:text-white hover:border-indigo-500 shadow-[0_4px_12px_rgba(99,102,241,0.15)]',
-    'glass-danger': 'bg-rose-500/5 backdrop-blur-md border border-rose-500/20 text-rose-400 hover:bg-rose-500 hover:text-white hover:border-rose-500 shadow-[0_4px_12px_rgba(244,63,94,0.1)]'
+    'glass-primary': 'bg-indigo-500/10 backdrop-blur-md border border-indigo-500/20 text-indigo-400 hover:bg-indigo-500/40 hover:text-white hover:border-indigo-500',
+    'glass-danger': 'bg-rose-500/5 backdrop-blur-md border border-rose-500/20 text-rose-400 hover:bg-rose-500/40 hover:text-white hover:border-rose-500'
   };
 
   const sizes = {
@@ -62,7 +65,7 @@ export const NVIconButton: React.FC<NVIconButtonProps> = ({
 
   return (
     <button className={combinedClasses} {...props}>
-      <Icon size={finalIconSize} {...iconProps} strokeWidth={strokeWidth}/>
+      <Icon size={finalIconSize} {...iconProps} className={cn(iconClassName, iconProps?.className)} strokeWidth={strokeWidth}/>
     </button>
   );
 };

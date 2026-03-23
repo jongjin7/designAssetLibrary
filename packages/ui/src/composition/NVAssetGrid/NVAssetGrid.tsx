@@ -12,7 +12,7 @@ export const NVAssetGrid: React.FC<NVAssetGridProps> = ({ children, className = 
     <div 
       className={cn(
         "columns-[180px] sm:columns-[220px] md:columns-[240px]",
-        "gap-4 space-y-4 px-1",
+        "gap-4 space-y-4",
         className
       )}
     >
