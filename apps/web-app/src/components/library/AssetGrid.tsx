@@ -8,9 +8,10 @@ interface AssetGridProps {
   selectedIds?: Set<string>;
   onSelect?: (id: string, e: React.MouseEvent) => void;
   isMobile?: boolean;
+  zoom?: number;
 }
 
-export function AssetGrid({ assets, onAssetTap, selectedIds, onSelect, isMobile }: AssetGridProps) {
+export function AssetGrid({ assets, onAssetTap, selectedIds, onSelect, isMobile, zoom }: AssetGridProps) {
   if (assets.length === 0) {
     return (
       <NVEmptyState
@@ -22,7 +23,7 @@ export function AssetGrid({ assets, onAssetTap, selectedIds, onSelect, isMobile 
   }
 
   return (
-    <NVAssetGrid>
+    <NVAssetGrid zoom={zoom}>
       {assets.map(asset => (
         <AssetCard 
           key={asset.id} 

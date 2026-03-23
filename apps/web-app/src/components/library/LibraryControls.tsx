@@ -47,6 +47,8 @@ interface LibraryControlsProps {
   className?: string;
   isSidebarVisible?: boolean;
   onAddAsset?: (data: any, file?: File) => Promise<void>;
+  zoom?: number;
+  onZoomChange?: (value: number) => void;
 }
 
 export function LibraryControls({
@@ -64,8 +66,9 @@ export function LibraryControls({
   className,
   isSidebarVisible = false,
   onAddAsset,
+  zoom = 50,
+  onZoomChange,
 }: LibraryControlsProps) {
-  const [zoom, setZoom] = useState(50);
   const [isAddOpen, setIsAddOpen] = useState(false);
 
   const handleSearchChange = (value: string) => {
@@ -154,7 +157,7 @@ export function LibraryControls({
         <div className="flex-shrink-0 flex items-center gap-3 px-6" style={{ WebkitAppRegion: 'no-drag' } as any}>
           <NVSlider 
             value={zoom} 
-            onChange={setZoom} 
+            onChange={(v) => onZoomChange?.(v)} 
             size="sm" 
             className="w-28" 
           />

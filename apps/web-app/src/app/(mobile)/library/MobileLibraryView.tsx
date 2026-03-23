@@ -15,7 +15,7 @@ interface MobileLibraryViewProps {
   assets: Asset[];
   loading: boolean;
   filter: string;
-  setFilter: (f: string) => void;
+  setFilter: (f: any) => void;
   selectedAsset: any;
   openDetail: (asset: any) => void;
   closeDetail: () => void;
@@ -38,13 +38,16 @@ interface MobileLibraryViewProps {
   handleFilterReset: () => void;
   isSearchVisible?: boolean;
   onSearchToggle?: () => void;
+  zoom: number;
+  setZoom: (v: number) => void;
 }
 
 export default function MobileLibraryView({
   assets, loading, filter, setFilter, selectedAsset, openDetail, closeDetail, deleteAsset, updateAsset,
   selectedIds, setSelectedIds, isSelectionMode, setIsSelectionMode,
   searchText, setSearchText, isFilterOpen, setIsFilterOpen, filteredAssets, handleFilterApply, handleFilterReset,
-  isSearchVisible = false, onSearchToggle
+  isSearchVisible = false, onSearchToggle,
+  zoom, setZoom
 }: MobileLibraryViewProps) {
 
   const handleSearchToggle = () => {
@@ -140,6 +143,7 @@ export default function MobileLibraryView({
               selectedIds={selectedIds}
               onSelect={(id) => handleSelect(id)}
               isMobile={true}
+              zoom={zoom}
             />
         )}
       </main>

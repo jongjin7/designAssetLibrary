@@ -14,7 +14,7 @@ interface DesktopLibraryViewProps {
   assets: Asset[];
   loading: boolean;
   filter: string;
-  setFilter: (f: string) => void;
+  setFilter: (f: any) => void;
   selectedAsset: any;
   openDetail: (asset: any) => void;
   closeDetail: () => void;
@@ -36,13 +36,16 @@ interface DesktopLibraryViewProps {
   handleFilterReset: () => void;
   isSearchVisible?: boolean;
   onSearchToggle?: () => void;
+  zoom: number;
+  setZoom: (v: number) => void;
 }
 
 export default function DesktopLibraryView({
   assets, loading, filter, setFilter, selectedAsset, openDetail, closeDetail, deleteAsset, updateAsset, addAsset,
   selectedIds, setSelectedIds,
   searchText, setSearchText, isFilterOpen, setIsFilterOpen, filteredAssets, handleFilterApply, handleFilterReset,
-  isSearchVisible, onSearchToggle
+  isSearchVisible, onSearchToggle,
+  zoom, setZoom
 }: DesktopLibraryViewProps) {
   
   const [isSidebarVisible, setIsSidebarVisible] = useState(false);
@@ -162,6 +165,8 @@ export default function DesktopLibraryView({
               setIsSidebarVisible(true);
             }
           }}
+          zoom={zoom}
+          onZoomChange={setZoom}
         />
 
         {/* Floating Sidebar Toggle - Fixed to FAR RIGHT Edge of Browser */}
@@ -197,6 +202,7 @@ export default function DesktopLibraryView({
                 onAssetTap={handleAssetTap} 
                 selectedIds={selectedIds}
                 onSelect={handleSelect}
+                zoom={zoom}
               />
             )}
           </div>
