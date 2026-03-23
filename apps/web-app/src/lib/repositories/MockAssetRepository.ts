@@ -185,8 +185,12 @@ export class MockAssetRepository implements AssetRepository {
   private persist() {
     try {
       localStorage.setItem(STORAGE_KEY, JSON.stringify(this.assets));
-    } catch (e) {
-      console.error('[Mock/OPFS] Failed to persist assets to localStorage:', e);
+    } catch (e: any) {
+      if (e.name === 'QuotaExceededError') {
+        console.error('[Mock/Storage] LocalStorage FULL! Cannot save more asset metadata.');
+      } else {
+        console.error('[Mock/Storage] Failed to persist assets:', e);
+      }
     }
   }
 }
