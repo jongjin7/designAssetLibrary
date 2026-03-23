@@ -31,6 +31,7 @@ type Story = StoryObj<typeof NVAssetCard>;
 const sampleAsset = {
   id: '1',
   fileName: 'abstract-gradient-mesh.png',
+  thumbnail: 'https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?auto=format&fit=crop&q=80&w=800',
   thumbnailGradient: 'linear-gradient(135deg, #6366f1 0%, #a855f7 100%)',
   palette: ['#6366f1', '#a855f7', '#ec4899'],
 };
@@ -39,18 +40,7 @@ export const Default: Story = {
   parameters: {
     docs: {
       description: {
-        story: '이미지가 없을 경우 파일 이름과 메타데이터에서 추출한 컬러 팔레트를 기반으로 생성된 그래디언트 썸네일을 보여줍니다.',
-      },
-    },
-  },
-  args: sampleAsset,
-};
-
-export const WithImage: Story = {
-  parameters: {
-    docs: {
-      description: {
-        story: '실제 이미지가 존재하는 경우의 모습입니다. 이미지 위에서 파일 이름과 정보가 오버레이됩니다.',
+        story: '기본적인 에셋 카드의 모습입니다. 고해상도 이미지와 파일명, 컬러 팔레트가 조화롭게 표시됩니다.',
       },
     },
   },
@@ -61,11 +51,42 @@ export const WithImage: Story = {
   },
 };
 
+export const Skeleton: Story = {
+  parameters: {
+    docs: {
+      description: {
+        story: '이미지가 로드되기 전의 스켈레톤 상태입니다. 회색 톤의 Shimmer 애니메이션이 적용되어 로딩 중임을 나타냅니다.',
+      },
+    },
+  },
+  args: {
+    ...sampleAsset,
+    thumbnail: '', // 데이터는 있으나 이미지가 아직 로드되지 않은 상황 시뮬레이션
+    thumbnailGradient: '',
+    isLoading: true,
+  },
+};
+
+export const LoadFailed: Story = {
+  parameters: {
+    docs: {
+      description: {
+        story: '네트워크 에러나 잘못된 경로로 인해 이미지 로드에 실패했을 때 나타나는 NOVA 서비스 로고 이미지입니다.',
+      },
+    },
+  },
+  args: {
+    ...sampleAsset,
+    thumbnail: 'https://invalid-image-url.com/error.jpg',
+    fileName: 'broken-image-link.png',
+  },
+};
+
 export const Selected: Story = {
   parameters: {
     docs: {
       description: {
-        story: '카드가 선택된 상태입니다. 사이언 컬러의 테두리와 체크 아이콘이 표시됩니다.',
+        story: '카드가 선택된 상태입니다. 인디고 컬러의 테두리와 체크 아이콘이 시각적 피드백을 제공합니다.',
       },
     },
   },
@@ -79,7 +100,7 @@ export const Favorite: Story = {
   parameters: {
     docs: {
       description: {
-        story: '즐겨찾기(좋아요)가 활성화된 상태입니다. 핑크색 하트 아이콘이 표시됩니다.',
+        story: '즐겨찾기(별표)가 활성화된 상태입니다. 프리미엄 인디고 컬러의 별 아이콘이 표시됩니다.',
       },
     },
   },
@@ -89,48 +110,5 @@ export const Favorite: Story = {
   },
 };
 
-export const Mobile: Story = {
-  parameters: {
-    docs: {
-      description: {
-        story: '모바일 환경에 최적화된 컴포넌트 형태를 보여줍니다. 스페이스가 좁은 환경에서의 레이아웃을 확인합니다.',
-      },
-    },
-    viewport: {
-      defaultViewport: 'mobile1',
-    },
-  },
-  args: {
-    ...sampleAsset,
-    isMobile: true,
-    thumbnail: 'https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?auto=format&fit=crop&q=80&w=800',
-  },
-};
 
-export const GridView: Story = {
-  parameters: {
-    docs: {
-      description: {
-        story: '에셋 그리드 내에서의 카드 배치 및 정렬 예시입니다.',
-      },
-    },
-  },
-  decorators: [
-    (Story) => (
-      <div className="p-10 bg-slate-950 w-full min-h-screen">
-        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4">
-           {[1, 2, 3, 4, 5, 6, 7, 8].map(i => (
-             <NVAssetCard 
-               key={i}
-               {...sampleAsset} 
-               id={`${i}`}
-               fileName={`Design-Asset-0${i}.png`}
-               isSelected={i === 2}
-               isFavorite={i === 4}
-             />
-           ))}
-        </div>
-      </div>
-    )
-  ]
-};
+
