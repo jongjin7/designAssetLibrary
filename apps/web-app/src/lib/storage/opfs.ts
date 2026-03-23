@@ -16,7 +16,7 @@ export class OPFSService {
     if (typeof window !== 'undefined') {
       try {
         this.useIDB = !navigator.storage || !navigator.storage.getDirectory;
-      } catch (e) {
+      } catch (e) { 
         this.useIDB = true;
       }
     }
@@ -27,15 +27,6 @@ export class OPFSService {
       OPFSService.instance = new OPFSService();
     }
     return OPFSService.instance;
-  }
-
-  private async blobToArrayBuffer(blob: Blob): Promise<ArrayBuffer> {
-    return new Promise((resolve, reject) => {
-      const reader = new FileReader();
-      reader.onload = () => resolve(reader.result as ArrayBuffer);
-      reader.onerror = reject;
-      reader.readAsArrayBuffer(blob);
-    });
   }
 
   private async blobToBase64(blob: Blob): Promise<string> {
@@ -133,13 +124,13 @@ export class OPFSService {
    */
   public async getFile(path: string): Promise<Blob> {
     // 1. Try OPFS first if available
-    if (typeof navigator !== 'undefined' && navigator.storage?.getDirectory) {
-      try {
-        const root = await navigator.storage.getDirectory();
+    try {
+      const root = await this.getRoot();
+      if (root) {
+        let currentDir = root;
         const parts = path.split('/');
         const fileName = parts.pop()!;
         
-        let currentDir = root;
         for (const part of parts) {
           currentDir = await currentDir.getDirectoryHandle(part);
         }
@@ -147,46 +138,66 @@ export class OPFSService {
         const fileHandle = await currentDir.getFileHandle(fileName);
         const file = await fileHandle.getFile();
         if (file) return file;
-      } catch (e) {
-        // Silently fail and try IDB
       }
+    } catch (e) {
+      console.debug('[Storage] OPFS lookup failed, trying IDB:', e);
     }
 
     // 2. Try IndexedDB Fallback
-    try {
-      const db = await this.getDB();
-      return new Promise((resolve, reject) => {
-        const transaction = db.transaction(this.storeName, 'readonly');
-        const store = transaction.objectStore(this.storeName);
-        const request = store.get(path);
-        request.onsuccess = async () => {
-          let result = request.result;
-          if (result) {
-            // Restore Blob from fallback types
-            if (typeof result === 'string' && result.startsWith('data:')) {
-              try {
-                const res = await fetch(result);
-                result = await res.blob();
-              } catch(e) { /* fallback */ }
-            } else if (result instanceof ArrayBuffer) {
-              const ext = path.split('.').pop()?.toLowerCase() || '';
-              let mime = 'image/webp';
-              if (ext === 'png') mime = 'image/png';
-              else if (ext === 'jpg' || ext === 'jpeg') mime = 'image/jpeg';
-              else if (ext === 'svg') mime = 'image/svg+xml';
-              else if (ext === 'gif') mime = 'image/gif';
-              result = new Blob([result], { type: mime });
-            }
-            resolve(result as Blob);
-          } else {
-            reject(new Error('NotFound'));
+    const db = await this.getDB();
+    return new Promise((resolve, reject) => {
+      const transaction = db.transaction(this.storeName, 'readonly');
+      const store = transaction.objectStore(this.storeName);
+      const request = store.get(path);
+      request.onsuccess = async () => {
+        let result = request.result;
+        if (result) {
+          // Restore Blob from fallback types
+          if (typeof result === 'string' && result.startsWith('data:')) {
+            try {
+              const res = await fetch(result);
+              result = await res.blob();
+            } catch(e) { console.debug('[Storage] Data URL to Blob failed:', e); }
+          } else if (result instanceof ArrayBuffer) {
+            const ext = path.split('.').pop()?.toLowerCase() ?? '';
+            const MIME_MAP: Record<string, string> = {
+              png: 'image/png', jpg: 'image/jpeg', jpeg: 'image/jpeg',
+              svg: 'image/svg+xml', gif: 'image/gif', webp: 'image/webp',
+              avif: 'image/avif', pdf: 'application/pdf',
+            };
+            result = new Blob([result], { type: MIME_MAP[ext] ?? 'application/octet-stream' });
           }
-        };
-        request.onerror = () => reject(request.error);
-      });
-    } catch (e) {
-      throw e;
-    }
+          resolve(result as Blob);
+        } else {
+          reject(new Error('NotFound'));
+        }
+      };
+      request.onerror = () => reject(request.error);
+    });
+  }
+
+  /**
+   * Save a file to IndexedDB (iOS WebKit bug workaround: stores as Base64 Data URL)
+   */
+  private async saveToIDB(path: string, content: Blob | BufferSource): Promise<void> {
+    const db = await this.getDB();
+
+    // Fix iOS WebKit bug: Store as Base64 Data URL instead of Blob/Buffer
+    // This universally bypasses all memory pointer/DOMException issues in IDB
+    let idbContent: string | BufferSource = content instanceof Blob
+      ? await this.blobToBase64(content).catch(e => {
+          console.error('[Storage] Base64 conversion failed:', e);
+          throw e;
+        })
+      : content;
+
+    return new Promise((resolve, reject) => {
+      const transaction = db.transaction(this.storeName, 'readwrite');
+      const store = transaction.objectStore(this.storeName);
+      const request = store.put(idbContent, path);
+      request.onsuccess = () => resolve();
+      request.onerror = () => reject(request.error);
+    });
   }
 
   /**
@@ -195,47 +206,31 @@ export class OPFSService {
   public async saveFile(path: string, content: Blob | BufferSource): Promise<void> {
     // Invalidate cache for this path
     if (this.urlCache.has(path)) {
-      const oldUrl = this.urlCache.get(path);
-      if (oldUrl) URL.revokeObjectURL(oldUrl);
+      URL.revokeObjectURL(this.urlCache.get(path)!);
       this.urlCache.delete(path);
+    }
+
+    if (this.useIDB) {
+      return this.saveToIDB(path, content);
     }
 
     try {
       const root = await this.getRoot();
-      
-      if (this.useIDB || !root) {
-        const db = await this.getDB();
-        
-        let idbContent: any = content;
-        // Fix iOS WebKit bug: Store as Base64 Data URL instead of Blob/Buffer
-        // This universally bypasses all memory pointer/DOMException issues in IDB
-        if (content instanceof Blob) {
-           try {
-             idbContent = await this.blobToBase64(content);
-           } catch(e) {
-             console.error('[Storage] Base64 conversion failed:', e);
-           }
-        }
 
-        return new Promise((resolve, reject) => {
-          const transaction = db.transaction(this.storeName, 'readwrite');
-          const store = transaction.objectStore(this.storeName);
-          const request = store.put(idbContent, path);
-          request.onsuccess = () => resolve();
-          request.onerror = () => reject(request.error);
-        });
+      if (!root) {
+        return this.saveToIDB(path, content);
       }
 
       const parts = path.split('/');
       const fileName = parts.pop()!;
-      
+
       let currentDir = root;
       for (const part of parts) {
         currentDir = await currentDir.getDirectoryHandle(part, { create: true });
       }
 
       const fileHandle = await currentDir.getFileHandle(fileName, { create: true });
-      
+
       if (!fileHandle.createWritable) {
         throw new Error('createWritable unsupported');
       }
@@ -244,12 +239,9 @@ export class OPFSService {
       await writable.write(content as any);
       await writable.close();
     } catch (e) {
-      console.error('[Storage] CRITICAL: Save failed, trying fallback:', e);
-      if (!this.useIDB) {
-        this.useIDB = true;
-        return this.saveFile(path, content);
-      }
-      throw e;
+      console.error('[Storage] CRITICAL: OPFS save failed, falling back to IDB:', e);
+      this.useIDB = true;
+      return this.saveToIDB(path, content);
     }
   }
 
@@ -285,6 +277,16 @@ export class OPFSService {
     } catch (e) {
       // Ignore if not in OPFS
     }
+  }
+
+  /**
+   * Revoke all cached blob URLs to free memory
+   */
+  public clearCache(): void {
+    for (const url of this.urlCache.values()) {
+      URL.revokeObjectURL(url);
+    }
+    this.urlCache.clear();
   }
 
   /**
