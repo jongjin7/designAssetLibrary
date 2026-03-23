@@ -3,7 +3,8 @@ import { Asset } from '../types/asset';
 export const mockAssets: Asset[] = [
   {
     id: '1',
-    fileName: 'brand-logo-v3.webp',
+    fileName: 'brand-logo-v3',
+    extension: 'webp',
     fileSize: '1.2 MB',
     mimeType: 'image/webp',
     thumbnail: 'https://images.unsplash.com/photo-1614850523296-d8c1af93d400?q=80&w=1000&auto=format&fit=crop',
@@ -15,7 +16,8 @@ export const mockAssets: Asset[] = [
   },
   {
     id: '2',
-    fileName: 'cta-button-glow.webp',
+    fileName: 'cta-button-glow',
+    extension: 'webp',
     fileSize: '340 KB',
     mimeType: 'image/webp',
     thumbnail: 'https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?q=80&w=1000&auto=format&fit=crop',
@@ -27,7 +29,8 @@ export const mockAssets: Asset[] = [
   },
   {
     id: '3',
-    fileName: 'icon-set-minimal.webp',
+    fileName: 'icon-set-minimal',
+    extension: 'webp',
     fileSize: '890 KB',
     mimeType: 'image/webp',
     thumbnail: 'https://images.unsplash.com/photo-1620641788421-7a1c342ea42e?q=80&w=1000&auto=format&fit=crop',
@@ -39,7 +42,8 @@ export const mockAssets: Asset[] = [
   },
   {
     id: '4',
-    fileName: 'palette-swatches.webp',
+    fileName: 'palette-swatches',
+    extension: 'webp',
     fileSize: '520 KB',
     mimeType: 'image/webp',
     thumbnailGradient: 'linear-gradient(135deg, #F43F5E 0%, #FB923C 50%, #FBBF24 100%)',
@@ -50,7 +54,8 @@ export const mockAssets: Asset[] = [
   },
   {
     id: '5',
-    fileName: 'typo-specimen.webp',
+    fileName: 'typo-specimen',
+    extension: 'webp',
     fileSize: '1.8 MB',
     mimeType: 'image/webp',
     thumbnail: 'https://images.unsplash.com/photo-1557683316-973673baf926?q=80&w=1000&auto=format&fit=crop',
@@ -62,7 +67,8 @@ export const mockAssets: Asset[] = [
   },
   {
     id: '6',
-    fileName: 'geo-pattern-dark.webp',
+    fileName: 'geo-pattern-dark',
+    extension: 'webp',
     fileSize: '2.1 MB',
     mimeType: 'image/webp',
     thumbnailGradient: 'linear-gradient(135deg, #064E3B 0%, #065F46 50%, #059669 100%)',
@@ -73,7 +79,8 @@ export const mockAssets: Asset[] = [
   },
   {
     id: '7',
-    fileName: 'dashboard-mockup.webp',
+    fileName: 'dashboard-mockup',
+    extension: 'webp',
     fileSize: '3.4 MB',
     mimeType: 'image/webp',
     thumbnail: 'https://images.unsplash.com/photo-1551288049-bebda4e38f71?q=80&w=1000&auto=format&fit=crop',
@@ -85,7 +92,8 @@ export const mockAssets: Asset[] = [
   },
   {
     id: '8',
-    fileName: 'glass-card-design.webp',
+    fileName: 'glass-card-design',
+    extension: 'webp',
     fileSize: '780 KB',
     mimeType: 'image/webp',
     thumbnail: 'https://images.unsplash.com/photo-1635776062127-d379bfcba9f8?q=80&w=1000&auto=format&fit=crop',

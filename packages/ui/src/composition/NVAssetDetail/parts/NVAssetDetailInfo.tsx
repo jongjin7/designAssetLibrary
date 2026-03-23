@@ -29,7 +29,7 @@ export function NVAssetDetailInfo({ asset, className = '' }: NVAssetDetailInfoPr
       <p className="text-[12px] font-semibold text-slate-500 flex items-center gap-1.5">
         <span>{formatDate(asset.createdAt)}</span>
         <span className="w-1 h-1 rounded-full bg-slate-800" />
-        <span className="text-[10px] opacity-60 uppercase font-bold">{asset.fileName.split('.').pop()}</span>
+        <span className="text-[10px] opacity-60 uppercase font-bold">{asset.extension}</span>
         <span className="w-1 h-1 rounded-full bg-slate-800" />
         <span className="text-[10px] opacity-60 uppercase font-bold">{asset.fileSize}</span>
       </p>

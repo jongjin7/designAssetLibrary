@@ -124,13 +124,14 @@ export class MockAssetRepository implements AssetRepository {
     const newAsset: Asset = {
       id,
       fileName,
+      extension: asset.extension || (fileName.includes('.') ? fileName.split('.').pop() || 'webp' : 'webp'),
       fileSize: asset.fileSize || '0 KB',
       mimeType: asset.mimeType || 'image/webp',
       thumbnailGradient: asset.thumbnailGradient || 'linear-gradient(135deg, #6366F1 0%, #8B5CF6 100%)',
       thumbnail: opfsPath.startsWith('assets/') ? opfsPath : asset.thumbnail || '',
       palette: asset.palette || ['#6366F1', '#8B5CF6'],
       tags: asset.tags || ['captured'],
-      createdAt: new Date().toISOString().split('T')[0],
+      createdAt: asset.createdAt || new Date().toISOString().split('T')[0],
       isFavorite: !!asset.isFavorite,
     };
     

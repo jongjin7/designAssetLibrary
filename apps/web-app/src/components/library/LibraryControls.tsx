@@ -16,6 +16,7 @@ import {
   Image as ImageIcon,
 } from 'lucide-react';
 import { ViewOptionsPopover } from './ViewOptionsPopover';
+import { processFileToAsset } from '../../lib/assetProcessor';
 import { 
   NVPopover, 
   NVPopoverTrigger, 
@@ -119,7 +120,19 @@ export function LibraryControls({
             </NVDialogTrigger>
             <NVDialogContent className="max-w-lg p-0 border-white/10 shadow-2xl z-[100]">
               <NVDesktopUploadPanel 
-                onAdd={onAddAsset ?? (async () => {})} 
+                onAdd={async (data, file) => {
+                  let finalAsset = data;
+                  if (file) {
+                    const processed = await processFileToAsset(file);
+                    // Merge processed metadata with user input (tags, name)
+                    finalAsset = { ...processed, ...data };
+                    // If the user manually provided tags, we should combine them or prioritize user input
+                    if (data.tags && data.tags.length > 0) {
+                       finalAsset.tags = [...new Set([...(processed.tags || []), ...data.tags])];
+                    }
+                  }
+                  await onAddAsset?.(finalAsset, file);
+                }} 
                 onClose={() => setIsAddOpen(false)} 
               />
             </NVDialogContent>

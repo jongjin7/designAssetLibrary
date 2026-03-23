@@ -6,7 +6,7 @@ import { useRouter } from 'next/navigation';
 import { CaptureViewfinder, CaptureViewfinderRef } from '../../../components/capture/CaptureViewfinder';
 import { CaptureControls } from '../../../components/capture/CaptureControls';
 import { useAssets } from '../../../hooks/useAssets';
-import { extractColors } from '../../../lib/colorExtractor';
+import { processFileToAsset } from '../../../lib/assetProcessor';
 
 export default function CapturePage() {
   const router = useRouter();
@@ -26,38 +26,49 @@ export default function CapturePage() {
     };
   }, []);
 
+  const dataURLToBlob = (dataurl: string): Blob | null => {
+    try {
+      const arr = dataurl.split(',');
+      const mimeMatch = arr[0].match(/:(.*?);/);
+      if (!mimeMatch) return null;
+      const mime = mimeMatch[1];
+      const bstr = atob(arr[1]);
+      let n = bstr.length;
+      const u8arr = new Uint8Array(n);
+      while (n--) {
+        u8arr[n] = bstr.charCodeAt(n);
+      }
+      return new Blob([u8arr], { type: mime });
+    } catch (e) {
+      return null;
+    }
+  };
+
   const handleShutter = async () => {
     if (!viewfinderRef.current || isCapturing.current) return;
     
     const result = viewfinderRef.current.takePhoto();
     if (!result) return;
     
-    const { dataUrl, fileName, fileSize } = result;
+    const { dataUrl, fileName } = result;
     
     isCapturing.current = true;
     setCapturedImage(dataUrl);
     setProgress(0);
 
-    // AI/Canvas Color Extraction
-    let palette = ['#6366F1', '#06B6D4', '#F8FAFC']; // Default
-    try {
-      palette = await extractColors(dataUrl);
-    } catch (err) {
-      console.warn('Failed to extract colors during capture:', err);
-    }
+    // Process using unified processor
+    const blob = dataURLToBlob(dataUrl) || new Blob();
+    const processedAsset = await processFileToAsset(blob, ['captured', 'new']);
 
-    // Create asset with REAL metadata and palette
+    const rawFileName = fileName || processedAsset.fileName || '';
+    const finalName = rawFileName.includes('.') 
+      ? rawFileName.split('.').slice(0, -1).join('.') 
+      : rawFileName;
+
     const newAsset = {
+      ...processedAsset,
+      fileName: finalName,
       id: Date.now().toString(),
-      fileName: fileName || `capture-${Date.now()}.webp`,
-      fileSize: fileSize || '0 KB',
-      mimeType: 'image/webp',
-      thumbnailGradient: `linear-gradient(135deg, ${palette[0]} 0%, ${palette[1] || palette[0]} 100%)`,
-      thumbnail: dataUrl,
-      palette: palette,
-      tags: ['captured', 'new'],
-      createdAt: new Date().toISOString().split('T')[0],
-      isFavorite: false,
     };
     
     let currentProgress = 0;
@@ -78,7 +89,6 @@ export default function CapturePage() {
             viewfinderRef.current?.clearPreview();
             setProgress(0);
             isCapturing.current = false;
-            // router.push('/library'); // Removed: Stay on page for multiple shots
           }, 1500);
         });
       } else {

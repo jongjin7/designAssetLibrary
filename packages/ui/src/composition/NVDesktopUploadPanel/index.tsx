@@ -40,11 +40,14 @@ export function NVDesktopUploadPanel({ onAdd, onClose }: NVDesktopUploadPanelPro
   };
 
   const handleAddTag = (e: React.KeyboardEvent<HTMLInputElement>) => {
-    if (e.key === 'Enter' && tagInput.trim()) {
-      if (!tags.includes(tagInput.trim())) {
-        setTags([...tags, tagInput.trim()]);
+    if (e.key === 'Enter') {
+      if (e.nativeEvent.isComposing) return;
+      if (tagInput.trim()) {
+        if (!tags.includes(tagInput.trim())) {
+          setTags([...tags, tagInput.trim()]);
+        }
+        setTagInput('');
       }
-      setTagInput('');
     }
   };
 
@@ -54,11 +57,19 @@ export function NVDesktopUploadPanel({ onAdd, onClose }: NVDesktopUploadPanelPro
 
   const handleSubmit = async () => {
     if (!file && !title) return;
-    setIsSubmitting(true);
+    let currentTags = [...tags];
+    if (tagInput.trim() && !currentTags.includes(tagInput.trim())) {
+      currentTags.push(tagInput.trim());
+    }
+
+    // Strip extension from both user title or default file name
+    const rawName = title || (file ? file.name : '무제 에셋');
+    const fileName = rawName.includes('.') ? rawName.split('.').slice(0, -1).join('.') : rawName;
+
     try {
       await onAdd({
-        fileName: title || (file ? file.name : '무제 에셋'),
-        tags: tags,
+        fileName: fileName,
+        tags: currentTags,
         createdAt: new Date().toISOString(),
       }, file || undefined);
       onClose();
