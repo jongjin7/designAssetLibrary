@@ -23,7 +23,7 @@ export function AssetGrid({ assets, onAssetTap, selectedIds, onSelect, isMobile,
   }
 
   return (
-    <NVAssetGrid zoom={zoom}>
+    <NVAssetGrid zoom={zoom} isMobile={isMobile}>
       {assets.map(asset => (
         <AssetCard 
           key={asset.id} 

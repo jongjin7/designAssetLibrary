@@ -63,7 +63,7 @@ export const NVAssetCard: React.FC<NVAssetCardProps> = ({
     <div 
       className={cn(
         "group relative flex flex-col shrink-0 w-full overflow-hidden transition-all duration-500",
-        "bg-transparent rounded-lg active:scale-[0.96] break-inside-avoid mb-4 select-none",
+        "bg-transparent rounded-lg active:scale-[0.96] break-inside-avoid select-none",
         isLongPressing ? "scale-[0.98] brightness-75 transition-all duration-200" : "",
         isSelected ? "ring-2 ring-indigo-500 ring-offset-2 ring-offset-slate-950" : "",
         isCompact ? "max-w-[140px]" : "",

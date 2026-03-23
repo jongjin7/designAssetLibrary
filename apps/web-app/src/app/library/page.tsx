@@ -28,7 +28,7 @@ export default function UnifiedLibraryPage() {
   const { selectedIds, setSelectedIds } = useAssetSelection();
   const [isSelectionMode, setIsSelectionMode] = useState(false);
   const [isSearchVisible, setIsSearchVisible] = useState(false);
-  const [zoom, setZoom] = useState(0);
+  const [zoom, setZoom] = useState(50);
 
   const prevIsDesktopRef = useRef<boolean | null>(null);
 
@@ -45,6 +45,11 @@ export default function UnifiedLibraryPage() {
 
     // Only reset if the mode has actually changed
     if (prevIsDesktopRef.current !== isDesktop) {
+      // Reset zoom to 0 when moving to mobile view
+      if (!isDesktop) {
+        setZoom(50);
+      }
+      
       closeDetail();
       setSelectedIds(new Set());
       setIsSelectionMode(false);
@@ -56,7 +61,7 @@ export default function UnifiedLibraryPage() {
       
       prevIsDesktopRef.current = isDesktop;
     }
-  }, [isDesktop, closeDetail, setSelectedIds, setIsSelectionMode, setIsSearchVisible, setIsFilterOpen, setSearchText, setFilter, handleFilterReset]);
+  }, [isDesktop, closeDetail, setSelectedIds, setIsSelectionMode, setIsSearchVisible, setIsFilterOpen, setSearchText, setFilter, handleFilterReset, setZoom]);
 
   // Prevent flash of wrong view before isDesktop is detected on mount
   if (isDesktop === null) {

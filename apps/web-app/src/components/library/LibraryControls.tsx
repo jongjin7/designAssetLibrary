@@ -153,14 +153,16 @@ export function LibraryControls({
           현재 선택될 폴더
         </div>
 
-        {/* Zoom Slider */}
-        <div className="flex-shrink-0 flex items-center gap-3 px-6" style={{ WebkitAppRegion: 'no-drag' } as any}>
+        {/* Zoom Slider with Icons */}
+        <div className="flex-shrink-0 flex items-center gap-2 px-6" style={{ WebkitAppRegion: 'no-drag' } as any}>
+          <LayoutGrid size={14} className="text-slate-500 flex-shrink-0" />
           <NVSlider 
             value={zoom} 
             onChange={(v) => onZoomChange?.(v)} 
             size="sm" 
-            className="w-28" 
+            className="w-24" 
           />
+          <ImageIcon size={18} className="text-slate-400 flex-shrink-0" />
         </div>
 
         <div className="flex-1 max-w-[320px] mx-auto px-4" style={{ WebkitAppRegion: 'no-drag' } as any}>
