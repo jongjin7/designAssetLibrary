@@ -29,6 +29,7 @@ export * from './molecules/NVBottomSheet';
 export { NVAssetGrid } from './composition/NVAssetGrid';
 export { NVAssetDetailSheet, NVAssetDetailSidebar, NVAssetDetailContent } from './composition/NVAssetDetail';
 export * from './composition/NVSearchPanel';
+export * from './composition/NVDesktopUploadPanel';
 
 // Foundations
 export * from './foundations/NVColorPalette';

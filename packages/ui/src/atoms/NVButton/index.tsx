@@ -12,7 +12,7 @@ export const NVButton: React.FC<NVButtonProps> = ({
   className = '', 
   ...props 
 }) => {
-  const baseStyles = 'inline-flex items-center justify-center font-semibold transition-all duration-300 active:scale-[0.96] disabled:opacity-40 disabled:pointer-events-none tracking-tight [&_svg]:text-inherit select-none cursor-pointer';
+  const baseStyles = 'inline-flex items-center justify-center font-semibold transition-all duration-300 active:scale-[0.96] disabled:opacity-40 disabled:pointer-events-none tracking-tight [&_svg]:text-inherit select-none cursor-pointer whitespace-nowrap';
   
   const roundedStyles = {
     xs: 'rounded-md',

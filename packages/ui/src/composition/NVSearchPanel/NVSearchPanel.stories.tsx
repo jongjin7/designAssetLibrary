@@ -7,7 +7,7 @@ import { NVIconButton } from '../../atoms/NVIconButton';
 import { NVPopover, NVPopoverTrigger, NVPopoverContent } from '../../atoms/NVPopover';
 
 const meta: Meta<typeof NVSearchPanel> = {
-  title: 'Composition/NVSearchPanel',
+  title: 'Composition/SearchPanel',
   component: NVSearchPanel,
   tags: ['autodocs'],
   parameters: {

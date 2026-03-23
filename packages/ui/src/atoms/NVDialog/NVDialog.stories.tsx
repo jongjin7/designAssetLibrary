@@ -102,43 +102,30 @@ export const ConfirmPattern: Story = {
 };
 
 /**
- * 리소스 생성(Resource Creation) 패턴입니다. 
- * Shopify Polaris나 Atlassian 시스템의 폼 대화상자처럼 
- * NVField를 사용하여 정돈된 폼을 구성합니다.
+ * 가벼운 입력(Simple Input) 패턴입니다. 
+ * 복잡한 폼 대신 닉네임 설정이나 간단한 정보 입력을 위한 구성입니다.
  */
-export const FormPattern: Story = {
+export const SimplePattern: Story = {
   render: () => (
-    <div className="flex justify-center p-10 bg-slate-950 min-h-[600px] relative overflow-hidden rounded-[32px] border border-white/5">
+    <div className="flex justify-center p-10 bg-slate-950 min-h-[400px] relative overflow-hidden rounded-[32px] border border-white/5">
       <div 
-        className="absolute inset-0 bg-cover bg-center" 
+        className="absolute inset-0 bg-cover bg-center opacity-30" 
         style={{ backgroundImage: `url(${showcaseBg})` }} 
       />
       <div className="relative z-10 w-full flex justify-center">
-        <StaticDialogContainer className="max-w-lg">
+        <StaticDialogContainer className="max-w-md">
           <NVDialogHeader>
-            <h2 className="text-lg font-bold leading-tight tracking-tight text-white">새 에셋 등록</h2>
-            <p className="text-[13px] text-slate-400 leading-relaxed">라이브러리에 로드할 에셋의 정보를 입력해 주세요.</p>
+            <h2 className="text-lg font-bold text-white">닉네임 설정</h2>
+            <p className="text-sm text-slate-400">커뮤니티에서 사용할 이름을 입력해 주세요.</p>
           </NVDialogHeader>
-          <NVDialogBody className="space-y-6">
-            <div className="w-full aspect-video rounded-3xl bg-white/[0.03] border border-dashed border-white/10 flex flex-col items-center justify-center gap-3 text-slate-500 hover:border-indigo-500/50 hover:bg-indigo-500/5 transition-all cursor-pointer group">
-               <ImageIcon size={32} strokeWidth={1.5} className="group-hover:scale-110 transition-transform" />
-               <span className="text-xs font-medium group-hover:text-slate-300">이미지 또는 비디오 업로드</span>
-            </div>
-            
-            <div className="grid grid-cols-1 gap-5 pt-2">
-              <NVField label="에셋 이름" size="sm">
-                <NVInput placeholder="에셋 제목 입력..." className="w-full" size="md" />
-              </NVField>
-              
-              <NVField label="태그 추가" size="sm">
-                <NVInput icon={<Tag size={14} />} placeholder="태그 입력 (Enter)" className="w-full" size="md" />
-              </NVField>
-            </div>
+          <NVDialogBody>
+            <NVField label="새 닉네임" size="sm">
+              <NVInput placeholder="최대 12자까지 입력..." className="w-full" size="md" />
+            </NVField>
           </NVDialogBody>
           <NVDialogFooter>
-            <NVButton variant="ghost" size="sm" className="mr-auto text-slate-500">나중에 하기</NVButton>
-            <NVButton variant="secondary" size="sm">임시 저장</NVButton>
-            <NVButton variant="primary" size="sm" className="px-5">등록 완료</NVButton>
+            <NVButton variant="secondary" size="sm">취소</NVButton>
+            <NVButton variant="primary" size="sm" className="px-6">저장하기</NVButton>
           </NVDialogFooter>
         </StaticDialogContainer>
       </div>

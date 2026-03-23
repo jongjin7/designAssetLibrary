@@ -16,15 +16,16 @@ import {
   Image as ImageIcon,
 } from 'lucide-react';
 import { ViewOptionsPopover } from './ViewOptionsPopover';
-import { DesktopAssetForm } from './DesktopAssetForm';
 import { 
   NVPopover, 
   NVPopoverTrigger, 
   NVPopoverContent,
   NVIconButton,
   NVDialog,
+  NVDialogTrigger,
   NVDialogContent,
   NVSearchPanel,
+  NVDesktopUploadPanel,
   NVBottomSheet,
 } from '@nova/ui';
 
@@ -106,23 +107,23 @@ export function LibraryControls({
         style={{ WebkitAppRegion: 'drag' } as any}
       >
         <div className="flex items-center gap-0 ml-2" style={{ WebkitAppRegion: 'no-drag' } as any}>
-          <NVPopover open={isAddOpen} onOpenChange={setIsAddOpen}>
-            <NVPopoverTrigger asChild>
+          <NVDialog open={isAddOpen} onOpenChange={setIsAddOpen}>
+            <NVDialogTrigger asChild>
               <NVIconButton 
                 icon={Plus} 
                 variant="ghost" 
                 size="sm" 
-                className={cn("text-slate-400 hover:text-white transition-colors", isAddOpen && "text-indigo-400 bg-indigo-500/10")} 
+                className={cn("text-slate-400 hover:text-white transition-colors", isAddOpen && "text-white bg-white/10")} 
                 title="새 에셋 등록"
               />
-            </NVPopoverTrigger>
-            <NVPopoverContent align="start" sideOffset={8} className="p-0 border-white/10 shadow-2xl z-[100]">
-              <DesktopAssetForm 
+            </NVDialogTrigger>
+            <NVDialogContent className="max-w-lg p-0 border-white/10 shadow-2xl z-[100]">
+              <NVDesktopUploadPanel 
                 onAdd={onAddAsset ?? (async () => {})} 
                 onClose={() => setIsAddOpen(false)} 
               />
-            </NVPopoverContent>
-          </NVPopover>
+            </NVDialogContent>
+          </NVDialog>
           <NVIconButton icon={ArrowLeftRight} variant="ghost" size="sm" className="text-slate-400 hover:text-white" onClick={onSearchToggle}
             title="이동 (Cmd+F)" />
           <NVIconButton icon={ChevronLeft} variant="ghost" size="sm" className="text-slate-600" />
