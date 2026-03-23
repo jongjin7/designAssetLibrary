@@ -11,17 +11,15 @@ const withPWA = require('@ducanh2912/next-pwa').default({
 const nextConfig = {
   transpilePackages: ['@nova/ui'],
   // 같은 네트워크의 모바일 기기에서 IP 접속 허용 (개발 시)
-  allowedDevOrigins: [
-    'https://localhost:3000',
-    'https://127.0.0.1:3000',
-    'https://192.168.102.38:3000',
-    'https://192.168.103.38:3000',
-    'http://192.168.102.38:3000',
-    'http://192.168.103.38:3000',
-    '192.168.102.*',
-    '192.168.103.*',
-    '192.168.0.*',
-  ],
+  experimental: {
+    allowedDevOrigins: [
+      'https://localhost:3000',
+      'https://127.0.0.1:3000',
+      'https://192.168.0.*:3000',
+      'https://192.168.102.*:3000',
+      'https://192.168.103.*:3000',
+    ],
+  },
 };
 
 module.exports = withPWA(nextConfig);

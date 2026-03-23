@@ -130,7 +130,7 @@ export default function DesktopLibraryView({
       
       try {
         const assetData = await processFileToAsset(file);
-        const newAsset = await addAsset(assetData);
+        const newAsset = await addAsset(assetData, file);
         if (newAsset) {
           openDetail(newAsset);
           setIsSidebarVisible(true);

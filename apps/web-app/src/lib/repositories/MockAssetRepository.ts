@@ -101,34 +101,37 @@ export class MockAssetRepository implements AssetRepository {
     await this.initialize();
 
     const id = asset.id || Math.random().toString(36).substr(2, 9);
-    const fileName = asset.fileName || `capture-${id}.webp`;
+    // Ensure we have an extension
+    let fileName = asset.fileName || `capture-${id}`;
+    if (!fileName.includes('.')) {
+      fileName = `${fileName}.${asset.extension || 'webp'}`;
+    }
+    
     const opfsPath = `assets/${fileName}`;
 
     try {
       if (file) {
         await this.opfs.saveFile(opfsPath, file);
-        console.log('[Mock/OPFS] File saved from Blob');
+        console.log(`[Mock/Storage] File saved to ${opfsPath} (Size: ${file.size} bytes)`);
       } else if (asset.thumbnail && asset.thumbnail.startsWith('data:')) {
         const blob = dataURLToBlob(asset.thumbnail);
         if (blob) {
           await this.opfs.saveFile(opfsPath, blob);
-          console.log('[Mock/OPFS] File saved from Data URL');
-        } else {
-          console.warn('[Mock/OPFS] Invalid Data URL, skipping OPFS save');
+          console.log(`[Mock/Storage] File saved from Data URL to ${opfsPath}`);
         }
       }
     } catch (e) {
-      console.error('[Mock/OPFS] Error saving file to OPFS:', e);
+      console.error(`[Mock/Storage] CRITICAL: Failed to save file to ${opfsPath}:`, e);
     }
 
     const newAsset: Asset = {
       id,
-      fileName,
-      extension: asset.extension || (fileName.includes('.') ? fileName.split('.').pop() || 'webp' : 'webp'),
+      fileName: fileName.split('.').slice(0, -1).join('.') || fileName,
+      extension: fileName.split('.').pop() || 'webp',
       fileSize: asset.fileSize || '0 KB',
       mimeType: asset.mimeType || 'image/webp',
       thumbnailGradient: asset.thumbnailGradient || 'linear-gradient(135deg, #6366F1 0%, #8B5CF6 100%)',
-      thumbnail: opfsPath.startsWith('assets/') ? opfsPath : asset.thumbnail || '',
+      thumbnail: opfsPath,
       palette: asset.palette || ['#6366F1', '#8B5CF6'],
       tags: asset.tags || ['captured'],
       createdAt: asset.createdAt || new Date().toISOString().split('T')[0],
@@ -138,14 +141,13 @@ export class MockAssetRepository implements AssetRepository {
     this.assets = [newAsset, ...this.assets];
     this.persist();
     
-    console.log('[Mock/OPFS] Asset metadata saved to localStorage');
-    
-    // Return with a usable Blob URL if it's an OPFS path
+    // Return with a usable Blob URL if it's an local path
     if (newAsset.thumbnail.startsWith('assets/')) {
       try {
         const url = await this.opfs.getFileUrl(newAsset.thumbnail);
         return { ...newAsset, thumbnail: url };
       } catch (e) {
+        console.error(`[Mock/Storage] Failed to generate preview URL for ${newAsset.thumbnail}:`, e);
         return newAsset;
       }
     }

@@ -80,7 +80,7 @@ export default function CapturePage() {
         setProgress(100);
         
         // Wait for persistence to complete
-        addAsset(newAsset).then(() => {
+        addAsset(newAsset, blob).then(() => {
           setToast(true);
           
           setTimeout(() => {
