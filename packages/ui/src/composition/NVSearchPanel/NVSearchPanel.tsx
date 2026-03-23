@@ -12,6 +12,7 @@ import { NVSearchKeywordPart } from './parts/NVSearchKeywordPart';
 import { NVSearchColorPart } from './parts/NVSearchColorPart';
 import { NVSearchPeriodPart } from './parts/NVSearchPeriodPart';
 import { NVSearchTagPart } from './parts/NVSearchTagPart';
+import { NVPopoverHeader } from '../../atoms/NVPopover';
 
 export interface NVSearchPanelProps {
   /** 검색 적용 시 호출되는 콜백 */
@@ -21,7 +22,7 @@ export interface NVSearchPanelProps {
   /** 닫기 버튼 클릭 시 호출되는 콜백 */
   onClose?: () => void;
   /** 검색 레이아웃 스타일 */
-  layout?: 'basic' | 'desktop' | 'popover';
+  layout?: 'basic' | 'desktop';
   /** 초기 필터 상태 */
   initialFilters?: Partial<SearchFilterState>;
   /** 추가 클래스 */
@@ -32,7 +33,7 @@ export interface NVSearchPanelProps {
 
 /**
  * 에셋 라이브러리 전체에서 공통으로 사용되는 상세 검색 패널입니다.
- * 가로형 데스크탑 레이아웃, 세로형 기본 레이아웃, 그리고 macOS 스타일의 팝오버 레이아웃을 모두 지원합니다.
+ * 가로형 데스크탑 레이아웃과 세로형 기본 레이아웃을 모두 지원합니다.
  */
 export const NVSearchPanel: React.FC<NVSearchPanelProps> = ({ 
   onSearch, 
@@ -44,7 +45,6 @@ export const NVSearchPanel: React.FC<NVSearchPanelProps> = ({
   className
 }) => {
   const isDesktop = layout === 'desktop';
-  const isPopover = layout === 'popover';
   
   const { filters, toggleColor, toggleTag, setKeyword, setPeriod, handleApply, handleReset } = useSearchFilters(initialFilters || {}, onSearch || onApply, onReset);
 
@@ -55,8 +55,7 @@ export const NVSearchPanel: React.FC<NVSearchPanelProps> = ({
       noPadding
       className={cn(
         "relative overflow-scroll scrollbar-hide border-white/10 shadow-[0_32px_80px_-16px_rgba(0,0,0,0.5)] transition-all duration-300",
-        isDesktop ? "w-[780px] rounded-[32px] p-0" : 
-        isPopover ? "w-[280px] rounded-3xl p-0 ring-1 ring-white/5" : "w-full rounded-3xl p-5",
+        isDesktop ? "w-[680px] rounded-[32px] p-0" : "w-full rounded-3xl p-5",
         className
       )}
     >
@@ -77,56 +76,54 @@ export const NVSearchPanel: React.FC<NVSearchPanelProps> = ({
         </div>
       )} */}
 
-      {/* Title Header (Popover/macOS) */}
-      {isPopover && (
-        <div className="px-5 py-4 border-b border-white/5 bg-white/[0.02] flex items-center justify-between">
-          <h3 className="text-[10px] font-black text-slate-400 uppercase tracking-[0.25em]">상세 검색 필터</h3>
-          {onClose && (
+      {isDesktop && (
+        <NVPopoverHeader>
+          <div className="relative flex items-center justify-between">
+            <h3 className="leading-none text-sm font-bold text-slate-300 uppercase tracking-widest">상세 검색</h3>
             <NVIconButton 
               icon={X} 
               variant="ghost" 
-              size="xs" 
+              size="sm"
+              iconSize={16}
               onClick={onClose} 
-              className="-mr-1.5 text-slate-500 hover:text-white"
-            />
-          )}
-        </div>
-      )}
+              className="absolute -right-1 top-1/2 -translate-y-1/2 text-slate-500 hover:text-white"
+              />
+          </div>
+        </NVPopoverHeader>)
+      }
 
-      <div className={cn("flex", (isDesktop && !isPopover) ? "flex-row" : "flex-col")}>
+
+
+      <div className={cn("flex", isDesktop ? "flex-row" : "flex-col")}>
         {/* Main Content Area */}
         <div className={cn("flex-1", 
-          isDesktop && !isPopover ? "p-10 pr-6 border-r border-white/5" : 
-          isPopover ? "p-5 pb-3" : ""
+          isDesktop ? "pl-4 pr-6 py-5 border-r border-white/5" : ""
         )}>
-          <div className={cn(isPopover ? "space-y-6" : "space-y-3.5")}>
-            <NVField label="에셋 검색" size={(isPopover) ? "xs" : "sm"} row={isDesktop && !isPopover} labelWidth={isDesktop && !isPopover ? "120px" : undefined} labelClassName={isPopover ? "text-slate-500" : ""}>
-              <NVSearchKeywordPart keyword={filters.keyword} setKeyword={setKeyword} isDesktop={isDesktop || isPopover} />
+          <div className="space-y-3.5">
+            <NVField label="에셋 검색" size="sm" row={isDesktop} labelWidth={isDesktop ? "100px" : undefined}>
+              <NVSearchKeywordPart keyword={filters.keyword} setKeyword={setKeyword} isDesktop={isDesktop} />
             </NVField>
 
-            <NVField label="색상 팔레트" size={(isPopover) ? "xs" : "sm"} row={isDesktop && !isPopover} labelWidth={isDesktop && !isPopover ? "120px" : undefined} labelClassName={isPopover ? "text-slate-500" : ""}>
-               <NVSearchColorPart colors={filters.colors} toggleColor={toggleColor} isDesktop={isDesktop || isPopover} />
-            </NVField>
-            
-            {(isPopover) && <div className="h-[1px] bg-white/5 -mx-5" />}
-
-            <NVField label="기간 설정" size={(isPopover) ? "xs" : "sm"} row={isDesktop && !isPopover} labelWidth={isDesktop && !isPopover ? "120px" : undefined} labelClassName={isPopover ? "text-slate-500" : ""}>
-               <NVSearchPeriodPart period={filters.period} setPeriod={setPeriod} isDesktop={isDesktop || isPopover} />
+            <NVField label="색상 팔레트" size="sm" row={isDesktop} labelWidth={isDesktop ? "100px" : undefined}>
+               <NVSearchColorPart colors={filters.colors} toggleColor={toggleColor} isDesktop={isDesktop} />
             </NVField>
 
-            <NVField label="태그 필터" size={(isPopover) ? "xs" : "sm"} row={isDesktop && !isPopover} labelWidth={isDesktop && !isPopover ? "120px" : undefined} labelClassName={isPopover ? "text-slate-500" : ""}>
-               <NVSearchTagPart tags={filters.tags} toggleTag={toggleTag} isDesktop={isDesktop || isPopover} />
+            <NVField label="기간 설정" size="sm" row={isDesktop} labelWidth={isDesktop ? "100px" : undefined}>
+               <NVSearchPeriodPart period={filters.period} setPeriod={setPeriod} isDesktop={isDesktop} />
+            </NVField>
+
+            <NVField label="태그 필터" size="sm" row={isDesktop} labelWidth={isDesktop ? "100px" : undefined}>
+               <NVSearchTagPart tags={filters.tags} toggleTag={toggleTag} isDesktop={isDesktop} />
             </NVField>
           </div>
         </div>
 
         {/* Sidebar / Actions Area */}
         <div className={cn(
-          (isDesktop && !isPopover) ? "w-[240px] bg-slate-950/30 p-10 flex flex-col justify-between" : 
-          isPopover ? "p-5 pt-3 border-t border-white/5 bg-slate-950/20" : "flex flex-col gap-4 mt-4"
+          isDesktop ? "w-[200px] bg-slate-950/30 px-8 py-6 flex flex-col justify-between" : "flex flex-col gap-4 mt-4"
         )}>
-          <div className={cn(isPopover ? "flex flex-col gap-3" : "space-y-6")}>
-            {(isDesktop && !isPopover) && (
+          <div className="space-y-6">
+            {isDesktop && (
               <div className="space-y-1">
                 <p className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-500">Selected Items</p>
                 <p className="text-sm font-medium text-slate-200">
@@ -135,37 +132,26 @@ export const NVSearchPanel: React.FC<NVSearchPanelProps> = ({
               </div>
             )}
             
-            <div className={cn(isPopover ? "flex flex-col gap-2" : isDesktop ? "space-y-3" : "mt-2 space-y-3")}>
+            <div className={cn(isDesktop ? "space-y-3" : "mt-2 space-y-3")}>
               <NVButton 
                 variant="primary" 
-                size={isPopover ? "sm" : "md"}
-                className="w-full justify-center" 
+                size="md"
+                className="w-full" 
                 onClick={handleApply}
               >
-                <Search size={isPopover ? 14 : 18} className="mr-2" /> 
-                {isPopover ? "검색 적용" : "상세 조건으로 검색"}
+                <Search size={16} /> 
+                상세 검색
               </NVButton>
               <NVButton 
                 variant="secondary" 
-                size={isPopover ? "sm" : "md"}
+                size="md"
                 className="w-full justify-center border-none hover:bg-white/5" 
                 onClick={handleReset}
               >
-                <RotateCcw size={isPopover ? 12 : 14} className="mr-2" /> 초기화
+                <RotateCcw size={16} /> 초기화
               </NVButton>
             </div>
           </div>
-
-          {(isDesktop && !isPopover) && onClose && (
-            <NVButton 
-              variant="ghost" 
-              size="xs" 
-              onClick={onClose} 
-              className="text-[10px] font-bold text-slate-500 hover:text-slate-400 transition-colors uppercase tracking-widest text-center py-2 w-full justify-center"
-            >
-              ESC 닫기
-            </NVButton>
-          )}
         </div>
       </div>
 

@@ -2,7 +2,7 @@
 
 import React, { useState } from 'react';
 import { cn } from '../../lib/utils';
-import { NVSearchBar } from '@nova/ui';
+import { NVGlassPanel, NVPopoverHeader, NVSearchBar } from '@nova/ui';
 import { FilterChips } from './FilterChips';
 import { LibraryFilters } from '../../hooks/useLibraryFilters';
 import { 
@@ -21,6 +21,7 @@ import {
   NVPopover, 
   NVPopoverTrigger, 
   NVPopoverContent,
+  NVPopoverAnchor,
   NVIconButton,
   NVSlider,
   NVAssetSelectionBar,
@@ -84,6 +85,7 @@ export function LibraryControls({
             onChange={onSearchChange}
             onFilterClick={ onFilterToggle}
             isFilterActive={isFilterOpen}
+            className={isMobile? '!text-base' : '' }
             placeholder="에셋 이름, 태그로 검색..."
           />
         <div className={cn(
@@ -162,19 +164,47 @@ export function LibraryControls({
             size="sm" 
             className="w-24" 
           />
-          <ImageIcon size={18} className="text-slate-400 flex-shrink-0" />
+          <ImageIcon size={14} className="text-slate-500 flex-shrink-0" />
         </div>
 
         <div className="flex-1 max-w-[320px] mx-auto px-4" style={{ WebkitAppRegion: 'no-drag' } as any}>
-          <NVSearchBar 
-            size="sm"
-            value={searchText}
-            onChange={onSearchChange}
-            placeholder="에셋 이름, 태그로 검색..."
-            showFilter={true}
-            onFilterClick={onFilterToggle}
-            isFilterActive={isFilterOpen}
-          />
+          <NVPopover open={isFilterOpen} onOpenChange={(open) => {
+            if (open !== isFilterOpen) onFilterToggle();
+          }}>
+            <NVPopoverAnchor asChild>
+              <div className="w-full relative" id="search-bar-wrapper">
+                <NVSearchBar 
+                  size="sm"
+                  value={searchText}
+                  onChange={onSearchChange}
+                  placeholder="에셋 이름, 태그로 검색..."
+                  showFilter={true}
+                  onFilterClick={onFilterToggle}
+                  isFilterActive={isFilterOpen}
+                />
+              </div>
+            </NVPopoverAnchor>
+            <NVPopoverContent 
+              align="center" 
+              sideOffset={12} 
+              className="p-0 border-none shadow-none bg-transparent w-auto -mt-[5px]"
+              onInteractOutside={(e) => {
+                const searchBar = document.getElementById('search-bar-wrapper');
+                if (searchBar?.contains(e.target as Node)) {
+                  e.preventDefault();
+                }
+              }}
+            >
+              <NVSearchPanel 
+                  layout="desktop"
+                  onSearch={(filters) => {
+                    onFilterApply(filters);
+                    onFilterToggle();
+                  }}
+                  onClose={onFilterToggle}
+                />
+            </NVPopoverContent>
+          </NVPopover>
         </div>
 
         {/* Right Actions */}
@@ -209,19 +239,8 @@ export function LibraryControls({
         </div>
       </header>
       
-      {/* Desktop Advanced Filter Modal */}
-      <NVDialog open={!isMobile && isFilterOpen} onOpenChange={onFilterToggle}>
-        <NVDialogContent className="max-w-3xl p-0 border-none bg-transparent shadow-none">
-          <NVSearchPanel 
-            layout="desktop"
-            onSearch={(filters) => {
-              onFilterApply(filters);
-              onFilterToggle();
-            }}
-            onClose={onFilterToggle}
-          />
-        </NVDialogContent>
-      </NVDialog>
+
+      
 
       <div className="px-8 py-2 border-b border-white/[0.05]">
         <FilterChips active={activeFilter} onChange={onFilterChange ?? (() => {})} />

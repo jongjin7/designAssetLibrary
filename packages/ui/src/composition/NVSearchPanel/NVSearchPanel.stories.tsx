@@ -113,7 +113,7 @@ export const ToggleExample: Story = {
 };
 
 /**
- * 팝업형(Popover) 예시입니다. macOS의 '보기 옵션(Show View Options)' 메뉴와 유사한 버티컬 레이아웃을 제공합니다.
+ * 팝업형(Popover) 예시입니다.
  * 좁은 공간에서도 모든 필터링 기능을 정교하게 사용할 수 있습니다.
  */
 export const PopoverLayout: Story = {
@@ -131,7 +131,7 @@ export const PopoverLayout: Story = {
           </NVPopoverTrigger>
           <NVPopoverContent className="p-0 border-none bg-transparent shadow-none w-auto overflow-visible">
             <NVSearchPanel 
-              layout="popover"
+              layout="basic"
               onClose={() => setIsOpen(false)}
               onSearch={() => setIsOpen(false)}
             />

@@ -15,6 +15,7 @@ const mockAsset: Asset = {
   fileName: 'design-preview-v2.jpg',
   fileSize: '4.2 MB',
   mimeType: 'image/jpeg',
+  extension: 'jpg',
   thumbnailGradient: 'linear-gradient(135deg, #6366F1 0%, #a855f7 100%)',
   thumbnail: 'https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?auto=format&fit=crop&q=80&w=800',
   palette: ['#6366F1', '#A855F7', '#F43F5E', '#10B981', '#06B6D4'],

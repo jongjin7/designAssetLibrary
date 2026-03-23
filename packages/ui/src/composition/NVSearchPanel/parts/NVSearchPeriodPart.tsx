@@ -19,9 +19,9 @@ interface NVSearchPeriodPartProps {
 
 export const NVSearchPeriodPart = ({ period, setPeriod, isDesktop = false }: NVSearchPeriodPartProps) => (
   <div className={cn(
-    "flex items-center justify-between w-full gap-1.5 pr-1"
+    "flex items-center  w-full gap-1.5 pr-1"
   )}>
-    <div className="flex-1 flex items-center gap-1.5">
+    <div className={cn(" flex items-center gap-1.5", isDesktop ? "justify-between" : "flex-1")}>
       {SEARCH_PERIODS.map((p) => {
         const isActive = period === p.value;
         return (

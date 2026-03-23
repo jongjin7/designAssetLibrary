@@ -27,7 +27,7 @@ export const NVSearchColorPart = ({ colors, toggleColor, isDesktop = false }: NV
           key={c.value}
           icon={Check}
           onClick={() => toggleColor(c.value)}
-          size={isDesktop ? "sm" : "xs"}
+          size={isDesktop ? "xs" : "xs"}
           className={cn(
             "!rounded-full transition-all duration-300 relative border-2",
             isActive 
