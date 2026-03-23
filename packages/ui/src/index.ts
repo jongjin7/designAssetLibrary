@@ -15,6 +15,7 @@ export * from './atoms/NVNotice';
 export * from './atoms/NVDialog';
 export * from './atoms/NVToast';
 export * from './atoms/NVPowerTooltip';
+export * from './atoms/NVSlider';
 
 // Molecules
 export * from './molecules/NVFilterGroup';

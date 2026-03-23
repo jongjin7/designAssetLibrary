@@ -22,6 +22,8 @@ import {
   NVPopoverTrigger, 
   NVPopoverContent,
   NVIconButton,
+  NVSlider,
+  NVAssetSelectionBar,
   NVDialog,
   NVDialogTrigger,
   NVDialogContent,
@@ -150,13 +152,11 @@ export function LibraryControls({
 
         {/* Zoom Slider */}
         <div className="flex-shrink-0 flex items-center gap-3 px-6" style={{ WebkitAppRegion: 'no-drag' } as any}>
-          <input 
-            type="range" 
-            min="0" 
-            max="100" 
-            value={zoom}
-            onChange={(e) => setZoom(parseInt(e.target.value))}
-            className="w-28 h-1 bg-white/10 rounded-full appearance-none cursor-pointer accent-indigo-500" 
+          <NVSlider 
+            value={zoom} 
+            onChange={setZoom} 
+            size="sm" 
+            className="w-28" 
           />
         </div>
 
