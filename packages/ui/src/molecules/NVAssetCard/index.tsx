@@ -1,6 +1,8 @@
 import React from 'react';
-import { Star, Maximize2, Check, Aperture } from 'lucide-react';
+import { Star, Maximize2, Check, Aperture, ZoomIn } from 'lucide-react';
+import { createPortal } from 'react-dom';
 import { cn } from '../../lib/utils';
+import { NVIconButton } from '../../atoms/NVIconButton';
 
 export interface NVAssetCardProps {
   id: string;
@@ -40,6 +42,7 @@ export const NVAssetCard: React.FC<NVAssetCardProps> = ({
   const [isLongPressing, setIsLongPressing] = React.useState(false);
   const [isLoaded, setIsLoaded] = React.useState(false);
   const [hasError, setHasError] = React.useState(false);
+  const [isZoomHovered, setIsZoomHovered] = React.useState(false);
   const timerRef = React.useRef<ReturnType<typeof setTimeout> | null>(null);
   const loadingTimeoutRef = React.useRef<ReturnType<typeof setTimeout> | null>(null);
 
@@ -257,29 +260,62 @@ export const NVAssetCard: React.FC<NVAssetCardProps> = ({
           </div>
         )}
 
-        {/* Bottom: Frameless Metadata (Floating Text) */}
+        {/* Bottom: Frameless Metadata (Floating Text) & Actions */}
         <div className={cn(
-          "flex flex-col gap-1.5 transition-all duration-500 mt-auto",
+          "flex items-end justify-between transition-all duration-500 mt-auto",
           isMobile ? "translate-y-0" : "translate-y-1" + (!hasError && !isLoading ? " group-hover:translate-y-0" : ""),
           (hasError || isLoading) && "opacity-40"
         )}>
-          <p className={cn(
-            "text-xs font-medium text-white/70 truncate drop-shadow-sm px-0.5 tracking-tight transition-colors",
-            (!hasError && !isLoading) && "group-hover:text-white"
-          )}>
-            {nameWithoutExt}
-          </p>
+          <div className="flex flex-col gap-1.5 min-w-0 pr-2">
+            <p className={cn(
+              "text-xs font-medium text-white/70 truncate drop-shadow-sm px-0.5 tracking-tight transition-colors",
+              (!hasError && !isLoading) && "group-hover:text-white"
+            )}>
+              {nameWithoutExt}
+            </p>
+            
+            {/* Subtle Color Line - Hidden on Error */}
+            {!hasError && !isLoading && (
+              <div className="flex h-0.5 w-8 rounded-full overflow-hidden opacity-40 group-hover:opacity-70 transition-opacity ml-0.5">
+                {palette.slice(0, 3).map((color, i) => (
+                  <div key={i} className="h-full flex-1" style={{ backgroundColor: color }} />
+                ))}
+              </div>
+            )}
+          </div>
           
-          {/* Subtle Color Line - Hidden on Error */}
-          {!hasError && !isLoading && (
-            <div className="flex h-0.5 w-8 rounded-full overflow-hidden opacity-40 group-hover:opacity-70 transition-opacity ml-0.5">
-              {palette.slice(0, 3).map((color, i) => (
-                <div key={i} className="h-full flex-1" style={{ backgroundColor: color }} />
-              ))}
-            </div>
+          {/* Desktop Zoom Icon */}
+          {!isMobile && !hasError && !isLoading && thumbnail && (
+            <NVIconButton
+              icon={ZoomIn}
+              size="sm"
+              variant="ghost"
+              className="bg-black/40 rounded-md text-white/70 hover:bg-black/80 hover:text-white backdrop-blur-md transition-all opacity-0 group-hover:opacity-100 flex-shrink-0 scale-95 hover:scale-105"
+              onMouseEnter={() => setIsZoomHovered(true)}
+              onMouseLeave={() => setIsZoomHovered(false)}
+              onClick={(e) => {
+                e.stopPropagation();
+                // We can open detail view on click
+                onTap?.(e);
+                setIsZoomHovered(false);
+              }}
+              title="이미지 크게 보기"
+            />
           )}
         </div>
       </div>
+
+      {/* Enlarged Image Portal */}
+      {isZoomHovered && !isMobile && !hasError && !isLoading && thumbnail && typeof document !== 'undefined' && createPortal(
+        <div className="fixed inset-0 z-[9999] flex items-center justify-center pointer-events-none p-12">
+          <img 
+            src={thumbnail} 
+            alt={fileName} 
+            className="max-h-full max-w-full object-contain rounded-lg border border-white/10 shadow-[0_0_80px_rgba(0,0,0,0.8)] animate-in zoom-in-95 fade-in duration-200" 
+          />
+        </div>,
+        document.body
+      )}
     </div>
   );
 };
