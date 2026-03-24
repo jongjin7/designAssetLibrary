@@ -2,7 +2,13 @@
 
 /* Scan local app files for Tailwind v4 */
 @source "../**/*.{js,ts,jsx,tsx}";
- 
+
+@layer base {
+  html, body {
+    min-width: 320px;
+  }
+}
+
 .app-drag-region {
   -webkit-app-region: drag;
 }
