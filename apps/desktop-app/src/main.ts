@@ -25,13 +25,39 @@ function createWindow() {
   // Or keep loading the local vite dev server for desktop-app specific renderer
   const WEB_APP_URL = 'https://localhost:3000';
 
+  let isErrorPageLoaded = false;
+
+  // Handle navigation failures (e.g., server goes down after initial load)
+  win.webContents.on('did-fail-load', (event, errorCode, errorDescription, validatedURL) => {
+    // Prevent infinite loops or redundant loads
+    if (isErrorPageLoaded) return;
+
+    // We only want to handle failures to the main web app URL
+    if (validatedURL.startsWith(WEB_APP_URL)) {
+      console.warn(`Navigation to ${validatedURL} failed: ${errorCode} (${errorDescription})`);
+      isErrorPageLoaded = true;
+      
+      // Load the local error page in dev or the built index.html in prod
+      if (VITE_DEV_SERVER_URL) {
+        win.loadURL(VITE_DEV_SERVER_URL);
+      } else {
+        win.loadFile(path.join(RENDERER_DIST, 'index.html'));
+      }
+    }
+  });
+
+  // Reset the error flag when navigation succeeds
+  win.webContents.on('did-finish-load', () => {
+    const currentURL = win.webContents.getURL();
+    if (currentURL.startsWith(WEB_APP_URL)) {
+      isErrorPageLoaded = false;
+    }
+  });
+
   if (VITE_DEV_SERVER_URL) {
     // If you want desktop-specific UI, use VITE_DEV_SERVER_URL
     // If you want to load the existing web-app, use WEB_APP_URL
-    win.loadURL(`${WEB_APP_URL}?platform=desktop`).catch(() => {
-      console.warn('Web app at localhost:3000 not reachable, falling back to desktop-app renderer');
-      win.loadURL(VITE_DEV_SERVER_URL);
-    });
+    win.loadURL(`${WEB_APP_URL}?platform=desktop`);
   } else {
     win.loadFile(path.join(RENDERER_DIST, 'index.html'));
   }

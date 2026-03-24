@@ -1,15 +1,9 @@
-@import "tailwindcss";
 @import "@nova/ui/src/styles/theme.css";
 
-/* Local styles */
-@layer base {
-  body {
-    background: var(--color-slate-950);
-    color: var(--color-slate-50);
-    overflow: hidden;
-  }
-}
+/* Scan current renderer files for Tailwind v4 */
+@source "../**/*.{js,ts,jsx,tsx}";
 
+/* Electron Specific Drag Regions */
 .app-drag-region {
   -webkit-app-region: drag;
 }
