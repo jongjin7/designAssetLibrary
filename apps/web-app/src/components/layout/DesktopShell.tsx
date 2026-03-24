@@ -72,10 +72,9 @@ export function DesktopShell({ children, onSearchToggle }: DesktopShellProps) {
       {/* Column 1: Sidebar */}
       <nav 
         className={cn(
-          "flex flex-col bg-white/[0.02] border-r border-white/[0.06] transition-all duration-300 ease-in-out",
+          "flex flex-col bg-white/[0.02] border-r border-white/[0.06] transition-all duration-300 ease-in-out app-drag-region",
           isSidebarCollapsed ? 'w-21' : 'w-[260px]'
         )}
-        style={{ WebkitAppRegion: 'drag' } as any}
       >
         {/* Window Controls Space (for Electron) + Visual Dots for Web */}
         <div className="h-12 shrink-0 flex items-center gap-2 pl-3.5">
@@ -95,15 +94,15 @@ export function DesktopShell({ children, onSearchToggle }: DesktopShellProps) {
             icon={PanelLeft}
             variant="ghost"
             size="md"
-            className={isSidebarCollapsed ? 'mx-auto' : 'mx-1'}
+            className={cn("app-no-drag", isSidebarCollapsed ? 'mx-auto' : 'mx-1')}
             onClick={handleToggleSidebar}
             title={isSidebarCollapsed ? "메뉴 확장" : "메뉴 축소"}
           /> 
         </div>
         
-        <nav className="flex-1 px-3 py-2 flex flex-col gap-1 overflow-y-auto">
+        <nav className="flex-1 px-3 py-2 flex flex-col gap-1 overflow-y-auto app-drag-region">
           {!isSidebarCollapsed && (
-            <div className="text-[11px] font-bold text-slate-500 uppercase tracking-[0.15em] mx-3 mt-6 mb-2">
+            <div className="text-[11px] font-bold text-slate-500 uppercase tracking-[0.15em] mx-3 mt-6 mb-2 app-no-drag">
               라이브러리
             </div>
           )}
@@ -118,7 +117,7 @@ export function DesktopShell({ children, onSearchToggle }: DesktopShellProps) {
               <div 
                 key={item.id}
                 className={cn(
-                  "group flex items-center gap-3 px-4 py-2.5 rounded-xl text-sm font-medium transition-all cursor-pointer",
+                  "group flex items-center gap-3 px-4 py-2.5 rounded-xl text-sm font-medium transition-all cursor-pointer app-no-drag",
                   isActive 
                     ? 'bg-indigo-500/10 text-indigo-500' 
                     : 'text-slate-400 hover:bg-white/[0.05] hover:text-slate-50',
@@ -133,7 +132,7 @@ export function DesktopShell({ children, onSearchToggle }: DesktopShellProps) {
             );
           })}
 
-          <div className={isSidebarCollapsed ? 'mt-4' : 'mt-2'}>
+          <div className={cn("app-no-drag", isSidebarCollapsed ? 'mt-4' : 'mt-2')}>
             <FolderTree 
               folders={folders} 
               activeFolderId={null}
@@ -147,7 +146,7 @@ export function DesktopShell({ children, onSearchToggle }: DesktopShellProps) {
           </div>
         </nav>
 
-        <div className={`p-4 border-t border-white/[0.06] ${isSidebarCollapsed ? 'flex justify-center' : ''}`}>
+        <div className={cn("p-4 border-t border-white/[0.06] app-no-drag", isSidebarCollapsed ? 'flex justify-center' : '')}>
           <div 
             className={cn(
               "flex items-center gap-3 p-2 rounded-xl cursor-pointer transition-all border border-transparent",

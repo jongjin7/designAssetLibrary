@@ -6,7 +6,7 @@
     "dev": "pnpm --filter web-app dev",
     "dev:https": "cd apps/web-app && npx next dev --experimental-https --port 3000",
     "web:dev": "pnpm --filter web-app dev",
-    "desktop:dev": "pnpm --filter desktop-app desktop:dev",
+    "desktop:dev": "pnpm --filter nova-desktop dev",
     "ext:dev": "pnpm --filter nova-extension dev",
     "build": "pnpm -r build",
     "lint": "pnpm -r lint",

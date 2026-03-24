@@ -1,8 +1,16 @@
-@import "../../../../packages/ui/src/styles/theme.css";
+@import "@nova/ui/src/styles/theme.css";
 
 /* Scan local app files for Tailwind v4 */
 @source "../**/*.{js,ts,jsx,tsx}";
-
+ 
+.app-drag-region {
+  -webkit-app-region: drag;
+}
+ 
+.app-no-drag {
+  -webkit-app-region: no-drag;
+}
+ 
 /* Explicit fallback for danger variant to ensure visibility in main app */
 
 

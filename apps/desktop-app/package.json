@@ -1,18 +1,37 @@
 {
-  "name": "desktop-app",
+  "name": "nova-desktop",
+  "productName": "NOVA Desktop",
   "version": "1.0.0",
-  "main": "./src/main.ts",
+  "description": "Premium Asset Management Client for Nova Project",
+  "main": "dist-electron/main.js",
   "private": true,
   "scripts": {
-    "desktop:dev": "vite",
-    "desktop:build": "tsc && vite build && electron-builder",
-    "type-check": "tsc --noEmit"
+    "dev": "vite",
+    "build": "tsc && vite build && electron-builder",
+    "preview": "vite preview"
+  },
+  "dependencies": {
+    "@nova/ui": "workspace:*",
+    "clsx": "^2.1.1",
+    "lucide-react": "^0.453.0",
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0",
+    "tailwind-merge": "^2.5.4"
   },
   "devDependencies": {
+    "@tailwindcss/postcss": "^4.2.1",
+    "@types/node": "^22.19.15",
+    "@types/react": "^19.0.0",
+    "@types/react-dom": "^19.0.0",
+    "@vitejs/plugin-react": "^4.2.1",
+    "autoprefixer": "^10.4.20",
     "electron": "^30.0.0",
-    "vite": "^5.2.0",
     "electron-builder": "^24.13.0",
+    "postcss": "^8.4.47",
+    "tailwindcss": "^4.2.1",
     "typescript": "^5.4.0",
-    "vite-plugin-electron": "^0.28.0"
+    "vite": "^5.2.0",
+    "vite-plugin-electron": "^0.28.0",
+    "vite-plugin-electron-renderer": "^0.14.5"
   }
 }
