@@ -15,5 +15,15 @@ const config: StorybookConfig = {
   docs: {
     autodocs: 'tag',
   },
+  async viteFinal(config) {
+    const path = await import('path');
+    if (config.resolve) {
+      config.resolve.alias = {
+        ...config.resolve.alias,
+        '@ui': path.resolve(__dirname, '../src'),
+      };
+    }
+    return config;
+  },
 };
 export default config;

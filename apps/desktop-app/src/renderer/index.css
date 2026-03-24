@@ -1,4 +1,4 @@
-@import "@nova/ui/src/styles/theme.css";
+@import "@nova/ui/styles/theme.css";
 
 /* Scan current renderer files for Tailwind v4 */
 @source "../**/*.{js,ts,jsx,tsx}";

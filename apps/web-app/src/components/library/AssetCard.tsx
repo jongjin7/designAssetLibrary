@@ -1,5 +1,5 @@
 import { NVAssetCard } from '@nova/ui';
-import { Asset } from '../../types/asset';
+import { Asset } from '@nova/types/asset';
 
 interface AssetCardProps {
   asset: Asset;

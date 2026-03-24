@@ -2,8 +2,8 @@
 
 import { Home, RotateCcw, ArrowLeft, Layers, Monitor, Search } from 'lucide-react';
 import { NVErrorView } from '@nova/ui';
-import { useIsDesktop } from '../../hooks/useIsDesktop';
-import { DesktopShell } from '../layout/DesktopShell';
+import { useIsDesktop } from '@nova/hooks/useIsDesktop';
+import { DesktopShell } from '@nova/components/layout/DesktopShell';
 import { useRouter } from 'next/navigation';
 
 interface AppErrorViewProps {

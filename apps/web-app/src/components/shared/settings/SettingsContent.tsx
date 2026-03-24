@@ -2,9 +2,9 @@
 
 import { LogOut } from 'lucide-react';
 import { NVButton } from '@nova/ui';
-import { SETTINGS_GROUPS } from '../../../lib/constants/settings';
+import { SETTINGS_GROUPS } from '@nova/lib/constants/settings';
 import { SettingsSection, SettingsItem } from './SettingsComponents';
-import { InstallBanner } from '../InstallBanner';
+import { InstallBanner } from '@nova/components/shared/InstallBanner';
 import { ProfileCard } from './ProfileCard';
 
 interface SettingsContentProps {

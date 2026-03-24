@@ -1,10 +1,10 @@
 'use client';
 
 import React, { useState } from 'react';
-import { cn } from '../../lib/utils';
+import { cn } from '@nova/lib/utils';
 import { NVGlassPanel, NVPopoverHeader, NVSearchBar } from '@nova/ui';
 import { FilterChips } from './FilterChips';
-import { LibraryFilters } from '../../hooks/useLibraryFilters';
+import { LibraryFilters } from '@nova/hooks/useLibraryFilters';
 import { 
   ArrowLeftRight, Plus,
   ChevronRight, ChevronLeft, 
@@ -16,7 +16,7 @@ import {
   Image as ImageIcon,
 } from 'lucide-react';
 import { ViewOptionsPopover } from './ViewOptionsPopover';
-import { processFileToAsset } from '../../lib/assetProcessor';
+import { processFileToAsset } from '@nova/lib/assetProcessor';
 import { 
   NVPopover, 
   NVPopoverTrigger, 

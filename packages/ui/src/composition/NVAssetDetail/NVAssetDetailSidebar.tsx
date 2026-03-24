@@ -2,9 +2,9 @@
 
 import React from 'react';
 import { Sparkles } from 'lucide-react';
-import { Asset } from '../../types/asset';
-import { NVAssetDetailContent } from './NVAssetDetailContent';
-import { cn } from '../../lib/utils';
+import { Asset } from '@ui/types/asset';
+import { NVAssetDetailContent } from '@ui/composition/NVAssetDetail/NVAssetDetailContent';
+import { cn } from '@ui/lib/utils';
 
 interface NVAssetDetailSidebarProps {
   asset: Asset | null;

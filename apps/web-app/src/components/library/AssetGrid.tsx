@@ -1,6 +1,6 @@
 import { NVAssetGrid, NVEmptyState } from '@nova/ui';
-import { Asset } from '../../types/asset';
-import { AssetCard } from './AssetCard';
+import { Asset } from '@nova/types/asset';
+import { AssetCard } from '@nova/components/library/AssetCard';
 
 interface AssetGridProps {
   assets: Asset[];

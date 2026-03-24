@@ -15,7 +15,6 @@ import {
 } from '@nova/ui';
 
 const ErrorPage: React.FC = () => {
-  const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(false);
   const [retryCount, setRetryCount] = useState(0);
 
   const handleReload = () => {
@@ -23,18 +22,13 @@ const ErrorPage: React.FC = () => {
     window.location.href = 'https://localhost:3000?platform=desktop';
   };
 
-  const handleGoHome = () => {
-     window.location.href = 'https://localhost:3000?platform=desktop';
-  };
 
   return (
     <div className="min-h-screen flex h-screen bg-[#0B0E14] overflow-hidden text-slate-50 font-sans selection:bg-indigo-500/30">
       
       {/* Column 1: Structural Sidebar (Minimalist) */}
       <nav 
-        className={`flex flex-col bg-white/[0.01] border-r border-white/5 transition-all duration-300 ease-in-out app-drag-region ${
-          isSidebarCollapsed ? 'w-21' : 'w-[260px]'
-        }`}
+        className={`flex flex-col bg-white/[0.01] border-r border-white/5 transition-all duration-300 ease-in-out app-drag-region w-[260px]`}
       >
         <div className="h-12 shrink-0 flex items-center gap-2 pl-3.5">
           <div className="w-3 h-3 rounded-full bg-white/5" />
@@ -43,18 +37,9 @@ const ErrorPage: React.FC = () => {
         </div>
 
         <div className="flex justify-between items-center px-2 mb-6">
-          {!isSidebarCollapsed && (
-            <h1 className="pl-3 text-2xl font-black text-white/20 tracking-tighter uppercase leading-none">
-              NOVA
-            </h1>
-          )}
-          <NVIconButton
-            icon={PanelLeft}
-            variant="ghost"
-            size="md"
-            className="app-no-drag opacity-20"
-            onClick={() => setIsSidebarCollapsed(!isSidebarCollapsed)}
-          /> 
+          <h1 className="pl-3 text-2xl font-black text-white/20 tracking-tighter uppercase leading-none">
+            NOVA
+          </h1>
         </div>
         
         <div className="flex-1 px-3 py-4 flex flex-col gap-1 opacity-10 pointer-events-none grayscale">
@@ -65,7 +50,7 @@ const ErrorPage: React.FC = () => {
           ].map((item, i) => (
             <div key={i} className="flex items-center gap-3 px-4 py-2.5 rounded-xl text-sm font-medium text-slate-400">
               <item.icon size={18} strokeWidth={1.5} />
-              {!isSidebarCollapsed && <span>{item.label}</span>}
+              <span>{item.label}</span>
             </div>
           ))}
         </div>
@@ -91,16 +76,11 @@ const ErrorPage: React.FC = () => {
           title="서버에 연결할 수 없습니다."
           description="네트워크 상태를 확인하거나 잠시 후 다시 시도해 주세요. 문제가 지속될 경우 관리자에게 문의하시기 바랍니다."
           fullScreen={false}
-          showBackgroundCode={!isSidebarCollapsed}
+          showBackgroundCode={true}
           primaryAction={{
             label: `연결 다시 시도 ${retryCount > 0 ? `#${retryCount}` : ''}`,
             onClick: handleReload,
             icon: RotateCcw
-          }}
-          secondaryAction={{
-            label: '홈으로 이동',
-            onClick: handleGoHome,
-            icon: Home
           }}
         />
       </main>

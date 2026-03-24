@@ -2,14 +2,13 @@
 
 import { useState } from 'react';
 import { Search, X } from 'lucide-react';
-import { useLibraryFilters, LibraryFilters } from '../../../hooks/useLibraryFilters';
-import { MobileTopBar } from '../../../components/layout/MobileTopBar';
-import { LibraryControls } from '../../../components/library/LibraryControls';
-import { FilterChips } from '../../../components/library/FilterChips';
-import { AssetGrid } from '../../../components/library/AssetGrid';
+import { useLibraryFilters, LibraryFilters } from '@nova/hooks/useLibraryFilters';
+import { MobileTopBar } from '@nova/components/layout/MobileTopBar';
+import { LibraryControls } from '@nova/components/library/LibraryControls';
+import { FilterChips } from '@nova/components/library/FilterChips';
+import { AssetGrid } from '@nova/components/library/AssetGrid';
 import { NVLoadingState, NVIconButton, NVAssetSelectionBar, NVAssetDetailSheet, Asset, NVButton } from '@nova/ui';
-import { extractColors } from '../../../lib/colorExtractor';
-import { extractColorsAI } from '../../../lib/colorExtractorAI';
+import { extractColors } from '@nova/lib/colorExtractor';
 
 interface MobileLibraryViewProps {
   assets: Asset[];
@@ -153,7 +152,7 @@ export default function MobileLibraryView({
         onClose={closeDetail} 
         onDelete={deleteAsset} 
         onUpdate={updateAsset}
-        onExtractAI={extractColorsAI}
+        onExtractAI={extractColors}
         onExtractBasic={extractColors}
       />
     </>

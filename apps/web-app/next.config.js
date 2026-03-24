@@ -20,6 +20,14 @@ const nextConfig = {
       'https://192.168.103.*:3000',
     ],
   },
+  webpack: (config) => {
+    config.resolve.alias = {
+      ...config.resolve.alias,
+      '@nova/ui': require('path').resolve(__dirname, '../../packages/ui/src'),
+      '@ui': require('path').resolve(__dirname, '../../packages/ui/src'),
+    };
+    return config;
+  },
 };
 
 module.exports = withPWA(nextConfig);

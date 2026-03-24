@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { ChevronRight, ChevronDown, Folder as FolderIcon, MoreVertical, Plus, Sparkles } from 'lucide-react';
-import { Folder } from '../../types/folder';
+import { Folder } from '@nova/types/folder';
 
 interface FolderTreeProps {
   folders: Folder[];

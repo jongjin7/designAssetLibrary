@@ -9,7 +9,7 @@ The NOVA platform uses **Supabase** as its core backend service with a focus on 
 - **Supabase Database:** PostgreSQL with JSONB and similarity search support.
 - **Supabase Storage:** S3-compatible storage with **TUS Protocol** Support for resumable uploads.
 - **Supabase Auth:** Email/Social login with Row-Level Security (RLS).
-- **Supabase Edge Functions:** Serverless logic hosting **TensorFlow.js** for server-side AI refinement.
+- **Supabase Edge Functions:** Serverless logic hosting **TensorFlow.js** for server-side AI refinement and consistency. (Primary extraction is performed client-side for immediate feedback).
 - **Supabase Realtime:** Instant state broadcasting to all connected clients.
 
 ## 2. High-Performance Sync Pipeline
@@ -17,11 +17,11 @@ The NOVA platform uses **Supabase** as its core backend service with a focus on 
 ### 2.1 Perceptual Hashing (phash)
 
 - **Goal:** Enable "0.2s search" and similarity-based discovery.
-- **Execution:** Generated via Edge Functions or TensorFlow.js on the server to ensure consistency.
+- **Execution:** Primarily generated client-side for instant feedback; can be cross-verified via Edge Functions or TensorFlow.js on the server to ensure consistency.
 
 ### 2.2 AI Engine
 
-- **TensorFlow.js:** Used in Supabase Edge Functions for sophisticated object detection and color palette refinement (5 core colors).
+- **TensorFlow.js:** Used in the frontend for immediate color extraction and object detection. Also available in Supabase Edge Functions for sophisticated server-side refinement and 5 core color validation.
 - **TUS Protocol:** Guaranteed delivery of large assets even over poor mobile connections.
 
 ## 3. Security & Row Level Security (RLS)

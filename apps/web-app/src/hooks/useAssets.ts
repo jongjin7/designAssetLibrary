@@ -1,8 +1,8 @@
 'use client';
 
 import { useState, useMemo, useCallback, useEffect } from 'react';
-import { Asset } from '../types/asset';
-import { assetRepository } from '../lib/dataService';
+import { Asset } from '@nova/types/asset';
+import { assetRepository } from '@nova/lib/dataService';
 
 type FilterType = 'all' | 'recent' | 'favorites';
 

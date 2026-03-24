@@ -1,5 +1,5 @@
 import { defineConfig } from 'vite';
-import path from 'node:path';
+import * as path from 'node:path';
 import electron from 'vite-plugin-electron';
 import renderer from 'vite-plugin-electron-renderer';
 import react from '@vitejs/plugin-react';
@@ -38,6 +38,7 @@ export default defineConfig({
   resolve: {
     alias: {
       '@': path.resolve(__dirname, './src'),
+      '@ui': path.resolve(__dirname, '../../packages/ui/src'),
     },
   },
 });

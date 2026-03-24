@@ -1,5 +1,5 @@
-import { extractColors } from './colorExtractor';
-import { Asset } from '../types/asset';
+import { extractColors } from '@nova/lib/colorExtractor';
+import { Asset } from '@nova/types/asset';
 
 export async function processFileToAsset(
   file: File | Blob, 

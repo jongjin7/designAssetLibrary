@@ -1,5 +1,5 @@
 import "./globals.css";
-import { PWAHandler } from "../components/shared/PWAHandler";
+import { PWAHandler } from "@nova/components/shared/PWAHandler";
 import { NVToastProvider } from "@nova/ui";
 
 export default function RootLayout({

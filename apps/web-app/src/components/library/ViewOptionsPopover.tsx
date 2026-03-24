@@ -12,7 +12,7 @@ import {
   NVButton,
   NVSelect
 } from '@nova/ui';
-import { cn } from '../../lib/utils';
+import { cn } from '@nova/lib/utils';
 
 interface ViewOptionsPopoverProps {
   className?: string;

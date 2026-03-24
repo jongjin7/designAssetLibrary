@@ -1,14 +1,13 @@
 import { useState, useEffect, useRef } from 'react';
 import { PanelRightOpen, PanelRightClose } from 'lucide-react';
-import { processFileToAsset } from '../../../lib/assetProcessor';
-import { AssetGrid } from '../../../components/library/AssetGrid';
-import { LibraryControls } from '../../../components/library/LibraryControls';
-import { DropZone } from '../../../components/shared/DropZone';
+import { processFileToAsset } from '@nova/lib/assetProcessor';
+import { AssetGrid } from '@nova/components/library/AssetGrid';
+import { LibraryControls } from '@nova/components/library/LibraryControls';
+import { DropZone } from '@nova/components/shared/DropZone';
 import { NVLoadingState, NVAssetSelectionBar, NVAssetDetailSidebar, Asset, NVIconButton } from '@nova/ui';
-import { cn } from '../../../lib/utils';
-import { extractColors } from '../../../lib/colorExtractor';
-import { extractColorsAI } from '../../../lib/colorExtractorAI';
-import { LibraryFilters } from '../../../hooks/useLibraryFilters';
+import { cn } from '@nova/lib/utils';
+import { extractColors } from '@nova/lib/colorExtractor';
+import { LibraryFilters } from '@nova/hooks/useLibraryFilters';
 
 interface DesktopLibraryViewProps {
   assets: Asset[];
@@ -221,7 +220,7 @@ export default function DesktopLibraryView({
           onClose={handleToggleSidebar} 
           onDelete={deleteAsset} 
           onUpdate={updateAsset} 
-          onExtractAI={extractColorsAI}
+          onExtractAI={extractColors}
           onExtractBasic={extractColors}
           className="w-[380px]"
         />

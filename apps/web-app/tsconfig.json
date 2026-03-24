@@ -21,13 +21,21 @@
       {
         "name": "next"
       }
-    ]
+    ],
+    "baseUrl": ".",
+    "paths": {
+      "@nova/ui": ["../../packages/ui/src/index.ts"],
+      "@nova/ui/*": ["../../packages/ui/src/*"],
+      "@ui/*": ["../../packages/ui/src/*"],
+      "@nova/*": ["src/*"]
+    }
   },
   "include": [
     "next-env.d.ts",
     ".next/types/**/*.ts",
     "**/*.ts",
-    "**/*.tsx"
+    "**/*.tsx",
+    "../../packages/ui/src/**/*"
   ],
   "exclude": [
     "node_modules"

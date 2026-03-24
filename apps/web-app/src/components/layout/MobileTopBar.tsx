@@ -2,7 +2,7 @@
 
 import Link from 'next/link';
 
-import { cn } from '../../lib/utils';
+import { cn } from '@nova/lib/utils';
 
 interface MobileTopBarProps {
   rightElement?: React.ReactNode;

@@ -1,17 +1,17 @@
 'use client';
 
-import { useIsDesktop } from '../../hooks/useIsDesktop';
-import DesktopLibraryView from '../(desktop)/library/DesktopLibraryView';
-import MobileLibraryView from '../(mobile)/library/MobileLibraryView';
-import { MobileShell } from '../../components/layout/MobileShell';
+import { useIsDesktop } from '@nova/hooks/useIsDesktop';
+import DesktopLibraryView from '@nova/app/(desktop)/library/DesktopLibraryView';
+import MobileLibraryView from '@nova/app/(mobile)/library/MobileLibraryView';
+import { MobileShell } from '@nova/components/layout/MobileShell';
 import { usePathname } from 'next/navigation';
-import { DesktopShell } from '../../components/layout/DesktopShell';
+import { DesktopShell } from '@nova/components/layout/DesktopShell';
 
 import { useState, useEffect, useRef } from 'react';
-import { useAssets } from '../../hooks/useAssets';
-import { useLibraryFilters } from '../../hooks/useLibraryFilters';
-import { useAssetSelection } from '../../hooks/useAssetSelection';
-import { SearchPalette } from '../../components/library/SearchPalette';
+import { useAssets } from '@nova/hooks/useAssets';
+import { useLibraryFilters } from '@nova/hooks/useLibraryFilters';
+import { useAssetSelection } from '@nova/hooks/useAssetSelection';
+import { SearchPalette } from '@nova/components/library/SearchPalette';
 import { NVLoadingState } from '@nova/ui';
 
 export default function UnifiedLibraryPage() {

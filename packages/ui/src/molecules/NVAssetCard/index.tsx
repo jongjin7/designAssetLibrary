@@ -1,8 +1,8 @@
 import React from 'react';
 import { Star, Maximize2, Check, Aperture, ZoomIn } from 'lucide-react';
 import { createPortal } from 'react-dom';
-import { cn } from '../../lib/utils';
-import { NVIconButton } from '../../atoms/NVIconButton';
+import { cn } from '@ui/lib/utils';
+import { NVIconButton } from '@ui/atoms/NVIconButton';
 
 export interface NVAssetCardProps {
   id: string;

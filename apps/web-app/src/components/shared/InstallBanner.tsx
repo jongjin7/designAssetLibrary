@@ -1,5 +1,5 @@
 import { Download, X, Share } from 'lucide-react';
-import { usePWA } from '../../hooks/usePWA';
+import { usePWA } from '@nova/hooks/usePWA';
 import { useState, useEffect } from 'react';
 import { NVCard } from '@nova/ui';
 

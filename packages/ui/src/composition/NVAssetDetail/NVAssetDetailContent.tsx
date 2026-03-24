@@ -1,15 +1,15 @@
 'use client';
 
 import React from 'react';
-import { cn } from '../../lib/utils';
-import { Asset } from '../../types/asset';
-import { useAssetColors } from './hooks/useAssetColors';
-import { NVAssetDetailHeader } from './parts/NVAssetDetailHeader';
-import { NVAssetDetailPreview } from './parts/NVAssetDetailPreview';
-import { NVAssetDetailInfo } from './parts/NVAssetDetailInfo';
-import { NVAssetDetailColors } from './parts/NVAssetDetailColors';
-import { NVAssetDetailTags } from './parts/NVAssetDetailTags';
-import { NVAssetDetailFooter } from './parts/NVAssetDetailFooter';
+import { cn } from '@ui/lib/utils';
+import { Asset } from '@ui/types/asset';
+import { useAssetColors } from '@ui/composition/NVAssetDetail/hooks/useAssetColors';
+import { NVAssetDetailHeader } from '@ui/composition/NVAssetDetail/parts/NVAssetDetailHeader';
+import { NVAssetDetailPreview } from '@ui/composition/NVAssetDetail/parts/NVAssetDetailPreview';
+import { NVAssetDetailInfo } from '@ui/composition/NVAssetDetail/parts/NVAssetDetailInfo';
+import { NVAssetDetailColors } from '@ui/composition/NVAssetDetail/parts/NVAssetDetailColors';
+import { NVAssetDetailTags } from '@ui/composition/NVAssetDetail/parts/NVAssetDetailTags';
+import { NVAssetDetailFooter } from '@ui/composition/NVAssetDetail/parts/NVAssetDetailFooter';
 
 interface NVAssetDetailContentProps {
   asset: Asset;

@@ -1,0 +1,10 @@
+{
+  "compilerOptions": {
+    "baseUrl": ".",
+    "paths": {
+      "@nova/ui": ["packages/ui/src/index.ts"],
+      "@nova/ui/*": ["packages/ui/src/*"],
+      "@nova/*": ["apps/web-app/src/*"]
+    }
+  }
+}

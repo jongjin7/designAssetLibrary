@@ -11,7 +11,7 @@ NOVA's frontend is split across three distinct applications (`web-app`, `desktop
 - **Manifest V3:** High-performance browser capture extension.
 - **Vanilla CSS:** Modular styling for maximum performance (**0.2s target**).
 - **OPFS (Origin Private File System):** Direct browser-level storage for high-res asset caching.
-- **Web Workers:** Background processing for image compression (WebP), SHA-256 generation, and AI analysis.
+- **Web Workers:** Background processing for image compression (WebP), SHA-256 generation, and AI analysis via **TensorFlow.js**.
 
 ## 2. Shared Design System (`packages/ui`)
 

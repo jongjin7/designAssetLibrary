@@ -2,12 +2,12 @@
 
 import { useState, useEffect, useRef } from 'react';
 import { useRouter, usePathname } from 'next/navigation';
-import { useFolders } from '../../hooks/useFolders';
-import { FolderTree } from '../navigation/FolderTree';
+import { useFolders } from '@nova/hooks/useFolders';
+import { FolderTree } from '@nova/components/navigation/FolderTree';
 import { Grid, Star, Clock, Menu, PanelLeft,  } from 'lucide-react';
 
 import { NVIconButton } from '@nova/ui';
-import { cn } from '../../lib/utils';
+import { cn } from '@nova/lib/utils';
 
 interface DesktopShellProps {
   children: React.ReactNode;

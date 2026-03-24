@@ -1,7 +1,7 @@
 'use client';
 
 import React from 'react';
-import { NetworkStatus } from '../shared/NetworkStatus';
+import { NetworkStatus } from '@nova/components/shared/NetworkStatus';
 import { MobileBottomNav as BottomTabs } from './MobileBottomNav';
 
 interface MobileShellProps {
