@@ -25,12 +25,14 @@ export * from './molecules/NVAssetSelectionBar';
 export * from './molecules/NVPaletteStrip';
 export * from './molecules/NVTagList';
 export * from './molecules/NVBottomSheet';
+export * from './molecules/NVErrorView';
 
 // Organisms / Combined Components
 export { NVAssetGrid } from './composition/NVAssetGrid';
 export { NVAssetDetailSheet, NVAssetDetailSidebar, NVAssetDetailContent } from './composition/NVAssetDetail';
 export * from './composition/NVSearchPanel';
 export * from './composition/NVDesktopUploadPanel';
+export * from './composition/NVErrorLayout';
 
 // Foundations
 export * from './foundations/NVColorPalette';
