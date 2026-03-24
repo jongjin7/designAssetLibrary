@@ -8,6 +8,8 @@ function createWindow() {
     title: "NOVA Desktop",
     width: 1200,
     height: 800,
+    minWidth: 760,
+    minHeight: 500,
     backgroundColor: "#0a0c13",
     titleBarStyle: "hiddenInset",
     // macOS standard for premium apps
@@ -20,7 +22,7 @@ function createWindow() {
   });
   const WEB_APP_URL = "https://localhost:3000";
   if (VITE_DEV_SERVER_URL) {
-    win.loadURL(WEB_APP_URL).catch(() => {
+    win.loadURL(`${WEB_APP_URL}?platform=desktop`).catch(() => {
       console.warn("Web app at localhost:3000 not reachable, falling back to desktop-app renderer");
       win.loadURL(VITE_DEV_SERVER_URL);
     });
@@ -36,6 +38,7 @@ function createWindow() {
     }
   });
 }
+electron.app.setName("NOVA Desktop");
 electron.app.whenReady().then(() => {
   createWindow();
   electron.app.on("activate", () => {
