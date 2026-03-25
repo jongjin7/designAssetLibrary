@@ -10,7 +10,7 @@ function createWindow() {
     title: 'Trove',
     width: 1200,
     height: 800,
-    minWidth: 760,
+    minWidth: 1024,
     minHeight: 500,
     backgroundColor: '#0a0c13',
     titleBarStyle: 'hiddenInset', // macOS standard for premium apps

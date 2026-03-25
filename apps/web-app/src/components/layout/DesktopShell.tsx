@@ -1,56 +1,93 @@
 'use client';
 
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef, createContext, useContext } from 'react';
 import { useRouter, usePathname } from 'next/navigation';
 import { useFolders } from '@nova/hooks/useFolders';
 import { FolderTree } from '@nova/components/navigation/FolderTree';
-import { Grid, Star, Clock, Menu, PanelLeft,  } from 'lucide-react';
+import { Grid, Star, Clock, Menu, PanelLeftClose, PanelLeftOpen } from 'lucide-react';
 
 import { NVIconButton } from '@nova/ui';
-import { cn } from '@nova/lib/utils';
+import { cn, checkIsDesktopApp } from '@nova/lib/utils';
+import Link from 'next/link';
+
+interface DesktopShellContextType {
+  isSidebarCollapsed: boolean;
+  handleToggleSidebar: () => void;
+  isFloating: boolean;
+  isDesktopApp: boolean;
+}
+
+const DesktopShellContext = createContext<DesktopShellContextType | undefined>(undefined);
+
+export function useDesktopShell() {
+  const context = useContext(DesktopShellContext);
+  return context;
+}
 
 interface DesktopShellProps {
   children: React.ReactNode;
   onSearchToggle?: () => void;
 }
 
+const SidebarToggleButton = ({className}: {className?: string}) => {
+  const context = useDesktopShell();
+  if (!context) return null;
+  const { isSidebarCollapsed, handleToggleSidebar } = context;
+
+  return (
+    <NVIconButton
+      icon={PanelLeftClose}
+      variant="ghost"
+      size="sm"
+      className={cn('app-no-drag', className)}
+      onClick={handleToggleSidebar}
+      title="메뉴 확장"
+    />
+  );
+};
+
 export function DesktopShell({ children, onSearchToggle }: DesktopShellProps) {
   const router = useRouter();
   const pathname = usePathname();
   const { folders, createFolder } = useFolders();
   const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(false);
-  
+  const [isFloating, setIsFloating] = useState(false);
+  const [isDesktopApp, setIsDesktopApp] = useState(false);
   const lastWidthRef = useRef(typeof window !== 'undefined' ? window.innerWidth : 1024);
 
-  // Handle automatic collapse/expand on resize CROSSING 1024px
+  // Handle automatic collapse/expand and floating mode on resize
   useEffect(() => {
-    const checkInitialState = () => {
-       if (window.innerWidth < 1024) {
-         setIsSidebarCollapsed(true);
-       } else {
-         setIsSidebarCollapsed(false);
-       }
-    };
+    const isApp = checkIsDesktopApp();
+    console.log('[DesktopShell] isDesktopApp check:', isApp, {
+      electron: (window as any).electron !== undefined,
+      userAgent: navigator.userAgent.indexOf('Electron') >= 0,
+      search: typeof window !== 'undefined' ? window.location.search : ''
+    });
+    setIsDesktopApp(isApp);
 
     const handleResize = () => {
       const currentWidth = window.innerWidth;
-      const wasAbove = lastWidthRef.current >= 1024;
-      const nowBelow = currentWidth < 1024;
+      const floatingBreakpoint = 1280;
       
-      const wasBelow = lastWidthRef.current < 1024;
-      const nowAbove = currentWidth >= 1024;
+      // Update floating mode
+      const shouldFloat = currentWidth < floatingBreakpoint;
+      setIsFloating(shouldFloat);
 
-      if (wasAbove && nowBelow) {
-        setIsSidebarCollapsed(true);
-      } else if (wasBelow && nowAbove) {
+      // Requirement: 1280px 이상 넓혀지면 접혔던 LNB가 넓혀진다 (Auto-expand on >= 1280)
+      if (!shouldFloat) {
         setIsSidebarCollapsed(false);
+      } else {
+        // Optional: Auto-collapse when entering floating mode from desktop-wide
+        if (lastWidthRef.current >= floatingBreakpoint) {
+          setIsSidebarCollapsed(true);
+        }
       }
       
       lastWidthRef.current = currentWidth;
     };
     
-    // Check state on mount
-    checkInitialState();
+    // Initial check
+    handleResize();
 
     window.addEventListener('resize', handleResize);
     return () => window.removeEventListener('resize', handleResize);
@@ -68,123 +105,128 @@ export function DesktopShell({ children, onSearchToggle }: DesktopShellProps) {
   };
 
   return (
-    <div className="min-h-screen flex h-screen bg-slate-950 overflow-hidden">
-      {/* Column 1: Sidebar */}
-      <nav 
-        className={cn(
-          "flex flex-col bg-white/[0.02] border-r border-white/[0.06] transition-all duration-300 ease-in-out app-drag-region",
-          isSidebarCollapsed ? 'w-21' : 'w-[260px]'
-        )}
-      >
-        {/* Window Controls Space (for Electron) + Visual Dots for Web */}
-        <div className="h-12 shrink-0 flex items-center gap-2 pl-3.5">
-          <div className="w-3.5 h-3.5 rounded-full bg-[#FEBC2E] shadow-inner" />
-          <div className="w-3.5 h-3.5 rounded-full bg-[#28C840] shadow-inner" />
-          <div className="w-3.5 h-3.5 rounded-full bg-[#FF5F57] shadow-inner" />
-        </div>
+    <DesktopShellContext.Provider value={{ isSidebarCollapsed, handleToggleSidebar, isFloating, isDesktopApp }}>
+      <div className="min-h-screen flex h-screen bg-[#020617] overflow-hidden relative">
 
-        <div className="flex justify-between items-center">
-          {!isSidebarCollapsed && (
-            <h1 className="pl-5 text-2xl font-black bg-gradient-to-br from-indigo-500 to-cyan-500 bg-clip-text text-transparent tracking-tighter">
-              Trove
-            </h1>
+        {/* Column 1: Sidebar (LNB) */}
+        <div  
+          className={cn(
+            "flex flex-col transition-all duration-300 ease-in-out z-50 overflow-hidden shrink-0 app-drag-region w-[260px]",
+            // When collapsed, it should be transparent and not take up space in the layout
+            isSidebarCollapsed 
+              ? "bg-transparent border-transparent shadow-none translate-x-[-260px] -ml-[260px]" 
+              : "bg-slate-950/60 backdrop-blur-2xl border-r border-white/5 shadow-[4px_0_24px_rgba(0,0,0,0.5)]",
           )}
-
-          <NVIconButton
-            icon={PanelLeft}
-            variant="ghost"
-            size="md"
-            className={cn("app-no-drag", isSidebarCollapsed ? 'mx-auto' : 'mx-1')}
-            onClick={handleToggleSidebar}
-            title={isSidebarCollapsed ? "메뉴 확장" : "메뉴 축소"}
-          /> 
-        </div>
-        
-        <nav className="flex-1 px-3 py-2 flex flex-col gap-1 overflow-y-auto app-drag-region">
-          {!isSidebarCollapsed && (
-            <div className="text-[11px] font-bold text-slate-500 uppercase tracking-[0.15em] mx-3 mt-6 mb-2 app-no-drag">
-              라이브러리
-            </div>
+        >
+          {/* Window Controls Space: Only visible when expanded in Desktop App */}
+          {isDesktopApp && (
+            <div className={cn(
+              "h-10 pl-4 pr-2 flex items-center justify-between border-b border-white/[0.05]",
+            )}> 
+              <div className="bg-red-400/10"/>
+              { !isSidebarCollapsed && <SidebarToggleButton /> }
+            </div> 
           )}
           
-          {[
-            { id: 'all', label: '모든 에셋', icon: Grid, path: '/library' },
-            { id: 'favorites', label: '즐겨찾기', icon: Star, path: '/favorites' },
-            { id: 'recent', label: '최근 항목', icon: Clock, path: '/recent' }
-          ].map((item) => {
-            const isActive = pathname === item.path;
-            return (
-              <div 
-                key={item.id}
-                className={cn(
-                  "group flex items-center gap-3 px-4 py-2.5 rounded-xl text-sm font-medium transition-all cursor-pointer app-no-drag",
-                  isActive 
-                    ? 'bg-indigo-500/10 text-indigo-500' 
-                    : 'text-slate-400 hover:bg-white/[0.05] hover:text-slate-50',
-                  isSidebarCollapsed && 'justify-center px-0'
-                )} 
-                onClick={() => handleNavClick(item.id)} 
-                title={isSidebarCollapsed ? item.label : undefined}
-              >
-                <item.icon size={18} className={`flex-shrink-0 ${isActive ? 'text-indigo-500' : 'group-hover:text-slate-50'}`} />
-                {!isSidebarCollapsed && <span>{item.label}</span>}
-              </div>
-            );
-          })}
-
-          <div className={cn("app-no-drag", isSidebarCollapsed ? 'mt-4' : 'mt-2')}>
-            <FolderTree 
-              folders={folders} 
-              activeFolderId={null}
-              onFolderClick={(id) => id ? router.push(`/folder/${id}`) : router.push('/library')}
-              onCreateFolder={(parent) => {
-                const name = window.prompt('새 폴더 이름을 입력하세요:');
-                if (name) createFolder(name, parent);
-              }}
-              isCollapsed={isSidebarCollapsed}
-            />
+          <div className={cn(
+            "flex justify-between items-center px-2 shrink-0 transition-all",
+            isDesktopApp? "h-11" : "h-12"
+          )}>
+            <h1 className="pl-2 text-2xl font-black bg-gradient-to-br from-indigo-400 via-indigo-500 to-cyan-400 bg-clip-text text-transparent tracking-tighter app-no-drag select-none">
+                <Link href="/">Trove</Link>
+            </h1>
+            
+            {!isDesktopApp && !isSidebarCollapsed && <SidebarToggleButton />}
           </div>
-        </nav>
-
-        <div className={cn("p-4 border-t border-white/[0.06] app-no-drag", isSidebarCollapsed ? 'flex justify-center' : '')}>
-          <div 
-            className={cn(
-              "flex items-center gap-3 p-2 rounded-xl cursor-pointer transition-all border border-transparent",
-              pathname === '/profile' 
-                ? 'bg-indigo-500/10 border-indigo-500/30' 
-                : 'hover:bg-white/[0.05]',
-              isSidebarCollapsed && 'w-10 h-10 p-0 justify-center'
-            )}
-            title={isSidebarCollapsed ? "설정" : undefined}
-            onClick={() => router.push('/profile')}
-          >
-            <div className={cn(
-              "flex-shrink-0 w-10 h-10 rounded-full bg-white/[0.05] border border-white/10 flex items-center justify-center transition-all",
-              pathname === '/profile' && 'border-indigo-500/50 bg-indigo-500/20',
-              isSidebarCollapsed && 'w-full h-full'
-            )}>
-              <div className="w-3 h-3 rounded-full bg-indigo-500 shadow-[0_0_8px_rgba(99,102,241,0.6)]" />
-            </div>
-            {!isSidebarCollapsed && (
-              <div className="flex flex-col min-w-0">
-                <span className={cn(
-                  "text-[13px] font-bold truncate",
-                  pathname === '/profile' ? 'text-indigo-500' : 'text-slate-50'
-                )}>
-                  Trove Designer
-                </span>
-                <span className="text-[11px] text-slate-500 truncate">user@nova.design</span>
+          
+          {/* Sidebar Content: Only visible when expanded */}
+          <div className={cn(
+            "flex-1 flex flex-col gap-1 overflow-hidden transition-all duration-300",
+            isSidebarCollapsed ? "opacity-0 invisible h-0" : "opacity-100 visible"
+          )}>
+            <nav className="flex-1 px-2.5 py-4 flex flex-col gap-1 overflow-y-auto app-drag-region custom-scrollbar">
+              <div className="text-xs font-bold text-slate-500 uppercase tracking-[0.2em] px-4 mt-4 mb-2 app-no-drag select-none opacity-60">
+                라이브러리
               </div>
-            )}
+              
+              {[
+                { id: 'all', label: '모든 에셋', icon: Grid, path: '/library' },
+                { id: 'favorites', label: '즐겨찾기', icon: Star, path: '/favorites' },
+                { id: 'recent', label: '최근 항목', icon: Clock, path: '/recent' }
+              ].map((item) => {
+                const isActive = pathname === item.path;
+                return (
+                  <div 
+                    key={item.id}
+                    className={cn(
+                      "group flex items-center gap-3 px-3.5 py-2 rounded-xl text-[13px] font-medium transition-all cursor-pointer app-no-drag select-none",
+                      isActive 
+                        ? 'bg-indigo-500/15 text-indigo-400 shadow-[inset_0_0_12px_rgba(99,102,241,0.1)]' 
+                        : 'text-slate-400 hover:bg-white/[0.06] hover:text-white',
+                    )} 
+                    onClick={() => {
+                      handleNavClick(item.id);
+                      if (isFloating) setIsSidebarCollapsed(true);
+                    }} 
+                  >
+                    <item.icon size={18} className={cn("shrink-0 transition-transform duration-300 group-hover:scale-110", isActive ? 'text-indigo-400' : 'group-hover:text-white')} />
+                    <span className="truncate">{item.label}</span>
+                  </div>
+                );
+              })}
+
+              <div className="app-drag-region px-0.5 mt-4">
+                <FolderTree 
+                  folders={folders} 
+                  activeFolderId={null}
+                  onFolderClick={(id) => {
+                    id ? router.push(`/folder/${id}`) : router.push('/library');
+                    if (isFloating) setIsSidebarCollapsed(true);
+                  }}
+                  onCreateFolder={(parent) => {
+                    const name = window.prompt('새 폴더 이름을 입력하세요:');
+                    if (name) createFolder(name, parent);
+                  }}
+                  isCollapsed={false}
+                />
+              </div>
+            </nav>
+
+            <div className="p-4 border-t border-white/5 app-no-drag">
+              <div 
+                className={cn(
+                  "flex items-center gap-3 p-1.5 rounded-xl cursor-pointer transition-all border border-transparent",
+                  pathname === '/profile' 
+                    ? 'bg-indigo-500/10 border-indigo-500/30' 
+                    : 'hover:bg-white/[0.05]',
+                )}
+                onClick={() => router.push('/profile')}
+              >
+                <div className={cn(
+                  "flex-shrink-0 w-9 h-9 rounded-full bg-slate-800 border border-white/10 flex items-center justify-center transition-all overflow-hidden",
+                  pathname === '/profile' && 'border-indigo-500/50 bg-indigo-500/20',
+                )}>
+                  <div className="w-2.5 h-2.5 rounded-full bg-indigo-500 shadow-[0_0_12px_rgba(99,102,241,0.8)]" />
+                </div>
+                <div className="flex flex-col min-w-0 text-left">
+                  <span className={cn(
+                    "text-[12px] font-bold truncate",
+                    pathname === '/profile' ? 'text-indigo-400' : 'text-slate-200'
+                  )}>
+                    Trove Designer
+                  </span>
+                  <span className="text-[10px] text-slate-500 truncate">user@nova.design</span>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
-      </nav>
 
-      {/* Column 2 & 3: Content Area (Main + Inspector) */}
-      <div className="flex-1 flex overflow-hidden">
-        {children}
+        {/* Main Content Area */}
+        <main className="flex-1 flex flex-col overflow-hidden transition-all duration-300">
+          {children}
+        </main>
       </div>
-    </div>
-
+    </DesktopShellContext.Provider>
   );
 }

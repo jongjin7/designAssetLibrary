@@ -20,3 +20,17 @@ export function cn(...inputs: (string | boolean | undefined | null | { [key: str
 
   return classes.join(' ');
 }
+
+export function checkIsDesktopApp() {
+  if (typeof window === 'undefined') return false;
+  
+  // Robust Electron detection
+  const isElectron = 
+    (window as any).electron !== undefined || 
+    navigator.userAgent.indexOf('Electron') >= 0 ||
+    (window as any).process?.versions?.electron !== undefined;
+    
+  const isPlatformParam = window.location.search.includes('platform=desktop');
+  
+  return isElectron || isPlatformParam;
+}
