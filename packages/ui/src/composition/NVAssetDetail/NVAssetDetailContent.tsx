@@ -22,6 +22,7 @@ interface NVAssetDetailContentProps {
   onShare?: (asset: Asset) => void;
   isInspector?: boolean;
   className?: string;
+  isDesktopApp?: boolean;
 }
 
 export function NVAssetDetailContent({ 
@@ -34,7 +35,8 @@ export function NVAssetDetailContent({
   onExtractBasic,
   onShare,
   isInspector = false,
-  className = ''
+  className = '',
+  isDesktopApp
 }: NVAssetDetailContentProps) {
   const { 
     palette, 
@@ -50,12 +52,12 @@ export function NVAssetDetailContent({
 
   return (
     <div className={cn(
-      "flex flex-col bg-[#0A0C13]", 
+      "flex flex-col", 
       isInspector ? "h-full" : "max-h-[90vh]", 
       className
     )}>
       {isInspector && (
-        <NVAssetDetailHeader title="Asset Detail" onClose={onClose} />
+        <NVAssetDetailHeader title="Asset Detail" onClose={onClose} isDesktopApp={isDesktopApp} />
       )}
 
       <div className="flex-1 overflow-y-auto overscroll-contain">

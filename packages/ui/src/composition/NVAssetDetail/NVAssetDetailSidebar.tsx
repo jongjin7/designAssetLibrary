@@ -15,6 +15,7 @@ interface NVAssetDetailSidebarProps {
   onExtractAI?: (imageUrl: string) => Promise<string[]>;
   onExtractBasic?: (imageUrl: string) => Promise<string[]>;
   className?: string;
+  isDesktopApp?: boolean;
 }
 
 export function NVAssetDetailSidebar({ 
@@ -25,11 +26,12 @@ export function NVAssetDetailSidebar({
   onUpdate,
   onExtractAI,
   onExtractBasic,
-  className = ''
+  className = '',
+  isDesktopApp = false
 }: NVAssetDetailSidebarProps) {
   if (!asset) {
     return (
-      <aside className={cn("w-[380px] h-full bg-slate-950/60 backdrop-blur-3xl border-l border-white/10 flex items-center justify-center p-10 text-center text-slate-200", className)}>
+      <aside className={cn("h-full border-l border-white/10 flex items-center justify-center p-10 text-center text-slate-200", className)}>
         <div className="flex flex-col items-center gap-4 opacity-40">
           <div className="w-16 h-16 rounded-3xl bg-white/[0.02] border border-white/5 flex items-center justify-center text-slate-400 shadow-inner">
             <Sparkles size={32} strokeWidth={1} />
@@ -44,7 +46,7 @@ export function NVAssetDetailSidebar({
   }
 
   return (
-    <aside className={cn("w-[380px] h-full bg-slate-950/60 backdrop-blur-3xl border-l border-white/10 flex flex-col overflow-hidden text-slate-200", className)}> 
+    <aside className={cn("h-full border-l border-white/10 flex flex-col overflow-hidden text-slate-200", className)}> 
       <NVAssetDetailContent 
         asset={asset} 
         onClose={onClose} 
@@ -55,6 +57,7 @@ export function NVAssetDetailSidebar({
         onExtractBasic={onExtractBasic}
         isInspector={true}
         className="h-full"
+        isDesktopApp={isDesktopApp}
       />
     </aside>
   );
