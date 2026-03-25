@@ -111,7 +111,7 @@ export function DesktopShell({ children, onSearchToggle }: DesktopShellProps) {
         {/* Column 1: Sidebar (LNB) */}
         <div  
           className={cn(
-            "flex flex-col transition-all duration-300 ease-in-out z-50 overflow-hidden shrink-0 app-drag-region w-[260px] bg-slate-950/60 backdrop-blur-2xl",
+            "flex flex-col transition-all duration-300 ease-in-out z-50 overflow-hidden shrink-0 w-[260px] bg-slate-950/60 backdrop-blur-2xl",
             // When collapsed, it should be transparent and not take up space in the layout
             isSidebarCollapsed 
               ? "bg-transparent border-transparent shadow-none translate-x-[-260px] -ml-[260px]" 
@@ -121,7 +121,7 @@ export function DesktopShell({ children, onSearchToggle }: DesktopShellProps) {
           {/* Window Controls Space: Only visible when expanded in Desktop App */}
           {isDesktopApp && (
             <div className={cn(
-              "h-10 pl-4 pr-2 flex items-center justify-between border-b border-white/[0.05] transition-all duration-300 ease-in-out",
+              "h-10 pl-4 pr-2 flex items-center justify-between border-b border-white/[0.05] transition-all duration-300 ease-in-out app-drag-region",
               isSidebarCollapsed ? "opacity-0 invisible" : "opacity-100 visible delay-300"
             )}> 
               <div />
@@ -133,7 +133,7 @@ export function DesktopShell({ children, onSearchToggle }: DesktopShellProps) {
             "flex justify-between items-center px-2 shrink-0 transition-all",
             isDesktopApp? "h-11" : "h-12"
           )}>
-            <h1 className="pl-2 text-2xl font-black bg-gradient-to-br from-indigo-400 via-indigo-500 to-cyan-400 bg-clip-text text-transparent tracking-tighter app-no-drag select-none">
+            <h1 className="pl-2 text-2xl font-black bg-gradient-to-br from-indigo-400 via-indigo-500 to-cyan-400 bg-clip-text text-transparent tracking-tighter select-none">
                 <Link href="/">Trove</Link>
             </h1>
             
@@ -145,8 +145,8 @@ export function DesktopShell({ children, onSearchToggle }: DesktopShellProps) {
             "flex-1 flex flex-col gap-1 overflow-hidden transition-all duration-300",
             isSidebarCollapsed ? "opacity-0 invisible h-0" : "opacity-100 visible"
           )}>
-            <nav className="flex-1 px-2.5 py-4 flex flex-col gap-1 overflow-y-auto app-drag-region custom-scrollbar">
-              <div className="text-xs font-bold text-slate-500 uppercase tracking-[0.2em] px-4 mt-4 mb-2 app-no-drag select-none opacity-60">
+            <nav className="flex-1 px-2.5 py-4 flex flex-col gap-1 overflow-y-auto custom-scrollbar select-none">
+              <div className="text-xs font-bold text-slate-500 uppercase tracking-[0.2em] px-4 mt-4 mb-2 opacity-60">
                 라이브러리
               </div>
               
@@ -176,7 +176,7 @@ export function DesktopShell({ children, onSearchToggle }: DesktopShellProps) {
                 );
               })}
 
-              <div className="app-drag-region px-0.5 mt-4">
+              <div className="px-0.5 mt-4">
                 <FolderTree 
                   folders={folders} 
                   activeFolderId={null}
@@ -193,10 +193,10 @@ export function DesktopShell({ children, onSearchToggle }: DesktopShellProps) {
               </div>
             </nav>
 
-            <div className="p-4 border-t border-white/5 app-no-drag">
-              <div 
+            <div className="p-4 border-t border-white/5">
+              <button 
                 className={cn(
-                  "flex items-center gap-3 p-1.5 rounded-xl cursor-pointer transition-all border border-transparent",
+                  "w-full flex items-center gap-3 p-1.5 rounded-xl cursor-pointer transition-all border border-transparent select-none",
                   pathname === '/profile' 
                     ? 'bg-indigo-500/10 border-indigo-500/30' 
                     : 'hover:bg-white/[0.05]',
@@ -218,7 +218,7 @@ export function DesktopShell({ children, onSearchToggle }: DesktopShellProps) {
                   </span>
                   <span className="text-[10px] text-slate-500 truncate">user@nova.design</span>
                 </div>
-              </div>
+              </button>
             </div>
           </div>
         </div>

@@ -173,7 +173,7 @@ export default function DesktopLibraryView({
 
         {/* Floating Sidebar Toggle - Fixed to FAR RIGHT Edge of Browser */}
         <div className={cn(
-          "fixed h-8 right-6 z-50 flex items-center",
+          "fixed h-8 right-6 z-50 flex items-center app-no-drag",
           isDesktopApp ? "top-[3px]" : "top-[7px]"
         )}>
            <NVIconButton 

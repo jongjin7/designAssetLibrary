@@ -260,7 +260,6 @@ export function LibraryControls({
             "flex items-center gap-1 pl-6 relative transition-all duration-300",
             isSidebarVisible ? "pr-2" : "pr-13"
           )} 
-          style={{ WebkitAppRegion: 'no-drag' } as any}
         >
           <NVPopover>
             <NVPopoverTrigger asChild>
@@ -268,7 +267,7 @@ export function LibraryControls({
                 icon={LayoutGrid} 
                 variant="ghost" 
                 size="sm" 
-                className="data-[state=open]:text-white"
+                className="data-[state=open]:text-white app-no-drag"
                 title="보기 옵션"
               />
             </NVPopoverTrigger>
@@ -282,7 +281,7 @@ export function LibraryControls({
             </NVPopoverContent>
           </NVPopover>
 
-          <NVIconButton icon={Pin} variant="ghost" size="sm"/>
+          <NVIconButton icon={Pin} variant="ghost" size="sm" className="app-no-drag"/>
         </div>
       </header>
 
