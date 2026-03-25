@@ -67,7 +67,7 @@ export function DesktopShell({ children, onSearchToggle }: DesktopShellProps) {
 
     const handleResize = () => {
       const currentWidth = window.innerWidth;
-      const floatingBreakpoint = 1280;
+      const floatingBreakpoint = 1100;
       
       // Update floating mode
       const shouldFloat = currentWidth < floatingBreakpoint;

@@ -36,6 +36,7 @@ import {
   NVDesktopUploadPanel,
   NVBottomSheet,
 } from '@nova/ui';
+import Link from 'next/link';
 
 
 
@@ -143,17 +144,20 @@ export function LibraryControls({
         
         {showToggle ? (
           <div className={cn(
-            "shrink-0 flex items-center mx-2",
+            "shrink-0 h-full flex items-center px-2 gap-6 border-white/[0.05] border-r",
             isDesktopApp ? "pl-15" : ""
           )}>
-              <NVIconButton
-                icon={PanelLeft}
-                variant="ghost"
-                size="sm"
-                onClick={handleToggleSidebar}
-                className="app-no-drag"
-                title="메뉴 확장"
-              /> 
+            {!isDesktopApp?  (<h1 className="pl-2 text-2xl font-black bg-gradient-to-br from-indigo-400 via-indigo-500 to-cyan-400 bg-clip-text text-transparent">
+                <Link href="/">T</Link>
+            </h1> ): undefined}
+            <NVIconButton
+              icon={PanelLeft}
+              variant="ghost"
+              size="sm"
+              onClick={handleToggleSidebar}
+              className="app-no-drag"
+              title="메뉴 확장"
+            /> 
           </div>
         ):undefined}
             
