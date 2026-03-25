@@ -1,15 +1,15 @@
 {
   "name": "nova-desktop",
-  "productName": "NOVA Desktop",
+  "productName": "Trove",
   "version": "1.0.0",
-  "description": "Premium Asset Management Client for Nova Project",
+  "description": "Premium Asset Management Client for Trove",
   "main": "dist-electron/main.js",
   "private": true,
   "scripts": {
     "dev": "vite",
     "build": "tsc && vite build && electron-builder",
     "preview": "vite preview",
-    "postinstall": "node -e \"const p=require('path'),e=require('child_process');const plist=p.join(__dirname,'node_modules/electron/dist/Electron.app/Contents/Info.plist');e.execSync('/usr/libexec/PlistBuddy -c \\\"Set :CFBundleName NOVA Desktop\\\" '+plist);e.execSync('/usr/libexec/PlistBuddy -c \\\"Set :CFBundleDisplayName NOVA Desktop\\\" '+plist);\""
+    "postinstall": "node -e \"const p=require('path'),e=require('child_process');const plist=p.join(__dirname,'node_modules/electron/dist/Electron.app/Contents/Info.plist');e.execSync('/usr/libexec/PlistBuddy -c \\\"Set :CFBundleName Trove\\\" '+plist);e.execSync('/usr/libexec/PlistBuddy -c \\\"Set :CFBundleDisplayName Trove\\\" '+plist);\""
   },
   "dependencies": {
     "@nova/ui": "workspace:*",

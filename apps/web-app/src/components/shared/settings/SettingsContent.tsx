@@ -24,7 +24,7 @@ export function SettingsContent({ isMobile = false, onLogout }: SettingsContentP
 
       <div className={`px-5 ${!isMobile ? 'w-full mb-2' : ''}`}>
         < ProfileCard
-          name="NOVA Designer"
+          name="Trove Designer"
           email="user@nova.design"
         />
       </div>
@@ -70,7 +70,7 @@ export function SettingsContent({ isMobile = false, onLogout }: SettingsContentP
 
 
       <p className={`text-center text-xs text-slate-500 p-4 mt-4 ${!isMobile ? 'opacity-50' : ''}`}>
-        NOVA v1.1.0 {isMobile ? '(Mobile Optimized)' : '(Desktop View)'}
+        Trove v1.1.0 {isMobile ? '(Mobile Optimized)' : '(Desktop View)'}
       </p>
     </section>
   );

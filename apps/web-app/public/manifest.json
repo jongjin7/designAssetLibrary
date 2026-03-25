@@ -1,7 +1,7 @@
 {
   "id": "nova-design-assets",
-  "name": "NOVA Design Assets",
-  "short_name": "NOVA",
+  "name": "Trove",
+  "short_name": "Trove",
   "description": "Premium Design Asset Collector & Library",
   "start_url": "/library",
   "scope": "/",

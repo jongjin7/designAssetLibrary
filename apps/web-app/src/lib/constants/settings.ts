@@ -15,7 +15,7 @@ export const SETTINGS_GROUPS: SettingsGroup[] = [
   {
     title: '워크스페이스',
     items: [
-      { icon: LayoutGrid, label: '현재 워크스페이스', sub: 'Nova Core Design System' },
+      { icon: LayoutGrid, label: '현재 워크스페이스', sub: 'Trove Core Design System' },
       { icon: Database, label: '스토리지 현황', sub: '1.2 GB / 10.0 GB 사용 중 (12%)' },
     ],
   },

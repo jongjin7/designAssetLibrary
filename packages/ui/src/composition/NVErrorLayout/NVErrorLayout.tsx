@@ -21,7 +21,7 @@ export interface NVErrorLayoutProps {
  */
 export const NVErrorLayout: React.FC<NVErrorLayoutProps> = ({ 
   children,
-  title = "NOVA",
+  title = "Trove",
   statusLabel = "System Diagnostic",
   statusColorClass = "text-slate-500"
 }) => {

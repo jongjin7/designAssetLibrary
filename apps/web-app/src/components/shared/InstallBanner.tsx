@@ -82,7 +82,7 @@ export function InstallBanner({ showClose = true, className }: InstallBannerProp
         <Download size={18} />
       </div>
       <div className="flex-1 min-w-0">
-        <p className="text-[13px] font-semibold text-slate-50">NOVA 앱 설치</p>
+        <p className="text-[13px] font-semibold text-slate-50">Trove 앱 설치</p>
         <p className="text-[11px] text-slate-500 mt-0.5 whitespace-nowrap overflow-hidden text-ellipsis">
           {installMsg || (isPromptReady ? '홈 화면에 추가하여 빠르게 실행' : '설치 준비 중...')}
         </p>

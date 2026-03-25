@@ -10,14 +10,14 @@ export default function RootLayout({
   return (
     <html lang="ko">
       <head>
-        <title>NOVA | Design Asset Library</title>
+        <title>Trove | Design Asset Library</title>
         <meta name="description" content="Capture and organize design assets instantly." />
         <link rel="manifest" href="/manifest.json" />
         <meta name="theme-color" content="#0a0a0b" />
         <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, viewport-fit=cover, user-scalable=no" />
         <meta name="mobile-web-app-capable" content="yes" />
         <meta name="apple-mobile-web-app-capable" content="yes" />
-        <meta name="apple-mobile-web-app-title" content="NOVA" />
+        <meta name="apple-mobile-web-app-title" content="Trove" />
         <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
         <link rel="apple-touch-icon" href="/icon-192.png" />
         {/* beforeinstallprompt를 번들 로드 전에 최우선으로 캐치 */}

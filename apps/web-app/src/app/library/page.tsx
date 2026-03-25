@@ -67,7 +67,7 @@ export default function UnifiedLibraryPage() {
   if (isDesktop === null) {
      return (
        <div className="fixed inset-0 flex items-center justify-center bg-slate-950 z-[100]">
-         <NVLoadingState message="NOVA 라이브러리 준비 중..." />
+         <NVLoadingState message="Trove 라이브러리 준비 중..." />
        </div>
      );
   }

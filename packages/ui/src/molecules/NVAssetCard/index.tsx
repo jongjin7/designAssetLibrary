@@ -197,7 +197,7 @@ export const NVAssetCard: React.FC<NVAssetCardProps> = ({
               <div className="flex flex-col items-center gap-1">
                 <div className="flex items-center gap-1.5 opacity-80">
                   <div className="h-[1px] w-3 bg-slate-700" />
-                  <span className="text-[10px] font-bold tracking-[0.3em] text-slate-400 uppercase">NOVA</span>
+                  <span className="text-[10px] font-bold tracking-[0.3em] text-slate-400 uppercase">Trove</span>
                   <div className="h-[1px] w-3 bg-slate-700" />
                 </div>
                 <span className="text-[9px] text-slate-600 font-medium tracking-tight">Capture Asset Library</span>

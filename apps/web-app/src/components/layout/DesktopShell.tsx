@@ -86,7 +86,7 @@ export function DesktopShell({ children, onSearchToggle }: DesktopShellProps) {
         <div className="flex justify-between items-center">
           {!isSidebarCollapsed && (
             <h1 className="pl-5 text-2xl font-black bg-gradient-to-br from-indigo-500 to-cyan-500 bg-clip-text text-transparent tracking-tighter">
-              NOVA
+              Trove
             </h1>
           )}
 
@@ -171,7 +171,7 @@ export function DesktopShell({ children, onSearchToggle }: DesktopShellProps) {
                   "text-[13px] font-bold truncate",
                   pathname === '/profile' ? 'text-indigo-500' : 'text-slate-50'
                 )}>
-                  NOVA Designer
+                  Trove Designer
                 </span>
                 <span className="text-[11px] text-slate-500 truncate">user@nova.design</span>
               </div>

@@ -7,7 +7,7 @@ const VITE_DEV_SERVER_URL = process.env.VITE_DEV_SERVER_URL;
 
 function createWindow() {
   const win = new BrowserWindow({
-    title: 'NOVA Desktop',
+    title: 'Trove',
     width: 1200,
     height: 800,
     minWidth: 760,
@@ -73,7 +73,7 @@ function createWindow() {
   });
 }
 
-app.setName('NOVA Desktop');
+app.setName('Trove');
 
 app.whenReady().then(() => {
   createWindow();

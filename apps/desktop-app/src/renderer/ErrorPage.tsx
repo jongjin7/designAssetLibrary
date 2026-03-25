@@ -38,7 +38,7 @@ const ErrorPage: React.FC = () => {
 
         <div className="flex justify-between items-center px-2 mb-6">
           <h1 className="pl-3 text-2xl font-black text-white/20 tracking-tighter uppercase leading-none">
-            NOVA
+            Trove
           </h1>
         </div>
         

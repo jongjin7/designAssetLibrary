@@ -1,6 +1,6 @@
 {
   "manifest_version": 3,
-  "name": "NOVA Capture Tool",
+  "name": "Trove Capture",
   "version": "1.0.0",
   "action": {
     "default_popup": "index.html"
