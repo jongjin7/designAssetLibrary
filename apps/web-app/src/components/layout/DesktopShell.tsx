@@ -41,7 +41,7 @@ const SidebarToggleButton = ({className}: {className?: string}) => {
       size="sm"
       className={cn('app-no-drag', className)}
       onClick={handleToggleSidebar}
-      title="메뉴 확장"
+      title="메뉴 축소"
     />
   );
 };
@@ -123,7 +123,7 @@ export function DesktopShell({ children, onSearchToggle }: DesktopShellProps) {
             <div className={cn(
               "h-10 pl-4 pr-2 flex items-center justify-between border-b border-white/[0.05]",
             )}> 
-              <div className="bg-red-400/10"/>
+              <div />
               { !isSidebarCollapsed && <SidebarToggleButton /> }
             </div> 
           )}

@@ -145,7 +145,7 @@ export function LibraryControls({
           <div className={cn(
             "shrink-0 flex items-center mx-2 transition-opacity duration-300",
             !isSidebarCollapsed ? "opacity-0" : "opacity-100",
-            isDesktopApp && isSidebarCollapsed ? "pl-15" : ""
+            isDesktopApp ? "pl-15" : ""
           )}>
               <NVIconButton
                 icon={PanelLeft}
