@@ -111,17 +111,18 @@ export function DesktopShell({ children, onSearchToggle }: DesktopShellProps) {
         {/* Column 1: Sidebar (LNB) */}
         <div  
           className={cn(
-            "flex flex-col transition-all duration-300 ease-in-out z-50 overflow-hidden shrink-0 app-drag-region w-[260px]",
+            "flex flex-col transition-all duration-300 ease-in-out z-50 overflow-hidden shrink-0 app-drag-region w-[260px] bg-slate-950/60 backdrop-blur-2xl",
             // When collapsed, it should be transparent and not take up space in the layout
             isSidebarCollapsed 
               ? "bg-transparent border-transparent shadow-none translate-x-[-260px] -ml-[260px]" 
-              : "bg-slate-950/60 backdrop-blur-2xl border-r border-white/5 shadow-[4px_0_24px_rgba(0,0,0,0.5)]",
+              : "border-r border-white/5 shadow-[4px_0_24px_rgba(0,0,0,0.5)] translate-x-0 ml-0",
           )}
         >
           {/* Window Controls Space: Only visible when expanded in Desktop App */}
           {isDesktopApp && (
             <div className={cn(
-              "h-10 pl-4 pr-2 flex items-center justify-between border-b border-white/[0.05]",
+              "h-10 pl-4 pr-2 flex items-center justify-between border-b border-white/[0.05] transition-all duration-300 ease-in-out",
+              isSidebarCollapsed ? "opacity-0 invisible" : "opacity-100 visible delay-300"
             )}> 
               <div />
               { !isSidebarCollapsed && <SidebarToggleButton /> }

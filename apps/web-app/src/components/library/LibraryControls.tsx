@@ -90,7 +90,7 @@ export function LibraryControls({
     } else {
       const timer = setTimeout(() => {
         setShowToggle(false);
-      }, 200);
+      }, 150);
       return () => clearTimeout(timer);
     }
   }, [isSidebarCollapsed]);
@@ -143,8 +143,7 @@ export function LibraryControls({
         
         {showToggle ? (
           <div className={cn(
-            "shrink-0 flex items-center mx-2 transition-opacity duration-300",
-            !isSidebarCollapsed ? "opacity-0" : "opacity-100",
+            "shrink-0 flex items-center mx-2",
             isDesktopApp ? "pl-15" : ""
           )}>
               <NVIconButton
