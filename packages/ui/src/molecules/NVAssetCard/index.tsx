@@ -42,9 +42,12 @@ export const NVAssetCard: React.FC<NVAssetCardProps> = ({
   const [isLongPressing, setIsLongPressing] = React.useState(false);
   const [isLoaded, setIsLoaded] = React.useState(false);
   const [hasError, setHasError] = React.useState(false);
-  const [isZoomHovered, setIsZoomHovered] = React.useState(false);
+  const [isZoomMounted, setIsZoomMounted] = React.useState(false);
+  const [isZoomActive, setIsZoomActive] = React.useState(false);
   const timerRef = React.useRef<ReturnType<typeof setTimeout> | null>(null);
   const loadingTimeoutRef = React.useRef<ReturnType<typeof setTimeout> | null>(null);
+  const zoomEnterTimerRef = React.useRef<ReturnType<typeof setTimeout> | null>(null);
+  const zoomExitTimerRef = React.useRef<ReturnType<typeof setTimeout> | null>(null);
 
   // Safety timeout for image loading
   React.useEffect(() => {
@@ -71,6 +74,8 @@ export const NVAssetCard: React.FC<NVAssetCardProps> = ({
     
     return () => {
       if (loadingTimeoutRef.current) clearTimeout(loadingTimeoutRef.current);
+      if (zoomEnterTimerRef.current) clearTimeout(zoomEnterTimerRef.current);
+      if (zoomExitTimerRef.current) clearTimeout(zoomExitTimerRef.current);
     };
   }, [thumbnail, isLoaded, hasError, isLoading]);
 
@@ -291,13 +296,26 @@ export const NVAssetCard: React.FC<NVAssetCardProps> = ({
               size="sm"
               variant="ghost"
               className="bg-black/40 rounded-md text-white/70 hover:bg-black/80 hover:text-white backdrop-blur-md transition-all opacity-0 group-hover:opacity-100 flex-shrink-0 scale-95 hover:scale-105"
-              onMouseEnter={() => setIsZoomHovered(true)}
-              onMouseLeave={() => setIsZoomHovered(false)}
+              onMouseEnter={() => {
+                if (zoomExitTimerRef.current) clearTimeout(zoomExitTimerRef.current);
+                zoomEnterTimerRef.current = setTimeout(() => {
+                  setIsZoomMounted(true);
+                  // 다음 프레임에서 active로 전환해야 transition이 시작됨
+                  requestAnimationFrame(() => setIsZoomActive(true));
+                }, 300);
+              }}
+              onMouseLeave={() => {
+                if (zoomEnterTimerRef.current) clearTimeout(zoomEnterTimerRef.current);
+                setIsZoomActive(false);
+                zoomExitTimerRef.current = setTimeout(() => {
+                  setIsZoomMounted(false);
+                }, 200);
+              }}
               onClick={(e) => {
                 e.stopPropagation();
-                // We can open detail view on click
                 onTap?.(e);
-                setIsZoomHovered(false);
+                setIsZoomActive(false);
+                setIsZoomMounted(false);
               }}
               title="이미지 크게 보기"
             />
@@ -306,12 +324,17 @@ export const NVAssetCard: React.FC<NVAssetCardProps> = ({
       </div>
 
       {/* Enlarged Image Portal */}
-      {isZoomHovered && !isMobile && !hasError && !isLoading && thumbnail && typeof document !== 'undefined' && createPortal(
+      {isZoomMounted && !isMobile && !hasError && !isLoading && thumbnail && typeof document !== 'undefined' && createPortal(
         <div className="fixed inset-0 z-[9999] flex items-center justify-center pointer-events-none p-12">
-          <img 
-            src={thumbnail} 
-            alt={fileName} 
-            className="max-h-full max-w-full object-contain rounded-lg border border-white/10 shadow-[0_0_80px_rgba(0,0,0,0.8)] animate-in zoom-in-95 fade-in duration-200" 
+          <img
+            src={thumbnail}
+            alt={fileName}
+            className="max-h-full max-w-full object-contain rounded-lg border border-white/10 shadow-[0_0_80px_rgba(0,0,0,0.8)]"
+            style={{
+              transition: 'opacity 150ms ease, transform 150ms ease',
+              opacity: isZoomActive ? 1 : 0,
+              transform: isZoomActive ? 'scale(1)' : 'scale(0.98)',
+            }}
           />
         </div>,
         document.body
