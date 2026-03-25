@@ -8,6 +8,7 @@ import { NVLoadingState, NVAssetSelectionBar, NVAssetDetailSidebar, Asset, NVIco
 import { cn } from '@nova/lib/utils';
 import { extractColors } from '@nova/lib/colorExtractor';
 import { LibraryFilters } from '@nova/hooks/useLibraryFilters';
+import { useDesktopShell } from '../../../components/layout/DesktopShell';
 
 interface DesktopLibraryViewProps {
   assets: Asset[];
@@ -48,6 +49,8 @@ export default function DesktopLibraryView({
 }: DesktopLibraryViewProps) {
   
   const [isSidebarVisible, setIsSidebarVisible] = useState(false);
+  const shell = useDesktopShell();
+  const isDesktopApp = shell?.isDesktopApp ?? false;
 
   // Automatically show sidebar when a new asset is selected
   useEffect(() => {
@@ -169,16 +172,15 @@ export default function DesktopLibraryView({
         />
 
         {/* Floating Sidebar Toggle - Fixed to FAR RIGHT Edge of Browser */}
-        <div className="fixed top-2 h-8 right-1 z-50 flex items-center pl-2 border-l border-white/10">
+        <div className={cn(
+          "fixed h-8 right-6 z-50 flex items-center",
+          isDesktopApp ? "top-[3px]" : "top-[7px]"
+        )}>
            <NVIconButton 
              icon={isSidebarVisible ? PanelRightClose : PanelRightOpen}
              variant="ghost" 
              size="sm"
              onClick={handleToggleSidebar}
-             className={cn(
-               "transition-colors",
-               isSidebarVisible ? "text-indigo-400 hover:text-indigo-300" : "text-slate-500 hover:text-white"
-             )}
              title={isSidebarVisible ? "사이드바 닫기" : "사이드바 열기 (상세 정보)"}
            />
         </div>
@@ -211,7 +213,7 @@ export default function DesktopLibraryView({
       {/* Desktop Sidebar Inspector with Slide-in Transition */}
       <div 
         className={cn(
-          "h-full overflow-hidden transition-all duration-300 ease-in-out border-l border-white/[0.04] bg-[#0A0C13]",
+          "h-full overflow-hidden transition-all duration-300 ease-in-out border-l border-white/[0.04]",
           isSidebarVisible ? "w-[380px] opacity-100" : "w-0 opacity-0 border-l-0"
         )}
       >
@@ -222,7 +224,7 @@ export default function DesktopLibraryView({
           onUpdate={updateAsset} 
           onExtractAI={extractColors}
           onExtractBasic={extractColors}
-          className="w-[380px]"
+          isDesktopApp={isDesktopApp}
         />
       </div>
     </div>

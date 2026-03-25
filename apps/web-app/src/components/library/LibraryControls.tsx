@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { cn } from '@nova/lib/utils';
 import { NVGlassPanel, NVPopoverHeader, NVSearchBar } from '@nova/ui';
 import { FilterChips } from './FilterChips';
@@ -8,15 +8,19 @@ import { LibraryFilters } from '@nova/hooks/useLibraryFilters';
 import { 
   ArrowLeftRight, Plus,
   ChevronRight, ChevronLeft, 
+  ArrowLeftFromLine,
+  ArrowRightFromLine,
   Cloud, 
   Zap, 
   LayoutGrid, 
   Filter, 
   Pin,
   Image as ImageIcon,
+  Menu, PanelLeft
 } from 'lucide-react';
 import { ViewOptionsPopover } from './ViewOptionsPopover';
 import { processFileToAsset } from '@nova/lib/assetProcessor';
+import { useDesktopShell } from '../layout/DesktopShell';
 import { 
   NVPopover, 
   NVPopoverTrigger, 
@@ -32,6 +36,8 @@ import {
   NVDesktopUploadPanel,
   NVBottomSheet,
 } from '@nova/ui';
+
+
 
 interface LibraryControlsProps {
   searchText: string;
@@ -71,6 +77,23 @@ export function LibraryControls({
   onZoomChange,
 }: LibraryControlsProps) {
   const [isAddOpen, setIsAddOpen] = useState(false);
+  const shell = useDesktopShell();
+  const isSidebarCollapsed = shell?.isSidebarCollapsed ?? false;
+  const isDesktopApp = shell?.isDesktopApp ?? false;
+  const handleToggleSidebar = shell?.handleToggleSidebar ?? (() => {});
+
+  const [showToggle, setShowToggle] = useState(isSidebarCollapsed);
+
+  useEffect(() => {
+    if (isSidebarCollapsed) {
+      setShowToggle(true);
+    } else {
+      const timer = setTimeout(() => {
+        setShowToggle(false);
+      }, 200);
+      return () => clearTimeout(timer);
+    }
+  }, [isSidebarCollapsed]);
 
   const handleSearchChange = (value: string) => {
     onSearchChange(value);
@@ -111,17 +134,38 @@ export function LibraryControls({
     <div className={cn("flex flex-col w-full select-none", className)}>
       {/* Premium Desktop Toolbar (macOS Style) */}
       <header 
-        className="h-12 flex items-center justify-between px-4 bg-slate-950/40 backdrop-blur-2xl border-b border-white/[0.05] sticky top-0 z-30"
-        style={{ WebkitAppRegion: 'drag' } as any}
+        className={
+          cn("flex items-center justify-between px-4 bg-slate-950/40 backdrop-blur-2xl border-b border-white/[0.05] sticky top-0 z-30 no-select app-drag-region",
+            isDesktopApp ? "h-10" : "h-12"
+          )
+        }
       >
-        <div className="flex items-center gap-0 ml-2" style={{ WebkitAppRegion: 'no-drag' } as any}>
+        
+        {showToggle ? (
+          <div className={cn(
+            "shrink-0 flex items-center mx-2 transition-opacity duration-300",
+            !isSidebarCollapsed ? "opacity-0" : "opacity-100",
+            isDesktopApp && isSidebarCollapsed ? "pl-15" : ""
+          )}>
+              <NVIconButton
+                icon={PanelLeft}
+                variant="ghost"
+                size="sm"
+                onClick={handleToggleSidebar}
+                className="app-no-drag"
+                title="메뉴 확장"
+              /> 
+          </div>
+        ):undefined}
+            
+
+        <div className="flex items-center gap-1 ml-2 app-no-drag">
           <NVDialog open={isAddOpen} onOpenChange={setIsAddOpen}>
             <NVDialogTrigger asChild>
               <NVIconButton 
                 icon={Plus} 
                 variant="ghost" 
-                size="sm" 
-                className={cn("text-slate-400 hover:text-white transition-colors", isAddOpen && "text-white bg-white/10")} 
+                size="sm"
                 title="새 에셋 등록"
               />
             </NVDialogTrigger>
@@ -144,30 +188,30 @@ export function LibraryControls({
               />
             </NVDialogContent>
           </NVDialog>
-          <NVIconButton icon={ArrowLeftRight} variant="ghost" size="sm" className="text-slate-400 hover:text-white" onClick={onSearchToggle}
+          <NVIconButton icon={ArrowLeftRight} variant="ghost" size="sm" onClick={onSearchToggle}
             title="이동 (Cmd+F)" />
-          <NVIconButton icon={ChevronLeft} variant="ghost" size="sm" className="text-slate-600" />
-          <NVIconButton icon={ChevronRight} variant="ghost" size="sm" className="text-slate-600" />
+          <NVIconButton icon={ChevronLeft} variant="ghost" size="sm" />
+          <NVIconButton icon={ChevronRight} variant="ghost" size="sm" />
         </div>
 
         {/* Title */}
-        <div className="ml-4 text-sm font-semibold text-slate-300 tracking-tight whitespace-nowrap truncate min-w-0 flex-shrink">
+        <div className="ml-4 text-xs font-semibold text-slate-300 tracking-tight whitespace-nowrap truncate min-w-0 flex-shrink">
           현재 선택될 폴더
         </div>
 
         {/* Zoom Slider with Icons */}
-        <div className="flex-shrink-0 flex items-center gap-2 px-6" style={{ WebkitAppRegion: 'no-drag' } as any}>
-          <LayoutGrid size={14} className="text-slate-500 flex-shrink-0" />
+        <div className="flex items-center gap-3 px-6 app-no-drag">
+          <NVIconButton icon={LayoutGrid} variant="ghost" size="sm"  className="shrink-0"/>
           <NVSlider 
             value={zoom} 
             onChange={(v) => onZoomChange?.(v)} 
             size="sm" 
             className="w-24" 
           />
-          <ImageIcon size={14} className="text-slate-500 flex-shrink-0" />
+          <NVIconButton icon={ImageIcon} variant="ghost" size="sm" className="shrink-0" />
         </div>
 
-        <div className="flex-1 max-w-[320px] mx-auto px-4" style={{ WebkitAppRegion: 'no-drag' } as any}>
+        <div className="flex-1 max-w-[320px] mx-auto px-4 app-no-drag">
           <NVPopover open={isFilterOpen} onOpenChange={(open) => {
             if (open !== isFilterOpen) onFilterToggle();
           }}>
@@ -210,8 +254,8 @@ export function LibraryControls({
         {/* Right Actions */}
         <div 
           className={cn(
-            "flex items-center gap-0.5 pl-6 relative transition-all duration-300",
-            isSidebarVisible ? "pr-2" : "pr-10"
+            "flex items-center gap-1 pl-6 relative transition-all duration-300",
+            isSidebarVisible ? "pr-2" : "pr-13"
           )} 
           style={{ WebkitAppRegion: 'no-drag' } as any}
         >
@@ -235,15 +279,12 @@ export function LibraryControls({
             </NVPopoverContent>
           </NVPopover>
 
-          <NVIconButton icon={Pin} variant="ghost" size="sm" className="ml-1 text-slate-500 hover:text-slate-300" />
+          <NVIconButton icon={Pin} variant="ghost" size="sm"/>
         </div>
       </header>
-      
-
-      
 
       <div className="px-8 py-2 border-b border-white/[0.05]">
-        <FilterChips active={activeFilter} onChange={onFilterChange ?? (() => {})} />
+        <FilterChips active={activeFilter} size="sm" onChange={onFilterChange ?? (() => {})} />
       </div>
     </div>
   );
