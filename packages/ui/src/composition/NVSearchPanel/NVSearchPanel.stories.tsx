@@ -31,9 +31,7 @@ export const Basic: Story = {
     layout: 'basic',
   },
   render: (args) => (
-    <div className="w-[800px] flex justify-center py-10 bg-slate-900 rounded-3xl overflow-hidden relative">
-      <NVSearchPanel {...args} onClose={() => alert('Close clicked')} />
-    </div>
+    <NVSearchPanel {...args} onClose={() => alert('Close clicked')} />
   ),
 };
 
@@ -45,9 +43,7 @@ export const DesktopOptimized: Story = {
     layout: 'desktop',
   },
   render: (args) => (
-    <div className="w-[850px] flex justify-center py-10 bg-slate-900 rounded-3xl overflow-hidden relative border border-white/5">
-      <NVSearchPanel {...args} onClose={() => alert('Close clicked')} />
-    </div>
+    <NVSearchPanel {...args} onClose={() => alert('Close clicked')} />
   ),
 };
 
@@ -59,7 +55,7 @@ export const ToggleExample: Story = {
     const [isOpen, setIsOpen] = React.useState(true);
     
     return (
-      <div className="w-[1000px] h-[650px] flex flex-col bg-slate-950 rounded-[40px] overflow-hidden border border-white/5 shadow-2xl">
+      <div className="w-[1000px] h-[500px] flex flex-col bg-slate-950 rounded-[40px] overflow-hidden border border-white/5 shadow-2xl">
         {/* Mock App Header */}
         <header className="h-20 px-8 flex items-center justify-between border-b border-white/10 bg-white/5 backdrop-blur-2xl">
           <div className="flex items-center gap-4">
@@ -84,7 +80,6 @@ export const ToggleExample: Story = {
                 상세 검색
               </button>
             </div>
-            <NVIconButton icon={Search} size="md" variant="glass-primary" />
           </div>
         </header>
         

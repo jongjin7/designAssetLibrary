@@ -15,9 +15,9 @@ const sizeMap: Record<NVLogoSize, string> = {
   lg: 'text-3xl font-black tracking-[-0.05em]',
 };
 
-export const NVLogo: React.FC<NVLogoProps> = ({ 
-  size = 'md', 
-  className 
+export const NVLogo: React.FC<NVLogoProps> = ({
+  size = 'md',
+  className
 }) => {
   return (
     <span className={cn(

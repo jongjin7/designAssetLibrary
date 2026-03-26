@@ -12,10 +12,6 @@ export interface NVErrorLayoutProps {
   statusColorClass?: string;
 }
 
-/**
- * 에러 발생 시 데이터 연동이 불가능한 상황에서 사용하는 더미 레이아웃 셸.
- * 실제 LNB와 시각적으로 동일하지만 기능적으로는 정적인 상태를 유지하여 시스템 안정성을 보장합니다.
- */
 export const NVErrorLayout: React.FC<NVErrorLayoutProps> = ({ 
   children,
   title = "Trove",
@@ -29,14 +25,9 @@ export const NVErrorLayout: React.FC<NVErrorLayoutProps> = ({
       <nav 
         className="flex flex-col bg-white/[0.01] border-r border-white/5 transition-all duration-300 ease-in-out app-drag-region w-[260px]"
       >
-        <div className="h-12 shrink-0 flex items-center gap-2 pl-3.5">
-          {/* Window Controls Placeholder */}
-          <div className="w-3 h-3 rounded-full bg-white/5" />
-          <div className="w-3 h-3 rounded-full bg-white/5" />
-          <div className="w-3 h-3 rounded-full bg-white/5" />
-        </div>
+        <div className="h-10 shrink-0 flex items-center gap-2 pl-3.5" />
 
-        <div className="flex justify-between items-center px-2 mb-6">
+        <div className="flex items-center h-11 px-4 mb-6"> 
           <h1 className="pl-3 text-2xl font-black text-white/20 tracking-tighter uppercase leading-none">
             {title}
           </h1>
@@ -60,7 +51,7 @@ export const NVErrorLayout: React.FC<NVErrorLayoutProps> = ({
       {/* Column 2: Main Content Area */}
       <main className="flex-1 flex flex-col relative overflow-hidden bg-[#0B0E14]">
         {/* Header Bar */}
-        <div className="h-12 border-b border-white/5 flex items-center justify-between px-8 opacity-40">
+        <div className="h-10 border-b border-white/5 flex items-center justify-between px-8 opacity-40">
            <div className={`flex items-center gap-3 text-[10px] font-bold tracking-widest uppercase ${statusColorClass}`}>
               <div className={`w-1.5 h-1.5 rounded-full ${statusColorClass.replace('text-', 'bg-')} animate-pulse`} />
               {statusLabel}

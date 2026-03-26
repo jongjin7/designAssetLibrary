@@ -37,10 +37,6 @@ export interface NVErrorViewProps {
   fullScreen?: boolean;
 }
 
-/**
- * NOVA 디자인 시스템 통합 에러 뷰 컴포넌트.
- * 데스크톱 앱과 웹앱에서 공통으로 사용하며 일관된 프리미엄 에러 경험을 제공합니다.
- */
 export const NVErrorView: React.FC<NVErrorViewProps> = ({
   statusCode,
   title,

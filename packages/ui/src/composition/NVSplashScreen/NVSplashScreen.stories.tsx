@@ -7,6 +7,11 @@ const meta: Meta<typeof NVSplashScreen> = {
   component: NVSplashScreen,
   parameters: {
     layout: 'fullscreen',
+    docs: {
+      description: {
+        component: '브랜드 가이드라인을 준수하는 고해상도 스플래시 화면입니다. 앱 초기화 및 데이터 동기화 과정에서 사용자에게 브랜드 존재감을 전달합니다.',
+      },
+    },
   },
   tags: ['autodocs'],
 };
@@ -32,19 +37,19 @@ export const LoadingAssets: Story = {
 export const States: Story = {
   render: () => (
     <div className="flex flex-col gap-8 h-screen overflow-y-auto bg-black p-10">
-      <div className="relative h-64 border border-white/10 rounded-xl overflow-hidden shrink-0">
+      <div className="relative h-70 border border-white/10 rounded-xl overflow-hidden shrink-0">
         <span className="absolute top-4 left-4 z-[110] text-[10px] text-slate-500 font-bold uppercase">Syncing State</span>
         <NVSplashScreen mode="syncing" message="데이터 동기화 중..." className="absolute inset-0 z-0" />
       </div>
-      <div className="relative h-64 border border-white/10 rounded-xl overflow-hidden shrink-0">
+      <div className="relative h-70 border border-white/10 rounded-xl overflow-hidden shrink-0">
         <span className="absolute top-4 left-4 z-[110] text-[10px] text-slate-500 font-bold uppercase">Loading State</span>
         <NVSplashScreen mode="loading" message="에셋 로드 중..." className="absolute inset-0 z-0" />
       </div>
-      <div className="relative h-64 border border-emerald-500/20 rounded-xl overflow-hidden shrink-0">
+      <div className="relative h-70 border border-emerald-500/20 rounded-xl overflow-hidden shrink-0">
         <span className="absolute top-4 left-4 z-[110] text-[10px] text-emerald-500 font-bold uppercase">Success State</span>
         <NVSplashScreen mode="success" message="준비 완료" className="absolute inset-0 z-0" />
       </div>
-      <div className="relative h-64 border border-rose-500/20 rounded-xl overflow-hidden shrink-0">
+      <div className="relative h-70 border border-rose-500/20 rounded-xl overflow-hidden shrink-0">
         <span className="absolute top-4 left-4 z-[110] text-[10px] text-rose-500 font-bold uppercase">Error State</span>
         <NVSplashScreen mode="error" message="동기화 실패" className="absolute inset-0 z-0" />
       </div>

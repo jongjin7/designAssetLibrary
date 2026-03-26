@@ -17,10 +17,6 @@ interface NVSplashScreenProps {
   className?: string;
 }
 
-/**
- * 프로젝트 표준 가이드를 준수하는 스플래시 화면 컴포넌트입니다.
- * 300ms의 표준 애니메이션 타이밍과 rounded-xl 곡률 기반의 백그라운드 효과를 사용합니다.
- */
 export const NVSplashScreen: React.FC<NVSplashScreenProps> = ({
   message = "디자인 시스템 동기화 중...",
   mode = "syncing",

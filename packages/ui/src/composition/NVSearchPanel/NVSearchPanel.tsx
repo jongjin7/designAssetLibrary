@@ -31,10 +31,6 @@ export interface NVSearchPanelProps {
   onReset?: () => void;
 }
 
-/**
- * 에셋 라이브러리 전체에서 공통으로 사용되는 상세 검색 패널입니다.
- * 가로형 데스크탑 레이아웃과 세로형 기본 레이아웃을 모두 지원합니다.
- */
 export const NVSearchPanel: React.FC<NVSearchPanelProps> = ({ 
   onSearch, 
   onApply,

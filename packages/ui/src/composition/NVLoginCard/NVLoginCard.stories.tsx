@@ -8,6 +8,11 @@ const meta: Meta<typeof NVLoginCard> = {
   parameters: {
     layout: 'centered',
     backgrounds: { default: 'dark' },
+    docs: {
+      description: {
+        component: '인증 플로우의 핵심인 로그인 카드 컴포넌트입니다. OAuth 2.0 기반의 진입점과 상태별(로딩, 에러) 피드백을 제공합니다.',
+      },
+    },
   },
   tags: ['autodocs'],
 };

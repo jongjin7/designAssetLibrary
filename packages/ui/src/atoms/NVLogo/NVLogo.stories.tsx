@@ -8,6 +8,11 @@ const meta: Meta<typeof NVLogo> = {
   parameters: {
     layout: 'centered',
     backgrounds: { default: 'dark' },
+    docs: {
+      description: {
+        component: 'NOVA 브랜드 아이덴티티를 나타내는 공식 로고 컴포넌트입니다. 4가지 표준 사이즈를 지원하며 글래스모피즘 테마에 최적화되어 있습니다.',
+      },
+    },
   },
   tags: ['autodocs'],
 };

@@ -38,7 +38,7 @@ const meta: Meta = {
   parameters: {
     docs: {
       description: {
-        component: '실제 서비스에서 사용되는 다양한 팝업의 구성 예시입니다.',
+        component: '사용자 프로필, 시스템 알림, 보기 옵션 등 퀵 액세스 팝오버의 다양한 활용 사례를 보여주는 구성 예시입니다.',
       },
     },
   },

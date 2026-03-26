@@ -18,10 +18,6 @@ interface NVLoginCardProps {
   isInitialized?: boolean;
 }
 
-/**
- * 프로젝트 표준 디자인 가이드를 준수하는 로그인 박스 컴포넌트입니다.
- * 곡률(rounded-xl), 블러(lg), 폰트 및 버튼 규격이 고정되어 있습니다.
- */
 export const NVLoginCard: React.FC<NVLoginCardProps> = ({
   onGithubLogin,
   onGuestLogin,

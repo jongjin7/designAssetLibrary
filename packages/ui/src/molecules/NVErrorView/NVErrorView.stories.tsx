@@ -8,6 +8,11 @@ const meta: Meta<typeof NVErrorView> = {
   component: NVErrorView,
   parameters: {
     layout: 'fullscreen',
+    docs: {
+      description: {
+        component: 'HTTP 에러(404, 500) 및 네트워크 접속 오류 등 다양한 시스템 장애 상태를 시각화하고 복구 액션을 제공하는 전용 뷰 컴포넌트입니다.',
+      },
+    },
   },
   tags: ['autodocs'],
 };

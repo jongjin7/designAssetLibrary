@@ -4,15 +4,17 @@ import { NVErrorLayout } from './index';
 import { NVErrorView } from '../../molecules/NVErrorView';
 import { RotateCcw } from 'lucide-react';
 
-/**
- * 일렉트론 앱 데스크탑 전용 에러 페이지 스토리입니다.
- */
 const meta: Meta<typeof NVErrorLayout> = {
   title: 'Electron/ErrorLayout',
   component: NVErrorLayout,
   parameters: {
     layout: 'fullscreen',
     backgrounds: { default: 'dark' },
+    docs: {
+      description: {
+        component: '일렉트론 앱 데스크탑 전용 에러 페이지입니다.',
+      },
+    },
   },
   tags: ['autodocs'],
 };

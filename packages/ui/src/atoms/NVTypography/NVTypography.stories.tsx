@@ -7,6 +7,11 @@ const meta: Meta<typeof NVTypography> = {
   component: NVTypography,
   parameters: {
     layout: 'centered',
+    docs: {
+      description: {
+        component: '디자인 시스템의 타이포그래피 표준을 정의하는 컴포넌트입니다. 시맨틱 태그 지원과 6가지 표준 변형(variant)을 제공합니다.',
+      },
+    },
   },
   tags: ['autodocs'],
 };
