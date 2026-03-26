@@ -16,6 +16,8 @@ export * from './atoms/NVDialog';
 export * from './atoms/NVToast';
 export * from './atoms/NVPowerTooltip';
 export * from './atoms/NVSlider';
+export * from './atoms/NVTypography';
+export * from './atoms/NVLogo';
 
 // Molecules
 export * from './molecules/NVFilterGroup';
@@ -33,6 +35,7 @@ export { NVAssetDetailSheet, NVAssetDetailSidebar, NVAssetDetailContent } from '
 export * from './composition/NVSearchPanel';
 export * from './composition/NVDesktopUploadPanel';
 export * from './composition/NVErrorLayout';
+export { NVLoginCard } from './composition/NVLoginCard';
 
 // Foundations
 export * from './foundations/NVColorPalette';
