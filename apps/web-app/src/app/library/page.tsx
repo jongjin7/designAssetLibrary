@@ -12,7 +12,7 @@ import { useAssets } from '@nova/hooks/useAssets';
 import { useLibraryFilters } from '@nova/hooks/useLibraryFilters';
 import { useAssetSelection } from '@nova/hooks/useAssetSelection';
 import { SearchPalette } from '@nova/components/library/SearchPalette';
-import { NVLoadingState } from '@nova/ui';
+import { NVLoadingState, NVSplashScreen } from '@nova/ui';
 
 export default function UnifiedLibraryPage() {
 
@@ -64,12 +64,8 @@ export default function UnifiedLibraryPage() {
   }, [isDesktop, closeDetail, setSelectedIds, setIsSelectionMode, setIsSearchVisible, setIsFilterOpen, setSearchText, setFilter, handleFilterReset, setZoom]);
 
   // Prevent flash of wrong view before isDesktop is detected on mount
-  if (isDesktop === null) {
-     return (
-       <div className="fixed inset-0 flex items-center justify-center bg-slate-950 z-[100]">
-         <NVLoadingState message="Trove 라이브러리 준비 중..." />
-       </div>
-     );
+  if (isDesktop === null || (loading && assets.length === 0)) {
+     return <NVSplashScreen message="라이브러리 에셋 동기화 중..." mode="syncing" />;
   }
 
   const commonProps = {

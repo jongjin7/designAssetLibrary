@@ -7,24 +7,21 @@ import { useRouter } from 'next/navigation';
 
 export default function RootEntry() {
   const { user, loading } = useAuth();
-  const [timeoutFinished, setTimeoutFinished] = React.useState(false);
   const router = useRouter();
 
   useEffect(() => {
-    const timer = setTimeout(() => setTimeoutFinished(true), 1500); // 1.5초는 브랜드 로고 노출을 위한 최소 시간
-    return () => clearTimeout(timer);
-  }, []);
-
-  useEffect(() => {
-    // 1. 최소 대기 시간 경과 AND 2. 계정 상태 로딩 완료
-    if (timeoutFinished && !loading) {
-      if (user) {
-        router.replace('/library');
-      } else {
+    // 세션 확인이 완료된 상태에서 상위 경로 분기
+    if (!loading) {
+      if (!user) {
+        // 1. 로그인 안 된 유저: 지체 없이 로그인 화면으로 이동
         router.replace('/login');
+      } else {
+        // 2. 로그인 된 유저: 라이브러리 진입 (동기화 및 브랜딩은 라이브러리 페이지에서 수행)
+        router.replace('/library');
       }
     }
-  }, [timeoutFinished, loading, user, router]);
+  }, [loading, user, router]);
 
+  // 상위 도메인 분기 전까지는 브랜드 셸 유지
   return <NVSplashScreen message="디자인 시스템 동기화 중..." mode="syncing" />;
 }
