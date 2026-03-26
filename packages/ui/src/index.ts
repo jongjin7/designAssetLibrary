@@ -36,6 +36,7 @@ export * from './composition/NVSearchPanel';
 export * from './composition/NVDesktopUploadPanel';
 export * from './composition/NVErrorLayout';
 export { NVLoginCard } from './composition/NVLoginCard';
+export { NVSplashScreen } from './composition/NVSplashScreen';
 
 // Foundations
 export * from './foundations/NVColorPalette';
