@@ -1,8 +1,5 @@
-'use client';
-
-import React, { useState } from 'react';
-import { PanelLeft, Grid, Star, Clock, Monitor, Search } from 'lucide-react';
-import { NVIconButton } from '../../atoms/NVIconButton';
+import React from 'react';
+import { Grid, Star, Clock, Monitor, Search } from 'lucide-react';
 
 export interface NVErrorLayoutProps {
   /** 메인 컨텐츠 (NVErrorView 등) */
@@ -25,16 +22,12 @@ export const NVErrorLayout: React.FC<NVErrorLayoutProps> = ({
   statusLabel = "System Diagnostic",
   statusColorClass = "text-slate-500"
 }) => {
-  const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(false);
-
   return (
     <div className="min-h-screen flex h-screen bg-[#0B0E14] overflow-hidden text-slate-50 font-sans selection:bg-indigo-500/30">
       
-      {/* Column 1: Structural Sidebar (Dummy/Hardened) */}
+      {/* Column 1: Structural Sidebar (Minimalist) */}
       <nav 
-        className={`flex flex-col bg-white/[0.01] border-r border-white/5 transition-all duration-300 ease-in-out ${
-          isSidebarCollapsed ? 'w-21' : 'w-[260px]'
-        }`}
+        className="flex flex-col bg-white/[0.01] border-r border-white/5 transition-all duration-300 ease-in-out app-drag-region w-[260px]"
       >
         <div className="h-12 shrink-0 flex items-center gap-2 pl-3.5">
           {/* Window Controls Placeholder */}
@@ -44,18 +37,9 @@ export const NVErrorLayout: React.FC<NVErrorLayoutProps> = ({
         </div>
 
         <div className="flex justify-between items-center px-2 mb-6">
-          {!isSidebarCollapsed && (
-            <h1 className="pl-3 text-2xl font-black text-white/20 tracking-tighter uppercase leading-none">
-              {title}
-            </h1>
-          )}
-          <NVIconButton
-            icon={PanelLeft}
-            variant="ghost"
-            size="md"
-            className="opacity-20"
-            onClick={() => setIsSidebarCollapsed(!isSidebarCollapsed)}
-          /> 
+          <h1 className="pl-3 text-2xl font-black text-white/20 tracking-tighter uppercase leading-none">
+            {title}
+          </h1>
         </div>
         
         {/* Navigation - Locked/Disabled visual state */}
@@ -67,7 +51,7 @@ export const NVErrorLayout: React.FC<NVErrorLayoutProps> = ({
           ].map((item, i) => (
             <div key={i} className="flex items-center gap-3 px-4 py-2.5 rounded-xl text-sm font-medium text-slate-400">
               <item.icon size={18} strokeWidth={1.5} />
-              {!isSidebarCollapsed && <span>{item.label}</span>}
+              <span>{item.label}</span>
             </div>
           ))}
         </div>
