@@ -59,7 +59,7 @@ export const MobileSheet: StoryObj<typeof NVAssetDetailSheet> = {
   render: () => {
     const [asset, setAsset] = useState<Asset | null>(mockAsset);
     return (
-      <div className="flex flex-col items-center justify-center min-h-[500px] bg-slate-950 relative overflow-hidden p-10">
+      <div className="flex flex-col items-center justify-center h-[800px] bg-slate-950 relative overflow-hidden p-10">
         <div 
           className="absolute inset-0 bg-cover bg-center opacity-60" 
           style={{ backgroundImage: `url(${showcaseBg})` }} 
@@ -101,7 +101,7 @@ export const DesktopInspector: StoryObj<typeof NVAssetDetailSidebar> = {
   render: () => {
     const [asset, setAsset] = useState<Asset | null>(mockAsset);
     return (
-      <div className="flex h-[600px] bg-slate-950 overflow-hidden border border-white/10 rounded-2xl relative">
+      <div className="flex h-[750px] bg-slate-950 overflow-hidden border border-white/10 rounded-2xl relative">
         <div className="flex-1 p-10 flex flex-col gap-6 items-center justify-center border-r border-white/10 relative overflow-hidden">
           <div 
             className="absolute inset-0 bg-cover bg-center opacity-40 grayscale-[0.5]" 
@@ -132,6 +132,7 @@ export const DesktopInspector: StoryObj<typeof NVAssetDetailSidebar> = {
           </div>
         </div>
         <NVAssetDetailSidebar 
+          className='w-[380px]'
           asset={asset} 
           onClose={() => setAsset(null)}
           onExtractAI={async () => ['#FF3D00', '#FFD600', '#00E676']}
