@@ -40,7 +40,7 @@ export function InstallBanner({ showClose = true, className }: InstallBannerProp
   if (platform === 'ios-safari' && !isInstallable) {
     return (
       <NVCard 
-        className={`fixed bottom-20 left-3 right-3 z-90 flex items-center gap-3 !p-3 !bg-slate-950/90 !border-indigo-500/40 !backdrop-blur-xl shadow-[0_8px_32px_rgba(0,0,0,0.4),0_0_0_1px_rgba(99,102,241,0.1)] animate-in fade-in slide-in-from-bottom-4 duration-300 ${className || ''}`.trim()} 
+        className={`fixed bottom-[calc(var(--mobile-nav-height)+env(safe-area-inset-bottom,0px)+8px)] left-3 right-3 z-90 flex items-center gap-3 !p-3 !bg-slate-950/90 !border-indigo-500/40 !backdrop-blur-xl shadow-[0_8px_32px_rgba(0,0,0,0.4),0_0_0_1px_rgba(99,102,241,0.1)] animate-in fade-in slide-in-from-bottom-4 duration-300 ${className || ''}`.trim()} 
         hoverEffect={false}
       >
         <div className="w-9 h-9 flex-shrink-0 rounded-xl bg-indigo-500/15 flex items-center justify-center text-indigo-500">
@@ -75,7 +75,7 @@ export function InstallBanner({ showClose = true, className }: InstallBannerProp
 
   return (
     <NVCard 
-      className={`fixed bottom-20 left-3 right-3 z-90 flex items-center gap-3 !p-3 !bg-slate-950/90 !border-indigo-500/40 !backdrop-blur-xl shadow-[0_8px_32px_rgba(0,0,0,0.4),0_0_0_1px_rgba(99,102,241,0.1)] animate-in fade-in slide-in-from-bottom-4 duration-300 ${className || ''}`.trim()} 
+      className={`fixed bottom-[calc(var(--mobile-nav-height)+env(safe-area-inset-bottom,0px)+8px)] left-3 right-3 z-90 flex items-center gap-3 !p-3 !bg-slate-950/90 !border-indigo-500/40 !backdrop-blur-xl shadow-[0_8px_32px_rgba(0,0,0,0.4),0_0_0_1px_rgba(99,102,241,0.1)] animate-in fade-in slide-in-from-bottom-4 duration-300 ${className || ''}`.trim()} 
       hoverEffect={false}
     >
       <div className="w-9 h-9 flex-shrink-0 rounded-xl bg-indigo-500/15 flex items-center justify-center text-indigo-500">

@@ -15,7 +15,7 @@ export default function RootLayout({
         <meta name="description" content="Capture and organize design assets instantly." />
         <link rel="manifest" href="/manifest.json" />
         <meta name="theme-color" content="#0a0a0b" />
-        <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, viewport-fit=cover, user-scalable=no" />
+        <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, viewport-fit=cover, user-scalable=no, interactive-widget=resizes-visual" />
         <meta name="mobile-web-app-capable" content="yes" />
         <meta name="apple-mobile-web-app-capable" content="yes" />
         <meta name="apple-mobile-web-app-title" content="Trove" />

@@ -123,7 +123,7 @@ export default function MobileLibraryView({
       <NVAssetSelectionBar
         isMobile={true} 
         selectedCount={selectedIds.size}
-        className="fixed bottom-20 z-40 left-1/2 -translate-x-1/2"
+        className="fixed z-40 left-1/2 -translate-x-1/2 bottom-[calc(var(--mobile-nav-height)+env(safe-area-inset-bottom,0px)+8px)]"
         onCancel={() => {
           setSelectedIds(new Set());
           setIsSelectionMode(false);

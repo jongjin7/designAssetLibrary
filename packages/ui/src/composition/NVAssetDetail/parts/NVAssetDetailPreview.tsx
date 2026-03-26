@@ -18,10 +18,14 @@ export function NVAssetDetailPreview({ asset, isInspector = false, className = '
       className
     )}>
       {asset.thumbnail ? (
-        <img 
-          src={asset.thumbnail} 
-          alt={asset.fileName} 
-          className="w-full h-full object-contain" 
+        <img
+          src={asset.thumbnail}
+          alt={asset.fileName}
+          loading="lazy"
+          decoding="async"
+          onContextMenu={(e) => e.preventDefault()}
+          className="w-full h-full object-contain select-none"
+          style={{ WebkitTouchCallout: 'none' } as React.CSSProperties}
         />
       ) : (
         <div 

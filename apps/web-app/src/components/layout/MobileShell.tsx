@@ -25,7 +25,7 @@ export function MobileShell({
     <div className={`flex flex-col h-[100dvh] max-w-[760px] mx-auto relative bg-slate-950 overflow-hidden ${className}`}>
       {showNetwork && <NetworkStatus />}
       
-      <div className="flex-1 overflow-y-auto pb-[calc(72px+env(safe-area-inset-bottom,0px))] scroll-smooth overscroll-none">
+      <div className="flex-1 overflow-y-auto pb-[calc(var(--mobile-nav-height)+env(safe-area-inset-bottom,0px))] scroll-smooth overscroll-none">
         {children}
       </div>
 
