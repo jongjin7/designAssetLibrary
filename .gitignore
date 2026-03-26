@@ -18,3 +18,4 @@ build/
 storybook-static/
 .vscode/
 .idea/
+*.tsbuildinfo
