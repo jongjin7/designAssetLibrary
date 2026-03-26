@@ -6,7 +6,7 @@ import { useFolders } from '@nova/hooks/useFolders';
 import { FolderTree } from '@nova/components/navigation/FolderTree';
 import { Grid, Star, Clock, Menu, PanelLeftClose, PanelLeftOpen } from 'lucide-react';
 
-import { NVIconButton } from '@nova/ui';
+import { NVIconButton, NVLogo } from '@nova/ui';
 import { cn, checkIsDesktopApp } from '@nova/lib/utils';
 import Link from 'next/link';
 
@@ -130,13 +130,14 @@ export function DesktopShell({ children, onSearchToggle }: DesktopShellProps) {
           )}
           
           <div className={cn(
-            "flex justify-between items-center px-2 shrink-0 transition-all",
+            "flex items-center px-4 shrink-0 transition-all",
             isDesktopApp? "h-11" : "h-12"
           )}>
-            <h1 className="pl-2 text-2xl font-black bg-gradient-to-br from-indigo-400 via-indigo-500 to-cyan-400 bg-clip-text text-transparent tracking-tighter select-none">
-                <Link href="/">Trove</Link>
-            </h1>
+            <Link href="/library">
+              <NVLogo size="lg" className="pl-0" />
+            </Link>
             
+            <div className="flex-1" />
             {!isDesktopApp && !isSidebarCollapsed && <SidebarToggleButton />}
           </div>
           

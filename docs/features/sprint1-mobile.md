@@ -7,6 +7,7 @@ Sprint 1 focuses on building the **PWA-based mobile application** for instant de
 ## 1. Feature Goals
 
 - **Instant Camera Capture:** Mobile-optimized UI for rapid shooting.
+- **OAuth-First Entry:** Seamless authentication via GitHub for rapid workspace access.
 - **Client-Side Processing:** EXIF/GPS metadata removal and thumbnail generation in-browser.
 - **AI Classification:** Real-time extraction of 5 core colors, components, and objects.
 - **High-Performance Storage:** **OPFS (Origin Private File System)** for local image caching.

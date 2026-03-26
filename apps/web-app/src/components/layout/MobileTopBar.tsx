@@ -3,6 +3,7 @@
 import Link from 'next/link';
 
 import { cn } from '@nova/lib/utils';
+import { NVLogo } from '@nova/ui';
 
 interface MobileTopBarProps {
   rightElement?: React.ReactNode;
@@ -21,9 +22,7 @@ export function MobileTopBar({ rightElement, className, sticky = true, children 
     )}>
       <div className="flex items-center justify-between px-5 pt-[calc(10px+env(safe-area-inset-top,0px))] pb-2 border-b border-white/[0.08]">
         <Link href="/library" className="group">
-          <h1 className="text-2xl font-extrabold tracking-tighter bg-gradient-to-r from-indigo-500 to-cyan-400 bg-clip-text text-transparent group-hover:opacity-80 transition-opacity">
-            Trove
-          </h1>
+          <NVLogo size="lg" className="group-hover:opacity-80 transition-opacity" />
         </Link>
         {rightElement ? (
           <div className="flex items-center gap-3">

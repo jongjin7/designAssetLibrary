@@ -15,6 +15,30 @@ if (!shouldInitialize && process.env.NEXT_PUBLIC_USE_MOCK !== 'true') {
 // Export a getter or the client (as any if not initialized to avoid breaking imports)
 export const supabase = shouldInitialize 
   ? createClient(supabaseUrl, supabaseAnonKey) 
-  : ({} as any as SupabaseClient);
+  : ({
+      auth: {
+        getUser: async () => ({ data: { user: JSON.parse(localStorage.getItem('nova_mock_user') || 'null') }, error: null }),
+        getSession: async () => ({ data: { session: null }, error: null }),
+        onAuthStateChange: () => ({ data: { subscription: { unsubscribe: () => {} } } }),
+        signInWithPassword: async () => ({ data: {}, error: { message: 'Supabase not initialized' } }),
+        signInWithOAuth: async () => ({ data: {}, error: { message: 'Supabase not initialized' } }),
+        signOut: async () => ({ error: null }),
+      },
+      storage: {
+        from: () => ({
+          upload: async () => ({ data: { path: 'mock-path' }, error: null }),
+          getPublicUrl: () => ({ data: { publicUrl: '' } }),
+        }),
+      },
+      from: () => ({
+        select: () => ({
+          order: () => ({ data: [], error: null }),
+          eq: () => ({ single: () => ({ data: null, error: null }) }),
+        }),
+        insert: () => ({ select: () => ({ single: () => ({ data: {}, error: null }) }) }),
+        update: () => ({ eq: () => ({ error: null }) }),
+        delete: () => ({ eq: () => ({ error: null }) }),
+      }),
+    } as any as SupabaseClient);
 
 export const isSupabaseInitialized = !!shouldInitialize;

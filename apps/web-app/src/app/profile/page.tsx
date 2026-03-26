@@ -5,13 +5,15 @@ import { DesktopShell } from '../../components/layout/DesktopShell';
 import { MobileShell } from '../../components/layout/MobileShell';
 import { useIsDesktop } from '../../hooks/useIsDesktop';
 
-export default function ProfileSettingsPage() {
+import { useAuth } from '@nova/providers/AuthProvider';
 
+export default function ProfileSettingsPage() {
   const isDesktop = useIsDesktop();
+  const { signOut } = useAuth();
 
 
   // 공통 설정 화면
-  const content = <SettingsContent isMobile={!isDesktop} onLogout={() => console.log('Logout')} />;
+  const content = <SettingsContent isMobile={!isDesktop} onLogout={signOut} />;
 
   if (isDesktop) {
     // 데스크탑 레이아웃 쉘 (사이드바 포함)
