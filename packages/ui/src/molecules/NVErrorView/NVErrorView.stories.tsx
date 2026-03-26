@@ -4,7 +4,7 @@ import { RotateCcw, Home, Search, Layers } from 'lucide-react';
 import React from 'react';
 
 const meta: Meta<typeof NVErrorView> = {
-  title: 'Molecules/NVErrorView',
+  title: 'Molecules/ErrorView',
   component: NVErrorView,
   parameters: {
     layout: 'fullscreen',

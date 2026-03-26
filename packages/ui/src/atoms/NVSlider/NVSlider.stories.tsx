@@ -3,7 +3,7 @@ import { NVSlider } from './index';
 import React, { useState } from 'react';
 
 const meta: Meta<typeof NVSlider> = {
-  title: 'Atoms/NVSlider',
+  title: 'Atoms/Slider',
   component: NVSlider,
   parameters: {
     layout: 'centered',
