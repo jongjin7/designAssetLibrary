@@ -8,7 +8,7 @@ import { NVLoadingState, NVAssetSelectionBar, NVAssetDetailSidebar, Asset, NVIco
 import { cn } from '@nova/lib/utils';
 import { extractColors } from '@nova/lib/colorExtractor';
 import { LibraryFilters } from '@nova/hooks/useLibraryFilters';
-import { useDesktopShell } from '../../../components/layout/DesktopShell';
+import { useDesktopShell } from '../../../components/layout/DesktopShell/index';
 
 interface DesktopLibraryViewProps {
   assets: Asset[];

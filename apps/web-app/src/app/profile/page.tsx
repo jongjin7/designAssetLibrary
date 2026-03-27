@@ -1,7 +1,7 @@
 'use client';
 
 import { SettingsContent } from '../../components/shared/settings/SettingsContent';
-import { DesktopShell } from '../../components/layout/DesktopShell';
+import { DesktopShell } from '../../components/layout/DesktopShell/index';
 import { MobileShell } from '../../components/layout/MobileShell';
 import { useIsDesktop } from '../../hooks/useIsDesktop';
 

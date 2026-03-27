@@ -1,12 +1,19 @@
 'use client';
 
-import React, { createContext, useContext, useEffect, useState, ReactNode } from 'react';
+import React, { createContext, useContext, useEffect, useState, ReactNode, useMemo } from 'react';
 import { User, Session } from '@supabase/supabase-js';
 import { supabase, isSupabaseInitialized } from '../lib/supabase';
 import { useRouter, usePathname } from 'next/navigation';
 
+export interface UserProfile {
+  name: string;
+  email: string;
+  avatarUrl: string | null;
+}
+
 interface AuthContextType {
   user: User | null;
+  profile: UserProfile | null;
   loading: boolean;
   signOut: () => Promise<void>;
   signInAsGuest: () => void;
@@ -14,6 +21,7 @@ interface AuthContextType {
 
 const AuthContext = createContext<AuthContextType>({
   user: null,
+  profile: null,
   loading: true,
   signOut: async () => {},
   signInAsGuest: () => {},
@@ -24,6 +32,16 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const [loading, setLoading] = useState(true);
   const router = useRouter();
   const pathname = usePathname();
+
+  const profile = useMemo<UserProfile | null>(() => {
+    if (!user) return null;
+    const meta = user.user_metadata || {};
+    return {
+      name: meta.full_name || meta.name || meta.user_name || meta.nickname || meta.display_name || '사용자',
+      email: user.email || '',
+      avatarUrl: meta.avatar_url || meta.picture || meta.profile_image || null,
+    };
+  }, [user]);
 
   useEffect(() => {
     // 1. If Supabase is NOT initialized, we check for a mock session
@@ -87,7 +105,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   };
 
   return (
-    <AuthContext.Provider value={{ user, loading, signOut, signInAsGuest }}>
+    <AuthContext.Provider value={{ user, profile, loading, signOut, signInAsGuest }}>
       {children}
     </AuthContext.Provider>
   );

@@ -5,7 +5,7 @@ import DesktopLibraryView from '@nova/app/(desktop)/library/DesktopLibraryView';
 import MobileLibraryView from '@nova/app/(mobile)/library/MobileLibraryView';
 import { MobileShell } from '@nova/components/layout/MobileShell';
 import { usePathname } from 'next/navigation';
-import { DesktopShell } from '@nova/components/layout/DesktopShell';
+import { DesktopShell } from '@nova/components/layout/DesktopShell/index';
 
 import { useState, useEffect, useRef } from 'react';
 import { useAssets } from '@nova/hooks/useAssets';
