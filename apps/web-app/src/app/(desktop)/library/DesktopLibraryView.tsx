@@ -204,7 +204,8 @@ export default function DesktopLibraryView({
 
         {/* Selection Bar: Always centered in the main content area */}
         <NVAssetSelectionBar
-          theme="dark" 
+          theme="dark"
+          size="md"
           selectedCount={selectedIds.size}
           className="absolute bottom-10 z-40 left-1/2 -translate-x-1/2"
           onCancel={() => setSelectedIds(new Set())}
