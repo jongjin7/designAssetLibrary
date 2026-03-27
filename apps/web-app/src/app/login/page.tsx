@@ -1,15 +1,75 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
+import { useRouter } from 'next/navigation';
 import { useAuth } from "@nova/providers/AuthProvider";
 import { NVLogo, NVLoginCard, NVTypography } from '@nova/ui';
 import { supabase, isSupabaseInitialized } from '@nova/lib/supabase';
 import type { Provider } from '@supabase/supabase-js';
 
+const POPUP_WIDTH = 520;
+const POPUP_HEIGHT = 640;
+
 export default function LoginPage() {
   const { signInAsGuest } = useAuth();
+  const router = useRouter();
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const popupRef = useRef<Window | null>(null);
+  const pollRef = useRef<ReturnType<typeof setInterval> | null>(null);
+
+  const stopPolling = () => {
+    if (pollRef.current) {
+      clearInterval(pollRef.current);
+      pollRef.current = null;
+    }
+  };
+
+  // 팝업에서 보내는 메시지 수신
+  useEffect(() => {
+    const onMessage = (event: MessageEvent) => {
+      if (event.origin !== window.location.origin) return;
+      if (event.data?.type === 'OAUTH_SUCCESS') {
+        stopPolling();
+        popupRef.current?.close();
+        router.push('/library');
+      } else if (event.data?.type === 'OAUTH_ERROR') {
+        stopPolling();
+        popupRef.current?.close();
+        setError(event.data.error || '로그인 중 오류가 발생했습니다.');
+        setLoading(false);
+      }
+    };
+    window.addEventListener('message', onMessage);
+    return () => {
+      window.removeEventListener('message', onMessage);
+      stopPolling();
+    };
+  }, [router]);
+
+  const openPopup = (url: string) => {
+    const left = window.screenX + (window.outerWidth - POPUP_WIDTH) / 2;
+    const top = window.screenY + (window.outerHeight - POPUP_HEIGHT) / 2;
+    const popup = window.open(
+      url,
+      'oauth_popup',
+      `width=${POPUP_WIDTH},height=${POPUP_HEIGHT},left=${left},top=${top},toolbar=no,menubar=no`
+    );
+    if (!popup) {
+      setError('팝업이 차단되었습니다. 브라우저 팝업 차단을 해제해주세요.');
+      setLoading(false);
+      return;
+    }
+    popupRef.current = popup;
+
+    // 팝업이 메시지 없이 닫히면 (사용자가 직접 닫거나 실패) 로딩 해제
+    pollRef.current = setInterval(() => {
+      if (popup.closed) {
+        stopPolling();
+        setLoading(false);
+      }
+    }, 500);
+  };
 
   // Google, Kakao: Supabase 네이티브 OAuth
   const handleOAuthLogin = async (provider: Extract<Provider, 'google' | 'kakao'>) => {
@@ -20,21 +80,21 @@ export default function LoginPage() {
     setLoading(true);
     setError(null);
 
-    // Kakao는 이메일 스코프를 명시해야 계정 이메일을 받을 수 있음
     const scopes: Partial<Record<typeof provider, string>> = {
       kakao: 'profile_nickname profile_image account_email',
     };
 
     try {
-      const { error: loginError } = await supabase.auth.signInWithOAuth({
+      const { data, error: loginError } = await supabase.auth.signInWithOAuth({
         provider,
         options: {
           redirectTo: `${window.location.origin}/auth/callback`,
-          skipBrowserRedirect: false,
+          skipBrowserRedirect: true,
           scopes: scopes[provider],
         },
       });
       if (loginError) throw loginError;
+      if (data.url) openPopup(data.url);
     } catch (err: any) {
       setError(err.message || '로그인 중 오류가 발생했습니다.');
       setLoading(false);
@@ -57,7 +117,7 @@ export default function LoginPage() {
       redirect_uri: `${window.location.origin}/api/auth/naver/callback`,
       state,
     });
-    window.location.href = `https://nid.naver.com/oauth2.0/authorize?${params}`;
+    openPopup(`https://nid.naver.com/oauth2.0/authorize?${params}`);
   };
 
   return (
