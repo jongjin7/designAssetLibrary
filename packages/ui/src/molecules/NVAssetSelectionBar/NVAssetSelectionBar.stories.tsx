@@ -45,13 +45,14 @@ export const LightTheme: Story = {
   parameters: {
     docs: {
       description: {
-        story: '밝은 테마 환경에 맞춘 유리판 스타일입니다.',
+        story: '밝은 테마 환경에 최적화된 고대비 배지와 유리판 스타일입니다.',
       },
     },
   },
   args: {
     theme: 'light',
     selectedCount: 5,
+    className: 'w-[420px]',
   },
 };
 
@@ -59,27 +60,30 @@ export const DarkTheme: Story = {
   parameters: {
     docs: {
       description: {
-        story: '어두운 테마 환경에 맞춘 다크 글래스 스타일입니다.',
+        story: '어두운 테마 환경에서 발광하는 배지와 다크 글래스 스타일입니다.',
       },
     },
   },
   args: {
     theme: 'dark',
     selectedCount: 12,
+    className: 'w-[420px]',
   },
 };
+
 export const Mobile: Story = {
   parameters: {
     docs: {
       description: {
-        story: '모바일 환경에서 화면 하단에 고정되는 레이아웃입니다. 너비가 화면에 맞게 조정됩니다.',
+        story: '모바일 환경에서 화면 하단에 플로팅되는 레이아웃입니다. 화면 너비에 맞춰 유연하게 조정됩니다.',
       },
     },
   },
   args: {
     isMobile: true,
-    theme: 'light',
-    className: 'fixed bottom-8 left-1/2 -translate-x-1/2 w-[92%] max-w-sm',
+    theme: 'dark',
+    selectedCount: 8,
+    className: 'fixed bottom-12 left-1/2 -translate-x-1/2',
   },
 };
 
@@ -87,12 +91,13 @@ export const SingleSelected: Story = {
   parameters: {
     docs: {
       description: {
-        story: '에셋이 하나만 선택되었을 때의 표시 형태입니다.',
+        story: '에셋이 하나만 선택되었을 때의 간결한 표시 형태입니다.',
       },
     },
   },
   args: {
     selectedCount: 1,
     theme: 'light',
+    className: 'w-[360px]',
   },
 };

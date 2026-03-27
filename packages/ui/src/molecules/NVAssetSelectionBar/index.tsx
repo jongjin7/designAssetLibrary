@@ -4,17 +4,25 @@ import { NVButton } from '../../atoms/NVButton';
 import { NVGlassPanel } from '../../atoms/NVGlassPanel';
 
 interface NVAssetSelectionBarProps {
+  /** 선택된 에셋의 총 개수 */
   selectedCount: number;
+  /** 선택 취소(해제) 시 호출되는 콜백 */
   onCancel: () => void;
+  /** 선택된 에셋들을 이동할 때 호출되는 콜백 */
   onMove?: () => void;
+  /** 선택된 에셋들을 삭제할 때 호출되는 콜백 */
   onDelete: () => void;
+  /** 모바일 환경 레이아웃 여부 */
   isMobile?: boolean;
+  /** 테마 테마 (기본: 'light') */
   theme?: 'light' | 'dark';
+  /** 추가 스타일 클래스 */
   className?: string;
 }
 
 /**
- * NVAssetSelectionBar provides actions for multiple selected assets.
+ * 다수의 에셋을 선택했을 때 나타나는 일괄 관리 도구 바입니다.
+ * 브랜드 아이덴티티가 강조된 배지와 테마별 최적화된 명도 대비를 제공합니다.
  */
 export function NVAssetSelectionBar({
   selectedCount,
@@ -27,39 +35,48 @@ export function NVAssetSelectionBar({
 }: NVAssetSelectionBarProps) {
   if (selectedCount === 0) return null;
 
-  const isLight = theme === 'light';
+  const isDark = theme === 'dark';
 
   return (
     <NVGlassPanel
       theme={theme}
+      blur="xl"
       className={cn(
-        "w-[340px] flex items-center justify-between transition-all duration-700 animate-in slide-in-from-top-4 !p-2",
+        "flex items-center justify-between transition-all duration-500 animate-in fade-in slide-in-from-bottom-2 !p-2 border-white/10",
+        isMobile ? "w-[calc(100%-40px)] rounded-2xl" : "w-[380px] rounded-3xl",
         className
       )}
     >
-      {/* Selected Indicator */}
-      <div className="flex items-center gap-0.5 shrink-0 ">
-        <span className="relative rounded-full flex items-center justify-center bg-white/20 w-6 h-6 tracking-tight font-semibold">
+      {/* Selected Indicator Section: Organic Information Unit */}
+      <div className="flex items-center gap-2 pl-2.5 shrink-0">
+        <span className={cn(
+          "relative rounded-full flex items-center justify-center w-[22px] h-[22px] text-[10px] font-black tracking-tighter bg-indigo-500 text-white transition-all duration-300",
+          isDark && "shadow-[0_0_12px_rgba(99,102,241,0.4)]"
+        )}>
           {selectedCount}
         </span>
-        <span className="tracking-tight text-sm text-slate-600 text-semibold">
-          개 항목 선택
+        <span className={cn(
+          "tracking-tight text-sm font-medium transition-colors duration-300",
+          isDark ? "text-slate-300" : "text-slate-600"
+        )}>
+          선택한 항목
         </span>
       </div>
       
-      {/* Action Buttons */}
-      <div className="flex shrink-0 items-center gap-1 ml-6">
+      {/* Action Buttons Section */}
+      <div className="flex shrink-0 items-center gap-1.5 ml-4">
         <NVButton 
-          variant='ghost'
+          variant={isDark ? 'ghost' : 'neutral'}
           size="sm"
           onClick={onCancel}
+          className={isDark ? "text-slate-400 hover:text-white" : ""}
         >
           취소
         </NVButton>
         
         {onMove && (
           <NVButton 
-            variant="glass"
+            variant={isDark ? "glass" : "secondary"}
             size="sm"
             onClick={onMove}
           >
@@ -68,11 +85,11 @@ export function NVAssetSelectionBar({
         )}
         
         <NVButton 
-          variant="danger"
+          variant={isDark ? "glass-danger" : "danger"}
           size="sm"
           onClick={onDelete}
         >
-          {isMobile ? '삭제' : '항목 삭제'}
+          삭제
         </NVButton>
       </div>
     </NVGlassPanel>

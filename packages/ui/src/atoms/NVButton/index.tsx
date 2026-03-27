@@ -32,7 +32,7 @@ export const NVButton: React.FC<NVButtonProps> = ({
     ghost: 'bg-transparent text-slate-500 hover:text-slate-50 hover:bg-white/5',
     glass: 'bg-gray-400/10 backdrop-blur-md border border-gray-400/20 text-gray-400 hover:bg-gray-400/40 hover:text-white hover:border-gray-400',
     'glass-primary': 'bg-indigo-500/10 backdrop-blur-md border border-indigo-500/20 text-indigo-400 hover:bg-indigo-500/40 hover:text-white hover:border-indigo-500',
-    'glass-danger': 'bg-rose-500/5 backdrop-blur-md border border-rose-500/20 text-rose-400 hover:bg-rose-500/40 hover:text-white hover:border-rose-500'
+    'glass-danger': 'bg-rose-500/10 backdrop-blur-md border border-rose-500/20 text-rose-400 hover:bg-rose-500/40 hover:text-white hover:border-rose-500'
   }; 
 
   const sizes = {
