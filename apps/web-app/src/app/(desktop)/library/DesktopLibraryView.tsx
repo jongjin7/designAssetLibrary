@@ -186,14 +186,6 @@ export default function DesktopLibraryView({
         </div>
 
         <div className="flex-1 overflow-y-auto p-8 relative cursor-default">
-          <NVAssetSelectionBar
-            theme="dark" 
-            selectedCount={selectedIds.size}
-            className="fixed bottom-4 z-40 left-[calc(50%-180px)] -translate-x-1/2"
-            onCancel={() => setSelectedIds(new Set())}
-            onMove={() => {}}
-            onDelete={handleBulkDelete}
-          />
 
           <div className="mx-auto">
             {loading ? (
@@ -209,6 +201,16 @@ export default function DesktopLibraryView({
             )}
           </div>
         </div>
+
+        {/* Selection Bar: Always centered in the main content area */}
+        <NVAssetSelectionBar
+          theme="dark" 
+          selectedCount={selectedIds.size}
+          className="absolute bottom-10 z-40 left-1/2 -translate-x-1/2"
+          onCancel={() => setSelectedIds(new Set())}
+          onMove={() => {}}
+          onDelete={handleBulkDelete}
+        />
       </div>
 
       {/* Desktop Sidebar Inspector with Slide-in Transition */}

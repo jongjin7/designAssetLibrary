@@ -42,8 +42,8 @@ export function NVAssetSelectionBar({
       theme={theme}
       blur="xl"
       className={cn(
-        "flex items-center justify-between transition-all duration-500 animate-in fade-in slide-in-from-bottom-2 !p-2 border-white/10",
-        isMobile ? "w-[calc(100%-40px)] rounded-2xl" : "w-[380px] rounded-3xl",
+        "flex items-center justify-between transition-all duration-500 animate-in fade-in slide-in-from-bottom-2 border-white/10",
+        isMobile ? "w-[calc(100%-40px)] rounded-2xl !p-2" : "!p-3 w-[380px] rounded-3xl",
         className
       )}
     >
@@ -64,20 +64,23 @@ export function NVAssetSelectionBar({
       </div>
       
       {/* Action Buttons Section */}
-      <div className="flex shrink-0 items-center gap-1.5 ml-4">
+      <div className="flex shrink-0 items-center gap-2 ml-auto pr-1">
         <NVButton 
-          variant={isDark ? 'ghost' : 'neutral'}
-          size="sm"
+          variant="ghost"
+          size={isMobile ? "sm" : "md"}
           onClick={onCancel}
-          className={isDark ? "text-slate-400 hover:text-white" : ""}
+          className={cn(
+            "transition-colors duration-200",
+            isDark ? "text-slate-200 hover:text-white hover:bg-white/10" : "text-slate-500 hover:text-slate-800"
+          )}
         >
           취소
         </NVButton>
         
         {onMove && (
           <NVButton 
-            variant={isDark ? "glass" : "secondary"}
-            size="sm"
+            variant={isDark ? "neutral" : "secondary"}
+            size={isMobile ? "sm" : "md"}
             onClick={onMove}
           >
             이동
@@ -86,7 +89,7 @@ export function NVAssetSelectionBar({
         
         <NVButton 
           variant={isDark ? "glass-danger" : "danger"}
-          size="sm"
+          size={isMobile ? "sm" : "md"}
           onClick={onDelete}
         >
           삭제
