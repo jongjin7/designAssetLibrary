@@ -46,46 +46,48 @@ export const NVLoginCard: React.FC<NVLoginCardProps> = ({
       <div className="space-y-8">
         <NVLoginCardHeader />
 
-        <div className="space-y-3">
-          {/* 주요 소셜 로그인 (Primary) */}
-          {onGoogleLogin && <NVLoginSocialButton provider="google" onClick={onGoogleLogin} disabled={disabled} />}
-          {onKakaoLogin && <NVLoginSocialButton provider="kakao" onClick={onKakaoLogin} disabled={disabled} />}
-          {onNaverLogin && <NVLoginSocialButton provider="naver" onClick={onNaverLogin} disabled={disabled} />}
+        <div className="">
+          <div className="space-y-3 brightness-60 hover:opacity-100 hover:brightness-100 transition-all duration-300">
+            {/* 주요 소셜 로그인 (Primary) */}
+            {onGoogleLogin && <NVLoginSocialButton provider="google" onClick={onGoogleLogin} disabled={disabled} />}
+            {onKakaoLogin && <NVLoginSocialButton provider="kakao" onClick={onKakaoLogin} disabled={disabled} />}
+            {onNaverLogin && <NVLoginSocialButton provider="naver" onClick={onNaverLogin} disabled={disabled} />}
 
-          {/* 보조 소셜 로그인 (Secondary) - 핸들러가 있을 때만 표시 */}
-          {(onFacebookLogin || onGithubLogin) && (
-            <div className="space-y-4">
-              <div className="relative py-4 flex items-center">
-                <div className="flex-grow border-t border-white/5"></div>
-                <span className="flex-shrink mx-4 text-slate-600 text-[10px] uppercase tracking-widest font-semibold text-center leading-none">
-                  또는
-                </span>
-                <div className="flex-grow border-t border-white/5"></div>
-              </div>
+            {/* 보조 소셜 로그인 (Secondary) - 핸들러가 있을 때만 표시 */}
+            {(onFacebookLogin || onGithubLogin) && (
+              <div className="space-y-4">
+                <div className="relative py-4 flex items-center">
+                  <div className="flex-grow border-t border-white/5"></div>
+                  <span className="flex-shrink mx-4 text-slate-600 text-[10px] uppercase tracking-widest font-semibold text-center leading-none">
+                    또는
+                  </span>
+                  <div className="flex-grow border-t border-white/5"></div>
+                </div>
 
-              <div className="grid grid-cols-2 gap-3">
-                {onFacebookLogin && (
-                  <NVLoginSocialButton provider="facebook" onClick={onFacebookLogin} disabled={disabled} isSecondary />
-                )}
-                {onGithubLogin && (
-                  <NVLoginSocialButton provider="github" onClick={onGithubLogin} disabled={disabled} isSecondary />
-                )}
+                <div className="grid grid-cols-2 gap-3">
+                  {onFacebookLogin && (
+                    <NVLoginSocialButton provider="facebook" onClick={onFacebookLogin} disabled={disabled} isSecondary />
+                  )}
+                  {onGithubLogin && (
+                    <NVLoginSocialButton provider="github" onClick={onGithubLogin} disabled={disabled} isSecondary />
+                  )}
+                </div>
               </div>
-            </div>
-          )}
+            )}
+          </div>
 
           {/* 게스트 액션 */}
-          <div className="pt-4">
+          <div className="pt-6">
             <NVButton
               variant="ghost"
               onClick={onGuestLogin}
               size="md"
-              className="w-full text-slate-400 hover:text-white transition-colors"
+              className="w-full "
               disabled={loading}
             >
               <div className="flex items-center justify-center gap-2">
-                <Sparkles size={14} className="text-indigo-400/70" />
-                <NVTypography variant="caption">로그인 없이 둘러보기</NVTypography>
+                <Sparkles size={14} />
+                <span className="text-xs">게스트로 둘러보기</span>
               </div>
             </NVButton>
           </div>
