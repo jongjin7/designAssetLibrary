@@ -187,9 +187,9 @@ export default function DesktopLibraryView({
 
         <div className="flex-1 overflow-y-auto p-8 relative cursor-default">
 
-          <div className="mx-auto">
+          <div className="mx-auto h-full">
             {loading ? (
-              <NVLoadingState className="py-20" />
+              <NVLoadingState className="h-full" />
             ) : (
               <AssetGrid 
                 assets={filteredAssets} 

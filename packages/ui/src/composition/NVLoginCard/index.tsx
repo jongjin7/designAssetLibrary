@@ -46,7 +46,7 @@ export const NVLoginCard: React.FC<NVLoginCardProps> = ({
       <div className="space-y-8">
         <NVLoginCardHeader />
 
-        <div className="">
+        <div className="px-4">
           <div className="space-y-3 brightness-60 hover:opacity-100 hover:brightness-100 transition-all duration-300">
             {/* 주요 소셜 로그인 (Primary) */}
             {onGoogleLogin && <NVLoginSocialButton provider="google" onClick={onGoogleLogin} disabled={disabled} />}

@@ -17,7 +17,8 @@ export function AssetGrid({ assets, onAssetTap, selectedIds, onSelect, isMobile,
       <NVEmptyState
         icon="📭"
         title="에셋이 없습니다"
-        description="카메라로 디자인 자산을 수집해 보세요"
+        description="디자인 자산을 수집해 보세요"
+        className="h-full"
       />
     );
   }

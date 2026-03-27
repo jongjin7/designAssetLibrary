@@ -134,7 +134,7 @@ export default function MobileLibraryView({
         onDelete={handleBulkDelete}
       />
       
-      <main className="px-5 py-4">
+      <main className="h-[calc(100%-128px)] px-5 py-4">
         {loading ? (
           <NVLoadingState fullHeight />
         ) : (
