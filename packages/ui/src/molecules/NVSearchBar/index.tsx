@@ -71,13 +71,13 @@ export const NVSearchBar: React.FC<NVSearchBarProps> = ({
       />
       
       <NVButton
-        variant={isFilterActive ? "glass-primary" : "glass"}
+        variant={isFilterActive ? "secondary" : "neutral"}
         size={size} 
         onClick={(e: React.MouseEvent) => {
           e.stopPropagation();
           onFilterClick?.(e);
         }}
-        className={cn('!border-transparent',className)} 
+        className={cn(className)} 
         
       >
         상세 검색
