@@ -44,10 +44,10 @@ export const NVSplashScreen: React.FC<NVSplashScreenProps> = ({
           <NVLogo size="lg" />
         </div>
         
-        <div className="space-y-6 text-center max-w-[280px]">
+        <div className="space-y-6 text-center max-w-[400px]">
             <div className="flex flex-col items-center space-y-4">
                 <NVLoadingState mode={mode} message={message} />
-                <NVTypography variant="secondary" className="text-slate-600 text-[10px] tracking-[0.2em] uppercase text-center opacity-70 leading-relaxed">
+                <NVTypography variant="secondary" className="text-slate-600 text-xs tracking-[0.2em] uppercase text-center opacity-70 leading-relaxed">
                   {brandDescription}
                 </NVTypography>
             </div>

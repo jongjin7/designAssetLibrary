@@ -168,7 +168,7 @@ export const NVAssetCard: React.FC<NVAssetCardProps> = ({
               setIsLoaded(true);
             }}
             className={cn(
-              "w-full h-auto object-contain transition-all duration-700 ease-out group-hover:scale-105",
+              "w-full h-auto object-contain transition-all duration-700 ease-out group-hover:scale-105 rounded-lg",
               isLoaded ? "opacity-100 scale-100" : "opacity-0 scale-100"
             )} 
           />
@@ -220,13 +220,18 @@ export const NVAssetCard: React.FC<NVAssetCardProps> = ({
       </div>
 
       {/* 2. Seamless Overlay: No visible box boundaries */}
-      <div className={cn(
-        "absolute inset-0 flex flex-col justify-between p-2.5 transition-all duration-300",
-        "bg-gradient-to-b from-black/20 via-transparent to-black/50",
-        (!hasError && !isLoading) && "group-hover:from-black/40 group-hover:to-black/70",
-        "opacity-100",
-        (hasError || isLoading) && "from-transparent to-black/20 group-hover:from-transparent group-hover:to-black/20"
-      )}>
+      <div className="absolute inset-0 flex flex-col justify-between p-2.5">
+        {/* Gradient base layer */}
+        <div className={cn(
+          "absolute inset-0 pointer-events-none transition-opacity duration-500 ease-in-out",
+          (hasError || isLoading)
+            ? "bg-gradient-to-b from-transparent to-black/20 opacity-100"
+            : "bg-gradient-to-b from-black/20 via-transparent to-black/50 opacity-100 group-hover:opacity-0"
+        )} />
+        {/* Gradient hover layer */}
+        {(!hasError && !isLoading) && (
+          <div className="absolute inset-0 pointer-events-none bg-gradient-to-b from-black/40 via-transparent to-black/70 opacity-0 group-hover:opacity-100 transition-opacity duration-500 ease-in-out" />
+        )}
         {/* Top: Minimal Floating Tags/Actions - Hidden on Error */}
         {!hasError && !isLoading && (
           <div className={cn(
