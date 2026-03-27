@@ -1,7 +1,7 @@
 import React from 'react';
 
 interface NVButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
-  variant?: 'primary' | 'secondary' | 'vivid' | 'danger' | 'ghost' | 'glass' | 'glass-primary' | 'glass-danger';
+  variant?: 'primary' | 'secondary' | 'neutral' | 'muted' | 'vivid' | 'danger' | 'ghost' | 'glass' | 'glass-primary' | 'glass-danger';
   size?: 'xs' | 'sm' | 'md' | 'lg' | 'xl';
 }
 
@@ -25,6 +25,8 @@ export const NVButton: React.FC<NVButtonProps> = ({
   const variants = {
     primary: 'bg-gradient-to-br from-indigo-500 to-indigo-700 text-white hover:brightness-[1.2] hover:saturate-[1.1]',
     secondary: 'bg-indigo-500/15 text-indigo-400 hover:bg-indigo-500/25 hover:text-indigo-300',
+    neutral: 'bg-white/5 text-slate-400 hover:bg-white/10 hover:text-slate-200',
+    muted: 'bg-white/[0.03] text-slate-600 hover:text-slate-500',
     vivid: 'bg-gradient-to-br from-cyan-400 to-cyan-600 text-white hover:brightness-[1.1] hover:saturate-[1.1]',
     danger: 'bg-rose-500/10 border border-rose-500/25 text-rose-500 hover:bg-rose-500 hover:text-white hover:border-rose-500',
     ghost: 'bg-transparent text-slate-500 hover:text-slate-50 hover:bg-white/5',

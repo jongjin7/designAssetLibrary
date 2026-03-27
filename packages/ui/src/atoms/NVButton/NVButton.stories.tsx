@@ -18,7 +18,7 @@ const meta: Meta<typeof NVButton> = {
   argTypes: {
     variant: {
       control: 'select',
-      options: ['primary', 'secondary', 'vivid', 'danger', 'ghost', 'glass', 'glass-primary', 'glass-danger'],
+      options: ['primary', 'secondary', 'neutral', 'muted', 'vivid', 'danger', 'ghost', 'glass', 'glass-primary', 'glass-danger'],
     },
     size: {
       control: 'select',
@@ -55,6 +55,34 @@ export const Secondary: Story = {
   args: {
     variant: 'secondary',
     children: 'Secondary Button',
+  },
+};
+
+export const Neutral: Story = {
+  parameters: {
+    docs: {
+      description: {
+        story: '채도가 없는 옅은 회색 버튼으로, 중립적인 액션이나 보조 도구에 사용됩니다.',
+      },
+    },
+  },
+  args: {
+    variant: 'neutral',
+    children: 'Neutral Gray',
+  },
+};
+
+export const Muted: Story = {
+  parameters: {
+    docs: {
+      description: {
+        story: '짙은 회색의 저명도 버튼입니다. 비활성 상태와 유사한 느낌을 주며 가시성을 최소화해야 할 때 사용합니다.',
+      },
+    },
+  },
+  args: {
+    variant: 'muted',
+    children: 'Muted Button',
   },
 };
 
