@@ -1,10 +1,8 @@
-# 백엔드 동기화: Supabase 통합 가이드 (Backend Sync: Supabase Integration Guide)
+# 백엔드 동기화: Supabase 통합 가이드
 
-Supabase를 허브로 Cloudflare R2(파일 저장), PostgreSQL(메타데이터), Realtime(변경 구독), Auth(사용자 인증)를 연결하는 백엔드 동기화 아키텍처 설정 가이드입니다. 각 서비스의 역할 분리와 환경변수 설정부터 실제 코드 예시까지 포함합니다.
+Supabase를 허브로 Cloudflare R2(파일 저장), PostgreSQL(메타데이터), Realtime(변경 구독), Auth(사용자 인증)를 연결하는 백엔드 동기화 아키텍처 설정 가이드입니다.
 
-## 1. 아키텍처 개요 (Architecture Overview)
-
-NOVA의 백엔드는 Supabase를 허브로 각 서비스가 분리된 역할을 담당합니다.
+## 1. 아키텍처 개요
 
 ```text
 [Client (PWA / Electron / Extension)]
@@ -33,7 +31,7 @@ NOVA의 백엔드는 Supabase를 허브로 각 서비스가 분리된 역할을 
 
 | 서비스 | 역할 | 비고 |
 | --- | --- | --- |
-| **Supabase Auth** | 사용자 인증 및 JWT 발급 | OAuth (Google) + Magic Link 지원 |
+| **Supabase Auth** | 사용자 인증 및 JWT 발급 | Google, Kakao OAuth + Naver 직접 구현 |
 | **PostgreSQL** | 에셋 메타데이터 중앙 저장 | `assets`, `folders`, `tags` 테이블 |
 | **Supabase Realtime** | 클라이언트 간 변경 사항 구독 | 모바일 ↔ 데스크탑 즉시 동기화 |
 | **Cloudflare R2** | 원본 이미지 및 썸네일 파일 저장 | S3 호환 API, Egress 무료 |
@@ -42,13 +40,37 @@ NOVA의 백엔드는 Supabase를 허브로 각 서비스가 분리된 역할을 
 
 ## 2. Supabase 프로젝트 설정
 
-### 2.1 환경변수 (`.env.local`)
+### 2.1 패키지 버전
+
+```
+@supabase/supabase-js@2.100.1  (@supabase/auth-js@2.100.1)
+```
+
+**Admin API 가용 메서드 (`supabase.auth.admin.*`)**
+
+| 메서드 | 용도 |
+|--------|------|
+| `createUser(attributes)` | 신규 사용자 생성 |
+| `updateUserById(uid, attributes)` | 기존 사용자 정보 업데이트 |
+| `getUserById(uid)` | UID로 사용자 조회 |
+| `listUsers(params)` | 사용자 목록 조회 (페이지네이션) |
+| `deleteUser(id)` | 사용자 삭제 |
+| `generateLink(params)` | magic link / 이메일 인증 링크 생성 |
+| `inviteUserByEmail(email)` | 초대 이메일 발송 |
+
+> ⚠️ `upsertUser()`는 공식 문서에 언급되더라도 실제 패키지에 존재하지 않습니다. 신규 생성은 `createUser`, 업데이트는 `updateUserById`를 조합해서 사용하세요.
+
+### 2.2 환경변수 (`.env.local`)
 
 ```bash
 # Supabase
 NEXT_PUBLIC_SUPABASE_URL=https://<your-project-ref>.supabase.co
-NEXT_PUBLIC_SUPABASE_ANON_KEY=<your-anon-key>
-SUPABASE_SERVICE_ROLE_KEY=<your-service-role-key>  # 서버 전용
+NEXT_PUBLIC_SUPABASE_ANON_KEY=<your-anon-key>       # sb_publishable_... 형식
+SUPABASE_SERVICE_ROLE_KEY=<your-service-role-key>    # sb_secret_... 형식 — 서버 전용
+
+# Naver OAuth (Supabase 미지원 → 직접 구현)
+NEXT_PUBLIC_NAVER_CLIENT_ID=<naver-client-id>        # 공개 가능 (OAuth URL에 포함됨)
+NAVER_CLIENT_SECRET=<naver-client-secret>            # 서버 전용
 
 # Cloudflare R2
 R2_ACCOUNT_ID=<your-cloudflare-account-id>
@@ -58,19 +80,17 @@ R2_BUCKET_NAME=nova-assets
 R2_PUBLIC_URL=https://<your-r2-public-domain>
 ```
 
-> ⚠️ `SUPABASE_SERVICE_ROLE_KEY`는 서버 사이드(Edge Functions, API Routes)에서만 사용하고, 클라이언트에 절대 노출하지 않습니다.
+> ⚠️ `SUPABASE_SERVICE_ROLE_KEY`, `NAVER_CLIENT_SECRET`는 서버 사이드(API Routes)에서만 사용합니다. `NEXT_PUBLIC_` 접두사를 붙이면 클라이언트에 노출되므로 절대 붙이지 마세요.
 
-### 2.2 클라이언트 초기화 (`packages/shared/src/supabase.ts`)
+### 2.3 클라이언트 초기화 (`apps/web-app/src/lib/supabase.ts`)
 
 ```typescript
-import { createBrowserClient } from '@supabase/ssr'
-import type { Database } from './database.types'
+import { createClient } from '@supabase/supabase-js'
 
-export const createClient = () =>
-  createBrowserClient<Database>(
-    process.env.NEXT_PUBLIC_SUPABASE_URL!,
-    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
-  )
+export const supabase = createClient(
+  process.env.NEXT_PUBLIC_SUPABASE_URL!,
+  process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
+)
 ```
 
 ---
@@ -79,9 +99,12 @@ export const createClient = () =>
 
 ### 3.1 인증 방식
 
-- **OAuth (Supabase 네이티브):** Google, Kakao
-- **OAuth (직접 구현):** Naver — Supabase 미지원이므로 `/api/auth/naver/callback` API 라우트로 처리
-- **게스트:** localStorage 기반 목(mock) 세션
+| 방식 | 구현 방법 | 비고 |
+| --- | --- | --- |
+| **Google OAuth** | Supabase 네이티브 | `signInWithOAuth({ provider: 'google' })` |
+| **Kakao OAuth** | Supabase 네이티브 | `account_email` scope 명시 필요 |
+| **Naver OAuth** | 직접 구현 | Supabase 미지원, `/api/auth/naver/callback` 서버 라우트 처리 |
+| **게스트** | localStorage mock | 실제 DB 미사용, 체험용 |
 
 ### 3.2 OAuth 프로바이더 설정
 
@@ -94,13 +117,13 @@ export const createClient = () =>
 #### Kakao
 
 1. [Kakao Developers](https://developers.kakao.com) → 애플리케이션 추가 → REST API 키 확인
-2. 카카오 로그인 → 활성화, Redirect URI 등록: `https://<project-ref>.supabase.co/auth/v1/callback`
-3. 카카오 로그인 → 동의항목: 닉네임, 프로필 사진, 이메일(필수) 설정
+2. 카카오 로그인 → 활성화, Redirect URI: `https://<project-ref>.supabase.co/auth/v1/callback`
+3. 카카오 로그인 → 동의항목: 닉네임, 프로필 사진, 이메일(선택 → 필수) 설정
 4. Supabase 대시보드 → Authentication → Providers → Kakao → REST API 키 입력
 
 #### Naver (직접 구현)
 
-Supabase가 Naver를 공식 지원하지 않아 별도 구현합니다.
+Supabase가 Naver를 공식 지원하지 않아 서버 라우트로 직접 구현합니다.
 
 1. [Naver Developers](https://developers.naver.com) → 애플리케이션 등록
 2. 사용 API: **네아로(네이버 아이디로 로그인)** 선택
@@ -109,7 +132,7 @@ Supabase가 Naver를 공식 지원하지 않아 별도 구현합니다.
 5. 발급된 Client ID → `.env.local`의 `NEXT_PUBLIC_NAVER_CLIENT_ID`
 6. 발급된 Client Secret → `.env.local`의 `NAVER_CLIENT_SECRET`
 
-**Naver OAuth 플로우:**
+**Naver OAuth 플로우 (`apps/web-app/src/app/api/auth/naver/callback/route.ts`):**
 
 ```
 [브라우저]
@@ -118,27 +141,30 @@ Supabase가 Naver를 공식 지원하지 않아 별도 구현합니다.
   2. 네이버 로그인 동의
 
 [Naver → /api/auth/naver/callback?code=...&state=...]
-  3. 네이버 액세스 토큰 교환 (server-side)
+  3. 네이버 액세스 토큰 교환 (NAVER_CLIENT_SECRET 사용, 서버 전용)
   4. 네이버 사용자 프로필 조회 (email, name, profile_image)
-  5. Supabase admin.upsertUser() 로 사용자 생성/업데이트
-  6. admin.generateLink({ type: 'magiclink' }) 로 자동 로그인 링크 생성
-  7. 브라우저를 action_link 로 리다이렉트 → Supabase가 세션 발급
+  5. admin.createUser() 로 생성 시도 → 이미 존재하면 listUsers()로 조회 후 updateUserById() 업데이트
+  6. admin.generateLink({ type: 'magiclink' }) 로 세션 발급용 일회성 URL 생성
+     ※ admin API는 이메일을 발송하지 않음 — 링크만 반환
+  7. 브라우저를 action_link 로 리다이렉트 → Supabase가 세션 쿠키 발급
 
 [브라우저]
   8. /library 로 최종 이동
 ```
 
-### 3.3 RLS (Row Level Security) 기본 정책
+### 3.3 콜백 처리
 
-모든 테이블에 RLS를 활성화하고, 인증된 사용자만 자신의 데이터에 접근합니다.
+- **Google / Kakao:** `/auth/callback` 페이지에서 `supabase.auth.exchangeCodeForSession(code)` 호출
+- **Naver:** `/api/auth/naver/callback` 서버 라우트에서 전체 처리 후 magic link로 세션 발급
+
+### 3.4 RLS (Row Level Security) 기본 정책
 
 ```sql
 -- assets 테이블 RLS 예시
 ALTER TABLE assets ENABLE ROW LEVEL SECURITY;
 
 CREATE POLICY "Users can manage their own assets"
-ON assets
-FOR ALL
+ON assets FOR ALL
 USING (auth.uid() = user_id)
 WITH CHECK (auth.uid() = user_id);
 ```
@@ -146,8 +172,6 @@ WITH CHECK (auth.uid() = user_id);
 ---
 
 ## 4. PostgreSQL — 메타데이터 스키마
-
-Sprint 1 & 2 통합 스키마입니다. 계층형 폴더 구조와 AI 분석 결과를 포함합니다.
 
 ```sql
 -- 에셋 테이블
@@ -173,8 +197,8 @@ CREATE TABLE folders (
   user_id         UUID NOT NULL REFERENCES auth.users(id) ON DELETE CASCADE,
   parent_id       UUID REFERENCES folders(id),  -- NULL이면 루트 폴더
   name            TEXT NOT NULL,
-  is_smart_folder BOOLEAN DEFAULT false,         -- AI 기반 자동 분류 폴더
-  rule            JSONB,                         -- 스마트 폴더 규칙
+  is_smart_folder BOOLEAN DEFAULT false,
+  rule            JSONB,
   created_at      TIMESTAMPTZ DEFAULT now()
 );
 
@@ -197,37 +221,22 @@ CREATE TABLE asset_tags (
 
 ## 5. Realtime — 변경 구독
 
-모바일에서 업로드 시 데스크탑 대시보드가 즉시 갱신되는 동기화 플로우입니다.
-
 ### 5.1 Supabase 대시보드 설정
 
 `Database` → `Replication` → `assets` 테이블에 대해 **INSERT, UPDATE, DELETE** 이벤트 활성화.
 
-### 5.2 구독 코드 (`apps/web-app`)
+### 5.2 구독 코드
 
 ```typescript
-import { createClient } from '@nova/shared'
-
-const supabase = createClient()
-
 const channel = supabase
   .channel('assets-sync')
   .on(
     'postgres_changes',
-    {
-      event: '*',
-      schema: 'public',
-      table: 'assets',
-      filter: `user_id=eq.${userId}`,
-    },
-    (payload) => {
-      console.log('Asset changed:', payload)
-      // UI 상태 업데이트 로직
-    }
+    { event: '*', schema: 'public', table: 'assets', filter: `user_id=eq.${userId}` },
+    (payload) => { /* UI 상태 업데이트 */ }
   )
   .subscribe()
 
-// 컴포넌트 언마운트 시 구독 해제
 return () => { supabase.removeChannel(channel) }
 ```
 
@@ -241,17 +250,14 @@ Supabase Storage 대신 R2를 사용하는 이유: **Egress(다운로드) 비용
 
 ```text
 [Client]
-  │ 1. 클라이언트에서 Web Worker가 EXIF 제거 + 썸네일 생성
-  │ 2. Supabase Edge Function에 서명된 업로드 URL 요청
-  ▼
+  1. Web Worker가 EXIF 제거 + 썸네일 생성
+  2. Supabase Edge Function에 Presigned URL 요청
 [Supabase Edge Function]
-  │ 3. R2 Presigned PUT URL 생성 후 클라이언트에 반환
-  ▼
-[Cloudflare R2]
-  │ 4. 클라이언트가 Presigned URL로 직접 R2에 업로드 (서버 거치지 않음)
-  ▼
-[Supabase Edge Function / DB Trigger]
-    5. 업로드 완료 후 PostgreSQL `assets` 테이블에 메타데이터 INSERT
+  3. R2 Presigned PUT URL 생성 후 클라이언트에 반환
+[Client → Cloudflare R2]
+  4. Presigned URL로 직접 R2에 업로드 (서버 거치지 않음)
+[DB Trigger]
+  5. 업로드 완료 후 PostgreSQL assets 테이블에 메타데이터 INSERT
 ```
 
 ### 6.2 R2 Presigned URL 발급 (Edge Function)
@@ -272,16 +278,12 @@ const r2 = new S3Client({
 
 Deno.serve(async (req) => {
   const { key, contentType } = await req.json()
-
   const url = await getSignedUrl(
     r2,
     new PutObjectCommand({ Bucket: Deno.env.get('R2_BUCKET_NAME'), Key: key, ContentType: contentType }),
     { expiresIn: 300 } // 5분 유효
   )
-
-  return new Response(JSON.stringify({ url }), {
-    headers: { 'Content-Type': 'application/json' },
-  })
+  return new Response(JSON.stringify({ url }), { headers: { 'Content-Type': 'application/json' } })
 })
 ```
 
@@ -291,4 +293,5 @@ Deno.serve(async (req) => {
 
 - [프로젝트 구조](structure.md)
 - [개발 명령어](commands.md)
+- [백엔드 아키텍처](../architecture/backend.md)
 - [통합 개발 계획](../DEVELOPMENT_PLAN.md)

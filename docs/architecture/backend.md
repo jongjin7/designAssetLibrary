@@ -108,15 +108,39 @@ return () => subscription.unsubscribe()
 
 ### 4.4 로그인 방식별 구현
 
-#### Google OAuth
+#### Google / Kakao OAuth (Supabase 네이티브)
 
 ```typescript
+// Kakao는 이메일 수집을 위해 scope 명시 필요
+const scopes: Partial<Record<'google' | 'kakao', string>> = {
+  kakao: 'profile_nickname profile_image account_email',
+};
+
 await supabase.auth.signInWithOAuth({
-  provider: 'google',
+  provider, // 'google' | 'kakao'
   options: {
     redirectTo: `${window.location.origin}/auth/callback`,
+    scopes: scopes[provider],
   },
 })
+```
+
+콜백: `/auth/callback` 페이지에서 `supabase.auth.exchangeCodeForSession(code)` 호출.
+
+#### Naver OAuth (직접 구현 — Supabase 미지원)
+
+```
+[Client] 네이버 버튼 클릭
+  → https://nid.naver.com/oauth2.0/authorize?client_id=NEXT_PUBLIC_NAVER_CLIENT_ID&...
+[Naver] 동의 후 /api/auth/naver/callback?code=...&state=... 리다이렉트
+[Server Route]
+  1. 네이버 액세스 토큰 교환 (NAVER_CLIENT_SECRET 사용, 서버 전용)
+  2. 네이버 프로필 API로 email, name, profile_image 조회
+  3. admin.createUser() 로 생성 시도 → 이미 존재하면 listUsers()로 조회 후 updateUserById() 업데이트
+     ※ upsertUser()는 실제 패키지에 존재하지 않음 — createUser + updateUserById 조합 사용
+  4. admin.generateLink({ type: 'magiclink' }) 로 세션 발급용 일회성 URL 생성
+     ※ admin API는 이메일을 발송하지 않음 — 사용자 이메일 수신 없음
+  5. action_link 로 리다이렉트 → Supabase가 세션 쿠키 발급 → /library 이동
 ```
 
 #### Magic Link (이메일)
@@ -167,6 +191,9 @@ export const config = {
 | 방식 | 사용 시나리오 | 비고 |
 | --- | --- | --- |
 | **Google OAuth** | 일반 사용자 로그인 | Supabase 대시보드 → Providers에서 활성화 |
+| **Kakao OAuth** | 카카오 사용자 로그인 | Supabase 네이티브 지원, `account_email` scope 필수 |
+| **Naver OAuth** | 네이버 사용자 로그인 | Supabase 미지원 → `/api/auth/naver/callback` 직접 구현 |
 | **Magic Link** | 이메일 기반 패스워드리스 | 별도 설정 불필요 (기본 활성화) |
+| **게스트** | 비로그인 체험 | localStorage 기반 mock 세션, 실제 DB 미사용 |
 | **JWT (Access Token)** | 모든 API 요청 인증 | 유효기간 1시간, 자동 갱신 |
 | **RLS** | DB 행 수준 접근 제어 | `auth.uid() = user_id` 정책 |
