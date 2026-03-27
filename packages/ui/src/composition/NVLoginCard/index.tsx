@@ -3,10 +3,17 @@ import { NVGlassPanel } from '../../atoms/NVGlassPanel';
 import { NVButton } from '../../atoms/NVButton';
 import { NVTypography } from '../../atoms/NVTypography';
 import { NVNotice } from '../../atoms/NVNotice';
-import { Github, Sparkles } from 'lucide-react';
+import { Sparkles } from 'lucide-react';
+import { NVLoginCardHeader } from './parts/NVLoginCardHeader';
+import { NVLoginSocialButton } from './parts/NVLoginSocialButton';
+import { NVLoginCardFooter } from './parts/NVLoginCardFooter';
 
-interface NVLoginCardProps {
-  /** GitHub OAuth 로그인 핸들러 */
+export interface NVLoginCardProps {
+  /** OAuth 로그인 핸들러들 */
+  onGoogleLogin?: () => void;
+  onKakaoLogin?: () => void;
+  onNaverLogin?: () => void;
+  onFacebookLogin?: () => void;
   onGithubLogin?: () => void;
   /** 게스트 로그인 핸들러 */
   onGuestLogin?: () => void;
@@ -19,64 +26,79 @@ interface NVLoginCardProps {
 }
 
 export const NVLoginCard: React.FC<NVLoginCardProps> = ({
+  onGoogleLogin,
+  onKakaoLogin,
+  onNaverLogin,
+  onFacebookLogin,
   onGithubLogin,
   onGuestLogin,
   error,
   loading = false,
   isInitialized = true,
 }) => {
+  const disabled = loading || !isInitialized;
+
   return (
     <NVGlassPanel 
       blur="lg" 
-      className="rounded-xl border-white/5 bg-white/[0.02] shadow-2xl shadow-black/40 w-full max-w-[380px]"
+      className="rounded-2xl border-white/5 bg-white/[0.03] shadow-2xl shadow-black/60 w-[380px] p-6 mobile:w-full mobile:h-full mobile:flex mobile:flex-col mobile:justify-center"
     >
-      <div className="space-y-8 p-1">
-        <div className="space-y-2">
-          <NVTypography variant="header" className="text-white text-lg">로그인</NVTypography>
-          <NVTypography variant="secondary" className="text-slate-500">
-            작업을 시작하려면 계정을 확인하세요.
-          </NVTypography>
+      <div className="space-y-8">
+        <NVLoginCardHeader />
+
+        <div className="space-y-3">
+          {/* 주요 소셜 로그인 (Primary) */}
+          {onGoogleLogin && <NVLoginSocialButton provider="google" onClick={onGoogleLogin} disabled={disabled} />}
+          {onKakaoLogin && <NVLoginSocialButton provider="kakao" onClick={onKakaoLogin} disabled={disabled} />}
+          {onNaverLogin && <NVLoginSocialButton provider="naver" onClick={onNaverLogin} disabled={disabled} />}
+
+          {/* 보조 소셜 로그인 (Secondary) - 핸들러가 있을 때만 표시 */}
+          {(onFacebookLogin || onGithubLogin) && (
+            <div className="space-y-4">
+              <div className="relative py-4 flex items-center">
+                <div className="flex-grow border-t border-white/5"></div>
+                <span className="flex-shrink mx-4 text-slate-600 text-[10px] uppercase tracking-widest font-semibold text-center leading-none">
+                  또는
+                </span>
+                <div className="flex-grow border-t border-white/5"></div>
+              </div>
+
+              <div className="grid grid-cols-2 gap-3">
+                {onFacebookLogin && (
+                  <NVLoginSocialButton provider="facebook" onClick={onFacebookLogin} disabled={disabled} isSecondary />
+                )}
+                {onGithubLogin && (
+                  <NVLoginSocialButton provider="github" onClick={onGithubLogin} disabled={disabled} isSecondary />
+                )}
+              </div>
+            </div>
+          )}
+
+          {/* 게스트 액션 */}
+          <div className="pt-4">
+            <NVButton
+              variant="ghost"
+              onClick={onGuestLogin}
+              size="md"
+              className="w-full text-slate-400 hover:text-white transition-colors"
+              disabled={loading}
+            >
+              <div className="flex items-center justify-center gap-2">
+                <Sparkles size={14} className="text-indigo-400/70" />
+                <NVTypography variant="caption">로그인 없이 둘러보기</NVTypography>
+              </div>
+            </NVButton>
+          </div>
         </div>
 
-        <div className="space-y-8">
-          <NVButton
-            variant="primary"
-            onClick={onGithubLogin}
-            size="lg"
-            className="w-full"
-            disabled={loading || !isInitialized}
-          >
-            <span className="flex items-center justify-center gap-2">
-              <Github size={18} />
-              GitHub 로그인
-            </span>
-          </NVButton>
-
-          <NVButton
-            variant="glass"
-            onClick={onGuestLogin}
-            size="lg"
-            className="w-full"
-            disabled={loading}
-          >
-            <span className="flex items-center justify-center gap-2">
-              <Sparkles size={16} className="text-indigo-400" />
-              <NVTypography variant="label" className="text-slate-300">게스트로 체험하기</NVTypography>
-            </span>
-          </NVButton>
-        </div>
-
+        {/* 에러 피드백 */}
         {error && (
           <NVNotice variant="error" className="rounded-xl py-2 mt-4 text-xs font-medium">
             {error}
           </NVNotice>
         )}
 
-        <div className="pt-2 text-center border-t border-white/5 pt-6">
-          <NVTypography variant="caption" className="text-slate-600 opacity-50">
-            Sprint 1 • OAuth Authentication
-          </NVTypography>
-        </div>
+        <NVLoginCardFooter />
       </div>
     </NVGlassPanel>
   );

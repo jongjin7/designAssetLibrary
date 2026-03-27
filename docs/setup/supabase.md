@@ -79,10 +79,56 @@ export const createClient = () =>
 
 ### 3.1 인증 방식
 
-- **OAuth:** Google 로그인 (Supabase 대시보드 → Authentication → Providers → Google)
-- **Magic Link:** 이메일 기반 패스워드리스 로그인
+- **OAuth (Supabase 네이티브):** Google, Kakao
+- **OAuth (직접 구현):** Naver — Supabase 미지원이므로 `/api/auth/naver/callback` API 라우트로 처리
+- **게스트:** localStorage 기반 목(mock) 세션
 
-### 3.2 RLS (Row Level Security) 기본 정책
+### 3.2 OAuth 프로바이더 설정
+
+#### Google
+
+1. [Google Cloud Console](https://console.cloud.google.com) → APIs & Services → Credentials → OAuth 2.0 클라이언트 ID 생성
+2. 승인된 리디렉션 URI: `https://<project-ref>.supabase.co/auth/v1/callback`
+3. Supabase 대시보드 → Authentication → Providers → Google → Client ID / Secret 입력
+
+#### Kakao
+
+1. [Kakao Developers](https://developers.kakao.com) → 애플리케이션 추가 → REST API 키 확인
+2. 카카오 로그인 → 활성화, Redirect URI 등록: `https://<project-ref>.supabase.co/auth/v1/callback`
+3. 카카오 로그인 → 동의항목: 닉네임, 프로필 사진, 이메일(필수) 설정
+4. Supabase 대시보드 → Authentication → Providers → Kakao → REST API 키 입력
+
+#### Naver (직접 구현)
+
+Supabase가 Naver를 공식 지원하지 않아 별도 구현합니다.
+
+1. [Naver Developers](https://developers.naver.com) → 애플리케이션 등록
+2. 사용 API: **네아로(네이버 아이디로 로그인)** 선택
+3. 서비스 URL: `https://your-app.com`
+4. Callback URL: `https://your-app.com/api/auth/naver/callback`
+5. 발급된 Client ID → `.env.local`의 `NEXT_PUBLIC_NAVER_CLIENT_ID`
+6. 발급된 Client Secret → `.env.local`의 `NAVER_CLIENT_SECRET`
+
+**Naver OAuth 플로우:**
+
+```
+[브라우저]
+  1. 네이버 버튼 클릭
+     → https://nid.naver.com/oauth2.0/authorize?client_id=...&redirect_uri=.../api/auth/naver/callback
+  2. 네이버 로그인 동의
+
+[Naver → /api/auth/naver/callback?code=...&state=...]
+  3. 네이버 액세스 토큰 교환 (server-side)
+  4. 네이버 사용자 프로필 조회 (email, name, profile_image)
+  5. Supabase admin.upsertUser() 로 사용자 생성/업데이트
+  6. admin.generateLink({ type: 'magiclink' }) 로 자동 로그인 링크 생성
+  7. 브라우저를 action_link 로 리다이렉트 → Supabase가 세션 발급
+
+[브라우저]
+  8. /library 로 최종 이동
+```
+
+### 3.3 RLS (Row Level Security) 기본 정책
 
 모든 테이블에 RLS를 활성화하고, 인증된 사용자만 자신의 데이터에 접근합니다.
 

@@ -12,8 +12,14 @@ interface SettingsContentProps {
   onLogout?: () => void;
 }
 
-// Tailwind Safelist Hint: text-rose-500 bg-rose-500/10 border-rose-500/20 hover:bg-rose-500
 export function SettingsContent({ isMobile = false, onLogout }: SettingsContentProps) {
+  // 현재 개발 단계 (Sprint 1) 기준으로 필터링
+  const CURRENT_SPRINT = 1;
+  const filteredGroups = SETTINGS_GROUPS.map(group => ({
+    ...group,
+    items: group.items.filter(item => item.sprint <= CURRENT_SPRINT)
+  })).filter(group => group.items.length > 0);
+
   return (
     <section className={`py-3 ${!isMobile ? 'max-w-[1200px] mx-auto w-full' : ''}`}>
       <header className={`flex flex-col ${isMobile ? 'px-7 pt-2 pb-4' : 'text-center p-0 mb-10'}`}>
@@ -34,7 +40,7 @@ export function SettingsContent({ isMobile = false, onLogout }: SettingsContentP
       </div>
 
       <div className={`px-5 ${!isMobile ? 'grid grid-cols-1 lg:grid-cols-2 gap-x-6' : 'flex flex-col gap-1'}`}>
-        {SETTINGS_GROUPS.map((group, index) => (
+        {filteredGroups.map((group, index) => (
           <div 
             key={group.title} 
             className={`${!isMobile ? 'h-full flex flex-col animate-in fade-in slide-in-from-bottom-4 duration-500 fill-mode-both' : ''}`}
@@ -70,7 +76,7 @@ export function SettingsContent({ isMobile = false, onLogout }: SettingsContentP
 
 
       <p className={`text-center text-xs text-slate-500 p-4 mt-4 ${!isMobile ? 'opacity-50' : ''}`}>
-        Trove v1.1.0 {isMobile ? '(Mobile Optimized)' : '(Desktop View)'}
+        Trove v1.1.0
       </p>
     </section>
   );
