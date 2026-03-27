@@ -7,18 +7,29 @@ import { SettingsSection, SettingsItem } from './SettingsComponents';
 import { InstallBanner } from '@nova/components/shared/InstallBanner';
 import { ProfileCard } from './ProfileCard';
 
+import { useAuth } from '@nova/providers/AuthProvider';
+
 interface SettingsContentProps {
   isMobile?: boolean;
   onLogout?: () => void;
 }
 
 export function SettingsContent({ isMobile = false, onLogout }: SettingsContentProps) {
+  const { user, loading } = useAuth();
+  
   // 현재 개발 단계 (Sprint 1) 기준으로 필터링
   const CURRENT_SPRINT = 1;
   const filteredGroups = SETTINGS_GROUPS.map(group => ({
     ...group,
     items: group.items.filter(item => item.sprint <= CURRENT_SPRINT)
   })).filter(group => group.items.length > 0);
+
+  const userName = user?.user_metadata?.full_name || 
+                   user?.user_metadata?.name || 
+                   user?.user_metadata?.user_name || 
+                   '사용자';
+  
+  const userEmail = user?.email || (loading ? '불러오는 중...' : '로그인 정보 없음');
 
   return (
     <section className={`py-3 ${!isMobile ? 'max-w-[1200px] mx-auto w-full' : ''}`}>
@@ -29,9 +40,9 @@ export function SettingsContent({ isMobile = false, onLogout }: SettingsContentP
       </header>
 
       <div className={`px-5 ${!isMobile ? 'w-full mb-2' : ''}`}>
-        < ProfileCard
-          name="Trove Designer"
-          email="user@nova.design"
+        <ProfileCard
+          name={userName}
+          email={userEmail}
         />
       </div>
 

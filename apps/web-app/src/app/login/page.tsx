@@ -111,10 +111,11 @@ export default function LoginPage() {
     setError(null);
     const state = crypto.randomUUID();
     sessionStorage.setItem('naver_oauth_state', state);
+    document.cookie = `naver_oauth_state=${state}; path=/; SameSite=Lax; max-age=300`;
     const params = new URLSearchParams({
       response_type: 'code',
       client_id: process.env.NEXT_PUBLIC_NAVER_CLIENT_ID,
-      redirect_uri: `${window.location.origin}/api/auth/naver/callback`,
+      redirect_uri: `${window.location.origin}/auth/naver/callback`,
       state,
     });
     openPopup(`https://nid.naver.com/oauth2.0/authorize?${params}`);

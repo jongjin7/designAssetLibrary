@@ -13,19 +13,26 @@ export async function GET(request: NextRequest) {
     );
   }
 
-  // 1. 네이버 액세스 토큰 교환
+  // state 쿠키 검증 (CSRF 방어)
+  const cookieState = request.cookies.get('naver_oauth_state')?.value;
+  if (!state || !cookieState || state !== cookieState) {
+    return NextResponse.redirect(`${origin}/login?error=invalid_state`);
+  }
+
+  // 1. 네이버 액세스 토큰 교환 (POST — client_secret을 URL에 노출하지 않음)
   const tokenParams = new URLSearchParams({
     grant_type: 'authorization_code',
     client_id: process.env.NEXT_PUBLIC_NAVER_CLIENT_ID!,
     client_secret: process.env.NAVER_CLIENT_SECRET!,
     code,
-    state: state || '',
+    state,
   });
 
-  const tokenRes = await fetch(
-    `https://nid.naver.com/oauth2.0/token?${tokenParams}`,
-    { method: 'GET', headers: { 'X-Naver-Client-Id': process.env.NEXT_PUBLIC_NAVER_CLIENT_ID! } }
-  );
+  const tokenRes = await fetch('https://nid.naver.com/oauth2.0/token', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+    body: tokenParams,
+  });
 
   if (!tokenRes.ok) {
     return NextResponse.redirect(`${origin}/login?error=naver_token_failed`);
@@ -74,11 +81,16 @@ export async function GET(request: NextRequest) {
     if (!createError.message.includes('already been registered')) {
       return NextResponse.redirect(`${origin}/login?error=user_upsert_failed`);
     }
-    const { data: { users }, error: listError } = await supabaseAdmin.auth.admin.listUsers({ perPage: 1000 });
-    if (listError) {
-      return NextResponse.redirect(`${origin}/login?error=user_upsert_failed`);
+    // 페이지네이션으로 전체 유저 탐색
+    let existing = null;
+    let page = 1;
+    while (!existing) {
+      const { data: pageData, error: listError } = await supabaseAdmin.auth.admin.listUsers({ page, perPage: 1000 });
+      if (listError) return NextResponse.redirect(`${origin}/login?error=user_upsert_failed`);
+      existing = pageData.users.find(u => u.email === email) ?? null;
+      if (pageData.users.length < 1000) break;
+      page++;
     }
-    const existing = users.find(u => u.email === email);
     if (existing) {
       await supabaseAdmin.auth.admin.updateUserById(existing.id, { user_metadata: userMeta });
     }
@@ -97,5 +109,7 @@ export async function GET(request: NextRequest) {
     return NextResponse.redirect(`${origin}/login?error=signin_link_failed`);
   }
 
-  return NextResponse.redirect(linkData.properties.action_link);
+  const res = NextResponse.redirect(linkData.properties.action_link);
+  res.cookies.delete('naver_oauth_state');
+  return res;
 }
