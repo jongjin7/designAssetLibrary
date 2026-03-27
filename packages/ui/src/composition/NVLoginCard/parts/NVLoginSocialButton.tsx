@@ -1,7 +1,7 @@
 import React from 'react';
 import { NVButton } from '../../../atoms/NVButton';
-import { Chrome, Facebook, Github } from 'lucide-react';
-import { KakaoIcon, NaverIcon } from './icons';
+import { Facebook, Github } from 'lucide-react';
+import { KakaoIcon, NaverIcon, GoogleIcon } from './icons';
 
 export type ProviderType = 'google' | 'kakao' | 'naver' | 'facebook' | 'github';
 
@@ -14,29 +14,29 @@ interface NVLoginSocialButtonProps {
 
 const PROVIDER_CONFIG = {
   google: {
-    icon: <Chrome size={18} />,
-    label: 'Google 계정으로 계속',
-    className: 'bg-white text-black hover:bg-slate-100 border-none',
+    icon: <GoogleIcon />,
+    label: 'Google 로그인',
+    className: '!bg-white !text-[#3c4043] !border-[#dadce0] active:!bg-[#eeeeee] hover:!brightness-[0.96]',
   },
   kakao: {
     icon: <KakaoIcon />,
-    label: '카카오톡으로 계속',
-    className: 'bg-[#FEE500] text-black hover:bg-[#F7E600] border-none',
+    label: '카카오 로그인',
+    className: '!bg-[#FEE500] !text-[#191919] !border-none hover:!brightness-[1.1] hover:!saturate-[1.1]',
   },
   naver: {
     icon: <NaverIcon />,
-    label: '네이버로 계속',
-    className: 'bg-[#03C75A] text-white hover:bg-[#02b351] border-none',
+    label: '네이버 로그인',
+    className: '!bg-[#03C75A] !text-white !border-none hover:!brightness-[1.1] hover:!saturate-[1.1]',
   },
   facebook: {
     icon: <Facebook size={18} />,
     label: 'Facebook으로 계속',
-    className: 'bg-[#1877F2] border-none text-white',
+    className: '!bg-[#1877F2] !border-none !text-white hover:!brightness-[1.1] hover:!saturate-[1.1]',
   },
   github: {
     icon: <Github size={18} />,
     label: 'GitHub로 계속',
-    className: 'bg-[#24292F] border-none text-white',
+    className: '!bg-[#24292F] !border-none !text-white hover:!brightness-[1.1] hover:!saturate-[1.1]',
   },
 };
 
@@ -54,7 +54,7 @@ export const NVLoginSocialButton: React.FC<NVLoginSocialButtonProps> = ({
       onClick={onClick}
       size="lg"
       disabled={disabled}
-      className={`w-full flex items-center justify-center gap-3 transition-all duration-300 hover:scale-[1.02] active:scale-[0.98] ${config.className} ${isSecondary ? '!py-2.5' : ''}`}
+      className={`w-full flex items-center justify-center gap-3 transition-all duration-300 active:scale-[0.98] ${config.className} ${isSecondary ? '!py-2.5' : ''}`}
     >
       {config.icon}
       {!isSecondary && <span>{config.label}</span>}
