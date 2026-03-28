@@ -2,8 +2,21 @@
   "manifest_version": 3,
   "name": "Trove Capture",
   "version": "1.0.0",
+  "description": "Capture web content directly to your Trove design library",
   "action": {
-    "default_popup": "index.html"
+    "default_popup": "index.html",
+    "default_title": "Trove Capture"
   },
-  "permissions": ["tabs", "storage", "activeTab"]
+  "background": {
+    "service_worker": "src/background/background.ts",
+    "type": "module"
+  },
+  "content_scripts": [
+    {
+      "matches": ["<all_urls>"],
+      "js": ["src/content/content.ts"]
+    }
+  ],
+  "permissions": ["tabs", "storage", "activeTab", "scripting"],
+  "host_permissions": ["<all_urls>"]
 }
