@@ -87,30 +87,35 @@ export const IllustrationNoRecent = () => (
 /* 5. Offline - "Absolute Clarity Wi-Fi" (v24) */
 export const IllustrationOffline = () => (
   <svg width="200" height="160" viewBox="0 0 200 160" fill="none" xmlns="http://www.w3.org/2000/svg">
-    {/* Clean Hub Background SLOT Focus (No confusing curves) */}
-    <g transform="translate(115, 125)">
-      <rect x="-45" y="-30" width="90" height="40" rx="4" fill="#0f0f18" stroke="#ef4444" strokeOpacity="0.12" strokeWidth="1.5" />
+    {/* Bottom Hub Background (Minimized for Focus) */}
+    <g transform="translate(115, 110)">
+      <rect x="-42" y="-28" width="84" height="38" rx="5" fill="#0f0f18" stroke="#ef4444" strokeOpacity="0.1" strokeWidth="1.25" />
       {[0, 1, 2, 3].map(i => (
-        <rect key={i} x={-36 + i * 18} y="-15" width="10" height="10" rx="1.5" stroke="#ef4444" strokeOpacity="0.1" strokeWidth="1.25" />
+        <rect key={i} x={-32 + i * 18} y="-14" width="10" height="10" rx="1.5" stroke="#ef4444" strokeOpacity="0.08" strokeWidth="1.25" />
       ))}
-      {/* Rectilinear Cable Accent */}
-      <path d="M-30 -10V-28H-55" stroke="#ef4444" strokeOpacity="0.08" strokeWidth="1.5" strokeLinecap="round" fill="none" />
     </g>
 
-    {/* Hyper-refined Protagonist - Zero Shadow Arcs */}
-    <g transform="translate(85, 75)">
-      {/* Precision Standard 3-Arcs (Single Layer) - Widened (R=40, 28, 16) */}
-      <path d="M-40 -6C-40 -28.1 -22.1 -46 0 -46C22.1 -46 40 -28.1 40 -6" stroke="#ef4444" strokeOpacity="0.2" strokeWidth="2.5" strokeLinecap="round" fill="none" />
-      <path d="M-28 4C-28 -11.5 -15.5 -24 0 -24C15.5 -24 28 -11.5 28 4" stroke="#ef4444" strokeOpacity="0.4" strokeWidth="2.5" strokeLinecap="round" fill="none" />
-      <path d="M-16 14C-16 5.2 -8.8 -2 0 -2C8.8 -2 16 5.2 16 14" stroke="#ef4444" strokeOpacity="0.7" strokeWidth="2.5" strokeLinecap="round" fill="none" />
+    {/* Concentric Wi-Fi Arcs - Absolute Precision Center */}
+    <g transform="translate(85, 60)">
+      {/* Subtle Arc Fading */}
+      <path d="M-34.4 0A42 42 0 0 1 34.4 0" stroke="#ef4444" strokeOpacity="0.15" strokeWidth="2.75" strokeLinecap="round" fill="none" />
+      <path d="M-22.9 8A28 28 0 0 1 22.9 8" stroke="#ef4444" strokeOpacity="0.35" strokeWidth="2.75" strokeLinecap="round" fill="none" />
+      <path d="M-11.5 16A14 14 0 0 1 11.5 16" stroke="#ef4444" strokeOpacity="0.65" strokeWidth="2.75" strokeLinecap="round" fill="none" />
       <circle r="4" fill="#ef4444" transform="translate(0, 24)" />
-      
-      {/* Single Bold Absolute Strike */}
-      <g transform="translate(0, 1)">
-        {/* Background clearing stroke for the strike */}
-        <line x1="-22" y1="-32" x2="22" y2="12" stroke="#0f0f18" strokeWidth="7" strokeLinecap="round" />
-        {/* The Strike */}
-        <line x1="-22" y1="-32" x2="22" y2="12" stroke="#ef4444" strokeOpacity="1" strokeWidth="2.5" strokeLinecap="round" />
+
+
+      <g transform="rotate(-40)">
+        {/* 1. Background Clearing (Creates the gap behind the strike) */}
+        <rect x="-4" y="-30" width="8" height="60" fill="#0f0f18" rx="4" />
+        
+        {/* 2. Primary Red Strike Line */}
+        <rect x="-1.5" y="-28" width="3" height="56" fill="#ef4444" rx="1.5" />
+        
+        {/* 3. Subtle Highlight for Premium Finish */}
+        <rect x="-0.75" y="-20" width="1.5" height="25" fill="white" fillOpacity="0.12" rx="0.75" />
+        
+        {/* 4. Secondary Glint Tip */}
+        <rect x="-0.75" y="12" width="1.5" height="10" fill="white" fillOpacity="0.08" rx="0.75" />
       </g>
     </g>
   </svg>
