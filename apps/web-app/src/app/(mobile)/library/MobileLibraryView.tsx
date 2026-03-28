@@ -7,8 +7,9 @@ import { MobileTopBar } from '@nova/components/layout/MobileTopBar';
 import { LibraryControls } from '@nova/components/library/LibraryControls';
 import { FilterChips } from '@nova/components/library/FilterChips';
 import { AssetGrid } from '@nova/components/library/AssetGrid';
-import { NVLoadingState, NVIconButton, NVAssetSelectionBar, NVAssetDetailSheet, Asset, NVButton } from '@nova/ui';
+import { NVLoadingState, NVIconButton, NVAssetSelectionBar, NVAssetDetailSheet, Asset, NVButton, NVEmptyState } from '@nova/ui';
 import { extractColors } from '@nova/lib/colorExtractor';
+import { LibraryEmptyState } from '../../../components/library/LibraryEmptyState';
 
 interface MobileLibraryViewProps {
   assets: Asset[];
@@ -87,6 +88,7 @@ export default function MobileLibraryView({
   
 
 
+
   return (
     <>
       <MobileTopBar
@@ -137,15 +139,24 @@ export default function MobileLibraryView({
       <main className="h-[calc(100%-128px)] px-5 py-4">
         {loading ? (
           <NVLoadingState fullHeight />
+        ) : filteredAssets.length > 0 ? (
+          <AssetGrid 
+            assets={filteredAssets} 
+            onAssetTap={handleAssetTap} 
+            selectedIds={selectedIds}
+            onSelect={(id) => handleSelect(id)}
+            isMobile={true}
+            zoom={zoom}
+          />
         ) : (
-            <AssetGrid 
-              assets={filteredAssets} 
-              onAssetTap={handleAssetTap} 
-              selectedIds={selectedIds}
-              onSelect={(id) => handleSelect(id)}
-              isMobile={true}
-              zoom={zoom}
+          <div className="flex items-center justify-center min-h-[60vh]">
+            <LibraryEmptyState 
+              assets={assets}
+              filteredAssets={filteredAssets}
+              filter={filter}
+              searchText={searchText}
             />
+          </div>
         )}
       </main>
 

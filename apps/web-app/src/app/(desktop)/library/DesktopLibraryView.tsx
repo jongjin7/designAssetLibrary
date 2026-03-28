@@ -4,11 +4,12 @@ import { processFileToAsset } from '@nova/lib/assetProcessor';
 import { AssetGrid } from '@nova/components/library/AssetGrid';
 import { LibraryControls } from '@nova/components/library/LibraryControls';
 import { DropZone } from '@nova/components/shared/DropZone';
-import { NVLoadingState, NVAssetSelectionBar, NVAssetDetailSidebar, Asset, NVIconButton } from '@nova/ui';
+import { NVLoadingState, NVAssetSelectionBar, NVAssetDetailSidebar, Asset, NVIconButton, NVEmptyState } from '@nova/ui';
 import { cn } from '@nova/lib/utils';
 import { extractColors } from '@nova/lib/colorExtractor';
 import { LibraryFilters } from '@nova/hooks/useLibraryFilters';
 import { useDesktopShell } from '../../../components/layout/DesktopShell/index';
+import { LibraryEmptyState } from '../../../components/library/LibraryEmptyState';
 
 interface DesktopLibraryViewProps {
   assets: Asset[];
@@ -144,6 +145,7 @@ export default function DesktopLibraryView({
   };
 
 
+
   return (
     <div className="flex h-full w-full overflow-hidden bg-[#0A0C13]">
       <div className="flex-1 flex flex-col overflow-hidden relative">
@@ -190,7 +192,7 @@ export default function DesktopLibraryView({
           <div className="mx-auto h-full">
             {loading ? (
               <NVLoadingState className="h-full" />
-            ) : (
+            ) : filteredAssets.length > 0 ? (
               <AssetGrid 
                 assets={filteredAssets} 
                 onAssetTap={handleAssetTap} 
@@ -198,6 +200,15 @@ export default function DesktopLibraryView({
                 onSelect={handleSelect}
                 zoom={zoom}
               />
+            ) : (
+              <div className="flex items-center justify-center h-full">
+                <LibraryEmptyState 
+                  assets={assets}
+                  filteredAssets={filteredAssets}
+                  filter={filter}
+                  searchText={searchText}
+                />
+              </div>
             )}
           </div>
         </div>

@@ -10,7 +10,7 @@ export type EmptyStateVariant = 'no-results' | 'empty-library' | 'no-favorites' 
  */
 
 const SpatialArchive = ({ color = "white", opacity = 0.04 }) => (
-  <g transform="translate(125, 105)">
+  <g transform="translate(115, 85)">
     <rect x="-35" y="-40" width="70" height="50" rx="6" fill={color} fillOpacity={opacity * 0.5} stroke={color} strokeOpacity={opacity} strokeWidth="1" transform="rotate(-5)" />
     <rect x="-35" y="-40" width="70" height="50" rx="6" fill={color} fillOpacity={opacity} stroke={color} strokeOpacity={opacity * 2} strokeWidth="1" transform="rotate(2)" />
     <path d="M-40 -30H-15L-8 -24H40V20H-40V-30Z" fill="#0f0f18" stroke={color} strokeOpacity={opacity * 3} strokeWidth="1.25" />
@@ -20,7 +20,7 @@ const SpatialArchive = ({ color = "white", opacity = 0.04 }) => (
 
 /* Document Stack Sub-theme */
 const DocumentStack = ({ color = "#f59e0b", opacity = 0.05 }) => (
-  <g transform="translate(125, 105)">
+  <g transform="translate(115, 76)">
     <rect x="-30" y="-35" width="60" height="75" rx="4" fill={color} fillOpacity={opacity * 0.4} stroke={color} strokeOpacity={opacity} strokeWidth="1" transform="rotate(-15)" />
     <rect x="-30" y="-35" width="60" height="75" rx="4" fill={color} fillOpacity={opacity * 0.6} stroke={color} strokeOpacity={opacity * 2} strokeWidth="1" transform="rotate(8)" />
     <rect x="-30" y="-35" width="60" height="75" rx="4" fill="#0f0f18" stroke={color} strokeOpacity={opacity * 4} strokeWidth="1.25" />
@@ -30,8 +30,10 @@ const DocumentStack = ({ color = "#f59e0b", opacity = 0.05 }) => (
 /* 1. No Results */
 export const IllustrationNoResults = () => (
   <svg width="200" height="160" viewBox="0 0 200 160" fill="none" xmlns="http://www.w3.org/2000/svg">
-    <SpatialArchive color="#6366f1" />
-    <g transform="translate(75, 65)">
+    <g transform="translate(10, 20)">
+      <SpatialArchive color="#6366f1" />
+    </g>
+    <g transform="translate(75, 60)">
       <circle r="34" fill="#0f0f18" fillOpacity="0.8" stroke="#6366f1" strokeOpacity="0.15" strokeWidth="2.5" />
       <circle r="30" stroke="#6366f1" strokeOpacity="1" strokeWidth="1.25" />
       <circle r="20" fill="#6366f1" fillOpacity="0.1" />
@@ -45,8 +47,10 @@ export const IllustrationNoResults = () => (
 /* 2. Empty Library */
 export const IllustrationEmptyLibrary = () => (
   <svg width="200" height="160" viewBox="0 0 200 160" fill="none" xmlns="http://www.w3.org/2000/svg">
-    <SpatialArchive color="#6366f1" />
-    <g transform="translate(75, 75)">
+    <g transform="translate(10, 10)">
+      <SpatialArchive color="#6366f1" />
+    </g>
+    <g transform="translate(75, 65)">
       <circle r="24" fill="#0f0f18" fillOpacity="0.9" stroke="#6366f1" strokeOpacity="0.4" strokeWidth="1.25" strokeDasharray="4 2" />
       <path d="M0 -10V10M-10 0H10" stroke="#6366f1" strokeOpacity="1" strokeWidth="2.5" strokeLinecap="round" />
     </g>
@@ -57,7 +61,7 @@ export const IllustrationEmptyLibrary = () => (
 export const IllustrationNoFavorites = () => (
   <svg width="200" height="160" viewBox="0 0 200 160" fill="none" xmlns="http://www.w3.org/2000/svg">
     <DocumentStack color="#f59e0b" />
-    <g transform="translate(95, 75)">
+    <g transform="translate(85, 66)">
       <path d="M0 -22L6 -8H22L10 4L14 20L0 12L-14 20L-10 4L-22 -8H-6L0 -22Z" fill="#141424" transform="translate(2, 3)" stroke="#f59e0b" strokeOpacity="0.08" strokeWidth="1" strokeLinejoin="round" />
       <path d="M0 -22L6 -8H22L10 4L14 20L0 12L-14 20L-10 4L-22 -8H-6L0 -22Z" fill="#0f0f18" stroke="#f59e0b" strokeOpacity="1" strokeWidth="1.5" strokeLinejoin="round" />
       <circle r="2.5" fill="#f59e0b" />
@@ -68,8 +72,10 @@ export const IllustrationNoFavorites = () => (
 /* 4. No Recent */
 export const IllustrationNoRecent = () => (
   <svg width="200" height="160" viewBox="0 0 200 160" fill="none" xmlns="http://www.w3.org/2000/svg">
-    <SpatialArchive color="#818cf8" />
-    <g transform="translate(75, 75)">
+    <g transform="translate(10, 10)">
+      <SpatialArchive color="#818cf8" />
+    </g>
+    <g transform="translate(75, 65)">
       <circle r="36" fill="#0f0f18" fillOpacity="0.9" stroke="#818cf8" strokeOpacity="0.1" strokeWidth="2.5" />
       <circle r="32" stroke="#818cf8" strokeOpacity="0.8" strokeWidth="1.25" />
       <path d="M0 0V-22" stroke="#818cf8" strokeOpacity="1" strokeWidth="2.5" strokeLinecap="round" />
@@ -82,7 +88,7 @@ export const IllustrationNoRecent = () => (
 export const IllustrationOffline = () => (
   <svg width="200" height="160" viewBox="0 0 200 160" fill="none" xmlns="http://www.w3.org/2000/svg">
     {/* Clean Hub Background SLOT Focus (No confusing curves) */}
-    <g transform="translate(125, 105)">
+    <g transform="translate(115, 125)">
       <rect x="-45" y="-30" width="90" height="40" rx="4" fill="#0f0f18" stroke="#ef4444" strokeOpacity="0.12" strokeWidth="1.5" />
       {[0, 1, 2, 3].map(i => (
         <rect key={i} x={-36 + i * 18} y="-15" width="10" height="10" rx="1.5" stroke="#ef4444" strokeOpacity="0.1" strokeWidth="1.25" />
@@ -92,11 +98,11 @@ export const IllustrationOffline = () => (
     </g>
 
     {/* Hyper-refined Protagonist - Zero Shadow Arcs */}
-    <g transform="translate(75, 78)">
-      {/* Precision Standard 3-Arcs (Single Layer) */}
-      <path d="M-32 -6C-32 -23.6 -17.6 -38 0 -38C17.6 -38 32 -23.6 32 -6" stroke="#ef4444" strokeOpacity="0.2" strokeWidth="2.5" strokeLinecap="round" fill="none" />
-      <path d="M-22 4C-22 -8.1 -12.1 -18 0 -18C12.1 -18 22 -8.1 22 4" stroke="#ef4444" strokeOpacity="0.4" strokeWidth="2.5" strokeLinecap="round" fill="none" />
-      <path d="M-12 14C-12 7.3 -6.6 2 0 2C6.6 2 12 7.3 12 14" stroke="#ef4444" strokeOpacity="0.7" strokeWidth="2.5" strokeLinecap="round" fill="none" />
+    <g transform="translate(85, 75)">
+      {/* Precision Standard 3-Arcs (Single Layer) - Widened (R=40, 28, 16) */}
+      <path d="M-40 -6C-40 -28.1 -22.1 -46 0 -46C22.1 -46 40 -28.1 40 -6" stroke="#ef4444" strokeOpacity="0.2" strokeWidth="2.5" strokeLinecap="round" fill="none" />
+      <path d="M-28 4C-28 -11.5 -15.5 -24 0 -24C15.5 -24 28 -11.5 28 4" stroke="#ef4444" strokeOpacity="0.4" strokeWidth="2.5" strokeLinecap="round" fill="none" />
+      <path d="M-16 14C-16 5.2 -8.8 -2 0 -2C8.8 -2 16 5.2 16 14" stroke="#ef4444" strokeOpacity="0.7" strokeWidth="2.5" strokeLinecap="round" fill="none" />
       <circle r="4" fill="#ef4444" transform="translate(0, 24)" />
       
       {/* Single Bold Absolute Strike */}
@@ -113,7 +119,6 @@ export const IllustrationOffline = () => (
 export const ILLUSTRATIONS: Record<Exclude<EmptyStateVariant, 'custom'>, React.FC> = {
   'no-results': IllustrationNoResults,
   'empty-library': IllustrationNoResults, // Re-use NoResults for EmptyLibrary or keep it separate
-  'empty-library-v1': IllustrationEmptyLibrary, // For reference
   'no-favorites': IllustrationNoFavorites,
   'no-recent': IllustrationNoRecent,
   'offline': IllustrationOffline,
