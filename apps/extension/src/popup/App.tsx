@@ -155,6 +155,32 @@ function getImageDimensions(dataUrl: string): Promise<{ width: number; height: n
   })
 }
 
+/** Crop a full-viewport PNG to the bounding rect of the selected element */
+function cropDataUrl(
+  dataUrl: string,
+  rect: { top: number; left: number; width: number; height: number },
+  dpr: number
+): Promise<string> {
+  return new Promise((resolve, reject) => {
+    const img = new Image()
+    img.onload = () => {
+      const canvas = document.createElement('canvas')
+      const sx = Math.round(rect.left * dpr)
+      const sy = Math.round(rect.top * dpr)
+      const sw = Math.round(rect.width * dpr)
+      const sh = Math.round(rect.height * dpr)
+      canvas.width = sw
+      canvas.height = sh
+      const ctx = canvas.getContext('2d')
+      if (!ctx) { reject(new Error('canvas context unavailable')); return }
+      ctx.drawImage(img, sx, sy, sw, sh, 0, 0, sw, sh)
+      resolve(canvas.toDataURL('image/png'))
+    }
+    img.onerror = reject
+    img.src = dataUrl
+  })
+}
+
 // ─── Component ───────────────────────────────────────────────────────────────
 
 export default function App() {
@@ -165,29 +191,61 @@ export default function App() {
 
   const isBusy = status === 'capturing' || status === 'saving' || status === 'selecting'
 
-  // ── Message listener for responses from background/content ─────────────────
+  // ── Shared handler for capture results ─────────────────────────────────────
+  const applyResult = useCallback((msg: Record<string, unknown>) => {
+    if (msg.type === 'CAPTURE_RESULT') {
+      setCapture({
+        dataUrl: msg.dataUrl as string,
+        width: msg.width as number,
+        height: msg.height as number,
+        capturedAt: Date.now(),
+      })
+      setStatus('captured')
+      setStatusMsg('캡처 완료')
+    } else if (msg.type === 'CAPTURE_ERROR') {
+      setStatus('error')
+      setStatusMsg((msg.message as string) || '캡처 중 오류가 발생했습니다.')
+    }
+  }, [])
+
+  // ── onMessage: only for content script → popup push messages ───────────────
   React.useEffect(() => {
     function handleMessage(msg: Record<string, unknown>) {
-      if (msg.type === 'CAPTURE_RESULT') {
-        const dataUrl = msg.dataUrl as string
-        const width = msg.width as number
-        const height = msg.height as number
-        setCapture({ dataUrl, width, height, capturedAt: Date.now() })
-        setStatus('captured')
-        setStatusMsg('캡처 완료')
-      } else if (msg.type === 'CAPTURE_ERROR') {
-        setStatus('error')
-        setStatusMsg((msg.message as string) || '캡처 중 오류가 발생했습니다.')
-      } else if (msg.type === 'ELEMENT_SELECTED') {
-        // Element selected — now ask background to capture visible area
-        // (element region is cropped client-side after capture)
-        chrome.runtime.sendMessage({ type: 'CAPTURE_VISIBLE_AREA' })
+      if (msg.type === 'ELEMENT_SELECTED') {
+        // Element selected — ask background to capture visible area, get rect for crop
+        const rect = msg.rect as { top: number; left: number; width: number; height: number }
         setStatusMsg('요소 캡처 중...')
+        chrome.runtime.sendMessage(
+          { type: 'CAPTURE_VISIBLE_AREA' },
+          (response: Record<string, unknown>) => {
+            if (chrome.runtime.lastError) {
+              applyResult({ type: 'CAPTURE_ERROR', message: chrome.runtime.lastError.message })
+              return
+            }
+            if (response?.type === 'CAPTURE_RESULT') {
+              // Crop the captured image to the selected element's bounding rect
+              cropDataUrl(
+                response.dataUrl as string,
+                rect,
+                window.devicePixelRatio || 1
+              ).then((cropped) => {
+                applyResult({ ...response, dataUrl: cropped })
+              }).catch(() => {
+                // Fallback: use full capture if crop fails
+                applyResult(response)
+              })
+            } else {
+              applyResult(response)
+            }
+          }
+        )
+      } else if (msg.type === 'CAPTURE_ERROR') {
+        applyResult(msg)
       }
     }
     chrome.runtime.onMessage.addListener(handleMessage)
     return () => chrome.runtime.onMessage.removeListener(handleMessage)
-  }, [])
+  }, [applyResult])
 
   // ── Capture ────────────────────────────────────────────────────────────────
   const handleCapture = useCallback(async () => {
@@ -197,24 +255,31 @@ export default function App() {
 
     try {
       if (mode === 'element') {
-        // Inject content script interaction
         setStatus('selecting')
         setStatusMsg('캡처할 요소를 클릭하세요. (ESC 취소)')
         const [tab] = await chrome.tabs.query({ active: true, currentWindow: true })
         if (!tab.id) throw new Error('활성 탭을 찾을 수 없습니다.')
         await chrome.tabs.sendMessage(tab.id, { type: 'CAPTURE_ELEMENT_START' })
-        // Result arrives via onMessage listener above
+        // Result arrives via onMessage listener above (ELEMENT_SELECTED push)
       } else {
-        // Visible or full page → delegate to background
-        const msgType =
-          mode === 'visible' ? 'CAPTURE_VISIBLE_AREA' : 'CAPTURE_FULL_PAGE'
-        chrome.runtime.sendMessage({ type: msgType })
+        // Visible or full page → sendMessage with callback to receive response
+        const msgType = mode === 'visible' ? 'CAPTURE_VISIBLE_AREA' : 'CAPTURE_FULL_PAGE'
+        chrome.runtime.sendMessage(
+          { type: msgType },
+          (response: Record<string, unknown>) => {
+            if (chrome.runtime.lastError) {
+              applyResult({ type: 'CAPTURE_ERROR', message: chrome.runtime.lastError.message })
+              return
+            }
+            applyResult(response)
+          }
+        )
       }
     } catch (err) {
       setStatus('error')
       setStatusMsg(err instanceof Error ? err.message : '캡처 실패')
     }
-  }, [mode])
+  }, [mode, applyResult])
 
   // ── Save ───────────────────────────────────────────────────────────────────
   const handleSave = useCallback(async () => {

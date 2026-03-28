@@ -96,8 +96,10 @@ async function captureFullPage(
         args: [scrollY],
       })
 
-      // Short delay for rendering
-      await delay(150)
+      // Wait for scroll + paint to settle.
+      // captureVisibleTab quota = 2 calls/sec → minimum 500ms between calls.
+      // Using 600ms to stay safely under the limit.
+      await delay(600)
 
       const strip = await chrome.tabs.captureVisibleTab(windowId, { format: 'png' })
       strips.push(strip)
