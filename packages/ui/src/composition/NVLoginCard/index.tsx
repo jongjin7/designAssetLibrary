@@ -43,11 +43,11 @@ export const NVLoginCard: React.FC<NVLoginCardProps> = ({
       blur="lg" 
       className="rounded-2xl border-white/5 bg-white/[0.03] shadow-2xl shadow-black/60 w-[380px] p-6 mobile:w-full mobile:h-full mobile:flex mobile:flex-col mobile:justify-center"
     >
-      <div className="space-y-8">
+      <div className="space-y-4">
         <NVLoginCardHeader />
 
-        <div className="px-4">
-          <div className="space-y-3 brightness-60 hover:opacity-100 hover:brightness-100 transition-all duration-300">
+        <div >
+          <div className="space-y-3 py-4 px-4 brightness-80 hover:brightness-100 transition-all duration-300">
             {/* 주요 소셜 로그인 (Primary) */}
             {onGoogleLogin && <NVLoginSocialButton provider="google" onClick={onGoogleLogin} disabled={disabled} />}
             {onKakaoLogin && <NVLoginSocialButton provider="kakao" onClick={onKakaoLogin} disabled={disabled} />}
@@ -77,7 +77,7 @@ export const NVLoginCard: React.FC<NVLoginCardProps> = ({
           </div>
 
           {/* 게스트 액션 */}
-          <div className="pt-6">
+          <div className="pt-2 px-4">
             <NVButton
               variant="ghost"
               onClick={onGuestLogin}

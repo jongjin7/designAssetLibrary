@@ -54,7 +54,7 @@ export const NVLoginSocialButton: React.FC<NVLoginSocialButtonProps> = ({
       onClick={onClick}
       size="lg"
       disabled={disabled}
-      className={`w-full flex items-center justify-center gap-3 transition-all duration-300 active:scale-[0.98] ${config.className} ${isSecondary ? '!py-2.5' : ''}`}
+      className={`w-full flex items-center justify-center gap-3 opacity-80 hover:opacity-100 transition-all duration-300 active:scale-[0.98] ${config.className} ${isSecondary ? '!py-2.5' : ''}`}
     >
       {config.icon}
       {!isSecondary && <span>{config.label}</span>}
