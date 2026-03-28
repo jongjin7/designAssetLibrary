@@ -40,8 +40,11 @@ export function useAssets() {
       const newAsset = await assetRepository.saveAsset(asset, file);
       await refreshAssets();
       return newAsset;
-    } catch (error) {
+    } catch (error: any) {
       console.error('Failed to add asset:', error);
+      if (typeof window !== 'undefined') {
+        alert(`파일 등록 실패: ${error.message || '인증 세션이 만료되었거나 권한이 없습니다.'}`);
+      }
     }
   }, [refreshAssets]);
 

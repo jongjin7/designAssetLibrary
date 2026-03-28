@@ -34,38 +34,69 @@ export class SupabaseAssetRepository implements AssetRepository {
   }
 
   async saveAsset(asset: Partial<Asset>, file?: Blob): Promise<Asset> {
-    // 1. If file provided, upload to Supabase Storage
-    let filePath = '';
-    if (file) {
-      const fileName = `${Date.now()}-${asset.fileName}`;
-      const { data: storageData, error: storageError } = await supabase.storage
-        .from('assets')
-        .upload(fileName, file);
+    try {
+      // 1. If file provided, upload to Supabase Storage
+      let filePath = '';
+      if (file) {
+        const fileName = `${Date.now()}-${asset.fileName}`;
+        const { data: storageData, error: storageError } = await supabase.storage
+          .from('assets')
+          .upload(fileName, file);
+        
+        if (storageError) {
+          console.error('[Supabase/Storage] Upload failed:', storageError);
+          throw storageError;
+        }
+        filePath = storageData?.path || '';
+
+        // Also cache in OPFS for local-first speed
+        await opfsStorage.saveFile(`cache/${fileName}`, file);
+      }
+
+      // 2. Save metadata to Database
+      const { data: userData } = await supabase.auth.getUser();
+      const currentUser = userData.user;
       
-      if (storageError) throw storageError;
-      filePath = storageData.path;
+      // Guest mode fallback
+      let userId = currentUser?.id;
+      if (!userId && typeof window !== 'undefined') {
+        const mockUserString = localStorage.getItem('nova_mock_user');
+        if (mockUserString) {
+          try {
+            const mockUser = JSON.parse(mockUserString);
+            if (mockUser?.id) {
+              userId = mockUser.id;
+              console.log('[SupabaseAssetRepository] Using Guest User ID:', userId);
+            }
+          } catch (e) {
+            console.error('[SupabaseAssetRepository] Failed to parse guest user:', e);
+          }
+        }
+      }
 
-      // Also cache in OPFS for local-first speed
-      await opfsStorage.saveFile(`cache/${fileName}`, file);
+      const { data, error } = await supabase
+        .from('assets')
+        .insert({
+          file_name: asset.fileName,
+          file_path: filePath,
+          file_size_bytes: file?.size || 0,
+          mime_type: asset.mimeType,
+          palette: asset.palette,
+          is_favorite: asset.isFavorite,
+          user_id: userId
+        })
+        .select()
+        .single();
+
+      if (error) {
+        console.error('[Supabase/Database] Insert failed:', error);
+        throw error;
+      }
+      return mapToAsset(data);
+    } catch (saveError) {
+      console.error('[SupabaseAssetRepository] saveAsset failed:', saveError);
+      throw saveError;
     }
-
-    // 2. Save metadata to Database
-    const { data, error } = await supabase
-      .from('assets')
-      .insert({
-        file_name: asset.fileName,
-        file_path: filePath,
-        file_size_bytes: file?.size || 0,
-        mime_type: asset.mimeType,
-        palette: asset.palette,
-        is_favorite: asset.isFavorite,
-        user_id: (await supabase.auth.getUser()).data.user?.id
-      })
-      .select()
-      .single();
-
-    if (error) throw error;
-    return mapToAsset(data);
   }
 
   async deleteAsset(id: string): Promise<void> {
