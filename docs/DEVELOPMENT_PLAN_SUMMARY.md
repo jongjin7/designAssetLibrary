@@ -1,7 +1,7 @@
 # NOVA MVP — 개발 계획 요약 (Sprint 1–4)
 
 > **기간**: 12주 (Week 1–12) · **구성**: 4 Sprints × 3주
-> **연관 문서**: `DEVELOPMENT_PLAN_S1_S2.md` · `DEVELOPMENT_PLAN_S3_S4.md` · `architecture/sync-storage-spec.md`
+> **연관 문서**: `DEVELOPMENT_PLAN_S1_S2.md` · `DEVELOPMENT_PLAN_S3_S4.md`
 
 ---
 

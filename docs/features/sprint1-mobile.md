@@ -1,58 +1,47 @@
-# Sprint 1: 모바일 수집기 명세 (Mobile Collector Specification)
+# Sprint 1: Mobile Collector Specification (Local-First)
 
-모바일 웹(PWA) 기반의 디자인 자산 수집 도구에 대한 기능 명세서입니다. 카메라 캡처, 이미지 최적화, AI 기반 자동 분류 및 실시간 동기화 구현을 목표로 합니다.
+This specification defines the functional and technical requirements for the **"PWA-based Instant Local Collection"** environment, the core objective of Sprint 1.
 
-Sprint 1 focuses on building the **PWA-based mobile application** for instant design asset collection.
+## 1. Feature Goals (Sprint 1 Limited)
 
-## 1. Feature Goals
-
-- **Instant Camera Capture:** Mobile-optimized UI for rapid shooting.
-- **Designer-Friendly OAuth:** Seamless authentication via Google, Naver, Kakao, or Facebook for rapid workspace access.
-- **Client-Side Processing:** EXIF/GPS metadata removal and thumbnail generation in-browser.
-- **AI Classification:** Real-time extraction of 5 core colors, components, and objects.
-- **High-Performance Storage:** **OPFS (Origin Private File System)** for local image caching.
-- **Reliable Sync:** **TUS Protocol** for resumable uploads within a 3s target.
+- **Instant Camera Capture:** Mobile-optimized, low-latency shooting UI (completion within 1s).
+- **Client-Side Pre-processing:** In-browser EXIF/GPS stripping and thumbnail generation worker.
+- **Local AI Classification:** On-device (MobileNet) extraction of 5 core colors, composition, and objects.
+- **High-Performance Storage:** **OPFS (Origin Private File System)** for high-speed I/O of large assets.
+- **Stable Persistence:** IndexedDB for guaranteed offline metadata persistence.
 
 ---
 
 ## 2. Core User Stories
 
-1. **As a designer**, I want to take a photo of a physical design and have its colors automatically extracted.
-2. **As a collector**, I want to capture multiple assets in a row without waiting for each one to upload.
-3. **As a user**, I want to see my mobile-captured assets update in real-time on my desktop dashboard.
+1. **As a designer**, I want to capture physical sketches or design references offline and instantly extract color palettes.
+2. **As a collector**, I want to shoot multiple photos in a row without UI blocking, maintaining a seamless collection flow.
+3. **As a user**, I want to send inspirations from other apps directly to my NOVA library via the iOS/Android 'Share' menu.
 
 ---
 
 ## 3. Technical Requirements
 
-### 3.1 PWA Camera & Storage (`/apps/web-app`)
+### 3.1 PWA Camera & Storage
+- **Camera API:** Custom camera interface using `Navigator.mediaDevices.getUserMedia`.
+- **Local Persistence:** **OPFS** as the primary source storage to prevent data loss even when browser cache is cleared.
+- **Worker Isolation:** Image pre-processing (GPS removal, resizing) performed in Web Workers to prevent main-thread blocking.
 
-- **API:** Use `Navigator.mediaDevices.getUserMedia` for custom camera interface.
-- **Local Cache:** Use **OPFS** for high-speed I/O of high-res assets.
-- **Privacy:** Client-side Web Worker strips GPS/EXIF before upload.
-- **Offline:** IndexedDB queue for metadata; TUS for resumable file chunks.
+### 3.2 OS Integration (Capture Channels)
+- **Share Sheet Support:** Implementation of data reception logic via `share_target` in `manifest.json`.
+- **Gallery Picker:** Multiple asset ingestion using standard `<input type="file">`.
 
-### 3.2 Smart Folders Logic
-
-- **Implementation:** Query builder that translates conditions into PostgreSQL JSONB filters.
-- **Virtual Views:** Folders with `is_smart_folder = true` act as dynamic viewpoints for assets with matching tags/colors.
-
-### 3.3 Desktop App Extension
-
-- **6 Capture Modes:** Full Page, Visible Area, Selected Element, Batch Image Save, Responsive Viewport, and Text/Color Picker.
-- **Performance:** Extension to Dashboard sync also targetting < 3s.
-
-## 3.4 Storage Logic
-
-- **Pathing**: `/users/[user_id]/[year]/[month]/[uuid].webp`.
-- **Optimization**: Automatic conversion to WEBP/AVIF to minimize storage and bandwidth.
+### 3.3 Security & Performance
+- **Deduplication:** Prevention of duplicate storage using **SHA-256 file hashes** as library IDs.
+- **Privacy:** Immediate anonymization (GPS extraction) of all pending assets on the client side.
+- **Latency Target:** From shutter click to local storage completion within **< 1s**.
 
 ---
 
 ## 4. Acceptance Criteria (AC)
 
-- [ ] PWA can be installed on iOS/Android home screens.
-- [ ] Users can capture an image and see it appear in the dashboard within **3 seconds**.
-- [ ] AI-extracted tags achieve **70% accuracy** in early testing.
-- [ ] Privacy check: Uploaded files contain no GPS coordinates.
-- [ ] Deduplication: SHA-256 hash prevents duplicate uploads of the same physical file.
+- [ ] Successful installation of PWA on iOS/Android home screens.
+- [ ] Verification of offline capture and persistent storage (data retained after app restart).
+- [ ] AI Auto-tagging: **≥ 70% accuracy** across 3 categories (Color, Composition, Object) based on local test sets.
+- [ ] Privacy Check: Confirmation that stored images contain no GPS coordinates.
+- [ ] External App Integration: Successful ingestion and tagging of images/URLs shared via OS menus.

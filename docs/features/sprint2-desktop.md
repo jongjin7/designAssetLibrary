@@ -1,64 +1,47 @@
-# Sprint 2: 데스크탑 관리 명세 (Desktop Management Specification)
+# Sprint 2: Desktop Expansion & Organization Specification
 
-데스크탑 대시보드와 브라우저 확장 프로그램 개발을 위한 기능 명세서입니다. 계층형 폴더 관리, 메타데이터 기반 스마트 폴더, 그리고 6가지 모드의 강력한 웹 캡처 도구 사양을 정의합니다.
-
-Sprint 2 focuses on the **Desktop Experience**, featuring advanced organization through hierarchical folders and dynamic "Smart Folders".
+This specification defines the functional and technical requirements for the **"Electron-based Native Management & Capture Channel Expansion"**, the core objective of Sprint 2.
 
 ## 1. Feature Goals
 
-- **Desktop Dashboard:** 3-column high-performance adaptive layout.
-- **Hierarchical Folders:** Unlimited depth tree with instant move/copy.
-- **Smart Folders:** Dynamic virtual views using `is_smart_folder` PostgreSQL logic.
-- **Browser Extension:** 6-mode capture tool with zero-friction saving.
-- **Bulk Operations:** Multi-select and batch metadata editing.
+- **Native File Power:** Local file Drag & Drop and **Monitored Folders (Chokidar)** for auto-ingestion.
+- **Browser Super-Charge:** Powerful browser extension supporting 7 sophisticated capture modes.
+- **Deep Organization:** Hierarchical folders (up to 5 levels) and condition-based **Smart Folders**.
+- **Keyboard-First Workflow:** Ultra-fast categorization and sorting via hotkeys (e.g., F-key menu).
+- **Rich Metadata:** Automated context memos, rating (1-5), color labels, and Batch Renaming.
 
 ---
 
 ## 2. Core User Stories
 
-1. **As a power user**, I want to drag multiple files from my desktop into my library.
-2. **As an organized user**, I want to place assets into nested folders with unlimited depth.
-3. **As a curator**, I want a folder that automatically shows all `#blue` assets from the last 30 days.
+1. **As an administrator**, I want to migrate massive local design folders to NOVA with a single drag-and-drop.
+2. **As a web collector**, I want to capture specific areas of a webpage or multiple images and send them instantly to my library.
+3. **As an organizer**, I want a smart folder that automatically displays 'Red assets' or 'PNGs saved within the last 7 days'.
 
 ---
 
 ## 3. Technical Requirements
 
-### 3.1 Folder System (`folders` table)
+### 3.1 Electron Integration
+- **Native FS Access:** Real-time change detection and auto-inbox ingestion using `chokidar`.
+- **High Performance:** **Sharp**-based batch processing for thumbnails to minimize wait time for 100+ uploads.
+- **Local DB:** SQLite (`better-sqlite3`) to ensure **< 200ms response time** when listing tens of thousands of assets.
 
-- **Structure:** Recursive tree navigation using PostgreSQL queries.
-- **Actions:** Create, Rename, Nest, Delete (with orphan handling).
-- **Auto-tagging:** Folders can have `auto_tags` that are applied to any new asset moved into them.
+### 3.2 Browser Extension (Manifest V3)
+- **7 Imaging Modes:** Area, Element, Visible, Full Page, Batch Save, Auto-Detect (Scroll detection), URL Bookmark.
+- **Context Menu:** Page analysis and batch image extraction via right-click.
+- **Drop Zone:** Dedicated overlay drop zone displayed on the right edge when dragging web images for instant saving.
 
-### 3.2 Smart Folders Logic
-
-- **Implementation:** Query builder that translates conditions into PostgreSQL JSONB filters.
-- **Virtual Views:** Folders with `is_smart_folder = true` act as dynamic viewpoints for assets with matching tags/colors.
-
-### 3.3 Desktop App Extension
-
-- **6 Capture Modes:**
-  - **Full Page:** High-res auto-stitching.
-  - **Visible Area:** Current screen capture.
-  - **Selected Element:** DOM-based capture.
-  - **Batch Image Save:** Extracts all images from a webpage.
-  - **Responsive Viewport:** Tests capture at different breakpoints.
-  - **Text/Color Picker:** Quick tool for design inspiration.
-- **Performance:** Extension to Dashboard sync also targeting < 3s.
+### 3.3 Advanced Sorting & Naming
+- **Smart Folder Engine:** Real-time query engine supporting complex conditions (AND/OR) for tags, formats, dates, and colors.
+- **Batch Rename:** Naming engine supporting 6+ parameters including `%N` (Number) and `%F` (Folder name).
 
 ---
 
-## 4. Milestones (Sprint 2: Weeks 4-6)
+## 4. Acceptance Criteria (AC)
 
-- **Week 4**: Desktop Dashboard UI & Adaptive Layout.
-- **Week 5**: Hierarchical Folder System & Smart Folder Logic.
-- **Week 6**: Browser Extension (6 modes) & Beta Release.
-
----
-
-## 5. Acceptance Criteria (AC)
-
-- [ ] Users can create nested folders up to unlimited levels deep.
-- [ ] Drag-and-drop file upload works on both Web and Electron apps.
-- [ ] "Smart Folder" query results update in < 200ms when filtered.
-- [ ] Browser extension successfully captures and uploads images directly to the user's library under 3s.
+- [ ] Successful build and execution of Desktop apps for both macOS and Windows.
+- [ ] Grid thumbnail loading completed within **3s** for 100+ dragged-and-dropped images.
+- [ ] Successful ingestion of all 7 browser capture modes into the Electron main process.
+- [ ] Smart Folders: Real-time reflection (within 3s) of asset lists after condition changes.
+- [ ] Performance: Navigation and tagging response maintained under **200ms** in environments with 20,000+ tags.
