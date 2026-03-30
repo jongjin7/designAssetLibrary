@@ -3,10 +3,11 @@
 import React, { useEffect, useState } from 'react';
 import Link from 'next/link';
 import { useRouter, usePathname } from 'next/navigation';
-import { Grid, Star, Clock } from 'lucide-react';
+import { Grid, Star, Clock, Inbox } from 'lucide-react';
 import { NVLogo } from '@nova/ui';
 import { cn } from '@nova/lib/utils';
 import { useFolders } from '@nova/hooks/useFolders';
+import { useAssets } from '@nova/hooks/useAssets';
 import { FolderTree } from '@nova/components/navigation/FolderTree';
 import { useDesktopShell } from '../context';
 import { SidebarToggleButton } from './SidebarToggleButton';
@@ -22,6 +23,7 @@ export function Sidebar({ onSearchToggle }: SidebarProps) {
   const [mounted, setMounted] = useState(false);
   useEffect(() => { setMounted(true); }, []);
   const { folders, createFolder } = useFolders();
+  const { inboxCount } = useAssets();
   const context = useDesktopShell();
   
   if (!context) return null;
@@ -77,9 +79,10 @@ export function Sidebar({ onSearchToggle }: SidebarProps) {
           
           {[
             { id: 'all', label: '모든 에셋', icon: Grid, path: '/library' },
+            { id: 'inbox', label: '인박스', icon: Inbox, path: '/inbox', count: inboxCount },
             { id: 'favorites', label: '즐겨찾기', icon: Star, path: '/favorites' },
             { id: 'recent', label: '최근 항목', icon: Clock, path: '/recent' }
-          ].map((item) => {
+          ].map((item: any) => {
             const isActive = pathname === item.path;
             return (
               <div 
@@ -93,7 +96,17 @@ export function Sidebar({ onSearchToggle }: SidebarProps) {
                 onClick={() => handleNavClick(item.id)}
               >
                 <item.icon size={18} className={cn("shrink-0 transition-transform duration-300 group-hover:scale-110", isActive ? 'text-indigo-400' : 'group-hover:text-white')} />
-                <span className="truncate">{item.label}</span>
+                <span className="flex-1 truncate">{item.label}</span>
+                {item.count > 0 && (
+                   <span className={cn(
+                     "px-1.5 py-0.5 rounded-full text-[10px] font-bold min-w-[20px] text-center transition-all duration-300",
+                     isActive 
+                      ? "bg-indigo-500 text-white" 
+                      : "bg-white/10 text-slate-400 group-hover:bg-white/20 group-hover:text-white"
+                   )}>
+                     {item.count}
+                   </span>
+                )}
               </div>
             );
           })}

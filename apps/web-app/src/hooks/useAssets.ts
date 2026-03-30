@@ -4,7 +4,7 @@ import { useState, useMemo, useCallback, useEffect } from 'react';
 import { Asset } from '@nova/types/asset';
 import { assetRepository } from '@nova/lib/dataService';
 
-type FilterType = 'all' | 'recent' | 'favorites';
+type FilterType = 'all' | 'recent' | 'favorites' | 'inbox';
 
 export function useAssets() {
   const [assets, setAssets] = useState<Asset[]>([]);
@@ -12,6 +12,10 @@ export function useAssets() {
   const [mounted, setMounted] = useState(false);
   const [filter, setFilter] = useState<FilterType>('all');
   const [selectedAssetId, setSelectedAssetId] = useState<string | null>(null);
+
+  const inboxCount = useMemo(() => 
+    assets.filter(a => !a.folderId).length
+  , [assets]);
 
   const refreshAssets = useCallback(async () => {
     // We don't want to set loading to true every time on resize if we already have data
@@ -59,6 +63,8 @@ export function useAssets() {
         ).slice(0, 6);
       case 'favorites':
         return assets.filter(a => a.isFavorite);
+      case 'inbox':
+        return assets.filter(a => !a.folderId);
       default:
         return assets;
     }
@@ -104,6 +110,7 @@ export function useAssets() {
     assets: filteredAssets, 
     filter, 
     setFilter, 
+    inboxCount,
     selectedAsset, 
     openDetail, 
     closeDetail, 

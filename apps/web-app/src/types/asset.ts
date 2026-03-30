@@ -10,4 +10,5 @@ export interface Asset {
   tags: string[];
   createdAt: string;
   isFavorite: boolean;
+  folderId?: string | null;
 }
