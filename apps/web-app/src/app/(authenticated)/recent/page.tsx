@@ -18,7 +18,7 @@ export default function RecentPage() {
   const isDesktop = useIsDesktop();
   const desktopShell = useDesktopShell();
   
-  const { assets, loading, filter, setFilter, selectedAsset, openDetail, closeDetail, deleteAsset, updateAsset, addAsset, moveAssets, isMoving, setFolderId } = useAssets();
+  const { assets, loading, filter, setFilter, selectedAsset, openDetail, closeDetail, deleteAsset, updateAsset, addAsset, moveAssets, isMoving, setFolderId } = useAssets([], { initialFilter: 'recent' });
 
   // Set the filter to 'recent' when the page mounts
   useEffect(() => {

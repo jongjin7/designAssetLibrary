@@ -18,7 +18,7 @@ export default function InboxPage() {
   const isDesktop = useIsDesktop();
   const desktopShell = useDesktopShell();
   
-  const { assets: rawAssets, loading, filter, setFilter, selectedAsset, openDetail, closeDetail, deleteAsset, updateAsset, addAsset, moveAssets, isMoving, setFolderId } = useAssets();
+  const { assets: rawAssets, loading, filter, setFilter, selectedAsset, openDetail, closeDetail, deleteAsset, updateAsset, addAsset, moveAssets, isMoving, setFolderId } = useAssets([], { initialFilter: 'inbox' });
 
   // Set the filter to 'inbox' when the page mounts
   useEffect(() => {

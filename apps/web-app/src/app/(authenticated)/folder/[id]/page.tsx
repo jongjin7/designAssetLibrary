@@ -36,7 +36,7 @@ export default function FolderPage() {
     addAsset,
     moveAssets,
     isMoving
-  } = useAssets(folders);
+  } = useAssets(folders, { initialFilter: 'folder', initialFolderId: folderId });
 
   useEffect(() => {
      setFilter('folder');
@@ -135,6 +135,7 @@ export default function FolderPage() {
       {...commonProps} 
       isSelectionMode={isSelectionMode} 
       setIsSelectionMode={setIsSelectionMode} 
+      activeKey={`folder_${folderId}`}
     />
   );
 }

@@ -1,27 +1,17 @@
-import { useState, useMemo, useCallback } from 'react';
+import { useMemo, useCallback } from 'react';
 import { Asset } from '../types/asset';
-
-export interface LibraryFilters {
-  keyword: string;
-  colors: string[];
-  tags: string[];
-  period: string;
-}
+import { useAssetStore, LibraryFilters } from '../store/useAssetStore';
 
 export function useLibraryFilters(assets: Asset[]) {
-  const [searchText, setSearchText] = useState('');
-  const [isFilterOpen, setIsFilterOpen] = useState(false);
-  const [activeFilters, setActiveFilters] = useState<LibraryFilters>({
-    keyword: '',
-    colors: [],
-    tags: [],
-    period: '',
-  });
-
+  const {
+     searchText, setSearchText, isFilterOpen, setIsFilterOpen,
+     activeFilters, setActiveFilters, handleFilterReset: resetAll
+  } = useAssetStore();
+  
   const filteredAssets = useMemo(() => {
     let result = assets;
     
-    // Quick search text (independent of advanced filters)
+    // Quick search text
     if (searchText) {
       const term = searchText.toLowerCase();
       result = result.filter(a => 
@@ -60,8 +50,16 @@ export function useLibraryFilters(assets: Asset[]) {
       }
 
       if (activeFilters.period) {
-        // Logic for period filtering could be added here if needed
-        // For now, it's just a placeholder in the state
+        const now = new Date();
+        result = result.filter(a => {
+          const createdAt = new Date(a.createdAt);
+          const diffInDays = (now.getTime() - createdAt.getTime()) / (1000 * 3600 * 24);
+          
+          if (activeFilters.period === 'today') return diffInDays < 1;
+          if (activeFilters.period === 'week') return diffInDays < 7;
+          if (activeFilters.period === 'month') return diffInDays < 30;
+          return true;
+        });
       }
     }
     
@@ -70,20 +68,15 @@ export function useLibraryFilters(assets: Asset[]) {
 
   const handleFilterApply = useCallback((filters: LibraryFilters) => {
     setActiveFilters(filters);
-  }, []);
+  }, [setActiveFilters]);
 
   const handleFilterReset = useCallback(() => {
-    setActiveFilters({
-      keyword: '',
-      colors: [],
-      tags: [],
-      period: '',
-    });
-  }, []);
+    resetAll();
+  }, [resetAll]);
 
   const toggleFilter = useCallback(() => {
     setIsFilterOpen(prev => !prev);
-  }, []);
+  }, [setIsFilterOpen]);
 
   return {
     searchText,
@@ -97,3 +90,5 @@ export function useLibraryFilters(assets: Asset[]) {
     toggleFilter
   };
 }
+
+export type { LibraryFilters };

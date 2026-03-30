@@ -7,7 +7,7 @@ import { useAssetStore } from '../store/useAssetStore';
 
 type FilterType = 'all' | 'recent' | 'favorites' | 'inbox' | 'folder';
 
-export function useAssets(allFolders: Folder[] = []) {
+export function useAssets(allFolders: Folder[] = [], options: { initialFilter?: FilterType, initialFolderId?: string | null } = {}) {
   const { 
     assets: rawAssets, 
     loading, 
@@ -17,18 +17,44 @@ export function useAssets(allFolders: Folder[] = []) {
     updateAsset, 
     toggleFavorite,
     isMoving,
-    moveAssets
+    moveAssets,
+    filter,
+    setFilter,
+    folderId,
+    setFolderId,
+    searchText,
+    setSearchText,
+    isFilterOpen,
+    setIsFilterOpen,
+    setIsSearchVisible
   } = useAssetStore();
   
-  const [mounted, setMounted] = useState(false);
-  const [filter, setFilter] = useState<FilterType>('all');
-  const [folderId, setFolderId] = useState<string | null>(null);
   const [selectedAssetId, setSelectedAssetId] = useState<string | null>(null);
+  const [mounted, setMounted] = useState(false);
+
+  // Use provided initial values as primary source if they differ from store,
+  // this ensures that when we navigate to a new route, the list reflects it immediately
+  // before the useEffect has a chance to update the global store.
+  const effectiveFilter = options.initialFilter || filter;
+  const effectiveFolderId = options.initialFolderId !== undefined ? options.initialFolderId : folderId;
 
   useEffect(() => {
     setMounted(true);
     refreshAssets();
   }, [refreshAssets]);
+
+  // Sync store with page intent
+  useEffect(() => {
+    if (options.initialFilter && options.initialFilter !== filter) {
+      setFilter(options.initialFilter);
+    }
+  }, [options.initialFilter, filter, setFilter]);
+
+  useEffect(() => {
+    if (options.initialFolderId !== undefined && options.initialFolderId !== folderId) {
+      setFolderId(options.initialFolderId);
+    }
+  }, [options.initialFolderId, folderId, setFolderId]);
 
   const inboxCount = useMemo(() => 
     rawAssets.filter(a => !a.folderId).length
@@ -39,9 +65,7 @@ export function useAssets(allFolders: Folder[] = []) {
   , [rawAssets, selectedAssetId]);
 
   const filteredAssets = useMemo(() => {
-    if (!mounted) return [];
-    
-    switch (filter) {
+    switch (effectiveFilter) {
       case 'recent':
         return [...rawAssets].sort((a, b) =>
           new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
@@ -51,18 +75,18 @@ export function useAssets(allFolders: Folder[] = []) {
       case 'inbox':
         return rawAssets.filter(a => !a.folderId);
       case 'folder': {
-        if (!folderId) return rawAssets;
+        if (!effectiveFolderId) return rawAssets;
         const getChildIds = (id: string): string[] => {
           const children = allFolders.filter(f => f.parentId === id);
           return [id, ...children.flatMap(c => getChildIds(c.id))];
         };
-        const targetFolderIds = getChildIds(folderId);
+        const targetFolderIds = getChildIds(effectiveFolderId);
         return rawAssets.filter(a => a.folderId && targetFolderIds.includes(a.folderId));
       }
       default:
         return rawAssets;
     }
-  }, [rawAssets, filter, folderId, mounted, allFolders]);
+  }, [rawAssets, effectiveFilter, effectiveFolderId, allFolders]);
 
   return { 
     assets: filteredAssets, 

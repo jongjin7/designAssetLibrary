@@ -1,41 +1,24 @@
-import { useState, useEffect } from 'react';
-import { Folder } from '../types/folder';
-import { mockFolders } from '../data/mockAssets';
+'use client';
 
+import { useAssetStore } from '../store/useAssetStore';
+
+/**
+ * useFolders is now a stable hook that consumes the global AssetStore.
+ * This ensures that folder data is persistent across all pages and layouts,
+ * eliminating the 'blink' effect caused by local state re-fetching.
+ */
 export function useFolders() {
-  const [folders, setFolders] = useState<Folder[]>([]);
-  const [loading, setLoading] = useState(true);
-
-  useEffect(() => {
-    // Simulate API call
-    const timer = setTimeout(() => {
-      setFolders(mockFolders as Folder[]);
-      setLoading(false);
-    }, 500);
-
-    return () => clearTimeout(timer);
-  }, []);
-
-  const createFolder = async (name: string, parentId: string | null = null) => {
-    const newFolder: Folder = {
-      id: Math.random().toString(36).substr(2, 9),
-      name,
-      parentId,
-      isSmartFolder: false,
-      createdAt: new Date().toISOString(),
-      updatedAt: new Date().toISOString(),
-    };
-    setFolders(prev => [...prev, newFolder]);
-    return newFolder;
-  };
-
-  const deleteFolder = async (id: string) => {
-    setFolders(prev => prev.filter(f => f.id !== id));
-  };
+  const { 
+    folders, 
+    fetchFolders, 
+    createFolder, 
+    deleteFolder 
+  } = useAssetStore();
 
   return {
     folders,
-    loading,
+    loading: false, // Global folders are considered instantly available once refreshed
+    fetchFolders,
     createFolder,
     deleteFolder,
   };

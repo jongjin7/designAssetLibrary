@@ -3,6 +3,7 @@
 import { useIsDesktop } from '@nova/hooks/useIsDesktop';
 import { DesktopShell } from '@nova/components/layout/DesktopShell/index';
 import { MobileShell } from '@nova/components/layout/MobileShell';
+import { MobileLibraryHeader } from '@nova/components/layout/MobileLibraryHeader';
 import { NVSplashScreen } from '@nova/ui';
 import { usePathname } from 'next/navigation';
 
@@ -30,6 +31,7 @@ export default function AuthenticatedLayout({ children }: { children: React.Reac
   return (
     <LibraryProvider>
       <MobileShell showTabs={!pathname.includes('/capture')}>
+        <MobileLibraryHeader />
         {children}
       </MobileShell>
     </LibraryProvider>

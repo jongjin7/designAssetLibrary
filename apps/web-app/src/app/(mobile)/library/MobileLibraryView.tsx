@@ -42,6 +42,7 @@ interface MobileLibraryViewProps {
   onSearchToggle?: () => void;
   zoom: number;
   setZoom: (v: number) => void;
+  activeKey?: string;
 }
 
 export default function MobileLibraryView({
@@ -49,11 +50,18 @@ export default function MobileLibraryView({
   selectedIds, setSelectedIds, isSelectionMode, setIsSelectionMode,
   searchText, setSearchText, isFilterOpen, setIsFilterOpen, filteredAssets, handleFilterApply, handleFilterReset,
   isSearchVisible = false, onSearchToggle,
-  zoom, setZoom
+  zoom, setZoom,
+  activeKey
 }: MobileLibraryViewProps) {
   const router = useRouter();
 
   const handleFilterChange = (key: string) => {
+    if (key.startsWith('folder_')) {
+      const folderId = key.replace('folder_', '');
+      router.push(`/folder/${folderId}`);
+      return;
+    }
+
     const pathMap: Record<string, string> = {
       all: '/library',
       inbox: '/inbox',
@@ -101,37 +109,6 @@ export default function MobileLibraryView({
 
   return (
     <>
-      <MobileTopBar
-        rightElement={
-          <NVIconButton
-            icon={isSearchVisible ? X : Search}
-            variant="ghost"
-            size="sm"
-            iconSize={24} 
-            onClick={handleSearchToggle}
-            className={isSearchVisible ? 'text-white' : 'text-slate-400 hover:text-white'}
-          />
-        }
-      >
-        {/* 검색 영역: 아이콘 탭 후 접근 */}
-        {isSearchVisible && (
-          <LibraryControls
-              isMobile={true}
-              searchText={searchText}
-              onSearchChange={setSearchText}
-              isFilterOpen={isFilterOpen}
-              onFilterToggle={() => setIsFilterOpen(!isFilterOpen)}
-              onFilterApply={handleFilterApply}
-              onFilterReset={handleFilterReset}
-              className="px-5 py-2"
-            />
-        )}
-
-        {!isFilterOpen && <div className="px-5 py-2 shadow-md shadow-black/20">
-          <FilterChips active={filter} onChange={handleFilterChange} />
-        </div>}
-      </MobileTopBar>
-
       <NVAssetSelectionBar
         theme="dark"
         size="sm"
@@ -146,7 +123,7 @@ export default function MobileLibraryView({
         onDelete={handleBulkDelete}
       />
       
-      <main className={cn(" px-5 py-4", filteredAssets.length === 0 && "h-[calc(100%-128px)]")}>
+      <main className={cn("px-5 py-4", filteredAssets.length === 0 && "h-[calc(100%-128px)]")}>
         {loading ? (
           <NVLoadingState fullHeight />
         ) : filteredAssets.length > 0 ? (

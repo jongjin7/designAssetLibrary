@@ -18,7 +18,7 @@ export default function FavoritesPage() {
   const isDesktop = useIsDesktop();
   const desktopShell = useDesktopShell();
   
-  const { assets: rawAssets, loading, filter, setFilter, selectedAsset, openDetail, closeDetail, deleteAsset, updateAsset, addAsset, moveAssets, isMoving, setFolderId } = useAssets();
+  const { assets: rawAssets, loading, filter, setFilter, selectedAsset, openDetail, closeDetail, deleteAsset, updateAsset, addAsset, moveAssets, isMoving, setFolderId } = useAssets([], { initialFilter: 'favorites' });
 
   // Set the filter to 'favorites' when the page mounts
   useEffect(() => {

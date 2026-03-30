@@ -22,7 +22,7 @@ export default function UnifiedLibraryPage() {
   const desktopShell = useDesktopShell();
   
   // Lifted state to persist across mobile <-> desktop transitions
-  const { assets, loading, filter, setFilter, selectedAsset, openDetail, closeDetail, deleteAsset, updateAsset, addAsset, moveAssets, isMoving } = useAssets();
+  const { assets, loading, filter, setFilter, selectedAsset, openDetail, closeDetail, deleteAsset, updateAsset, addAsset, moveAssets, isMoving } = useAssets([], { initialFilter: 'all' });
 
   const { 
     searchText, setSearchText, isFilterOpen, setIsFilterOpen, filteredAssets, handleFilterApply, handleFilterReset 
