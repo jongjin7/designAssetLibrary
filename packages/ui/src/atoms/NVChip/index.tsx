@@ -1,10 +1,12 @@
 import React from 'react';
 import { cn } from '../../lib/utils';
+import { X } from 'lucide-react';
 
 export interface NVChipProps {
   label: string;
   isActive?: boolean;
   onClick?: () => void;
+  onDelete?: () => void;
   className?: string;
   variant?: 'filter' | 'tag' | 'status';
   size?: 'sm' | 'md' | 'lg';
@@ -15,6 +17,7 @@ export const NVChip: React.FC<NVChipProps> = ({
   label,
   isActive = false,
   onClick,
+  onDelete,
   className = '',
   variant = 'filter',
   size = 'md',
@@ -26,7 +29,7 @@ export const NVChip: React.FC<NVChipProps> = ({
   );
 
   const sizeStyles = {
-    sm: 'px-3 py-1 text-[11px] gap-1',
+    sm: 'px-3 py-1 text-xs gap-1',
     md: 'px-4 py-1.5 text-sm gap-1.5',
     lg: 'px-5 py-2 text-base gap-2'
   };
@@ -47,6 +50,17 @@ export const NVChip: React.FC<NVChipProps> = ({
       onClick={onClick}
     >
       {label}
+      {onDelete && (
+        <button
+          onClick={(e) => {
+            e.stopPropagation();
+            onDelete();
+          }}
+          className="ml-1 p-0.5 rounded-full hover:bg-white/20 hover:text-white transition-colors"
+        >
+          <X size={12} strokeWidth={3} />
+        </button>
+      )}
     </Component>
   );
 };

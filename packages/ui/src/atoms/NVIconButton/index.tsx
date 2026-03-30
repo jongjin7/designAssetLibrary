@@ -11,6 +11,7 @@ interface NVIconButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement
   strokeWidth?: number;
   iconClassName?: string;
   hoverEffect?: 'none' | 'scale' | 'brightness' | 'saturate';
+  rounded?: boolean;
 }
 
 export const NVIconButton: React.FC<NVIconButtonProps> = ({ 
@@ -23,6 +24,7 @@ export const NVIconButton: React.FC<NVIconButtonProps> = ({
   className = '', 
   strokeWidth=1.5,
   hoverEffect = 'scale',
+  rounded = false,
   ...props 
 }) => {
   const baseStyles = 'inline-flex items-center justify-center transition-all duration-300 active:scale-[0.96] disabled:opacity-40 disabled:pointer-events-none [&_svg]:text-inherit';
@@ -63,7 +65,8 @@ export const NVIconButton: React.FC<NVIconButtonProps> = ({
   };
 
   const finalIconSize = iconSize || defaultIconSizes[size];
-  const combinedClasses = `${baseStyles} ${variants[variant]} ${sizes[size]} ${roundedStyles[size]} ${className}`;
+  const finalRoundedStyle = rounded ? 'rounded-full' : roundedStyles[size];
+  const combinedClasses = `${baseStyles} ${variants[variant]} ${sizes[size]} ${finalRoundedStyle} ${className}`;
 
   return (
     <button className={combinedClasses} {...props}>

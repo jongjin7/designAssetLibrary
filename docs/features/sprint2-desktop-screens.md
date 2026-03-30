@@ -41,7 +41,7 @@ Sidebar Nav      Main Content Area
 
 ## 2. 화면별 UI 구성
 
-### 2.1 Desktop Dashboard (`/dashboard`)
+### 2.1 Desktop Dashboard (`/library`)
 
 3-Column 레이아웃을 통해 탐색, 목록 확인, 상세 편집을 한 화면에서 수행합니다.
 
@@ -49,7 +49,7 @@ Sidebar Nav      Main Content Area
 | --- | --- | --- |
 | **Column 1** | **Sidebar** | 네비게이션, 폴더 관리, Inbox 상태 확인 |
 | **Column 2** | **Explorer** | 에셋 그리드. `Shift+Click` 다중 선택, Drag to Move 지원 |
-| **Column 3** | **Inspector** | 메타데이터 편집 패널. 팔레트, 태그, 자동 저장(Auto-save) 지원 |
+| **Column 3** | **Inspector** | 메타데이터 편집 패널. 팔레트, **태그 추가/삭제**, 자동 저장(Auto-save) 지원 |
 
 ---
 

@@ -74,7 +74,17 @@ export function NVAssetDetailContent({
             isExtracting={isExtracting} 
             onExtractAI={handleAIExtraction} 
           />
-          <NVAssetDetailTags tags={asset.tags} />
+          <NVAssetDetailTags 
+            tags={asset.tags} 
+            onAddTag={(newTag) => {
+              if (!asset.tags.includes(newTag)) {
+                onUpdate?.(asset.id, { tags: [...asset.tags, newTag] });
+              }
+            }}
+            onDeleteTag={(tagToDelete) => {
+              onUpdate?.(asset.id, { tags: asset.tags.filter(t => t !== tagToDelete) });
+            }}
+          />
         </div>
       </div>
 
