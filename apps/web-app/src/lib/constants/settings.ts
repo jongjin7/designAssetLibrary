@@ -5,6 +5,7 @@ export interface SettingsItemType {
   label: string;
   sub?: string;
   sprint: number;
+  href?: string;
 }
 
 export interface SettingsGroup {
@@ -31,9 +32,8 @@ export const SETTINGS_GROUPS: SettingsGroup[] = [
   {
     title: '계정 및 보안',
     items: [
-      { icon: User, label: '개인정보 설정', sub: 'nova_architect@nova.design', sprint: 1 },
       { icon: Bell, label: '알림 및 푸시', sub: '중요 업데이트 및 업로드 알림 활성', sprint: 1 },
-      { icon: Shield, label: '보안 정책', sub: '2단계 인증 사용 중 · EXIF 자동 필터링 활성', sprint: 1 },
+      { icon: Shield, label: '보안 정책', sub: '2단계 인증 사용 중 · EXIF 자동 필터링 활성', sprint: 1, href: '/profile/security' },
     ],
   },
   {

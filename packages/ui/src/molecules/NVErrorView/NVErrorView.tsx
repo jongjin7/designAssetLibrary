@@ -95,7 +95,7 @@ export const NVErrorView: React.FC<NVErrorViewProps> = ({
 
           <NVEmptyState
             icon={
-              <div className={`w-20 h-20 rounded-3xl flex items-center justify-center border shadow-inner transition-colors duration-500 ${
+              <div className={`w-20 h-20 rounded-3xl flex items-center justify-center border shadow-inner transition-colors duration-500 mb-4 ${
                 isDanger ? 'bg-rose-500/10 border-rose-500/20' : isWarning ? 'bg-amber-500/10 border-amber-500/20' : 'bg-indigo-500/10 border-indigo-500/20'
               }`}>
                 {/* @ts-ignore icon rendering */}

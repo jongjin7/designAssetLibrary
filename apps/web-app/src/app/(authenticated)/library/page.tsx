@@ -7,35 +7,40 @@ import { MobileShell } from '@nova/components/layout/MobileShell';
 import { usePathname } from 'next/navigation';
 import { DesktopShell } from '@nova/components/layout/DesktopShell/index';
 
-import { useState, useEffect, useRef, useMemo } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { useAssets } from '@nova/hooks/useAssets';
 import { useLibraryFilters } from '@nova/hooks/useLibraryFilters';
 import { useAssetSelection } from '@nova/hooks/useAssetSelection';
 import { SearchPalette } from '@nova/components/library/SearchPalette';
-import { NVSplashScreen } from '@nova/ui';
+import { NVLoadingState, NVSplashScreen } from '@nova/ui';
 
-export default function FavoritesPage() {
+import { useDesktopShell } from '@nova/components/layout/DesktopShell/index';
+
+export default function UnifiedLibraryPage() {
+
   const pathname = usePathname();
   const isDesktop = useIsDesktop();
+  const desktopShell = useDesktopShell();
   
+  // Lifted state to persist across mobile <-> desktop transitions
   const { assets, loading, filter, setFilter, selectedAsset, openDetail, closeDetail, deleteAsset, updateAsset, addAsset } = useAssets();
-
-  // Filter assets to only include favorites
-  const favoriteAssets = useMemo(() => assets.filter(a => a.isFavorite), [assets]);
 
   const { 
     searchText, setSearchText, isFilterOpen, setIsFilterOpen, filteredAssets, handleFilterApply, handleFilterReset 
-  } = useLibraryFilters(favoriteAssets);
-  
+  } = useLibraryFilters(assets);
   const { selectedIds, setSelectedIds } = useAssetSelection();
   const [isSelectionMode, setIsSelectionMode] = useState(false);
-  const [isSearchVisible, setIsSearchVisible] = useState(false);
+  
+  // Local search state for mobile, for desktop we use desktopShell context
+  const [isMobileSearchVisible, setIsMobileSearchVisible] = useState(false);
   const [zoom, setZoom] = useState(50);
 
   const prevIsDesktopRef = useRef<boolean | null>(null);
 
+  // Reset all transient UI states ONLY when switching between mobile and desktop
   useEffect(() => {
     if (isDesktop === null) return;
+    
     if (prevIsDesktopRef.current === null) {
       prevIsDesktopRef.current = isDesktop;
       return;
@@ -43,70 +48,60 @@ export default function FavoritesPage() {
 
     if (prevIsDesktopRef.current !== isDesktop) {
       if (!isDesktop) setZoom(50);
+      
       closeDetail();
       setSelectedIds(new Set());
       setIsSelectionMode(false);
-      setIsSearchVisible(false);
+      setIsMobileSearchVisible(false);
       setIsFilterOpen(false);
       setSearchText('');
       setFilter('all');
       handleFilterReset();
+      
       prevIsDesktopRef.current = isDesktop;
     }
-  }, [isDesktop, closeDetail, setSelectedIds, setIsSelectionMode, setIsSearchVisible, setIsFilterOpen, setSearchText, setFilter, handleFilterReset, setZoom]);
+  }, [isDesktop, closeDetail, setSelectedIds, setIsSelectionMode, setIsMobileSearchVisible, setIsFilterOpen, setSearchText, setFilter, handleFilterReset, setZoom]);
 
+  // Prevent flash of wrong view before isDesktop is detected on mount
   if (isDesktop === null || (loading && assets.length === 0)) {
-     return <NVSplashScreen message="즐겨찾는 에셋 불러오는 중..." mode="syncing" />;
+     return <NVSplashScreen message="라이브러리 에셋 동기화 중..." mode="syncing" />;
   }
 
+  const isSearchVisible = isDesktop && desktopShell ? desktopShell.isSearchVisible : isMobileSearchVisible;
+  const onSearchToggle = isDesktop && desktopShell ? desktopShell.onSearchToggle : () => setIsMobileSearchVisible(!isMobileSearchVisible);
+
   const commonProps = {
-    assets: favoriteAssets, 
-    loading, 
-    filter, 
-    setFilter, 
-    selectedAsset, 
-    openDetail, 
-    closeDetail, 
-    deleteAsset, 
-    updateAsset, 
-    addAsset,
-    selectedIds, 
-    setSelectedIds,
-    searchText, 
-    setSearchText, 
-    isFilterOpen, 
-    setIsFilterOpen, 
-    filteredAssets, 
-    handleFilterApply, 
-    handleFilterReset,
+    assets, loading, filter, setFilter, selectedAsset, openDetail, closeDetail, deleteAsset, updateAsset, addAsset,
+    selectedIds, setSelectedIds,
+    searchText, setSearchText, isFilterOpen, setIsFilterOpen, filteredAssets, handleFilterApply, handleFilterReset,
     isSearchVisible, 
-    onSearchToggle: () => setIsSearchVisible(!isSearchVisible),
+    onSearchToggle,
     zoom,
-    setZoom,
-    title: "즐겨찾기" // Pass a title to show in the views
+    setZoom
   };
 
   if (isDesktop) {
     return (
-      <DesktopShell onSearchToggle={() => setIsSearchVisible(!isSearchVisible)}>
-        <DesktopLibraryView {...commonProps} />
+      <>
+        <DesktopLibraryView 
+          {...commonProps} 
+        />
         <SearchPalette 
           isOpen={isSearchVisible} 
-          onClose={() => setIsSearchVisible(false)}
+          onClose={() => desktopShell?.setIsSearchVisible(false)}
           value={searchText}
           onChange={setSearchText}
         />
-      </DesktopShell>
+      </>
     );
   }
 
   return (
-    <MobileShell showTabs={!pathname.includes('/capture')}>
-      <MobileLibraryView 
-        {...commonProps} 
-        isSelectionMode={isSelectionMode} 
-        setIsSelectionMode={setIsSelectionMode} 
-      />
-    </MobileShell>
+    <MobileLibraryView 
+      {...commonProps} 
+      isSelectionMode={isSelectionMode} 
+      setIsSelectionMode={setIsSelectionMode} 
+    />
   );
 }
+

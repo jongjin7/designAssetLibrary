@@ -15,16 +15,22 @@ interface AuthContextType {
   user: User | null;
   profile: UserProfile | null;
   loading: boolean;
+  /** OAuth 로그인(Google, GitHub 등) 여부 */
+  isOAuth: boolean;
   signOut: () => Promise<void>;
   signInAsGuest: () => void;
+  /** 표시 이름 변경. OAuth 재로그인 시 provider 값으로 덮어쓰일 수 있음 */
+  updateDisplayName: (name: string) => Promise<void>;
 }
 
 const AuthContext = createContext<AuthContextType>({
   user: null,
   profile: null,
   loading: true,
+  isOAuth: false,
   signOut: async () => {},
   signInAsGuest: () => {},
+  updateDisplayName: async () => {},
 });
 
 export function AuthProvider({ children }: { children: ReactNode }) {
@@ -41,6 +47,13 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       email: user.email || '',
       avatarUrl: meta.avatar_url || meta.picture || meta.profile_image || null,
     };
+  }, [user]);
+
+  // app_metadata.provider가 'email'이 아니면 OAuth 로그인
+  const isOAuth = useMemo(() => {
+    if (!user) return false;
+    const provider = user.app_metadata?.provider;
+    return !!provider && provider !== 'email';
   }, [user]);
 
   useEffect(() => {
@@ -93,6 +106,26 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     router.push('/login');
   };
 
+  const updateDisplayName = async (name: string) => {
+    if (!user) return;
+
+    if (isSupabaseInitialized) {
+      const { data, error } = await supabase.auth.updateUser({
+        data: { full_name: name },
+      });
+      if (error) throw error;
+      if (data.user) setUser(data.user);
+    } else {
+      // mock 모드: localStorage 갱신
+      const updated = {
+        ...user,
+        user_metadata: { ...user.user_metadata, full_name: name },
+      };
+      localStorage.setItem('nova_mock_user', JSON.stringify(updated));
+      setUser(updated as User);
+    }
+  };
+
   const signInAsGuest = () => {
     const guestUser = {
       id: 'guest_user_id',
@@ -105,7 +138,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   };
 
   return (
-    <AuthContext.Provider value={{ user, profile, loading, signOut, signInAsGuest }}>
+    <AuthContext.Provider value={{ user, profile, loading, isOAuth, signOut, signInAsGuest, updateDisplayName }}>
       {children}
     </AuthContext.Provider>
   );

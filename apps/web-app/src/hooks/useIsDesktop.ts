@@ -1,14 +1,18 @@
 import { useState, useEffect } from 'react';
 
+let lastIsDesktop: boolean | null = null;
+
 export function useIsDesktop(breakpoint = 760) {
-  const [isDesktop, setIsDesktop] = useState<boolean | null>(null);
+  const [isDesktop, setIsDesktop] = useState<boolean | null>(lastIsDesktop);
 
   useEffect(() => {
     const checkIsDesktop = () => {
-      // Force desktop view if running in Electron environment
       const isElectron = (window as any).electron !== undefined;
       const isPlatformDesktop = window.location.search.includes('platform=desktop');
-      setIsDesktop(isElectron || isPlatformDesktop || window.innerWidth >= breakpoint);
+      const newValue = isElectron || isPlatformDesktop || window.innerWidth >= breakpoint;
+      
+      setIsDesktop(newValue);
+      lastIsDesktop = newValue;
     };
     checkIsDesktop();
     window.addEventListener('resize', checkIsDesktop);

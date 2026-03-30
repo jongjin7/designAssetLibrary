@@ -12,7 +12,11 @@ import { useDesktopShell } from '../context';
 import { SidebarToggleButton } from './SidebarToggleButton';
 import { SidebarProfile } from './SidebarProfile';
 
-export function Sidebar() {
+interface SidebarProps {
+  onSearchToggle?: () => void;
+}
+
+export function Sidebar({ onSearchToggle }: SidebarProps) {
   const router = useRouter();
   const pathname = usePathname();
   const [mounted, setMounted] = useState(false);

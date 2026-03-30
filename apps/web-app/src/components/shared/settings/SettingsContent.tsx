@@ -63,6 +63,7 @@ export function SettingsContent({ isMobile = false, onLogout }: SettingsContentP
                   icon={item.icon}
                   label={item.label}
                   sub={item.sub}
+                  href={item.href}
                 />
               ))}
             </SettingsSection>

@@ -10,10 +10,11 @@ interface DesktopShellProps {
   onSearchToggle?: () => void;
 }
 
-export function DesktopShell({ children }: DesktopShellProps) {
+export function DesktopShell({ children, onSearchToggle: onSearchToggleProp }: DesktopShellProps) {
   const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(false);
   const [isFloating, setIsFloating] = useState(false);
   const [isDesktopApp, setIsDesktopApp] = useState(false);
+  const [isSearchVisible, setIsSearchVisible] = useState(false);
   const lastWidthRef = useRef(typeof window !== 'undefined' ? window.innerWidth : 1024);
 
   // Handle automatic collapse/expand and floating mode on resize
@@ -48,16 +49,25 @@ export function DesktopShell({ children }: DesktopShellProps) {
     setIsSidebarCollapsed(!isSidebarCollapsed);
   };
 
+  const handleSearchToggle = () => {
+    const nextValue = !isSearchVisible;
+    setIsSearchVisible(nextValue);
+    onSearchToggleProp?.();
+  };
+
   return (
     <DesktopShellContext.Provider value={{ 
       isSidebarCollapsed, 
       setIsSidebarCollapsed,
       handleToggleSidebar, 
       isFloating, 
-      isDesktopApp 
+      isDesktopApp,
+      isSearchVisible,
+      setIsSearchVisible,
+      onSearchToggle: handleSearchToggle
     }}>
       <div className="min-h-screen flex h-screen bg-[#020617] overflow-hidden relative">
-        <Sidebar />
+        <Sidebar onSearchToggle={handleSearchToggle} />
         
         <main className="flex-1 flex flex-col overflow-hidden transition-all duration-300">
           {children}
