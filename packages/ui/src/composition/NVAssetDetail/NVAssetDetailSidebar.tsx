@@ -12,6 +12,8 @@ interface NVAssetDetailSidebarProps {
   onDelete?: (id: string) => void;
   onMove?: (id: string) => void;
   onUpdate?: (id: string, updates: Partial<Asset>) => void;
+  onShare?: (asset: Asset) => void;
+  moveTrigger?: React.ReactNode;
   onExtractAI?: (imageUrl: string) => Promise<string[]>;
   onExtractBasic?: (imageUrl: string) => Promise<string[]>;
   className?: string;
@@ -24,6 +26,8 @@ export function NVAssetDetailSidebar({
   onDelete, 
   onMove, 
   onUpdate,
+  onShare,
+  moveTrigger,
   onExtractAI,
   onExtractBasic,
   className = '',
@@ -53,6 +57,8 @@ export function NVAssetDetailSidebar({
         onDelete={onDelete} 
         onMove={onMove} 
         onUpdate={onUpdate}
+        onShare={onShare}
+        moveTrigger={moveTrigger}
         onExtractAI={onExtractAI}
         onExtractBasic={onExtractBasic}
         isInspector={true}

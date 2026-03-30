@@ -28,6 +28,7 @@ import {
   NVDesktopUploadPanel,
 } from '@nova/ui';
 import { DesktopPageHeader } from '../layout/DesktopShell';
+import { MoveAssetPopover } from './MoveAssetPopover';
 
 interface LibraryControlsProps {
   searchText: string;
@@ -43,6 +44,7 @@ interface LibraryControlsProps {
   className?: string;
   isSidebarVisible?: boolean;
   onAddAsset?: (data: any, file?: File) => Promise<void>;
+  onMoveAsset?: (folderId: string | null) => void;
   zoom?: number;
   onZoomChange?: (value: number) => void;
 }
@@ -60,6 +62,7 @@ export function LibraryControls({
   className,
   isSidebarVisible = false,
   onAddAsset,
+  onMoveAsset,
   zoom = 50,
   onZoomChange,
 }: LibraryControlsProps) {
@@ -126,8 +129,19 @@ export function LibraryControls({
               />
             </NVDialogContent>
           </NVDialog>
-          <NVIconButton icon={ArrowLeftRight} variant="ghost" size="sm" onClick={onSearchToggle}
-            title="이동 (Cmd+F)" />
+          
+          <MoveAssetPopover 
+            onMove={onMoveAsset || (() => {})}
+            trigger={
+              <NVIconButton 
+                icon={ArrowLeftRight} 
+                variant="ghost" 
+                size="sm" 
+                title="폴더로 이동 (F)" 
+              />
+            }
+          />
+
           <NVIconButton icon={ChevronLeft} variant="ghost" size="sm" />
           <NVIconButton icon={ChevronRight} variant="ghost" size="sm" />
           

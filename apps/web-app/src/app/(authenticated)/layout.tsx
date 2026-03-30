@@ -6,6 +6,8 @@ import { MobileShell } from '@nova/components/layout/MobileShell';
 import { NVSplashScreen } from '@nova/ui';
 import { usePathname } from 'next/navigation';
 
+import { LibraryProvider } from '@nova/context/LibraryContext';
+
 export default function AuthenticatedLayout({ children }: { children: React.ReactNode }) {
   const isDesktop = useIsDesktop();
   const pathname = usePathname();
@@ -17,15 +19,19 @@ export default function AuthenticatedLayout({ children }: { children: React.Reac
 
   if (isDesktop) {
     return (
-      <DesktopShell>
-        {children}
-      </DesktopShell>
+      <LibraryProvider>
+        <DesktopShell>
+          {children}
+        </DesktopShell>
+      </LibraryProvider>
     );
   }
 
   return (
-    <MobileShell showTabs={!pathname.includes('/capture')}>
-      {children}
-    </MobileShell>
+    <LibraryProvider>
+      <MobileShell showTabs={!pathname.includes('/capture')}>
+        {children}
+      </MobileShell>
+    </LibraryProvider>
   );
 }

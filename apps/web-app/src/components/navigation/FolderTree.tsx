@@ -1,16 +1,18 @@
 import { useState } from 'react';
 import { ChevronRight, ChevronDown, Folder as FolderIcon, MoreVertical, Plus, Sparkles } from 'lucide-react';
 import { Folder } from '@nova/types/folder';
+import { cn } from '@nova/lib/utils';
 
 interface FolderTreeProps {
   folders: Folder[];
   activeFolderId: string | null;
   onFolderClick: (id: string | null) => void;
+  getFolderCount?: (id: string) => number;
   onCreateFolder?: (parentId: string | null) => void;
   isCollapsed?: boolean;
 }
 
-export function FolderTree({ folders, activeFolderId, onFolderClick, onCreateFolder, isCollapsed = false }: FolderTreeProps) {
+export function FolderTree({ folders, activeFolderId, onFolderClick, getFolderCount, onCreateFolder, isCollapsed = false }: FolderTreeProps) {
   const [expanded, setExpanded] = useState<Record<string, boolean>>({});
 
   const toggleExpand = (id: string, e: React.MouseEvent) => {
@@ -61,6 +63,16 @@ export function FolderTree({ folders, activeFolderId, onFolderClick, onCreateFol
                 {!isCollapsed && (
                   <>
                     <span className="flex-1 truncate">{folder.name}</span>
+                    {getFolderCount && getFolderCount(folder.id) > 0 && (
+                      <span className={cn(
+                        "px-1.5 py-0.5 rounded-full text-[10px] font-bold min-w-[18px] text-center transition-all duration-300",
+                        isActive 
+                          ? "bg-white/20 text-white" 
+                          : "bg-white/10 text-slate-400 group-hover:bg-white/20 group-hover:text-white"
+                      )}>
+                        {getFolderCount(folder.id)}
+                      </span>
+                    )}
                     <button className="opacity-0 group-hover:opacity-100 p-1 rounded-md text-slate-500 hover:text-slate-50 hover:bg-white/5 transition-all">
                       <MoreVertical size={14} />
                     </button>
@@ -124,7 +136,21 @@ export function FolderTree({ folders, activeFolderId, onFolderClick, onCreateFol
                       ? 'text-cyan-500 drop-shadow-[0_0_8px_rgba(6,182,212,0.4)]' 
                       : 'text-slate-500 group-hover:text-cyan-400'}`} 
                 />
-                {!isCollapsed && <span className="flex-1 truncate">{folder.name}</span>}
+                {!isCollapsed && (
+                  <>
+                    <span className="flex-1 truncate">{folder.name}</span>
+                    {getFolderCount && getFolderCount(folder.id) > 0 && (
+                      <span className={cn(
+                        "px-1.5 py-0.5 rounded-full text-[10px] font-bold min-w-[18px] text-center transition-all duration-300",
+                        isActive 
+                          ? "bg-cyan-500 text-white" 
+                          : "bg-white/10 text-slate-400 group-hover:bg-white/20 group-hover:text-white"
+                      )}>
+                        {getFolderCount(folder.id)}
+                      </span>
+                    )}
+                  </>
+                )}
               </div>
             );
           })}

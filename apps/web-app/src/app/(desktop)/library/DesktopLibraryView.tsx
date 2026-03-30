@@ -1,8 +1,9 @@
 import { useState, useEffect, useRef } from 'react';
-import { PanelRightOpen, PanelRightClose } from 'lucide-react';
+import { PanelRightOpen, PanelRightClose, ArrowLeftRight, FolderInput } from 'lucide-react';
 import { processFileToAsset } from '@nova/lib/assetProcessor';
 import { AssetGrid } from '@nova/components/library/AssetGrid';
 import { LibraryControls } from '@nova/components/library/LibraryControls';
+import { MoveAssetPopover } from '@nova/components/library/MoveAssetPopover';
 import { DropZone } from '@nova/components/shared/DropZone';
 import { NVLoadingState, NVAssetSelectionBar, NVAssetDetailSidebar, Asset, NVIconButton, NVEmptyState } from '@nova/ui';
 import { cn } from '@nova/lib/utils';
@@ -22,6 +23,8 @@ interface DesktopLibraryViewProps {
   deleteAsset: (id: string) => Promise<void>;
   updateAsset: (id: string, data: any) => Promise<void>;
   addAsset: (data: any, file?: File | Blob) => Promise<any>;
+  moveAssets: (ids: string[], folderId: string | null) => Promise<void>;
+  isMoving: boolean;
   
   // Selection
   selectedIds: Set<string>;
@@ -42,7 +45,7 @@ interface DesktopLibraryViewProps {
 }
 
 export default function DesktopLibraryView({
-  assets, loading, filter, setFilter, selectedAsset, openDetail, closeDetail, deleteAsset, updateAsset, addAsset,
+  assets, loading, filter, setFilter, selectedAsset, openDetail, closeDetail, deleteAsset, updateAsset, addAsset, moveAssets, isMoving,
   selectedIds, setSelectedIds,
   searchText, setSearchText, isFilterOpen, setIsFilterOpen, filteredAssets, handleFilterApply, handleFilterReset,
   isSearchVisible, onSearchToggle,
@@ -130,6 +133,58 @@ export default function DesktopLibraryView({
     }
   };
 
+  const handleMoveAsset = async (id: string, folderId: string | null) => {
+    try {
+      await updateAsset(id, { folderId });
+      // If we are in the sidebar, the asset will update automatically via props
+      console.log(`Moved asset ${id} to folder ${folderId}`);
+    } catch (err) {
+      console.error('Failed to move asset:', err);
+    }
+  };
+
+  const handleBulkMove = async (folderId: string | null) => {
+    try {
+      const ids = Array.from(selectedIds);
+      await moveAssets(ids, folderId);
+      setSelectedIds(new Set());
+      console.log(`Moved ${ids.length} assets to folder ${folderId}`);
+    } catch (err) {
+      console.error('Failed to move assets:', err);
+    }
+  };
+
+  const handleShare = async (asset: Asset) => {
+    const shareUrl = `${window.location.origin}/asset/${asset.id}`;
+    
+    // Copy to clipboard first as a fallback/primary on desktop
+    try {
+      await navigator.clipboard.writeText(shareUrl);
+      console.log('Share link copied to clipboard');
+    } catch (err) {
+      console.error('Failed to copy link:', err);
+    }
+    
+    if (navigator.share) {
+      try {
+        await navigator.share({
+          title: asset.fileName,
+          text: `디자인 라이브러리에서 '${asset.fileName}' 에셋을 확인해보세요.`,
+          url: shareUrl,
+        });
+      } catch (err: any) {
+        // Silently handle user cancellation
+        if (err.name !== 'AbortError') {
+          console.error('Share failed:', err);
+        }
+      }
+    } else {
+       // On platforms without navigator.share, the clipboard copy above is enough
+       // Show a simple alert if not already handled by a toast system
+       alert('링크가 클립보드에 복사되었습니다.');
+    }
+  };
+
   const handleDrop = async (files: FileList) => {
     for (let i = 0; i < files.length; i++) {
       const file = files[i];
@@ -190,6 +245,11 @@ export default function DesktopLibraryView({
         </div>
 
         <div className="flex-1 overflow-y-auto p-8 relative cursor-default">
+          {isMoving && (
+            <div className="absolute inset-0 z-[100] flex flex-col items-center justify-center bg-slate-950/40 backdrop-blur-sm transition-all animate-in fade-in duration-300">
+               <NVLoadingState message={`${selectedIds.size}개의 에셋 이동 중...`} />
+            </div>
+          )}
           <div className="mx-auto h-full">
             {loading ? (
               <NVLoadingState className="h-full" />
@@ -226,7 +286,22 @@ export default function DesktopLibraryView({
           selectedCount={selectedIds.size}
           className="absolute bottom-10 z-40 left-1/2 -translate-x-1/2"
           onCancel={() => setSelectedIds(new Set())}
-          onMove={() => {}}
+          moveTrigger={
+            <MoveAssetPopover 
+              onMove={handleBulkMove}
+              trigger={
+                <NVIconButton 
+                  icon={ArrowLeftRight} 
+                  variant="ghost" 
+                  size="sm" 
+                  className="px-6 h-10 rounded-xl hover:bg-white/10"
+                  title="폴더로 이동"
+                >
+                   <span className="text-sm font-semibold ml-2">이동</span>
+                </NVIconButton>
+              }
+            />
+          }
           onDelete={handleBulkDelete}
         />
       </div>
@@ -243,6 +318,27 @@ export default function DesktopLibraryView({
           onClose={handleToggleSidebar} 
           onDelete={deleteAsset} 
           onUpdate={updateAsset} 
+          onShare={handleShare}
+          onMove={(id) => handleMoveAsset(id, null)} // Default to inbox if somehow triggered directly
+          moveTrigger={
+            <MoveAssetPopover 
+              variant="context"
+              onMove={(folderId) => {
+                if (selectedAsset) handleMoveAsset(selectedAsset.id, folderId);
+              }}
+              trigger={
+                <NVIconButton 
+                  icon={FolderInput}
+                  variant="secondary"
+                  size="md"
+                  className="!rounded-2xl"
+                  iconSize={20}
+                  strokeWidth={1.5}
+                  aria-label="이동"
+                />
+              }
+            />
+          }
           onExtractAI={extractColors}
           onExtractBasic={extractColors}
           isDesktopApp={isDesktopApp}

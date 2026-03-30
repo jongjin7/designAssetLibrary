@@ -10,6 +10,7 @@ interface NVAssetDetailFooterProps {
   isFavorite?: boolean;
   onShare?: () => void;
   onMove?: () => void;
+  moveTrigger?: React.ReactNode;
   onDelete?: () => void;
   onToggleFavorite?: () => void;
   className?: string;
@@ -20,6 +21,7 @@ export function NVAssetDetailFooter({
   isFavorite = false,
   onShare, 
   onMove, 
+  moveTrigger,
   onDelete, 
   onToggleFavorite,
   className = '' 
@@ -36,7 +38,7 @@ export function NVAssetDetailFooter({
           variant="secondary"
           size="md"
           className={cn(
-            "!rounded-2xl transition-all duration-300", 
+            "!rounded-2xl", 
             isFavorite && "text-yellow-400"
           )}
           iconSize={20}
@@ -59,16 +61,20 @@ export function NVAssetDetailFooter({
           aria-label="공유"
         />
         
-        <NVIconButton 
-          icon={FolderInput}
-          variant="secondary"
-          size="md"
-          className="!rounded-2xl"
-          iconSize={20}
-          strokeWidth={1.5}
-          onClick={onMove}
-          aria-label="이동"
-        />
+        {moveTrigger ? (
+          moveTrigger
+        ) : onMove ? (
+          <NVIconButton 
+            icon={FolderInput}
+            variant="secondary"
+            size="md"
+            className="!rounded-2xl"
+            iconSize={20}
+            strokeWidth={1.5}
+            onClick={onMove}
+            aria-label="이동"
+          />
+        ) : null}
         
         <NVIconButton 
           icon={Trash2}

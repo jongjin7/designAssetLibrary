@@ -20,6 +20,7 @@ interface NVAssetDetailContentProps {
   onExtractAI?: (imageUrl: string) => Promise<string[]>;
   onExtractBasic?: (imageUrl: string) => Promise<string[]>;
   onShare?: (asset: Asset) => void;
+  moveTrigger?: React.ReactNode;
   isInspector?: boolean;
   className?: string;
   isDesktopApp?: boolean;
@@ -34,6 +35,7 @@ export function NVAssetDetailContent({
   onExtractAI,
   onExtractBasic,
   onShare,
+  moveTrigger,
   isInspector = false,
   className = '',
   isDesktopApp
@@ -93,6 +95,7 @@ export function NVAssetDetailContent({
         isFavorite={asset.isFavorite}
         onShare={() => onShare?.(asset)}
         onMove={() => onMove?.(asset.id)}
+        moveTrigger={moveTrigger}
         onDelete={() => onDelete?.(asset.id)}
         onToggleFavorite={() => {
           onUpdate?.(asset.id, { isFavorite: !asset.isFavorite });

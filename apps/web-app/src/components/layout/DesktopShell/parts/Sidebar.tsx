@@ -7,7 +7,7 @@ import { Grid, Star, Clock, Inbox } from 'lucide-react';
 import { NVLogo } from '@nova/ui';
 import { cn } from '@nova/lib/utils';
 import { useFolders } from '@nova/hooks/useFolders';
-import { useAssets } from '@nova/hooks/useAssets';
+import { useAssetStore } from '@nova/store/useAssetStore';
 import { FolderTree } from '@nova/components/navigation/FolderTree';
 import { useDesktopShell } from '../context';
 import { SidebarToggleButton } from './SidebarToggleButton';
@@ -21,9 +21,19 @@ export function Sidebar({ onSearchToggle }: SidebarProps) {
   const router = useRouter();
   const pathname = usePathname();
   const [mounted, setMounted] = useState(false);
-  useEffect(() => { setMounted(true); }, []);
+  
+  // Use selectors to ensure re-render when assets change
+  const refreshAssets = useAssetStore(state => state.refreshAssets);
+  const inboxCount = useAssetStore(state => state.assets.filter(a => !a.folderId).length);
+  const getFolderCount = useAssetStore(state => state.getFolderCount);
+  const assets = useAssetStore(state => state.assets); // Subscribing to assets for general updates
+
+  useEffect(() => { 
+    setMounted(true); 
+    refreshAssets();
+  }, [refreshAssets]);
+
   const { folders, createFolder } = useFolders();
-  const { inboxCount } = useAssets();
   const context = useDesktopShell();
   
   if (!context) return null;
@@ -78,9 +88,9 @@ export function Sidebar({ onSearchToggle }: SidebarProps) {
           </div>
           
           {[
-            { id: 'all', label: '모든 에셋', icon: Grid, path: '/library' },
+            { id: 'all', label: '모든 에셋', icon: Grid, path: '/library', count: assets.length },
             { id: 'inbox', label: '인박스', icon: Inbox, path: '/inbox', count: inboxCount },
-            { id: 'favorites', label: '즐겨찾기', icon: Star, path: '/favorites' },
+            { id: 'favorites', label: '즐겨찾기', icon: Star, path: '/favorites', count: assets.filter(a => a.isFavorite).length },
             { id: 'recent', label: '최근 항목', icon: Clock, path: '/recent' }
           ].map((item: any) => {
             const isActive = pathname === item.path;
@@ -115,6 +125,7 @@ export function Sidebar({ onSearchToggle }: SidebarProps) {
             <FolderTree 
               folders={folders} 
               activeFolderId={null}
+              getFolderCount={(id) => getFolderCount(id, folders)}
               onFolderClick={(id) => {
                 const target = id ? `/folder/${id}` : '/library';
                 if (pathname === target) return;

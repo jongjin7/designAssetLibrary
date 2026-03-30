@@ -10,6 +10,8 @@ interface NVAssetSelectionBarProps {
   onCancel: () => void;
   /** 선택된 에셋들을 이동할 때 호출되는 콜백 */
   onMove?: () => void;
+  /** 이동 버튼을 대체할 커스텀 노드 (예: Popover Trigger) */
+  moveTrigger?: React.ReactNode;
   /** 선택된 에셋들을 삭제할 때 호출되는 콜백 */
   onDelete: () => void;
   /** 모바일 환경 레이아웃 여부 (true일 경우 컴팩트하게 조절됨) */
@@ -30,6 +32,7 @@ export function NVAssetSelectionBar({
   selectedCount,
   onCancel,
   onMove,
+  moveTrigger,
   onDelete,
   isMobile = false,
   size,
@@ -115,7 +118,9 @@ export function NVAssetSelectionBar({
           취소
         </NVButton>
         
-        {onMove && (
+        {moveTrigger ? (
+          moveTrigger
+        ) : onMove ? (
           <NVButton 
             variant={isDark ? "neutral" : "secondary"}
             size={currentStyle.buttons}
@@ -123,7 +128,7 @@ export function NVAssetSelectionBar({
           >
             이동
           </NVButton>
-        )}
+        ) : null}
         
         <NVButton 
           variant={isDark ? "glass-danger" : "danger"}
