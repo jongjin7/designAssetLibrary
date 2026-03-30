@@ -39,7 +39,6 @@ interface LibraryControlsProps {
   isMobile?: boolean;
   isSearchVisible?: boolean;
   onSearchToggle?: () => void;
-  activeFilter?: string;
   onFilterChange?: (filter: string) => void;
   className?: string;
   isSidebarVisible?: boolean;
@@ -57,7 +56,6 @@ export function LibraryControls({
   onFilterReset,
   isMobile = false,
   onSearchToggle,
-  activeFilter = 'all',
   onFilterChange,
   className,
   isSidebarVisible = false,
@@ -223,9 +221,6 @@ export function LibraryControls({
 
           <NVIconButton icon={Pin} variant="ghost" size="sm" className="app-no-drag"/>
         </div>
-      }
-      bottom={
-        <FilterChips active={activeFilter} size="sm" onChange={onFilterChange ?? (() => {})} />
       }
     />
   );

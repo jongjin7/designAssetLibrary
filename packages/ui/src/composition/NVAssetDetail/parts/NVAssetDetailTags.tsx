@@ -41,7 +41,7 @@ export function NVAssetDetailTags({
   };
 
   return (
-    <div className={cn("px-5 mt-4 space-y-3", className)}>
+    <div className={cn("px-5 mt-4 space-y-2", className)}>
       <p className="text-xs text-slate-700 font-semibold uppercase tracking-widest leading-none px-0.5">태그</p>
       {isAdding && (
         <div className="flex gap-2 animate-in fade-in slide-in-from-top-2 duration-300">

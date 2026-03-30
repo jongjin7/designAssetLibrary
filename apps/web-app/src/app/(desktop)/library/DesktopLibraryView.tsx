@@ -163,8 +163,6 @@ export default function DesktopLibraryView({
           onFilterApply={handleFilterApply}
           onFilterReset={handleFilterReset}
           onSearchToggle={onSearchToggle}
-          activeFilter={filter}
-          onFilterChange={(f) => setFilter(f as any)}
           isSidebarVisible={isSidebarVisible}
           onAddAsset={async (data, file) => {
             const newAsset = await addAsset(data, file);
@@ -192,7 +190,6 @@ export default function DesktopLibraryView({
         </div>
 
         <div className="flex-1 overflow-y-auto p-8 relative cursor-default">
-
           <div className="mx-auto h-full">
             {loading ? (
               <NVLoadingState className="h-full" />
@@ -206,6 +203,8 @@ export default function DesktopLibraryView({
                   updateAsset(id, { isFavorite });
                 }}
                 zoom={zoom}
+                isSidebarOpen={isSidebarVisible}
+                activeAssetId={selectedAsset?.id}
               />
             ) : (
               <div className="flex items-center justify-center h-full">

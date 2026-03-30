@@ -10,6 +10,7 @@ import { AssetGrid } from '@nova/components/library/AssetGrid';
 import { NVLoadingState, NVIconButton, NVAssetSelectionBar, NVAssetDetailSheet, Asset, NVButton, NVEmptyState } from '@nova/ui';
 import { extractColors } from '@nova/lib/colorExtractor';
 import { LibraryEmptyState } from '../../../components/library/LibraryEmptyState';
+import { cn } from '@nova/lib/utils';
 
 interface MobileLibraryViewProps {
   assets: Asset[];
@@ -136,7 +137,7 @@ export default function MobileLibraryView({
         onDelete={handleBulkDelete}
       />
       
-      <main className="h-[calc(100%-128px)] px-5 py-4">
+      <main className={cn(" px-5 py-4", filteredAssets.length === 0 && "h-[calc(100%-128px)]")}>
         {loading ? (
           <NVLoadingState fullHeight />
         ) : filteredAssets.length > 0 ? (

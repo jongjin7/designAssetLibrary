@@ -33,11 +33,11 @@ export function NVAssetDetailFooter({
       <div className="flex items-center justify-between px-10 py-3 mx-auto max-w-sm">
         <NVIconButton 
           icon={Star}
-          variant={isFavorite ? 'primary' : 'secondary'}
+          variant="secondary"
           size="md"
           className={cn(
             "!rounded-2xl transition-all duration-300", 
-            isFavorite && "text-yellow-400 ring-4 ring-yellow-500/20 shadow-[0_0_20px_rgba(250,204,21,0.15)]"
+            isFavorite && "text-yellow-400"
           )}
           iconSize={20}
           strokeWidth={2}

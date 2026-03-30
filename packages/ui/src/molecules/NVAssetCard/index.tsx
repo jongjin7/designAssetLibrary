@@ -20,9 +20,11 @@ export interface NVAssetCardProps {
   onFavoriteToggle?: (e: React.MouseEvent) => void;
   onMaximize?: (e: React.MouseEvent) => void;
   className?: string;
+  isDimmed?: boolean;
 }
 
 export const NVAssetCard: React.FC<NVAssetCardProps> = ({
+  id,
   fileName,
   thumbnail,
   thumbnailGradient,
@@ -36,7 +38,8 @@ export const NVAssetCard: React.FC<NVAssetCardProps> = ({
   onSelect,
   onFavoriteToggle,
   onMaximize,
-  className = ''
+  className = '',
+  isDimmed = false
 }) => {
   const nameWithoutExt = fileName.split('.').slice(0, -1).join('.') || fileName;
   const [isLongPressing, setIsLongPressing] = React.useState(false);
@@ -108,6 +111,7 @@ export const NVAssetCard: React.FC<NVAssetCardProps> = ({
 
   return (
     <div 
+      id={`asset-card-${id}`}
       className={cn(
         "group relative flex flex-col shrink-0 w-full overflow-hidden transition-all duration-500",
         "bg-transparent rounded-lg break-inside-avoid select-none",
@@ -116,6 +120,7 @@ export const NVAssetCard: React.FC<NVAssetCardProps> = ({
         isLongPressing ? "scale-[0.98] brightness-75 transition-all duration-200" : "",
         isSelected ? "ring-2 ring-indigo-500 ring-offset-2 ring-offset-slate-950" : "",
         isCompact ? "max-w-[140px]" : "",
+        isDimmed ? "opacity-30 scale-[0.98]" : "opacity-100 scale-100",
         className
       )}
       onClick={handleCardClick}
