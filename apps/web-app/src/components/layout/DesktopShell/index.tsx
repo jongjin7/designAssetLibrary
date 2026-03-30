@@ -24,19 +24,16 @@ export function DesktopShell({ children, onSearchToggle: onSearchToggleProp }: D
 
     const handleResize = () => {
       const currentWidth = window.innerWidth;
-      const floatingBreakpoint = 1100;
-      
+      const floatingBreakpoint = 1024;
+
       const shouldFloat = currentWidth < floatingBreakpoint;
       setIsFloating(shouldFloat);
 
-      if (!shouldFloat) {
-        setIsSidebarCollapsed(false);
-      } else {
-        if (lastWidthRef.current >= floatingBreakpoint) {
-          setIsSidebarCollapsed(true);
-        }
+      if (shouldFloat && lastWidthRef.current >= floatingBreakpoint) {
+        // 데스크탑→모바일 전환 시에만 사이드바 닫기
+        setIsSidebarCollapsed(true);
       }
-      
+
       lastWidthRef.current = currentWidth;
     };
     
@@ -80,3 +77,4 @@ export function DesktopShell({ children, onSearchToggle: onSearchToggleProp }: D
 export { useDesktopShell } from './context';
 export { SidebarProfile } from './parts/SidebarProfile';
 export { SidebarToggleButton } from './parts/SidebarToggleButton';
+export { DesktopPageHeader } from './parts/DesktopPageHeader';

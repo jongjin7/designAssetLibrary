@@ -1,11 +1,11 @@
 'use client';
 
 import React from 'react';
-import { ArrowLeft } from 'lucide-react';
+import { ArrowLeft, ChevronLeft, ChevronRight, Settings } from 'lucide-react';
 import { useRouter } from 'next/navigation';
-import { DesktopShell } from '@nova/components/layout/DesktopShell/index';
-import { MobileShell } from '@nova/components/layout/MobileShell';
+import { DesktopPageHeader } from '@nova/components/layout/DesktopShell';
 import { useIsDesktop } from '@nova/hooks/useIsDesktop';
+import { NVIconButton } from '@nova/ui';
 
 // ─── 페이지 헤더 ─────────────────────────────────────────────────────────────
 
@@ -49,28 +49,46 @@ export const SettingsPageHeader: React.FC<SettingsPageHeaderProps> = ({
 
 interface SettingsPageShellProps {
   children: (isMobile: boolean) => React.ReactNode;
+  maxWidth?: number;
 }
 
 /**
  * 설정 서브페이지의 데스크탑 / 모바일 레이아웃 분기를 처리합니다.
- * children은 isMobile을 받는 render prop 형태로 전달합니다.
+ * 공통화된 DesktopPageHeader 레이아웃을 최상단에 적용합니다.
  */
-export const SettingsPageShell: React.FC<SettingsPageShellProps> = ({ children }) => {
+export const SettingsPageShell: React.FC<SettingsPageShellProps> = ({ children, maxWidth = 720 }) => {
   const isDesktop = useIsDesktop();
+  const router = useRouter();
 
   if (isDesktop) {
     return (
-      <DesktopShell>
-        <div className="flex-1 flex flex-col overflow-hidden bg-slate-950 overflow-y-auto">
+      <div className="flex-1 flex flex-col h-full overflow-hidden bg-slate-950">
+        {/* 공통 최상단 툴바 레이아웃 적용 */}
+        <DesktopPageHeader 
+          left={
+            <>
+              <div className="flex items-center gap-2 ml-4">
+                <Settings size={14} className="text-slate-500" />
+                <span className="text-xs font-bold text-slate-400 uppercase tracking-widest opacity-80 select-none">
+                  App Settings
+                </span>
+              </div>
+            </>
+          }
+          
+        />
+        
+        {/* 스크롤 가능한 본문 영역 */}
+        <div className="flex-1 overflow-y-auto">
           <div className="flex justify-center p-6 lg:p-10 min-h-full">
-            <div className="w-full max-w-[720px]">
+            <div className="w-full" style={{ maxWidth: `${maxWidth}px` }}>
               {children(false)}
             </div>
           </div>
         </div>
-      </DesktopShell>
+      </div>
     );
   }
 
-  return <MobileShell>{children(true)}</MobileShell>;
+  return <>{children(true)}</>;
 };
