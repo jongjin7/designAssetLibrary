@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import { Search, X } from 'lucide-react';
+import { useRouter } from 'next/navigation';
 import { useLibraryFilters, LibraryFilters } from '@nova/hooks/useLibraryFilters';
 import { MobileTopBar } from '@nova/components/layout/MobileTopBar';
 import { LibraryControls } from '@nova/components/library/LibraryControls';
@@ -50,6 +51,18 @@ export default function MobileLibraryView({
   isSearchVisible = false, onSearchToggle,
   zoom, setZoom
 }: MobileLibraryViewProps) {
+  const router = useRouter();
+
+  const handleFilterChange = (key: string) => {
+    const pathMap: Record<string, string> = {
+      all: '/library',
+      inbox: '/inbox',
+      favorites: '/favorites',
+      recent: '/recent'
+    };
+    const target = pathMap[key] || '/library';
+    router.push(target);
+  };
 
   const handleSearchToggle = () => {
     if (isSearchVisible) {
@@ -86,10 +99,6 @@ export default function MobileLibraryView({
     }
   };
 
-  
-
-
-
   return (
     <>
       <MobileTopBar
@@ -119,7 +128,7 @@ export default function MobileLibraryView({
         )}
 
         {!isFilterOpen && <div className="px-5 py-2 shadow-md shadow-black/20">
-          <FilterChips active={filter} onChange={(f) => setFilter(f as any)} />
+          <FilterChips active={filter} onChange={handleFilterChange} />
         </div>}
       </MobileTopBar>
 
@@ -175,4 +184,3 @@ export default function MobileLibraryView({
     </>
   );
 }
-

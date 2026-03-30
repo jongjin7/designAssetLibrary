@@ -11,6 +11,7 @@ export interface NVChipProps {
   variant?: 'filter' | 'tag' | 'status';
   size?: 'sm' | 'md' | 'lg';
   disabled?: boolean;
+  count?: number;
 }
 
 export const NVChip: React.FC<NVChipProps> = ({
@@ -21,7 +22,8 @@ export const NVChip: React.FC<NVChipProps> = ({
   className = '',
   variant = 'filter',
   size = 'md',
-  disabled = false
+  disabled = false,
+  count
 }) => {
   const baseStyles = cn(
     'rounded-full font-medium transition-all duration-300 active:scale-[0.96] whitespace-nowrap border flex items-center justify-center disabled:opacity-40 disabled:pointer-events-none disabled:cursor-not-allowed',
@@ -46,10 +48,20 @@ export const NVChip: React.FC<NVChipProps> = ({
 
   return (
     <Component 
-      className={`${baseStyles} ${sizeStyles[size]} ${variantStyles[variant]} ${className}`}
+      className={cn(baseStyles, sizeStyles[size], variantStyles[variant], className)}
       onClick={onClick}
     >
       {label}
+      {count !== undefined && count > 0 && (
+        <span className={cn(
+          "px-1.5 py-0.5 ml-1.5 rounded-full text-[10px] font-bold min-w-[18px] text-center transition-all duration-300",
+          isActive 
+            ? "bg-white/20 text-white" 
+            : "bg-white/10 text-slate-500 group-hover:bg-white/20 group-hover:text-slate-300"
+        )}>
+          {count}
+        </span>
+      )}
       {onDelete && (
         <button
           onClick={(e) => {

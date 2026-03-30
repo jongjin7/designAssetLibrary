@@ -4,6 +4,7 @@ import { NVChip } from '../../atoms/NVChip';
 export interface NVFilterOption {
   key: string;
   label: string;
+  count?: number;
 }
 
 export interface NVFilterGroupProps {
@@ -31,6 +32,7 @@ export const NVFilterGroup: React.FC<NVFilterGroupProps> = ({
           onClick={() => onChange(option.key)}
           variant="filter"
           size={size}
+          count={option.count}
         />
       ))}
     </div>

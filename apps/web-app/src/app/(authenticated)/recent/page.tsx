@@ -5,7 +5,7 @@ import DesktopLibraryView from '@nova/app/(desktop)/library/DesktopLibraryView';
 import MobileLibraryView from '@nova/app/(mobile)/library/MobileLibraryView';
 import { usePathname } from 'next/navigation';
 
-import { useState, useEffect, useRef, useMemo } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { useAssets } from '@nova/hooks/useAssets';
 import { useLibraryFilters } from '@nova/hooks/useLibraryFilters';
 import { useAssetSelection } from '@nova/hooks/useAssetSelection';
@@ -14,21 +14,21 @@ import { NVSplashScreen } from '@nova/ui';
 
 import { useDesktopShell } from '@nova/components/layout/DesktopShell/index';
 
-export default function FavoritesPage() {
+export default function RecentPage() {
   const isDesktop = useIsDesktop();
   const desktopShell = useDesktopShell();
   
-  const { assets: rawAssets, loading, filter, setFilter, selectedAsset, openDetail, closeDetail, deleteAsset, updateAsset, addAsset, moveAssets, isMoving, setFolderId } = useAssets();
+  const { assets, loading, filter, setFilter, selectedAsset, openDetail, closeDetail, deleteAsset, updateAsset, addAsset, moveAssets, isMoving, setFolderId } = useAssets();
 
-  // Set the filter to 'favorites' when the page mounts
+  // Set the filter to 'recent' when the page mounts
   useEffect(() => {
-    setFilter('favorites');
-    setFolderId(null);
+    setFilter('recent');
+    setFolderId(null); // Clear folder filter if any
   }, [setFilter, setFolderId]);
 
   const { 
     searchText, setSearchText, isFilterOpen, setIsFilterOpen, filteredAssets, handleFilterApply, handleFilterReset 
-  } = useLibraryFilters(rawAssets);
+  } = useLibraryFilters(assets);
   
   const { selectedIds, setSelectedIds } = useAssetSelection();
   const [isSelectionMode, setIsSelectionMode] = useState(false);
@@ -52,21 +52,21 @@ export default function FavoritesPage() {
       setIsMobileSearchVisible(false);
       setIsFilterOpen(false);
       setSearchText('');
-      setFilter('favorites');
+      setFilter('recent'); // Keep current filter
       handleFilterReset();
       prevIsDesktopRef.current = isDesktop;
     }
   }, [isDesktop, closeDetail, setSelectedIds, setIsSelectionMode, setIsMobileSearchVisible, setIsFilterOpen, setSearchText, setFilter, handleFilterReset, setZoom]);
 
-  if (isDesktop === null || (loading && rawAssets.length === 0)) {
-     return <NVSplashScreen message="즐겨찾는 에셋 불러오는 중..." mode="syncing" />;
+  if (isDesktop === null || (loading && assets.length === 0)) {
+     return <NVSplashScreen message="최근 항목 불러오는 중..." mode="syncing" />;
   }
 
   const isSearchVisible = isDesktop && desktopShell ? desktopShell.isSearchVisible : isMobileSearchVisible;
   const onSearchToggle = isDesktop && desktopShell ? desktopShell.onSearchToggle : () => setIsMobileSearchVisible(!isMobileSearchVisible);
 
   const commonProps = {
-    assets: rawAssets, 
+    assets, 
     loading, 
     filter, 
     setFilter, 
@@ -91,7 +91,7 @@ export default function FavoritesPage() {
     onSearchToggle,
     zoom,
     setZoom,
-    title: "즐겨찾기"
+    title: "최근 항목"
   };
 
   if (isDesktop) {

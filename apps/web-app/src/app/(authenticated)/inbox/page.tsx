@@ -3,7 +3,7 @@
 import { useIsDesktop } from '@nova/hooks/useIsDesktop';
 import DesktopLibraryView from '@nova/app/(desktop)/library/DesktopLibraryView';
 import MobileLibraryView from '@nova/app/(mobile)/library/MobileLibraryView';
-import { useRouter, usePathname } from 'next/navigation';
+import { usePathname } from 'next/navigation';
 
 import { useState, useEffect, useRef, useMemo } from 'react';
 import { useAssets } from '@nova/hooks/useAssets';
@@ -15,18 +15,20 @@ import { NVSplashScreen } from '@nova/ui';
 import { useDesktopShell } from '@nova/components/layout/DesktopShell/index';
 
 export default function InboxPage() {
-  const pathname = usePathname();
   const isDesktop = useIsDesktop();
   const desktopShell = useDesktopShell();
   
-  const { assets, loading, filter, setFilter, selectedAsset, openDetail, closeDetail, deleteAsset, updateAsset, addAsset } = useAssets();
+  const { assets: rawAssets, loading, filter, setFilter, selectedAsset, openDetail, closeDetail, deleteAsset, updateAsset, addAsset, moveAssets, isMoving, setFolderId } = useAssets();
 
-  // Filter assets to only include those WITHOUT a folderId (Inbox)
-  const inboxAssets = useMemo(() => assets.filter(a => !a.folderId), [assets]);
+  // Set the filter to 'inbox' when the page mounts
+  useEffect(() => {
+    setFilter('inbox');
+    setFolderId(null);
+  }, [setFilter, setFolderId]);
 
   const { 
     searchText, setSearchText, isFilterOpen, setIsFilterOpen, filteredAssets, handleFilterApply, handleFilterReset 
-  } = useLibraryFilters(inboxAssets);
+  } = useLibraryFilters(rawAssets);
   
   const { selectedIds, setSelectedIds } = useAssetSelection();
   const [isSelectionMode, setIsSelectionMode] = useState(false);
@@ -50,13 +52,13 @@ export default function InboxPage() {
       setIsMobileSearchVisible(false);
       setIsFilterOpen(false);
       setSearchText('');
-      setFilter('all');
+      setFilter('inbox');
       handleFilterReset();
       prevIsDesktopRef.current = isDesktop;
     }
   }, [isDesktop, closeDetail, setSelectedIds, setIsSelectionMode, setIsMobileSearchVisible, setIsFilterOpen, setSearchText, setFilter, handleFilterReset, setZoom]);
 
-  if (isDesktop === null || (loading && assets.length === 0)) {
+  if (isDesktop === null || (loading && rawAssets.length === 0)) {
      return <NVSplashScreen message="인박스 에셋 불러오는 중..." mode="syncing" />;
   }
 
@@ -64,7 +66,7 @@ export default function InboxPage() {
   const onSearchToggle = isDesktop && desktopShell ? desktopShell.onSearchToggle : () => setIsMobileSearchVisible(!isMobileSearchVisible);
 
   const commonProps = {
-    assets: inboxAssets, 
+    assets: rawAssets, 
     loading, 
     filter, 
     setFilter, 
@@ -74,6 +76,8 @@ export default function InboxPage() {
     deleteAsset, 
     updateAsset, 
     addAsset,
+    moveAssets,
+    isMoving,
     selectedIds, 
     setSelectedIds,
     searchText, 

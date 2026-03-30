@@ -45,7 +45,7 @@ export function useAssets(allFolders: Folder[] = []) {
       case 'recent':
         return [...rawAssets].sort((a, b) =>
           new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
-        ).slice(0, 6);
+        );
       case 'favorites':
         return rawAssets.filter(a => a.isFavorite);
       case 'inbox':
