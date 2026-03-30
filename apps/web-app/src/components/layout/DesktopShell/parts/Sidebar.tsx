@@ -27,6 +27,7 @@ export function Sidebar({ onSearchToggle }: SidebarProps) {
   const inboxCount = useAssetStore(state => state.assets.filter(a => !a.folderId).length);
   const getFolderCount = useAssetStore(state => state.getFolderCount);
   const assets = useAssetStore(state => state.assets); // Subscribing to assets for general updates
+  const folderId = useAssetStore(state => state.folderId);
 
   useEffect(() => { 
     setMounted(true); 
@@ -124,7 +125,7 @@ export function Sidebar({ onSearchToggle }: SidebarProps) {
           <div className="px-0.5 mt-4">
             <FolderTree 
               folders={folders} 
-              activeFolderId={null}
+              activeFolderId={folderId}
               getFolderCount={(id) => getFolderCount(id, folders)}
               onFolderClick={(id) => {
                 const target = id ? `/folder/${id}` : '/library';

@@ -31,10 +31,15 @@ export function FilterChips({ active, onChange, className = '', size = 'md' }: F
     { key: 'recent', label: '최근 항목' },
   ];
 
+  const folderId = useAssetStore(state => state.folderId);
+  
+  // If we're in a folder, the key used for highlighting should be folder_[id]
+  const effectiveActiveKey = active === 'folder' && folderId ? `folder_${folderId}` : active;
+
   return (
     <NVFilterGroup
         options={filters}
-        activeKey={active}
+        activeKey={effectiveActiveKey}
         onChange={onChange}
         size={size}
         className={className}
