@@ -1,6 +1,6 @@
 'use client';
 
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import Link from 'next/link';
 import { useRouter, usePathname } from 'next/navigation';
 import { Grid, Star, Clock } from 'lucide-react';
@@ -15,6 +15,8 @@ import { SidebarProfile } from './SidebarProfile';
 export function Sidebar() {
   const router = useRouter();
   const pathname = usePathname();
+  const [mounted, setMounted] = useState(false);
+  useEffect(() => { setMounted(true); }, []);
   const { folders, createFolder } = useFolders();
   const context = useDesktopShell();
   
@@ -22,14 +24,17 @@ export function Sidebar() {
   const { isSidebarCollapsed, isFloating, isDesktopApp, setIsSidebarCollapsed } = context as any;
 
   const handleNavClick = (nav: string) => {
-    if (nav === 'all') router.push('/library');
-    else router.push(`/${nav}`);
+    const target = nav === 'all' ? '/library' : `/${nav}`;
+    if (pathname === target) return;
+    router.push(target);
+    if (isFloating) setIsSidebarCollapsed(true);
   };
 
   return (
     <div  
       className={cn(
-        "flex flex-col transition-all duration-300 ease-in-out z-50 overflow-hidden shrink-0 w-[260px] bg-slate-950/60 backdrop-blur-2xl",
+        "flex flex-col z-50 overflow-hidden shrink-0 w-[260px] bg-slate-950/60 backdrop-blur-2xl",
+        mounted && "transition-all duration-300 ease-in-out",
         isSidebarCollapsed 
           ? "bg-transparent border-transparent shadow-none translate-x-[-260px] -ml-[260px]" 
           : "border-r border-white/5 shadow-[4px_0_24px_rgba(0,0,0,0.5)] translate-x-0 ml-0",
@@ -82,10 +87,7 @@ export function Sidebar() {
                     ? 'bg-indigo-500/15 text-indigo-400 shadow-[inset_0_0_12px_rgba(99,102,241,0.1)]' 
                     : 'text-slate-400 hover:bg-white/[0.06] hover:text-white',
                 )} 
-                onClick={() => {
-                  handleNavClick(item.id);
-                  if (isFloating) setIsSidebarCollapsed(true);
-                }} 
+                onClick={() => handleNavClick(item.id)}
               >
                 <item.icon size={18} className={cn("shrink-0 transition-transform duration-300 group-hover:scale-110", isActive ? 'text-indigo-400' : 'group-hover:text-white')} />
                 <span className="truncate">{item.label}</span>
@@ -98,7 +100,9 @@ export function Sidebar() {
               folders={folders} 
               activeFolderId={null}
               onFolderClick={(id) => {
-                id ? router.push(`/folder/${id}`) : router.push('/library');
+                const target = id ? `/folder/${id}` : '/library';
+                if (pathname === target) return;
+                router.push(target);
                 if (isFloating) setIsSidebarCollapsed(true);
               }}
               onCreateFolder={(parent) => {

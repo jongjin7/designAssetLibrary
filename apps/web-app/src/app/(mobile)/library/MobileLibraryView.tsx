@@ -145,6 +145,9 @@ export default function MobileLibraryView({
             onAssetTap={handleAssetTap} 
             selectedIds={selectedIds}
             onSelect={(id) => handleSelect(id)}
+            onFavoriteToggle={(id, isFavorite) => {
+              updateAsset(id, { isFavorite });
+            }}
             isMobile={true}
             zoom={zoom}
           />

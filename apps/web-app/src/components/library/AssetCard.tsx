@@ -6,11 +6,12 @@ interface AssetCardProps {
   onTap: (asset: Asset, e: React.MouseEvent) => void;
   isSelected?: boolean;
   onSelect?: (id: string, e: React.MouseEvent) => void;
+  onFavoriteToggle?: (id: string, isFavorite: boolean) => void;
   onAssetTap?: (asset: Asset, e: React.MouseEvent) => void;
   isMobile?: boolean;
 }
 
-export function AssetCard({ asset, onTap, isSelected, onSelect, onAssetTap, isMobile }: AssetCardProps) {
+export function AssetCard({ asset, onTap, isSelected, onSelect, onFavoriteToggle, onAssetTap, isMobile }: AssetCardProps) {
   const handleSelect = (e: React.MouseEvent) => {
     e.stopPropagation();
     onSelect?.(asset.id, e);
@@ -28,8 +29,9 @@ export function AssetCard({ asset, onTap, isSelected, onSelect, onAssetTap, isMo
       isMobile={isMobile}
       onTap={(e) => onTap(asset, e)}
       onSelect={handleSelect}
-      onFavoriteToggle={() => {
-        // Handle favorite toggle (would need action in app)
+      onFavoriteToggle={(e) => {
+        e.stopPropagation();
+        onFavoriteToggle?.(asset.id, !asset.isFavorite);
       }}
       onMaximize={(e) => onTap(asset, e)}
     />

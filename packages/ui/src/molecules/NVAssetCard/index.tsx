@@ -235,38 +235,50 @@ export const NVAssetCard: React.FC<NVAssetCardProps> = ({
         {/* Top: Minimal Floating Tags/Actions - Hidden on Error */}
         {!hasError && !isLoading && (
           <div className={cn(
-            "flex items-start justify-between transition-opacity duration-300",
+            "flex items-start justify-between transition-opacity duration-300 z-1 ",
             isSelected || isMobile ? "opacity-100" : "opacity-0 group-hover:opacity-100"
           )}>
-            {/* Selection Indicator */}
-            <div 
+            <NVIconButton 
+                icon={Check}
+                variant={isSelected ? 'primary' : 'glass'}
+                size="xs"
+                rounded={true}
+                strokeWidth={isSelected ? 3 : 2}
                 className={cn(
-                  "flex h-5 w-5 items-center justify-center rounded-full transition-all border",
+                  "transition-all duration-300",
                   isSelected 
-                    ? "bg-indigo-500 border-indigo-500 scale-100 text-white shadow-[0_0_12px_rgba(99,102,241,0.5)]" 
-                    : "border-white/30 bg-black/10 backdrop-blur-sm group-hover:opacity-100 text-white/50"
+                    ? "shadow-[0_0_12px_rgba(99,102,241,0.5)]" 
+                    : "text-white/50 border-white/30 group-hover:opacity-100"
                 )}
                 onClick={(e) => {
                   e.stopPropagation();
                   onSelect?.(e);
                 }}
-              >
-                <Check size={12} strokeWidth={isSelected ? 4 : 2} />
-            </div>
+                aria-label="에셋 선택"
+            />
 
-            {/* Quick Star */}
-            <button 
+            <NVIconButton 
+                icon={Star}
+                variant='neutral'
+                size="xs"
+                iconSize={16}
+                rounded={true}
+                strokeWidth={isFavorite ? 2.5 : 2}
+                iconProps={{ 
+                   fill: isFavorite ? "currentColor" : "none" 
+                }}
                 className={cn(
-                  "p-1 transition-all drop-shadow-lg scale-100 active:scale-95",
-                  isFavorite ? "text-indigo-400" : "text-white/60 hover:text-white"
+                  "transition-all duration-300",
+                  isFavorite 
+                    ? "!text-yellow-300" 
+                    : "!text-white/50"
                 )}
                 onClick={(e) => {
                   e.stopPropagation();
                   onFavoriteToggle?.(e);
                 }}
-              >
-                <Star size={16} fill={isFavorite ? "currentColor" : "none"} />
-            </button>
+                aria-label="즐겨찾기 토글"
+            />
           </div>
         )}
 

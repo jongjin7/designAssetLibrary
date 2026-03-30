@@ -90,9 +90,13 @@ export function NVAssetDetailContent({
 
       <NVAssetDetailFooter 
         isInspector={isInspector} 
+        isFavorite={asset.isFavorite}
         onShare={() => onShare?.(asset)}
         onMove={() => onMove?.(asset.id)}
         onDelete={() => onDelete?.(asset.id)}
+        onToggleFavorite={() => {
+          onUpdate?.(asset.id, { isFavorite: !asset.isFavorite });
+        }}
       />
     </div>
   );

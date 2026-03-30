@@ -105,7 +105,11 @@ export default function DesktopLibraryView({
       return;
     }
     
-    // Default mode: open inspector
+    // Default mode: toggle inspector (re-click same asset to close)
+    if (selectedAsset?.id === asset.id && isSidebarVisible) {
+      handleToggleSidebar();
+      return;
+    }
     openDetail(asset);
     setIsSidebarVisible(true);
   };
@@ -198,6 +202,9 @@ export default function DesktopLibraryView({
                 onAssetTap={handleAssetTap} 
                 selectedIds={selectedIds}
                 onSelect={handleSelect}
+                onFavoriteToggle={(id, isFavorite) => {
+                  updateAsset(id, { isFavorite });
+                }}
                 zoom={zoom}
               />
             ) : (

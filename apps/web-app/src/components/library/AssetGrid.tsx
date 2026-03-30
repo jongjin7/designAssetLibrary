@@ -7,11 +7,12 @@ interface AssetGridProps {
   onAssetTap: (asset: Asset, e: React.MouseEvent) => void;
   selectedIds?: Set<string>;
   onSelect?: (id: string, e: React.MouseEvent) => void;
+  onFavoriteToggle?: (id: string, isFavorite: boolean) => void;
   isMobile?: boolean;
   zoom?: number;
 }
 
-export function AssetGrid({ assets, onAssetTap, selectedIds, onSelect, isMobile, zoom }: AssetGridProps) {
+export function AssetGrid({ assets, onAssetTap, selectedIds, onSelect, onFavoriteToggle, isMobile, zoom }: AssetGridProps) {
   if (assets.length === 0) {
     return (
       <NVEmptyState
@@ -32,6 +33,7 @@ export function AssetGrid({ assets, onAssetTap, selectedIds, onSelect, isMobile,
           onTap={onAssetTap} 
           isSelected={selectedIds?.has(asset.id)}
           onSelect={onSelect}
+          onFavoriteToggle={onFavoriteToggle}
           onAssetTap={onAssetTap}
           isMobile={isMobile}
         />
