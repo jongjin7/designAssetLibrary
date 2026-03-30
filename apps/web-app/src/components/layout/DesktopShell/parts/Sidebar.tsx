@@ -25,13 +25,12 @@ export function Sidebar({ onSearchToggle }: SidebarProps) {
   const context = useDesktopShell();
   
   if (!context) return null;
-  const { isSidebarCollapsed, isFloating, isDesktopApp, setIsSidebarCollapsed } = context as any;
+  const { isSidebarCollapsed, isDesktopApp } = context as any;
 
   const handleNavClick = (nav: string) => {
     const target = nav === 'all' ? '/library' : `/${nav}`;
     if (pathname === target) return;
     router.push(target);
-    if (isFloating) setIsSidebarCollapsed(true);
   };
 
   return (
@@ -107,7 +106,6 @@ export function Sidebar({ onSearchToggle }: SidebarProps) {
                 const target = id ? `/folder/${id}` : '/library';
                 if (pathname === target) return;
                 router.push(target);
-                if (isFloating) setIsSidebarCollapsed(true);
               }}
               onCreateFolder={(parent) => {
                 const name = window.prompt('새 폴더 이름을 입력하세요:');

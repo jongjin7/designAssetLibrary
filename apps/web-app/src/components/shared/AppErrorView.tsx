@@ -1,9 +1,8 @@
 'use client';
 
-import { Home, RotateCcw, ArrowLeft, Layers, Monitor, Search } from 'lucide-react';
+import { Home, RotateCcw, ArrowLeft } from 'lucide-react';
 import { NVErrorView } from '@nova/ui';
 import { useIsDesktop } from '@nova/hooks/useIsDesktop';
-import { DesktopShell } from '@nova/components/layout/DesktopShell';
 import { useRouter } from 'next/navigation';
 
 interface AppErrorViewProps {
@@ -38,19 +37,7 @@ export default function AppErrorView({
       title={displayTitle}
       description={displayDescription}
       variant={is404 ? 'default' : 'danger'}
-      fullScreen={!isDesktop || !is404}
-      header={isDesktop ? (
-        <div className="h-12 border-b border-white/5 flex items-center justify-between px-10 opacity-40">
-           <div className={`flex items-center gap-3 text-[10px] font-bold tracking-widest uppercase ${is404 ? 'text-indigo-400' : 'text-rose-500'}`}>
-              <div className={`w-1.5 h-1.5 rounded-full ${is404 ? 'bg-indigo-400' : 'bg-rose-500'} animate-pulse`} />
-              {is404 ? "Page Not Found" : "System Error"}
-           </div>
-           <div className="flex items-center gap-4 text-slate-500">
-              <Monitor size={14} />
-              <Search size={14} />
-           </div>
-        </div>
-      ) : undefined}
+      fullScreen={!isDesktop}
       primaryAction={reset ? {
         label: '다시 시도',
         onClick: reset,
@@ -67,10 +54,6 @@ export default function AppErrorView({
       }}
     />
   );
-
-  if (isDesktop && is404) {
-    return <DesktopShell>{content}</DesktopShell>;
-  }
 
   return content;
 }
