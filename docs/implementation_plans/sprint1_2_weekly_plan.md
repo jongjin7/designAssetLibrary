@@ -40,12 +40,13 @@
 #### **Week 4: Desktop Shell & Ingestion**
 
 - [x] **3-Panel Layout**: 사이드바 - 에셋 그리드 - 인스펙터 구조의 `DesktopShell` 및 `Sidebar` UI 구축 완료.
+- [x] **Asset Management Mode**: 관리 모드 토글, 다중 선택(Shift/Cmd), 에러 상태 에셋 선택 및 일괄 삭제/이동 엔진 구축 완료.
 - [ ] **Asset Grid v2**: 대량 에셋 대응을 위한 가상 스크롤(Virtual Scroll) 적용.
 - [ ] **Batch Upload**: OS 탐색기 드래그&드롭 즉시 업로드 오버레이 및 배치 처리 엔진.
 
 #### **Week 5: Advanced Organization & Taxonomy**
 
-- [ ] **Hierarchical Folders**: 5단계 중첩 지원 폴더 트리 UI 및 DB 연동 (진행 중).
+- [ ] **Hierarchical Folders**: 5단계 중첩 지원 폴더 트리 UI. 새 폴더(+), 폴더 관리(...) Popover UI 및 DB 연동 (진행 중).
 - [ ] **Smart Folder**: 태그, 별점, 컬러 라벨 기반 자동 분류 가상 폴더 시스템.
 - [ ] **Auto-Tagging**: 폴더 이동 시 태그 자동 부여 파이프라인.
 
