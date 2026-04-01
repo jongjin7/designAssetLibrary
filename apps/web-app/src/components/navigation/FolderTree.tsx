@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { ChevronRight, ChevronDown, Folder as FolderIcon, MoreVertical, Plus, Sparkles, Pencil, Trash2, Copy, BrainCircuit, LayoutGrid } from 'lucide-react';
+import { ChevronRight, ChevronDown, Folder as FolderIcon, FolderOpen, MoreVertical, Plus, Sparkles, Pencil, Trash2, Copy, BrainCircuit, LayoutGrid } from 'lucide-react';
 import { Folder } from '@nova/types/folder';
 import { cn } from '@nova/lib/utils';
 import { 
@@ -41,6 +41,9 @@ export function FolderTree({ folders, activeFolderId, onFolderClick, getFolderCo
   };
 
   const renderFolderItems = (parentId: string | null = null, depth = 0) => {
+    // Limit nesting to 2 levels (0: root, 1: child)
+    if (depth > 1) return null;
+    
     const items = folders.filter(f => f.parentId === parentId && !f.isSmartFolder);
 
     if (items.length === 0 && depth > 0) return null;
@@ -55,31 +58,37 @@ export function FolderTree({ folders, activeFolderId, onFolderClick, getFolderCo
           return (
             <div key={folder.id} className="flex flex-col">
               <div 
-                className={`group flex items-center gap-2.5 px-3 py-2 rounded-xl text-[13px] font-medium transition-all cursor-pointer relative
+                className={`group flex items-center gap-3 px-3.5 py-1.5 rounded-lg text-[13px] font-medium transition-all cursor-pointer relative
                   ${isActive 
-                    ? 'text-indigo-500 bg-indigo-500/10' 
+                    ? 'text-indigo-400 bg-indigo-500/10' 
                     : 'text-slate-400 hover:bg-white/[0.03] hover:text-slate-50'}
                   ${isCollapsed ? 'justify-center px-0' : ''}`}
-                style={!isCollapsed ? { paddingLeft: `${depth * 12 + 12}px` } : undefined}
+                style={!isCollapsed ? { paddingLeft: '14px' } : undefined}
                 onClick={() => onFolderClick(folder.id)}
                 title={isCollapsed ? folder.name : undefined}
               >
-                {!isCollapsed && (
-                  <span 
-                    className="flex items-center justify-center w-4 h-4 text-slate-500 hover:text-slate-50 transition-colors"
-                    onClick={(e) => toggleExpand(folder.id, e)}
+                {/* No separate chevron, folder icon itself represents toggle state */}
+                {depth === 0 ? (
+                  <div 
+                    className="relative flex items-center justify-center w-[18px] h-[18px] flex-shrink-0"
+                    onClick={(e) => hasChildren && toggleExpand(folder.id, e)}
                   >
-                    {hasChildren ? (
-                      isExpanded ? <ChevronDown size={14} /> : <ChevronRight size={14} />
+                    {isExpanded ? (
+                      <FolderOpen 
+                        size={17} 
+                        className={`flex-shrink-0 transition-all ${isActive ? 'text-indigo-400' : 'text-slate-500 group-hover:text-slate-300'}`} 
+                      />
                     ) : (
-                      <span className="w-3.5" />
+                      <FolderIcon 
+                        size={17} 
+                        className={`flex-shrink-0 transition-all ${isActive ? 'text-indigo-400' : 'text-slate-500 group-hover:text-slate-300'}`} 
+                      />
                     )}
-                  </span>
+                  </div>
+                ) : (
+                  // Spacer to align depth 1 text exactly with parent folder icons and 'All Assets'
+                  <div className="w-[18px] h-[18px] flex-shrink-0" />
                 )}
-                <FolderIcon 
-                  size={16} 
-                  className={`flex-shrink-0 ${isActive ? 'text-indigo-500' : 'text-slate-500 group-hover:text-slate-300'}`} 
-                />
                 {!isCollapsed && (
                   <>
                     <span className="flex-1 truncate">{folder.name}</span>
@@ -148,7 +157,13 @@ export function FolderTree({ folders, activeFolderId, onFolderClick, getFolderCo
                   </>
                 )}
               </div>
-              {!isCollapsed && isExpanded && renderFolderItems(folder.id, depth + 1)}
+              {!isCollapsed && isExpanded && (
+                <div className="relative">
+                  {/* Vertical Guide Line - Aligned with the center of the 18px icon */}
+                  <div className="absolute left-[22px] top-0 bottom-1 w-[1px] bg-white/[0.06]" />
+                  {renderFolderItems(folder.id, depth + 1)}
+                </div>
+              )}
             </div>
           );
         })}
@@ -210,23 +225,26 @@ export function FolderTree({ folders, activeFolderId, onFolderClick, getFolderCo
             return (
               <div 
                 key={folder.id} 
-                className={`group flex items-center gap-2.5 px-3 py-2 rounded-xl text-[13px] font-medium transition-all cursor-pointer
+                className={`group flex items-center gap-3 px-3.5 py-1.5 rounded-lg text-[13px] font-medium transition-all cursor-pointer
                   ${isActive 
                     ? 'text-cyan-500 bg-cyan-500/10' 
                     : 'text-slate-400 hover:bg-white/[0.03] hover:text-slate-50'}
                   ${isCollapsed ? 'justify-center px-0' : ''}`}
-                style={!isCollapsed ? { paddingLeft: '12px' } : undefined}
+                style={!isCollapsed ? { paddingLeft: '14px' } : undefined}
                 onClick={() => onFolderClick(folder.id)}
                 title={isCollapsed ? folder.name : undefined}
               >
-                {!isCollapsed && <span className="w-4" />}
-                <Sparkles 
-                  size={16} 
-                  className={`flex-shrink-0 transition-all
-                    ${isActive 
-                      ? 'text-cyan-500 drop-shadow-[0_0_8px_rgba(6,182,212,0.4)]' 
-                      : 'text-slate-500 group-hover:text-cyan-400'}`} 
-                />
+                {!isCollapsed && (
+                  <div className="w-[18px] h-[18px] flex items-center justify-center flex-shrink-0">
+                    <Sparkles 
+                      size={17} 
+                      className={`flex-shrink-0 transition-all
+                        ${isActive 
+                          ? 'text-cyan-500 drop-shadow-[0_0_8px_rgba(6,182,212,0.4)]' 
+                          : 'text-slate-500 group-hover:text-cyan-400'}`} 
+                    />
+                  </div>
+                )}
                 {!isCollapsed && (
                   <>
                     <span className="flex-1 truncate">{folder.name}</span>
