@@ -105,6 +105,12 @@ export const NVAssetCard: React.FC<NVAssetCardProps> = ({
   };
 
   const handleCardClick = (e: React.MouseEvent) => {
+    // Enable selection even on error if it's mobile or selectable mode
+    if (isMobile || isSelected) {
+       onSelect?.(e);
+       return;
+    }
+    
     if (hasError || isLoading) return;
     onTap?.(e);
   };
@@ -116,7 +122,7 @@ export const NVAssetCard: React.FC<NVAssetCardProps> = ({
         "group relative flex flex-col shrink-0 w-full overflow-hidden transition-all duration-500",
         "bg-transparent rounded-lg break-inside-avoid select-none",
         (!hasError && !isLoading) && "active:scale-[0.96] cursor-pointer",
-        (hasError || isLoading) && "cursor-default",
+        (hasError || isLoading) && (isMobile ? "cursor-pointer" : "cursor-default"),
         isLongPressing ? "scale-[0.98] brightness-75 transition-all duration-200" : "",
         isSelected ? "ring-2 ring-indigo-500 ring-offset-2 ring-offset-slate-950" : "",
         isCompact ? "max-w-[140px]" : "",
@@ -152,9 +158,10 @@ export const NVAssetCard: React.FC<NVAssetCardProps> = ({
         {/* Shimmer Skeleton (shown until loaded or error) */}
         {(isLoading || (!isLoaded && !hasError)) && (
           <div 
-            className="absolute inset-0 bg-slate-800/60 z-10" 
+            className="absolute inset-0 z-10" 
             style={{ 
-              backgroundImage: 'linear-gradient(90deg, transparent 0%, rgba(255,255,255,0.03) 50%, transparent 100%)',
+              background: thumbnailGradient || 'rgba(30, 41, 59, 0.5)',
+              backgroundImage: `${thumbnailGradient ? thumbnailGradient + ',' : ''} linear-gradient(90deg, transparent 0%, rgba(255,255,255,0.03) 50%, transparent 100%)`,
               backgroundSize: '200% 100%',
               animation: 'nv-shimmer 2s infinite linear'
             }} 
@@ -181,7 +188,10 @@ export const NVAssetCard: React.FC<NVAssetCardProps> = ({
         
         {/* Error Fallback with Service Logo (Enhanced) */}
         {hasError && !isLoading && (
-          <div className="aspect-square w-full flex flex-col items-center justify-center bg-slate-900 z-20 relative overflow-hidden group/error select-none">
+          <div 
+            className="aspect-square w-full flex flex-col items-center justify-center z-20 relative overflow-hidden group/error select-none"
+            style={{ background: thumbnailGradient || '#0B0E14' }}
+          >
             {/* Background Decorative patterns */}
             <div className="absolute inset-0 opacity-20 bg-[radial-gradient(circle_at_center,_var(--tw-gradient-stops))] from-indigo-500/30 via-transparent to-transparent scale-150" />
             <div className="absolute inset-0 bg-slate-900/40 backdrop-blur-[2px]" />
@@ -237,8 +247,8 @@ export const NVAssetCard: React.FC<NVAssetCardProps> = ({
         {(!hasError && !isLoading) && (
           <div className="absolute inset-0 pointer-events-none bg-gradient-to-b from-black/40 via-transparent to-black/70 opacity-0 group-hover:opacity-100 transition-opacity duration-500 ease-in-out" />
         )}
-        {/* Top: Minimal Floating Tags/Actions - Hidden on Error */}
-        {!hasError && !isLoading && (
+        {/* Top: Minimal Floating Tags/Actions */}
+        {(true) && (
           <div className={cn(
             "flex items-start justify-between transition-opacity duration-300 z-1 ",
             isSelected || isMobile ? "opacity-100" : "opacity-0 group-hover:opacity-100"
@@ -252,7 +262,7 @@ export const NVAssetCard: React.FC<NVAssetCardProps> = ({
                 className={cn(
                   "transition-all duration-300",
                   isSelected 
-                    ? "shadow-[0_0_12px_rgba(99,102,241,0.5)]" 
+                    ? "" 
                     : "text-white/50 border-white/30 group-hover:opacity-100"
                 )}
                 onClick={(e) => {

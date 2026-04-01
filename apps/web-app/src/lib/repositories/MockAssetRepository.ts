@@ -108,20 +108,43 @@ export class MockAssetRepository implements AssetRepository {
     }
     
     const opfsPath = `assets/${fileName}`;
+    let previewUrl: string | null = null;
 
     try {
       if (file) {
         await this.opfs.saveFile(opfsPath, file);
+        previewUrl = URL.createObjectURL(file);
         console.log(`[Mock/Storage] File saved to ${opfsPath} (Size: ${file.size} bytes)`);
       } else if (asset.thumbnail && asset.thumbnail.startsWith('data:')) {
         const blob = dataURLToBlob(asset.thumbnail);
         if (blob) {
           await this.opfs.saveFile(opfsPath, blob);
+          previewUrl = asset.thumbnail;
           console.log(`[Mock/Storage] File saved from Data URL to ${opfsPath}`);
         }
       }
     } catch (e) {
       console.error(`[Mock/Storage] CRITICAL: Failed to save file to ${opfsPath}:`, e);
+    }
+
+    // AI Color Extraction Integration
+    let palette = asset.palette;
+    let aiTags: string[] = [];
+    
+    if (previewUrl) {
+      try {
+        const { extractColors } = await import('../colorExtractor');
+        palette = await extractColors(previewUrl);
+        // Clean up object URL if it was created
+        if (previewUrl.startsWith('blob:')) URL.revokeObjectURL(previewUrl);
+        
+        // Add color tags automatically based on primary colors
+        if (palette && palette.length > 0) {
+          aiTags = palette.slice(0, 2).map(hex => `color/${hex.replace('#', '')}`);
+        }
+      } catch (err) {
+        console.error('[Mock/AI] Color extraction failed, using fallback:', err);
+      }
     }
 
     const newAsset: Asset = {
@@ -130,10 +153,10 @@ export class MockAssetRepository implements AssetRepository {
       extension: fileName.split('.').pop() || 'webp',
       fileSize: asset.fileSize || '0 KB',
       mimeType: asset.mimeType || 'image/webp',
-      thumbnailGradient: asset.thumbnailGradient || 'linear-gradient(135deg, #6366F1 0%, #8B5CF6 100%)',
+      thumbnailGradient: asset.thumbnailGradient || `linear-gradient(135deg, ${palette?.[0] || '#6366F1'} 0%, ${palette?.[1] || '#06B6D4'} 100%)`,
       thumbnail: opfsPath,
-      palette: asset.palette || ['#6366F1', '#8B5CF6'],
-      tags: asset.tags || ['captured'],
+      palette: palette || ['#6366F1', '#06B6D4'],
+      tags: [...(asset.tags || []), 'captured', ...aiTags],
       createdAt: asset.createdAt || new Date().toISOString().split('T')[0],
       isFavorite: !!asset.isFavorite,
     };

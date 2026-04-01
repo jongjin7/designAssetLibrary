@@ -53,18 +53,16 @@ export default function DesktopLibraryView({
 }: DesktopLibraryViewProps) {
   
   const [isSidebarVisible, setIsSidebarVisible] = useState(false);
+  const [isManagementMode, setIsManagementMode] = useState(false);
   const shell = useDesktopShell();
   const isDesktopApp = shell?.isDesktopApp ?? false;
 
-  // Automatically show sidebar when a new asset is selected
+  // Clear management mode when selection is cancelled or successful
   useEffect(() => {
-    if (selectedAsset) {
-      // Only auto-open if we have enough screen space
-      if (window.innerWidth >= 760) {
-        setIsSidebarVisible(true);
-      }
+    if (selectedIds.size === 0 && !isManagementMode) {
+      // Nothing to do
     }
-  }, [selectedAsset]);
+  }, [selectedIds, isManagementMode]);
 
   const lastWidthRef = typeof window !== 'undefined' ? useRef(window.innerWidth) : { current: 1024 };
 
@@ -95,9 +93,14 @@ export default function DesktopLibraryView({
       closeDetail();
     }
   };
+
+  const handleToggleManagementMode = () => {
+    setIsManagementMode(prev => !prev);
+  };
+
   const handleAssetTap = (asset: Asset, e: React.MouseEvent) => {
-    // Selection mode: Cmd/Ctrl or Shift or if we already have a selection
-    if (e.metaKey || e.ctrlKey || e.shiftKey || selectedIds.size > 0) {
+    // Selection mode: Management mode active OR Cmd/Ctrl or Shift
+    if (isManagementMode || e.metaKey || e.ctrlKey || e.shiftKey || selectedIds.size > 0) {
       const newSelected = new Set(selectedIds);
       if (newSelected.has(asset.id)) {
         newSelected.delete(asset.id);
@@ -127,9 +130,20 @@ export default function DesktopLibraryView({
     setSelectedIds(newSelected);
   };
 
-  const handleBulkDelete = () => {
+  const handleBulkDelete = async () => {
+    if (selectedIds.size === 0) return;
+    
     if (window.confirm(`${selectedIds.size}개의 에셋을 삭제하시겠습니까?`)) {
-      setSelectedIds(new Set());
+      try {
+        const idsToDelete = Array.from(selectedIds);
+        // Sequential deletion for safety or Parallel with Promise.all
+        await Promise.all(idsToDelete.map(id => deleteAsset(id)));
+        setSelectedIds(new Set());
+        console.log(`Successfully deleted ${idsToDelete.length} assets`);
+      } catch (err) {
+        console.error('Failed to delete assets in bulk:', err);
+        alert('일부 에셋 삭제에 실패했습니다.');
+      }
     }
   };
 
@@ -203,8 +217,6 @@ export default function DesktopLibraryView({
     }
   };
 
-
-
   return (
     <div className="flex h-full w-full overflow-hidden bg-[#0A0C13]">
       <div className="flex-1 flex flex-col overflow-hidden relative">
@@ -219,6 +231,8 @@ export default function DesktopLibraryView({
           onFilterReset={handleFilterReset}
           onSearchToggle={onSearchToggle}
           isSidebarVisible={isSidebarVisible}
+          isManagementMode={isManagementMode}
+          onManagementToggle={handleToggleManagementMode}
           onAddAsset={async (data, file) => {
             const newAsset = await addAsset(data, file);
             if (newAsset) {
@@ -262,6 +276,7 @@ export default function DesktopLibraryView({
                 onFavoriteToggle={(id, isFavorite) => {
                   updateAsset(id, { isFavorite });
                 }}
+                isSelectMode={isManagementMode}
                 zoom={zoom}
                 isSidebarOpen={isSidebarVisible}
                 activeAssetId={selectedAsset?.id}
@@ -279,13 +294,16 @@ export default function DesktopLibraryView({
           </div>
         </div>
 
-        {/* Selection Bar: Always centered in the main content area */}
         <NVAssetSelectionBar
           theme="dark"
           size="md"
           selectedCount={selectedIds.size}
+          isManagementMode={isManagementMode}
           className="absolute bottom-10 z-40 left-1/2 -translate-x-1/2"
-          onCancel={() => setSelectedIds(new Set())}
+          onCancel={() => {
+            setSelectedIds(new Set());
+            if (isManagementMode) handleToggleManagementMode();
+          }}
           moveTrigger={
             <MoveAssetPopover 
               onMove={handleBulkMove}

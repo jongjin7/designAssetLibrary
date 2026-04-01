@@ -10,6 +10,7 @@ interface AssetGridProps {
   onSelect?: (id: string, e: React.MouseEvent) => void;
   onFavoriteToggle?: (id: string, isFavorite: boolean) => void;
   isMobile?: boolean;
+  isSelectMode?: boolean;
   zoom?: number;
   activeAssetId?: string | null;
   isSidebarOpen?: boolean;
@@ -22,6 +23,7 @@ export function AssetGrid({
   onSelect, 
   onFavoriteToggle, 
   isMobile, 
+  isSelectMode = false,
   zoom,
   activeAssetId,
   isSidebarOpen 
@@ -76,6 +78,7 @@ export function AssetGrid({
               onSelect={onSelect}
               onFavoriteToggle={onFavoriteToggle}
               isMobile={isMobile}
+              isSelectMode={isSelectMode}
               isDimmed={isDimmed}
             />
           );

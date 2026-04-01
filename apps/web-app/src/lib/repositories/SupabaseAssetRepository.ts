@@ -37,6 +37,9 @@ export class SupabaseAssetRepository implements AssetRepository {
     try {
       // 1. If file provided, upload to Supabase Storage
       let filePath = '';
+      let palette = asset.palette;
+      let aiTags: string[] = [];
+
       if (file) {
         const fileName = `${Date.now()}-${asset.fileName}`;
         const { data: storageData, error: storageError } = await supabase.storage
@@ -51,11 +54,25 @@ export class SupabaseAssetRepository implements AssetRepository {
 
         // Also cache in OPFS for local-first speed
         await opfsStorage.saveFile(`cache/${fileName}`, file);
+
+        // AI Color Extraction
+        try {
+          const previewUrl = URL.createObjectURL(file);
+          const { extractColors } = await import('../colorExtractor');
+          palette = await extractColors(previewUrl);
+          URL.revokeObjectURL(previewUrl);
+          
+          if (palette && palette.length > 0) {
+             aiTags = palette.slice(0, 2).map(hex => `color/${hex.replace('#', '')}`);
+          }
+        } catch (colorError) {
+          console.error('[Supabase/AI] Color extraction failed:', colorError);
+        }
       }
 
       // 2. Save metadata to Database
-      const { data: userData } = await supabase.auth.getUser();
-      const currentUser = userData.user;
+      const { data: userData } = await (supabase.auth as any).getUser();
+      const currentUser = userData?.user;
       
       // Guest mode fallback
       let userId = currentUser?.id;
@@ -81,7 +98,7 @@ export class SupabaseAssetRepository implements AssetRepository {
           file_path: filePath,
           file_size_bytes: file?.size || 0,
           mime_type: asset.mimeType,
-          palette: asset.palette,
+          palette: palette || asset.palette,
           is_favorite: asset.isFavorite,
           user_id: userId
         })

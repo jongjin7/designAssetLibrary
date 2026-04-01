@@ -38,7 +38,7 @@ export const NVIconButton: React.FC<NVIconButtonProps> = ({
   };
 
   const variants = {
-    primary: 'bg-gradient-to-br from-indigo-500 to-indigo-700 text-white hover:brightness-[1.2] hover:saturate-[1.1]',
+    primary: 'bg-indigo-500 text-white hover:brightness-[1.2] hover:saturate-[1.1]',
     secondary: 'bg-indigo-500/15 text-indigo-400 hover:bg-indigo-500/25 hover:text-indigo-300',
     neutral: 'bg-white/5 text-slate-400 hover:bg-white/10 hover:text-slate-200',
     muted: 'bg-white/[0.03] text-slate-600 hover:text-slate-500',

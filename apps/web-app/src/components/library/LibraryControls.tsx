@@ -10,7 +10,8 @@ import {
   ChevronRight, ChevronLeft, 
   LayoutGrid, 
   Pin,
-  Image as ImageIcon
+  Image as ImageIcon,
+  ListChecks
 } from 'lucide-react';
 import { ViewOptionsPopover } from './ViewOptionsPopover';
 import { processFileToAsset } from '@nova/lib/assetProcessor';
@@ -43,6 +44,8 @@ interface LibraryControlsProps {
   onFilterChange?: (filter: string) => void;
   className?: string;
   isSidebarVisible?: boolean;
+  isManagementMode?: boolean;
+  onManagementToggle?: () => void;
   onAddAsset?: (data: any, file?: File) => Promise<void>;
   onMoveAsset?: (folderId: string | null) => void;
   zoom?: number;
@@ -61,6 +64,8 @@ export function LibraryControls({
   onFilterChange,
   className,
   isSidebarVisible = false,
+  isManagementMode = false,
+  onManagementToggle,
   onAddAsset,
   onMoveAsset,
   zoom = 50,
@@ -232,6 +237,18 @@ export function LibraryControls({
               <ViewOptionsPopover />
             </NVPopoverContent>
           </NVPopover>
+
+          <NVIconButton 
+            icon={ListChecks} 
+            variant={isManagementMode ? "secondary" : "ghost"} 
+            size="sm" 
+            className={cn(
+              "app-no-drag hover:text-indigo-400",
+              isManagementMode && "text-indigo-400 bg-indigo-400/10"
+            )}
+            title={isManagementMode ? "에셋 관리 종료" : "에셋 관리 (다중 선택)"}
+            onClick={onManagementToggle}
+          />
 
           <NVIconButton icon={Pin} variant="ghost" size="sm" className="app-no-drag"/>
         </div>

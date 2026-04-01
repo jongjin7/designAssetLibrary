@@ -9,10 +9,11 @@ interface AssetCardProps {
   onFavoriteToggle?: (id: string, isFavorite: boolean) => void;
   onAssetTap?: (asset: Asset, e: React.MouseEvent) => void;
   isMobile?: boolean;
+  isSelectMode?: boolean;
   isDimmed?: boolean;
 }
 
-export function AssetCard({ asset, onTap, isSelected, onSelect, onFavoriteToggle, onAssetTap, isMobile, isDimmed }: AssetCardProps) {
+export function AssetCard({ asset, onTap, isSelected, onSelect, onFavoriteToggle, onAssetTap, isMobile, isSelectMode, isDimmed }: AssetCardProps) {
   const handleSelect = (e: React.MouseEvent) => {
     e.stopPropagation();
     onSelect?.(asset.id, e);
@@ -27,7 +28,7 @@ export function AssetCard({ asset, onTap, isSelected, onSelect, onFavoriteToggle
       palette={asset.palette}
       isFavorite={asset.isFavorite}
       isSelected={isSelected}
-      isMobile={isMobile}
+      isMobile={isMobile || isSelectMode}
       isDimmed={isDimmed}
       onTap={(e) => onTap(asset, e)}
       onSelect={handleSelect}

@@ -22,6 +22,8 @@ interface NVAssetSelectionBarProps {
   theme?: 'light' | 'dark';
   /** 추가 스타일 클래스 */
   className?: string;
+  /** 현재 관리 모드(isManagementMode)가 활성화되어 있는지 여부 */
+  isManagementMode?: boolean;
 }
 
 /**
@@ -37,9 +39,12 @@ export function NVAssetSelectionBar({
   isMobile = false,
   size,
   theme = 'light',
-  className = ''
+  className = '',
+  isManagementMode = false,
 }: NVAssetSelectionBarProps) {
-  if (selectedCount === 0) return null;
+  // Always show if in management mode OR if items are selected
+  const isVisible = isManagementMode || selectedCount > 0;
+  if (!isVisible) return null;
 
   const isDark = theme === 'dark';
   
@@ -81,7 +86,7 @@ export function NVAssetSelectionBar({
       theme={theme}
       blur="xl"
       className={cn(
-        "flex items-center justify-between transition-all duration-500 animate-in fade-in slide-in-from-bottom-2 border-white/10",
+        "flex items-center justify-between transition-all duration-500 animate-in fade-in slide-in-from-bottom-2 border-white/10 shadow-2xl",
         currentStyle.panel,
         currentStyle.width,
         className
@@ -100,8 +105,15 @@ export function NVAssetSelectionBar({
           "transition-colors duration-300",
           isDark ? "text-slate-200" : "text-slate-600"
         )}>
-          선택한 항목
+          {selectedCount > 0 ? "선택한 항목" : "항목 선택 중"}
         </span>
+        
+        {/* Management Badge - Kept as requested */}
+        {isManagementMode && (
+          <span className="px-2 py-0.5 bg-indigo-500 text-white text-[9px] uppercase font-black tracking-[0.15em] rounded-md ml-2 border border-white/20">
+            Edit Mode
+          </span>
+        )}
       </div>
       
       {/* Action Buttons Section */}
