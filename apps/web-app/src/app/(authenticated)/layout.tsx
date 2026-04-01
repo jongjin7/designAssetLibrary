@@ -2,8 +2,7 @@
 
 import { useIsDesktop } from '@nova/hooks/useIsDesktop';
 import { DesktopShell } from '@nova/components/layout/DesktopShell/index';
-import { MobileShell } from '@nova/components/layout/MobileShell';
-import { MobileLibraryHeader } from '@nova/components/layout/MobileLibraryHeader';
+import { MobileShell, MobileLibraryHeader } from '@nova/components/layout/MobileShell/index';
 import { NVSplashScreen } from '@nova/ui';
 import { usePathname } from 'next/navigation';
 

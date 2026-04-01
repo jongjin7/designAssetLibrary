@@ -4,7 +4,6 @@ import { useState } from 'react';
 import { Search, X } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import { useLibraryFilters, LibraryFilters } from '@nova/hooks/useLibraryFilters';
-import { MobileTopBar } from '@nova/components/layout/MobileTopBar';
 import { LibraryControls } from '@nova/components/library/LibraryControls';
 import { FilterChips } from '@nova/components/library/FilterChips';
 import { AssetGrid } from '@nova/components/library/AssetGrid';
@@ -92,7 +91,7 @@ export default function MobileLibraryView({
     else setIsSelectionMode(false);
   };
 
-  const handleAssetTap = (asset: any, e: React.MouseEvent) => {
+  const handleAssetTap = (asset: any) => {
     if (isSelectionMode || selectedIds.size > 0) {
       handleSelect(asset.id);
       return;
@@ -136,6 +135,7 @@ export default function MobileLibraryView({
               updateAsset(id, { isFavorite });
             }}
             isMobile={true}
+            isSelectMode={isSelectionMode}
             zoom={zoom}
           />
         ) : (

@@ -2,7 +2,7 @@
 
 import React from 'react';
 import { NetworkStatus } from '@nova/components/shared/NetworkStatus';
-import { MobileBottomNav as BottomTabs } from './MobileBottomNav';
+import { MobileBottomNav as BottomTabs } from './parts/MobileBottomNav';
 
 interface MobileShellProps {
   children: React.ReactNode;
@@ -37,3 +37,7 @@ export function MobileShell({
     </div>
   );
 }
+
+export * from './parts/MobileBottomNav';
+export * from './parts/MobileLibraryHeader';
+export * from './parts/MobileTopBar';

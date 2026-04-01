@@ -105,13 +105,15 @@ export const NVAssetCard: React.FC<NVAssetCardProps> = ({
   };
 
   const handleCardClick = (e: React.MouseEvent) => {
-    // Enable selection even on error if it's mobile or selectable mode
-    if (isMobile || isSelected) {
+    // If it's an error or loading card, it shouldn't be clickable at all
+    if (hasError || isLoading) return;
+    
+    // If already selected, clicking again toggles selection (deselects)
+    if (isSelected) {
        onSelect?.(e);
        return;
     }
     
-    if (hasError || isLoading) return;
     onTap?.(e);
   };
 
@@ -122,7 +124,7 @@ export const NVAssetCard: React.FC<NVAssetCardProps> = ({
         "group relative flex flex-col shrink-0 w-full overflow-hidden transition-all duration-500",
         "bg-transparent rounded-lg break-inside-avoid select-none",
         (!hasError && !isLoading) && "active:scale-[0.96] cursor-pointer",
-        (hasError || isLoading) && (isMobile ? "cursor-pointer" : "cursor-default"),
+        (hasError || isLoading) && "cursor-default",
         isLongPressing ? "scale-[0.98] brightness-75 transition-all duration-200" : "",
         isSelected ? "ring-2 ring-indigo-500 ring-offset-2 ring-offset-slate-950" : "",
         isCompact ? "max-w-[140px]" : "",
@@ -132,13 +134,14 @@ export const NVAssetCard: React.FC<NVAssetCardProps> = ({
       onClick={handleCardClick}
       onMouseDown={startPress}
       onMouseUp={endPress}
+      onMouseUpCapture={endPress}
       onMouseLeave={endPress}
       onTouchStart={startPress}
       onTouchEnd={endPress}
       onContextMenu={(e) => {
         if (isMobile || hasError || isLoading) e.preventDefault();
       }}
-      role="button"
+      role={(hasError || isLoading) ? "presentation" : "button"}
       tabIndex={(hasError || isLoading) ? -1 : 0}
       style={{ WebkitTouchCallout: 'none' }}
     >
@@ -251,49 +254,55 @@ export const NVAssetCard: React.FC<NVAssetCardProps> = ({
         {(true) && (
           <div className={cn(
             "flex items-start justify-between transition-opacity duration-300 z-1 ",
-            isSelected || isMobile ? "opacity-100" : "opacity-0 group-hover:opacity-100"
+            ((isSelected || isMobile) && !hasError && !isLoading) 
+              ? "opacity-100" 
+              : "opacity-0 group-hover:opacity-100"
           )}>
-            <NVIconButton 
-                icon={Check}
-                variant={isSelected ? 'primary' : 'glass'}
-                size="xs"
-                rounded={true}
-                strokeWidth={isSelected ? 3 : 2}
-                className={cn(
-                  "transition-all duration-300",
-                  isSelected 
-                    ? "" 
-                    : "text-white/50 border-white/30 group-hover:opacity-100"
-                )}
-                onClick={(e) => {
-                  e.stopPropagation();
-                  onSelect?.(e);
-                }}
-                aria-label="에셋 선택"
-            />
+            {!hasError && !isLoading && (
+              <NVIconButton 
+                  icon={Check}
+                  variant={isSelected ? 'primary' : 'glass'}
+                  size="xs"
+                  rounded={true}
+                  strokeWidth={isSelected ? 3 : 2}
+                  className={cn(
+                    "transition-all duration-300",
+                    isSelected 
+                      ? "" 
+                      : "text-white/50 border-white/30 group-hover:opacity-100"
+                  )}
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    onSelect?.(e);
+                  }}
+                  aria-label="에셋 선택"
+              />
+            )}
 
-            <NVIconButton 
-                icon={Star}
-                variant='neutral'
-                size="xs"
-                iconSize={16}
-                rounded={true}
-                strokeWidth={isFavorite ? 2.5 : 2}
-                iconProps={{ 
-                   fill: isFavorite ? "currentColor" : "none" 
-                }}
-                className={cn(
-                  "transition-all duration-300",
-                  isFavorite 
-                    ? "!text-yellow-300" 
-                    : "!text-white/50"
-                )}
-                onClick={(e) => {
-                  e.stopPropagation();
-                  onFavoriteToggle?.(e);
-                }}
-                aria-label="즐겨찾기 토글"
-            />
+            {!hasError && !isLoading && (
+              <NVIconButton 
+                  icon={Star}
+                  variant='neutral'
+                  size="xs"
+                  iconSize={16}
+                  rounded={true}
+                  strokeWidth={isFavorite ? 2.5 : 2}
+                  iconProps={{ 
+                     fill: isFavorite ? "currentColor" : "none" 
+                  }}
+                  className={cn(
+                    "transition-all duration-300",
+                    isFavorite 
+                      ? "!text-yellow-300" 
+                      : "!text-white/50"
+                  )}
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    onFavoriteToggle?.(e);
+                  }}
+                  aria-label="즐겨찾기 토글"
+              />
+            )}
           </div>
         )}
 

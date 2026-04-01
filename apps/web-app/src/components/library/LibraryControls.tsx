@@ -3,7 +3,6 @@
 import React, { useEffect, useState } from 'react';
 import { cn } from '@nova/lib/utils';
 import { NVSearchBar } from '@nova/ui';
-import { FilterChips } from './FilterChips';
 import { LibraryFilters } from '@nova/hooks/useLibraryFilters';
 import { 
   ArrowLeftRight, Plus,
@@ -246,7 +245,7 @@ export function LibraryControls({
               "app-no-drag hover:text-indigo-400",
               isManagementMode && "text-indigo-400 bg-indigo-400/10"
             )}
-            title={isManagementMode ? "에셋 관리 종료" : "에셋 관리 (다중 선택)"}
+            title={isManagementMode ? "에셋 관리 종료" : "에셋 관리"}
             onClick={onManagementToggle}
           />
 
