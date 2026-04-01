@@ -13,6 +13,7 @@ export * from './atoms/NVGlassPanel';
 export * from './atoms/NVField';
 export * from './atoms/NVNotice';
 export * from './atoms/NVDialog';
+export * from './atoms/NVSectionHeader';
 export * from './atoms/NVToast';
 export * from './atoms/NVPowerTooltip';
 export * from './atoms/NVSlider';
@@ -28,6 +29,7 @@ export * from './molecules/NVPaletteStrip';
 export * from './molecules/NVTagList';
 export * from './molecules/NVBottomSheet';
 export * from './molecules/NVErrorView';
+export * from './molecules/NVFolderCard';
 
 // Organisms / Combined Components
 export { NVAssetGrid } from './composition/NVAssetGrid';
