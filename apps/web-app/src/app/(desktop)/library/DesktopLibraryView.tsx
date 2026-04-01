@@ -5,7 +5,7 @@ import { AssetGrid } from '@nova/components/library/AssetGrid';
 import { LibraryControls } from '@nova/components/library/LibraryControls';
 import { MoveAssetPopover } from '@nova/components/library/MoveAssetPopover';
 import { DropZone } from '@nova/components/shared/DropZone';
-import { NVLoadingState, NVAssetSelectionBar, NVAssetDetailSidebar, Asset, NVIconButton, NVEmptyState } from '@nova/ui';
+import { NVLoadingState, NVAssetSelectionBar, NVAssetDetailSidebar, Asset, NVIconButton, NVEmptyState, NVSectionHeader, NVFolderCard } from '@nova/ui';
 import { cn } from '@nova/lib/utils';
 import { extractColors } from '@nova/lib/colorExtractor';
 import { LibraryFilters } from '@nova/hooks/useLibraryFilters';
@@ -42,6 +42,11 @@ interface DesktopLibraryViewProps {
   onSearchToggle?: () => void;
   zoom: number;
   setZoom: (v: number) => void;
+  
+  // Folders & Data
+  subFolders?: any[];
+  allAssets?: Asset[];
+  setFolderId?: (id: string | null) => void;
 }
 
 export default function DesktopLibraryView({
@@ -49,7 +54,10 @@ export default function DesktopLibraryView({
   selectedIds, setSelectedIds,
   searchText, setSearchText, isFilterOpen, setIsFilterOpen, filteredAssets, handleFilterApply, handleFilterReset,
   isSearchVisible, onSearchToggle,
-  zoom, setZoom
+  zoom, setZoom,
+  subFolders = [],
+  allAssets = [],
+  setFolderId
 }: DesktopLibraryViewProps) {
   
   const [isSidebarVisible, setIsSidebarVisible] = useState(false);
@@ -264,23 +272,69 @@ export default function DesktopLibraryView({
                <NVLoadingState message={`${selectedIds.size}개의 에셋 이동 중...`} />
             </div>
           )}
-          <div className="mx-auto h-full">
+          <div className="mx-auto h-full max-w-[1600px]">
             {loading ? (
               <NVLoadingState className="h-full" />
-            ) : filteredAssets.length > 0 ? (
-              <AssetGrid 
-                assets={filteredAssets} 
-                onAssetTap={handleAssetTap} 
-                selectedIds={selectedIds}
-                onSelect={handleSelect}
-                onFavoriteToggle={(id, isFavorite) => {
-                  updateAsset(id, { isFavorite });
-                }}
-                isSelectMode={isManagementMode}
-                zoom={zoom}
-                isSidebarOpen={isSidebarVisible}
-                activeAssetId={selectedAsset?.id}
-              />
+            ) : (filteredAssets.length > 0 || subFolders.length > 0) ? (
+              <div className="flex flex-col gap-12 pb-20">
+                {/* 1. 하위 폴더 섹션 (하위 폴더가 있는 경우에만 노출) */}
+                {subFolders.length > 0 && (
+                  <div className="animate-in fade-in slide-in-from-top-2 duration-500">
+                    <NVSectionHeader title="하위 폴더" count={subFolders.length} hasDropdown={true} />
+                    <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-6 mt-6">
+                      {subFolders.map(folder => {
+                        const folderAssets = allAssets.filter(a => a.folderId === folder.id);
+                        return (
+                          <NVFolderCard 
+                            key={folder.id}
+                            id={folder.id}
+                            name={folder.name}
+                            assetCount={folderAssets.length}
+                            assetThumbnails={folderAssets.slice(0, 3).map(a => a.thumbnail).filter(Boolean) as string[]}
+                            onClick={(id) => {
+                              setFilter?.('folder');
+                              setFolderId?.(id);
+                            }}
+                          />
+                        );
+                      })}
+                    </div>
+                  </div>
+                )}
+
+                {/* 2. 목차 섹션 (에셋 목록) */}
+                <div className="animate-in fade-in slide-in-from-top-4 duration-700 delay-150">
+                  {subFolders.length > 0 && (
+                    <NVSectionHeader title="목차" count={filteredAssets.length} className="mb-6" />
+                  )}
+                  {filteredAssets.length > 0 ? (
+                    <AssetGrid 
+                      assets={filteredAssets} 
+                      onAssetTap={handleAssetTap} 
+                      selectedIds={selectedIds}
+                      onSelect={handleSelect}
+                      onFavoriteToggle={(id, isFavorite) => {
+                        updateAsset(id, { isFavorite });
+                      }}
+                      isSelectMode={isManagementMode}
+                      zoom={zoom}
+                      isSidebarOpen={isSidebarVisible}
+                      activeAssetId={selectedAsset?.id}
+                    />
+                  ) : subFolders.length > 0 ? (
+                    <div className="flex flex-col items-center justify-center py-20 bg-slate-900/10 rounded-2xl border border-dashed border-white/5">
+                       <p className="text-slate-500 font-medium">이 폴더에는 직접 포함된 에셋이 없습니다.</p>
+                    </div>
+                  ) : (
+                    <LibraryEmptyState 
+                      assets={assets}
+                      filteredAssets={filteredAssets}
+                      filter={filter}
+                      searchText={searchText}
+                    />
+                  )}
+                </div>
+              </div>
             ) : (
               <div className="flex items-center justify-center h-full">
                 <LibraryEmptyState 
