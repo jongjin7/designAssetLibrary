@@ -37,7 +37,7 @@ export const NVFolderCard: React.FC<NVFolderCardProps> = ({
       {/* 1. Thumbnail Area: Pinterest-inspired 3-split layout */}
       <div className={cn(
         "relative aspect-[3/2] w-full bg-slate-900 rounded-xl overflow-hidden transition-all duration-500",
-        "border border-white/5 group-hover:border-white/10 shadow-lg group-hover:shadow-2xl group-hover:-translate-y-1"
+        "border border-white/5 group-hover:border-white/10 shadow-lg group-hover:shadow-2xl"
       )}>
         {thumbCount > 0 ? (
           <div className="flex w-full h-full gap-[2px] bg-slate-800">
@@ -76,8 +76,8 @@ export const NVFolderCard: React.FC<NVFolderCardProps> = ({
             )}
           </div>
         ) : (
-          <div className="flex w-full h-full items-center justify-center bg-slate-900/50 border-2 border-dashed border-white/5">
-            <Folder className="w-10 h-10 text-slate-700" strokeWidth={1.5} />
+          <div className="flex w-full h-full items-center justify-center bg-slate-900/50">
+            <Folder className="w-10 h-10 text-slate-700" strokeWidth={1} />
           </div>
         )}
 
