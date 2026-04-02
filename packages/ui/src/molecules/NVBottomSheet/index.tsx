@@ -78,7 +78,7 @@ export function NVBottomSheet({ isOpen, onClose, children, className = '' }: NVB
   return (
     <div 
       className={cn(
-        "fixed inset-0 z-[100] bg-black/60 flex items-end justify-center transition-opacity duration-300",
+        "fixed inset-0 z-[100] bg-black/60 backdrop-blur-md flex items-end justify-center transition-opacity duration-300",
         isVisible && !isClosing ? "opacity-100" : "opacity-0"
       )}
       onClick={onClose}
