@@ -97,6 +97,7 @@ export function useLibraryPage({ initialFilter, title, folderId = null }: UseLib
       
       return {
         ...folder,
+        hasSubfolders: folders.some(f => f.parentId === folder.id),
         aggregatedAssetCount: descendantAssets.length,
         aggregatedThumbnails: descendantAssets
           .slice(0, 3)

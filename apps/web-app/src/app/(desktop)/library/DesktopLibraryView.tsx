@@ -348,6 +348,7 @@ export default function DesktopLibraryView({
                           name={folder.name}
                           assetCount={folder.aggregatedAssetCount || 0}
                           assetThumbnails={folder.aggregatedThumbnails || []}
+                          hasSubfolders={folder.hasSubfolders}
                           onClick={(id) => {
                             router.push(`/folder/${id}`);
                           }}

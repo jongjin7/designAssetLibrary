@@ -197,6 +197,7 @@ export default function MobileLibraryView({
                         name={folder.name}
                         assetCount={folder.aggregatedAssetCount || 0}
                         assetThumbnails={folder.aggregatedThumbnails || []}
+                        hasSubfolders={folder.hasSubfolders}
                         isMobile={true}
                         onClick={(id) => handleFolderClick(id)}
                       />

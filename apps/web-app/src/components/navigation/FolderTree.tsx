@@ -5,6 +5,8 @@ import {
   ChevronDown, 
   Folder as FolderIcon, 
   FolderOpen, 
+  FolderPlus,
+  FolderMinus,
   Plus, 
   Sparkles 
 } from 'lucide-react';
@@ -33,16 +35,10 @@ interface FolderTreeProps {
 
 export function FolderTree({ folders, activeFolderId, onFolderClick, getFolderCount, onCreateFolder, isCollapsed = false }: FolderTreeProps) {
   const [expanded, setExpanded] = useState<Record<string, boolean>>({});
-  const [isCreateOpen, setIsCreateOpen] = useState(false);
-  const [newFolderName, setNewFolderName] = useState('');
 
   const handleCreateFolder = (parentId: string | null = null, name: string) => {
     if (name.trim()) {
       onCreateFolder?.(parentId, name);
-      if (parentId === null) {
-        setNewFolderName('');
-        setIsCreateOpen(false);
-      }
     }
   };
 
@@ -84,15 +80,31 @@ export function FolderTree({ folders, activeFolderId, onFolderClick, getFolderCo
                     className="relative flex items-center justify-center w-[18px] h-[18px] flex-shrink-0"
                     onClick={(e) => hasChildren && toggleExpand(folder.id, e)}
                   >
-                    {isExpanded ? (
-                      <FolderOpen 
-                        size={17} 
-                        className={`flex-shrink-0 transition-all ${isActive ? 'text-indigo-400' : 'text-slate-500 group-hover:text-slate-300'}`} 
-                      />
+                    {hasChildren ? (
+                      isExpanded ? (
+                        <FolderMinus 
+                          size={17} 
+                          className={cn(
+                            "flex-shrink-0 transition-all",
+                            isActive ? "text-indigo-400" : "text-slate-500 group-hover:text-slate-300"
+                          )} 
+                        />
+                      ) : (
+                        <FolderPlus 
+                          size={17} 
+                          className={cn(
+                            "flex-shrink-0 transition-all",
+                            isActive ? "text-indigo-400" : "text-slate-500 group-hover:text-slate-300"
+                          )} 
+                        />
+                      )
                     ) : (
                       <FolderIcon 
                         size={17} 
-                        className={`flex-shrink-0 transition-all ${isActive ? 'text-indigo-400' : 'text-slate-500 group-hover:text-slate-300'}`} 
+                        className={cn(
+                          "flex-shrink-0 transition-all",
+                          isActive ? "text-indigo-400" : "text-slate-500 group-hover:text-slate-300"
+                        )} 
                       />
                     )}
                   </div>
@@ -157,35 +169,18 @@ export function FolderTree({ folders, activeFolderId, onFolderClick, getFolderCo
               폴더
             </span>
           )}
-          <NVPopover open={isCreateOpen} onOpenChange={setIsCreateOpen}>
-            <NVPopoverTrigger asChild>
+          <NVFolderPopover 
+            isCreationMode={true}
+            onCreateSubfolder={(parentId, name) => handleCreateFolder(parentId, name)}
+            trigger={
               <button 
                 className={`p-1 rounded-md text-slate-500 hover:bg-white/5 hover:text-indigo-500 transition-all ${isCollapsed ? 'mx-auto' : ''}`}
                 title="폴더 추가"
               >
                 <Plus size={14} />
               </button>
-            </NVPopoverTrigger>
-            <NVPopoverContent className="w-[240px] p-0" align="start" side="bottom" sideOffset={8}>
-              <NVPopoverHeader className="py-2.5">
-                <span className="text-xs font-bold text-white">새 폴더 생성</span>
-              </NVPopoverHeader>
-              <NVPopoverBody className="px-3 py-3">
-                <NVInput 
-                  size="sm"
-                  placeholder="폴더 이름 입력..." 
-                  value={newFolderName}
-                  onChange={(e) => setNewFolderName(e.target.value)}
-                  autoFocus
-                  onKeyDown={(e) => e.key === 'Enter' && handleCreateFolder(null, newFolderName)}
-                />
-              </NVPopoverBody>
-              <NVPopoverFooter className="py-2">
-                <NVButton size="xs" variant="ghost" onClick={() => setIsCreateOpen(false)}>취소</NVButton>
-                <NVButton size="xs" variant="primary" onClick={() => handleCreateFolder(null, newFolderName)}>생성</NVButton>
-              </NVPopoverFooter>
-            </NVPopoverContent>
-          </NVPopover>
+            }
+          />
         </div>
         {renderFolderItems(null)}
       </div>

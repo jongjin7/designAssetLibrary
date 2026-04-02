@@ -1,5 +1,5 @@
 import React from 'react';
-import { Folder } from 'lucide-react';
+import { Folder, FolderPlus } from 'lucide-react';
 import { cn } from '@ui/lib/utils';
 
 export interface NVFolderCardProps {
@@ -8,6 +8,7 @@ export interface NVFolderCardProps {
   assetThumbnails: string[];
   assetCount: number;
   isMobile?: boolean;
+  hasSubfolders?: boolean;
   className?: string;
   onClick?: (id: string, e: React.MouseEvent) => void;
 }
@@ -17,6 +18,7 @@ export const NVFolderCard: React.FC<NVFolderCardProps> = ({
   name,
   assetThumbnails,
   assetCount,
+  hasSubfolders = false,
   isMobile = false,
   className = '',
   onClick
@@ -77,7 +79,11 @@ export const NVFolderCard: React.FC<NVFolderCardProps> = ({
           </div>
         ) : (
           <div className="flex w-full h-full items-center justify-center bg-slate-900/50">
-            <Folder className="w-10 h-10 text-slate-700" strokeWidth={1} />
+            {hasSubfolders ? (
+              <FolderPlus className="w-10 h-10 text-indigo-700/50" strokeWidth={1} />
+            ) : (
+              <Folder className="w-10 h-10 text-slate-700" strokeWidth={1} />
+            )}
           </div>
         )}
 
@@ -100,7 +106,9 @@ export const NVFolderCard: React.FC<NVFolderCardProps> = ({
         <p className="text-[11px] font-medium text-slate-500 flex items-center gap-1.5 uppercase tracking-wider">
           <span>{assetCount.toLocaleString()} items</span>
           <span className="w-1 h-1 rounded-full bg-slate-700" />
-          <span className="text-slate-600">Collection</span>
+          <span className={cn(hasSubfolders ? "text-indigo-400/80 font-bold" : "text-slate-600")}>
+            {hasSubfolders ? "Hierarchical" : "Collection"}
+          </span>
         </p>
       </div>
     </div>
