@@ -83,7 +83,7 @@ export const NVFolderCard: React.FC<NVFolderCardProps> = ({
 
         {/* 2. Seamless Glass Overlays */}
         <div className="absolute inset-0 pointer-events-none bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-60 group-hover:opacity-40 transition-opacity duration-500" />
-        <div className="absolute inset-0 pointer-events-none ring-1 ring-inset ring-white/10 rounded-xl" />
+        <div className="absolute inset-0 pointer-events-none ring-1 ring-inset ring-white/15 rounded-xl" />
       </div>
 
       {/* 3. Metadata Area */}

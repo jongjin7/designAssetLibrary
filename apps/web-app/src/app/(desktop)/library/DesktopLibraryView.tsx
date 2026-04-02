@@ -23,6 +23,7 @@ import {
   NVButton,
   NVDialogBody
 } from '@nova/ui';
+import { useRouter } from 'next/navigation';
 import { cn } from '@nova/lib/utils';
 import { extractColors } from '@nova/lib/colorExtractor';
 import { LibraryFilters } from '@nova/hooks/useLibraryFilters';
@@ -80,6 +81,7 @@ export default function DesktopLibraryView({
   const [isSidebarVisible, setIsSidebarVisible] = useState(false);
   const [isManagementMode, setIsManagementMode] = useState(false);
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
+  const router = useRouter();
   const shell = useDesktopShell();
   const isDesktopApp = shell?.isDesktopApp ?? false;
 
@@ -311,8 +313,7 @@ export default function DesktopLibraryView({
                             assetCount={folderAssets.length}
                             assetThumbnails={folderAssets.slice(0, 3).map(a => a.thumbnail).filter(Boolean) as string[]}
                             onClick={(id) => {
-                              setFilter?.('folder');
-                              setFolderId?.(id);
+                              router.push(`/folder/${id}`);
                             }}
                           />
                         );
