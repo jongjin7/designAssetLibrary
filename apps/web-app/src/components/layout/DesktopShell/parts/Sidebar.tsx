@@ -132,8 +132,7 @@ export function Sidebar({ onSearchToggle }: SidebarProps) {
                 if (pathname === target) return;
                 router.push(target);
               }}
-              onCreateFolder={(parent) => {
-                const name = window.prompt('새 폴더 이름을 입력하세요:');
+              onCreateFolder={(parent, name) => {
                 if (name) createFolder(name, parent);
               }}
               isCollapsed={false}

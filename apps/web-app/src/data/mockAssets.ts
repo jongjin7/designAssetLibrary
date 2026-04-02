@@ -149,5 +149,29 @@ export const mockFolders = [
     smartLogic: { color: 'blue' },
     createdAt: '2026-03-05',
     updatedAt: '2026-03-05',
+  },
+  {
+    id: 's2',
+    name: 'Recent Edits',
+    parentId: null,
+    isSmartFolder: true,
+    createdAt: '2026-04-01',
+    updatedAt: '2026-04-01',
+  },
+  {
+    id: 's3',
+    name: 'Large Files',
+    parentId: null,
+    isSmartFolder: true,
+    createdAt: '2026-04-01',
+    updatedAt: '2026-04-01',
+  },
+  {
+    id: 's4',
+    name: 'Unclassified AI',
+    parentId: null,
+    isSmartFolder: true,
+    createdAt: '2026-04-01',
+    updatedAt: '2026-04-01',
   }
 ];

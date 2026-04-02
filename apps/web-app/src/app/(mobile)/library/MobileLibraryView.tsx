@@ -7,7 +7,24 @@ import { useLibraryFilters, LibraryFilters } from '@nova/hooks/useLibraryFilters
 import { LibraryControls } from '@nova/components/library/LibraryControls';
 import { FilterChips } from '@nova/components/library/FilterChips';
 import { AssetGrid } from '@nova/components/library/AssetGrid';
-import { NVLoadingState, NVIconButton, NVAssetSelectionBar, NVAssetDetailSheet, Asset, NVButton, NVEmptyState, NVSectionHeader, NVFolderCard } from '@nova/ui';
+import { 
+  NVLoadingState, 
+  NVIconButton, 
+  NVAssetSelectionBar, 
+  NVAssetDetailSheet, 
+  Asset, 
+  NVButton, 
+  NVEmptyState, 
+  NVSectionHeader, 
+  NVFolderCard,
+  NVDialog,
+  NVDialogContent,
+  NVDialogHeader,
+  NVDialogTitle,
+  NVDialogDescription,
+  NVDialogFooter,
+  NVDialogBody
+} from '@nova/ui';
 import { extractColors } from '@nova/lib/colorExtractor';
 import { LibraryEmptyState } from '../../../components/library/LibraryEmptyState';
 import { cn } from '@nova/lib/utils';
@@ -59,6 +76,7 @@ export default function MobileLibraryView({
   allAssets = []
 }: MobileLibraryViewProps) {
   const router = useRouter();
+  const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
 
   const handleFolderClick = (id: string) => {
     router.push(`/folder/${id}`);
@@ -110,9 +128,19 @@ export default function MobileLibraryView({
   };
 
   const handleBulkDelete = () => {
-    if (window.confirm(`${selectedIds.size}개의 에셋을 삭제하시겠습니까?`)) {
+    if (selectedIds.size === 0) return;
+    setIsDeleteDialogOpen(true);
+  };
+
+  const confirmBulkDelete = async () => {
+    try {
+      const idsToDelete = Array.from(selectedIds);
+      await Promise.all(idsToDelete.map(id => deleteAsset(id)));
       setSelectedIds(new Set());
       setIsSelectionMode(false);
+      setIsDeleteDialogOpen(false);
+    } catch (err) {
+      console.error('Failed to delete assets in bulk:', err);
     }
   };
 
@@ -214,6 +242,32 @@ export default function MobileLibraryView({
         onExtractAI={extractColors}
         onExtractBasic={extractColors}
       />
+
+      <NVDialog open={isDeleteDialogOpen} onOpenChange={setIsDeleteDialogOpen}>
+        <NVDialogContent className="w-[calc(100%-40px)] rounded-2xl max-w-sm">
+          <NVDialogHeader className="px-5 pt-6 pb-2">
+            <NVDialogTitle className="text-lg">에셋 삭제 확인</NVDialogTitle>
+            <NVDialogDescription className="text-xs">
+              선택한 {selectedIds.size}개의 에셋을 라이브러리에서 완전히 삭제하시겠습니까?
+            </NVDialogDescription>
+          </NVDialogHeader>
+          <NVDialogBody className="px-5 pb-6">
+            <div className="p-3 rounded-xl bg-rose-500/5 border border-rose-500/10 mb-2">
+              <p className="text-[10px] text-rose-400 font-medium leading-relaxed">
+                * 삭제된 에셋은 복구할 수 없습니다.
+              </p>
+            </div>
+          </NVDialogBody>
+          <NVDialogFooter className="flex-row gap-2 px-5 py-3">
+            <NVButton variant="ghost" className="flex-1 h-11 rounded-xl" onClick={() => setIsDeleteDialogOpen(false)}>
+              취소
+            </NVButton>
+            <NVButton variant="primary" className="flex-1 h-11 rounded-xl bg-rose-500 hover:bg-rose-600 border-none" onClick={confirmBulkDelete}>
+              삭제
+            </NVButton>
+          </NVDialogFooter>
+        </NVDialogContent>
+      </NVDialog>
     </>
   );
 }

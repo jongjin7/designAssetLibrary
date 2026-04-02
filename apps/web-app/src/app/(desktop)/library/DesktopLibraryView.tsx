@@ -5,7 +5,24 @@ import { AssetGrid } from '@nova/components/library/AssetGrid';
 import { LibraryControls } from '@nova/components/library/LibraryControls';
 import { MoveAssetPopover } from '@nova/components/library/MoveAssetPopover';
 import { DropZone } from '@nova/components/shared/DropZone';
-import { NVLoadingState, NVAssetSelectionBar, NVAssetDetailSidebar, Asset, NVIconButton, NVEmptyState, NVSectionHeader, NVFolderCard } from '@nova/ui';
+import { 
+  NVLoadingState, 
+  NVAssetSelectionBar, 
+  NVAssetDetailSidebar, 
+  Asset, 
+  NVIconButton, 
+  NVEmptyState, 
+  NVSectionHeader, 
+  NVFolderCard,
+  NVDialog,
+  NVDialogContent,
+  NVDialogHeader,
+  NVDialogTitle,
+  NVDialogDescription,
+  NVDialogFooter,
+  NVButton,
+  NVDialogBody
+} from '@nova/ui';
 import { cn } from '@nova/lib/utils';
 import { extractColors } from '@nova/lib/colorExtractor';
 import { LibraryFilters } from '@nova/hooks/useLibraryFilters';
@@ -62,6 +79,7 @@ export default function DesktopLibraryView({
   
   const [isSidebarVisible, setIsSidebarVisible] = useState(false);
   const [isManagementMode, setIsManagementMode] = useState(false);
+  const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
   const shell = useDesktopShell();
   const isDesktopApp = shell?.isDesktopApp ?? false;
 
@@ -140,18 +158,19 @@ export default function DesktopLibraryView({
 
   const handleBulkDelete = async () => {
     if (selectedIds.size === 0) return;
-    
-    if (window.confirm(`${selectedIds.size}개의 에셋을 삭제하시겠습니까?`)) {
-      try {
-        const idsToDelete = Array.from(selectedIds);
-        // Sequential deletion for safety or Parallel with Promise.all
-        await Promise.all(idsToDelete.map(id => deleteAsset(id)));
-        setSelectedIds(new Set());
-        console.log(`Successfully deleted ${idsToDelete.length} assets`);
-      } catch (err) {
-        console.error('Failed to delete assets in bulk:', err);
-        alert('일부 에셋 삭제에 실패했습니다.');
-      }
+    setIsDeleteDialogOpen(true);
+  };
+
+  const confirmBulkDelete = async () => {
+    try {
+      const idsToDelete = Array.from(selectedIds);
+      await Promise.all(idsToDelete.map(id => deleteAsset(id)));
+      setSelectedIds(new Set());
+      setIsDeleteDialogOpen(false);
+      console.log(`Successfully deleted ${idsToDelete.length} assets`);
+    } catch (err) {
+      console.error('Failed to delete assets in bulk:', err);
+      // We could use a toast system here for user feedback
     }
   };
 
@@ -416,6 +435,32 @@ export default function DesktopLibraryView({
           isDesktopApp={isDesktopApp}
         />
       </div>
+
+      <NVDialog open={isDeleteDialogOpen} onOpenChange={setIsDeleteDialogOpen}>
+        <NVDialogContent className="max-w-md">
+          <NVDialogHeader>
+            <NVDialogTitle>에셋 삭제 확인</NVDialogTitle>
+            <NVDialogDescription>
+              선택한 {selectedIds.size}개의 에셋을 라이브러리에서 완전히 삭제하시겠습니까? 이 작업은 되돌릴 수 없습니다.
+            </NVDialogDescription>
+          </NVDialogHeader>
+          <NVDialogBody className="pt-2 pb-6">
+            <div className="p-4 rounded-xl bg-rose-500/5 border border-rose-500/10">
+              <p className="text-xs text-rose-400 font-medium leading-relaxed">
+                * 삭제된 에셋은 복구할 수 없으며, 연결된 모든 폴더 및 즐겨찾기 정보가 함께 제거됩니다.
+              </p>
+            </div>
+          </NVDialogBody>
+          <NVDialogFooter>
+            <NVButton variant="ghost" onClick={() => setIsDeleteDialogOpen(false)}>
+              취소
+            </NVButton>
+            <NVButton variant="primary" className="bg-rose-500 hover:bg-rose-600 border-rose-400/20" onClick={confirmBulkDelete}>
+              에셋 삭제하기
+            </NVButton>
+          </NVDialogFooter>
+        </NVDialogContent>
+      </NVDialog>
     </div>
   );
 }
