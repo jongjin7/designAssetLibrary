@@ -19,7 +19,7 @@ export const NVSectionHeader: React.FC<NVSectionHeaderProps> = ({
 }) => {
   return (
     <div className={cn(
-      "flex items-center justify-between py-4 border-b border-white/5 bg-transparent select-none",
+      "flex items-center justify-between bg-transparent select-none",
       className
     )}>
       <div 

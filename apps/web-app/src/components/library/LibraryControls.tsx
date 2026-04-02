@@ -49,6 +49,9 @@ interface LibraryControlsProps {
   onMoveAsset?: (folderId: string | null) => void;
   zoom?: number;
   onZoomChange?: (value: number) => void;
+  onBack?: () => void;
+  hasParent?: boolean;
+  breadcrumbs?: any[];
 }
 
 export function LibraryControls({
@@ -69,6 +72,9 @@ export function LibraryControls({
   onMoveAsset,
   zoom = 50,
   onZoomChange,
+  onBack,
+  hasParent = false,
+  breadcrumbs = [],
 }: LibraryControlsProps) {
   const [isAddOpen, setIsAddOpen] = useState(false);
 
@@ -146,11 +152,47 @@ export function LibraryControls({
             }
           />
 
-          <NVIconButton icon={ChevronLeft} variant="ghost" size="sm" />
+          <NVIconButton 
+            icon={ChevronLeft} 
+            variant="ghost" 
+            size="sm" 
+            onClick={onBack}
+            disabled={!hasParent}
+            className={cn(!hasParent && "opacity-20 cursor-not-allowed")}
+            title="이전 단계로 이동"
+          />
           <NVIconButton icon={ChevronRight} variant="ghost" size="sm" />
           
-          <div className="ml-4 text-xs font-semibold text-slate-300 tracking-tight whitespace-nowrap truncate min-w-0 flex-shrink">
-            현재 선택될 폴더
+          <div className="ml-4 flex items-center gap-1.5 overflow-hidden">
+            <button 
+              onClick={() => onBack?.()}
+              className="text-xs font-semibold text-slate-500 hover:text-indigo-400 transition-colors whitespace-nowrap"
+            >
+              Library
+            </button>
+            {breadcrumbs.map((crumb, idx) => (
+              <React.Fragment key={crumb.id}>
+                <ChevronRight size={12} className="text-slate-600 shrink-0" />
+                <button 
+                  onClick={() => {
+                    // Navigate to this crumb's folder
+                    if (idx < breadcrumbs.length - 1) {
+                      // Only if it's not the current one
+                      window.location.href = `/folder/${crumb.id}`;
+                    }
+                  }}
+                  className={cn(
+                    "text-xs font-semibold truncate transition-colors",
+                    idx === breadcrumbs.length - 1 
+                      ? "text-slate-200 cursor-default" 
+                      : "text-slate-500 hover:text-indigo-400"
+                  )}
+                  style={{ maxWidth: '120px' }}
+                >
+                  {crumb.name}
+                </button>
+              </React.Fragment>
+            ))}
           </div>
         </>
       }

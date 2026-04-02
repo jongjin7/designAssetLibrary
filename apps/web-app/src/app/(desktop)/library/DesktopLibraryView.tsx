@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef } from 'react';
-import { PanelRightOpen, PanelRightClose, ArrowLeftRight, FolderInput } from 'lucide-react';
+import { PanelRightOpen, PanelRightClose, ArrowLeftRight, FolderInput, ChevronRight, ChevronLeft } from 'lucide-react';
 import { processFileToAsset } from '@nova/lib/assetProcessor';
 import { AssetGrid } from '@nova/components/library/AssetGrid';
 import { LibraryControls } from '@nova/components/library/LibraryControls';
@@ -65,6 +65,10 @@ interface DesktopLibraryViewProps {
   subFolders?: any[];
   allAssets?: Asset[];
   setFolderId?: (id: string | null) => void;
+  parentFolderId?: string | null;
+  parentFolder?: any;
+  breadcrumbs?: any[];
+  title?: string;
 }
 
 export default function DesktopLibraryView({
@@ -75,7 +79,10 @@ export default function DesktopLibraryView({
   zoom, setZoom,
   subFolders = [],
   allAssets = [],
-  setFolderId
+  setFolderId,
+  parentFolderId = null,
+  parentFolder = null,
+  title = "라이브러리"
 }: DesktopLibraryViewProps) {
   
   const [isSidebarVisible, setIsSidebarVisible] = useState(false);
@@ -124,6 +131,14 @@ export default function DesktopLibraryView({
 
   const handleToggleManagementMode = () => {
     setIsManagementMode(prev => !prev);
+  };
+
+  const handleBack = () => {
+    if (parentFolderId) {
+      router.push(`/folder/${parentFolderId}`);
+    } else {
+      router.push('/library');
+    }
   };
 
   const handleAssetTap = (asset: Asset, e: React.MouseEvent) => {
@@ -271,6 +286,8 @@ export default function DesktopLibraryView({
           }}
           zoom={zoom}
           onZoomChange={setZoom}
+          onBack={handleBack}
+          hasParent={filter === 'folder' || parentFolderId !== null}
         />
 
         {/* Floating Sidebar Toggle - Fixed to FAR RIGHT Edge of Browser */}
@@ -296,28 +313,46 @@ export default function DesktopLibraryView({
           <div className="mx-auto h-full max-w-[1600px]">
             {loading ? (
               <NVLoadingState className="h-full" />
-            ) : (filteredAssets.length > 0 || subFolders.length > 0) ? (
-              <div className="flex flex-col gap-12 pb-20">
-                {/* 1. 하위 폴더 섹션 (하위 폴더가 있는 경우에만 노출) */}
-                {subFolders.length > 0 && (
+            ) : (filteredAssets.length > 0 || subFolders.length > 0 || filter === 'folder') ? (
+              <div className="flex flex-col pb-20">
+                {/* 1. 하위 폴더 섹션 (하위 폴더 또는 폴더 뷰인 경우 노출) */}
+                {(subFolders.length > 0 || filter === 'folder') && (
                   <div className="animate-in fade-in slide-in-from-top-2 duration-500">
-                    <NVSectionHeader title="하위 폴더" count={subFolders.length} hasDropdown={true} />
-                    <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-6 mt-6">
-                      {subFolders.map(folder => {
-                        const folderAssets = allAssets.filter(a => a.folderId === folder.id);
-                        return (
-                          <NVFolderCard 
-                            key={folder.id}
-                            id={folder.id}
-                            name={folder.name}
-                            assetCount={folderAssets.length}
-                            assetThumbnails={folderAssets.slice(0, 3).map(a => a.thumbnail).filter(Boolean) as string[]}
-                            onClick={(id) => {
-                              router.push(`/folder/${id}`);
-                            }}
-                          />
-                        );
-                      })}
+                    <div className="flex flex-col items-start gap-3 mb-8">
+                      {filter === 'folder' && (
+                        <NVButton 
+                          variant="ghost" 
+                          size="md" 
+                          className="-ml-2 pl-1 pr-2 !h-auto !py-1"
+                          onClick={() => router.push(parentFolderId ? `/folder/${parentFolderId}` : '/library')}
+                        >
+                          <ChevronLeft className="w-3 h-3 mr-1" />
+                          {parentFolder?.name || "Library"}
+                        </NVButton>
+                      )}
+                      
+                      <div className="flex items-center justify-between w-full">
+                        <NVSectionHeader 
+                          title={title} 
+                          count={filteredAssets.length} 
+                          hasDropdown={true} 
+                          className="mb-0 !p-0" 
+                        />
+                      </div>
+                    </div>
+                    <div className={cn("grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-6", subFolders.length > 0 && "mb-12")}>
+                      {subFolders.map(folder => (
+                        <NVFolderCard 
+                          key={folder.id}
+                          id={folder.id}
+                          name={folder.name}
+                          assetCount={folder.aggregatedAssetCount || 0}
+                          assetThumbnails={folder.aggregatedThumbnails || []}
+                          onClick={(id) => {
+                            router.push(`/folder/${id}`);
+                          }}
+                        />
+                      ))}
                     </div>
                   </div>
                 )}

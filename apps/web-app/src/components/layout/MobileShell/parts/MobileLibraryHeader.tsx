@@ -1,6 +1,6 @@
 'use client';
 
-import { Search, X } from 'lucide-react';
+import { Search, X, ChevronLeft } from 'lucide-react';
 import { useRouter, usePathname } from 'next/navigation';
 import { useAssetStore } from '@nova/store/useAssetStore';
 import { useLibraryFilters } from '@nova/hooks/useLibraryFilters';
@@ -21,8 +21,22 @@ export function MobileLibraryHeader() {
     isFilterOpen, 
     setIsFilterOpen,
     isSearchVisible,
-    setIsSearchVisible
+    setIsSearchVisible,
+    folders
   } = useAssetStore();
+
+  const currentFolderId = pathname.startsWith('/folder/') ? pathname.split('/').pop() : null;
+  const currentFolder = folders.find(f => f.id === currentFolderId);
+  const parentId = currentFolder?.parentId || null;
+  const showBack = pathname.startsWith('/folder/');
+
+  const handleBack = () => {
+    if (parentId) {
+      router.push(`/folder/${parentId}`);
+    } else {
+      router.push('/library');
+    }
+  };
 
   // We actually need the library filters logic for advanced filtering if any,
   // but for the persistent header, the core search and chips are enough.
@@ -64,6 +78,18 @@ export function MobileLibraryHeader() {
 
   return (
     <MobileTopBar
+      leftElement={
+        showBack && (
+          <NVIconButton
+            icon={ChevronLeft}
+            variant="ghost"
+            size="sm"
+            iconSize={26}
+            onClick={handleBack}
+            className="text-slate-400 hover:text-white -ml-2"
+          />
+        )
+      }
       rightElement={
         <NVIconButton
           icon={isSearchVisible ? X : Search}

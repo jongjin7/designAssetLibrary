@@ -76,12 +76,7 @@ export function useAssets(allFolders: Folder[] = [], options: { initialFilter?: 
         return rawAssets.filter(a => !a.folderId);
       case 'folder': {
         if (!effectiveFolderId) return rawAssets;
-        const getChildIds = (id: string): string[] => {
-          const children = allFolders.filter(f => f.parentId === id);
-          return [id, ...children.flatMap(c => getChildIds(c.id))];
-        };
-        const targetFolderIds = getChildIds(effectiveFolderId);
-        return rawAssets.filter(a => a.folderId && targetFolderIds.includes(a.folderId));
+        return rawAssets.filter(a => a.folderId === effectiveFolderId);
       }
       default:
         return rawAssets;

@@ -6,13 +6,14 @@ import { cn } from '@nova/lib/utils';
 import { NVLogo } from '@nova/ui';
 
 interface MobileTopBarProps {
+  leftElement?: React.ReactNode;
   rightElement?: React.ReactNode;
   className?: string;
   sticky?: boolean;
   children?: React.ReactNode;
 }
 
-export function MobileTopBar({ rightElement, className, sticky = true, children }: MobileTopBarProps) {
+export function MobileTopBar({ leftElement, rightElement, className, sticky = true, children }: MobileTopBarProps) {
   return (
     <header className={cn(
       "z-[60] flex flex-col w-full",
@@ -21,9 +22,12 @@ export function MobileTopBar({ rightElement, className, sticky = true, children 
       className
     )}>
       <div className="flex items-center justify-between px-5 pt-[calc(10px+env(safe-area-inset-top,0px))] pb-2 border-b border-white/[0.08]">
-        <Link href="/library" className="group">
-          <NVLogo size="lg" className="group-hover:opacity-80 transition-opacity" />
-        </Link>
+        <div className="flex items-center gap-3">
+          {leftElement}
+          <Link href="/library" className="group">
+            <NVLogo size="lg" className="group-hover:opacity-80 transition-opacity" />
+          </Link>
+        </div>
         {rightElement ? (
           <div className="flex items-center gap-3">
             {rightElement}

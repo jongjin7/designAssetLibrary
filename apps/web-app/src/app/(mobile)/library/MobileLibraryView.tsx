@@ -1,7 +1,7 @@
 'use client';
 
-import { useState } from 'react';
-import { Search, X } from 'lucide-react';
+import React, { useState } from 'react';
+import { Search, X, ChevronRight, ChevronLeft } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import { useLibraryFilters, LibraryFilters } from '@nova/hooks/useLibraryFilters';
 import { LibraryControls } from '@nova/components/library/LibraryControls';
@@ -63,6 +63,10 @@ interface MobileLibraryViewProps {
   // Folders & Data
   subFolders?: any[];
   allAssets?: Asset[];
+  breadcrumbs?: any[];
+  parentFolderId?: string | null;
+  parentFolder?: any;
+  title?: string;
 }
 
 export default function MobileLibraryView({
@@ -73,7 +77,10 @@ export default function MobileLibraryView({
   zoom, setZoom,
   activeKey,
   subFolders = [],
-  allAssets = []
+  allAssets = [],
+  parentFolderId = null,
+  parentFolder = null,
+  title = "라이브러리"
 }: MobileLibraryViewProps) {
   const router = useRouter();
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
@@ -163,27 +170,37 @@ export default function MobileLibraryView({
       <main className={cn("px-5 py-4", (filteredAssets.length === 0 && subFolders.length === 0) && "h-[calc(100%-128px)]")}>
         {loading ? (
           <NVLoadingState fullHeight />
-        ) : (filteredAssets.length > 0 || subFolders.length > 0) ? (
+        ) : (filteredAssets.length > 0 || subFolders.length > 0 || filter === 'folder') ? (
           <div className="flex flex-col gap-8 pb-20">
              {/* 1. 하위 폴더 섹션 (모바일) */}
-             {subFolders.length > 0 && (
+             {(subFolders.length > 0 || filter === 'folder') && (
                 <div className="animate-in fade-in slide-in-from-top-2 duration-500">
-                  <NVSectionHeader title="하위 폴더" count={subFolders.length} />
-                  <div className="grid grid-cols-2 gap-4 mt-4">
-                    {subFolders.map(folder => {
-                      const folderAssets = allAssets.filter(a => a.folderId === folder.id);
-                      return (
-                        <NVFolderCard 
-                          key={folder.id}
-                          id={folder.id}
-                          name={folder.name}
-                          assetCount={folderAssets.length}
-                          assetThumbnails={folderAssets.slice(0, 3).map(a => a.thumbnail).filter(Boolean) as string[]}
-                          isMobile={true}
-                          onClick={(id) => handleFolderClick(id)}
-                        />
-                      );
-                    })}
+                  <div className="flex flex-col items-start gap-1 mb-6">
+                    {filter === 'folder' && (
+                      <NVButton 
+                        variant="ghost" 
+                        size="md" 
+                        className="-ml-2 pl-1 pr-2 !h-auto !py-1"
+                        onClick={() => router.push(parentFolderId ? `/folder/${parentFolderId}` : '/library')}
+                      >
+                        <ChevronLeft className="w-3 h-3 mr-1" />
+                        {parentFolder?.name || "Library"}
+                      </NVButton>
+                    )}
+                    <NVSectionHeader title={title} count={filteredAssets.length} className="mb-0 !p-0" />
+                  </div>
+                  <div className="grid grid-cols-2 gap-4">
+                    {subFolders.map(folder => (
+                      <NVFolderCard 
+                        key={folder.id}
+                        id={folder.id}
+                        name={folder.name}
+                        assetCount={folder.aggregatedAssetCount || 0}
+                        assetThumbnails={folder.aggregatedThumbnails || []}
+                        isMobile={true}
+                        onClick={(id) => handleFolderClick(id)}
+                      />
+                    ))}
                   </div>
                 </div>
              )}

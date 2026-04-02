@@ -86,8 +86,27 @@ export function useLibraryPage({ initialFilter, title, folderId = null }: UseLib
     
     const filteredFolders = folders.filter(f => f.parentId === folderId);
     
+    const getDescendantFolderIds = (parentId: string): string[] => {
+      const children = folders.filter(f => f.parentId === parentId).map(f => f.id);
+      return [parentId, ...children.flatMap(getDescendantFolderIds)];
+    };
+
+    const foldersWithAggregatedData = filteredFolders.map(folder => {
+      const descendantIds = getDescendantFolderIds(folder.id);
+      const descendantAssets = allAssets.filter(a => a.folderId && descendantIds.includes(a.folderId));
+      
+      return {
+        ...folder,
+        aggregatedAssetCount: descendantAssets.length,
+        aggregatedThumbnails: descendantAssets
+          .slice(0, 3)
+          .map(a => a.thumbnail)
+          .filter(Boolean) as string[]
+      };
+    });
+
     // 정렬 로직: 스마트 폴더 우선 -> 이름순(A-Z) -> 최신순
-    return [...filteredFolders].sort((a, b) => {
+    return [...foldersWithAggregatedData].sort((a, b) => {
       // 1. 스마트 폴더(스페셜 그룹)를 상단에 고정
       if (a.isSmartFolder && !b.isSmartFolder) return -1;
       if (!a.isSmartFolder && b.isSmartFolder) return 1;
@@ -99,7 +118,20 @@ export function useLibraryPage({ initialFilter, title, folderId = null }: UseLib
       // 3. 이름이 같다면 최신순 정렬
       return new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime();
     });
-  }, [folders, folderId, filter]);
+  }, [folders, folderId, filter, allAssets]);
+
+  const breadcrumbs = useMemo(() => {
+    if (!folderId || folders.length === 0) return [];
+    const path = [];
+    let currentId = folderId;
+    while (currentId) {
+      const folder = folders.find(f => f.id === currentId);
+      if (!folder) break;
+      path.unshift(folder);
+      currentId = folder.parentId;
+    }
+    return path;
+  }, [folders, folderId]);
 
   const commonProps = {
     assets, loading, filter, setFilter, selectedAsset, openDetail, closeDetail,
@@ -111,7 +143,10 @@ export function useLibraryPage({ initialFilter, title, folderId = null }: UseLib
     zoom, setZoom,
     subFolders,
     allAssets,
-    setFolderId, // 폴더 이동을 위해 추가
+    setFolderId,
+    parentFolderId: currentFolder?.parentId || null,
+    parentFolder: folders.find(f => f.id === currentFolder?.parentId) || null,
+    breadcrumbs,
     ...(resolvedTitle ? { title: resolvedTitle } : {}),
   };
 
