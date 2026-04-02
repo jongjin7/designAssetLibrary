@@ -20,6 +20,7 @@ export * from './atoms/NVSlider';
 export * from './atoms/NVTypography';
 export * from './atoms/NVLogo';
 
+
 // Molecules
 export * from './molecules/NVFilterGroup';
 export * from './molecules/NVSearchBar';
@@ -30,6 +31,8 @@ export * from './molecules/NVTagList';
 export * from './molecules/NVBottomSheet';
 export * from './molecules/NVErrorView';
 export * from './molecules/NVFolderCard';
+export * from './molecules/NVFolderPopover';
+export * from './molecules/NVMenuItem';
 
 // Organisms / Combined Components
 export { NVAssetGrid } from './composition/NVAssetGrid';
