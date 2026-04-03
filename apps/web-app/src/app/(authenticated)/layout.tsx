@@ -1,6 +1,6 @@
 'use client';
 
-import { useIsDesktop } from '@nova/hooks/useIsDesktop';
+import { useIsDesktop } from '@nova/hooks';
 import { DesktopShell } from '@nova/components/layout/DesktopShell/index';
 import { MobileShell, MobileLibraryHeader } from '@nova/components/layout/MobileShell/index';
 import { NVSplashScreen } from '@nova/ui';

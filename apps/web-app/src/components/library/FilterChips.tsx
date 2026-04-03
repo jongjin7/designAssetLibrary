@@ -10,7 +10,7 @@ interface FilterChipsProps {
 }
 
 import { useAssetStore } from '@nova/store/useAssetStore';
-import { useFolders } from '@nova/hooks/useFolders';
+import { useFolders } from '@nova/hooks';
 
 export function FilterChips({ active, onChange, className = '', size = 'md' }: FilterChipsProps) {
   const assets = useAssetStore(state => state.assets);

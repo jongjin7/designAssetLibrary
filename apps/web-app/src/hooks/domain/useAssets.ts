@@ -3,7 +3,7 @@
 import { useState, useMemo, useEffect } from 'react';
 import { Asset } from '@nova/types/asset';
 import { Folder } from '@nova/types/folder';
-import { useAssetStore } from '../store/useAssetStore';
+import { useAssetStore } from '@nova/store/useAssetStore';
 
 type FilterType = 'all' | 'recent' | 'favorites' | 'inbox' | 'folder';
 

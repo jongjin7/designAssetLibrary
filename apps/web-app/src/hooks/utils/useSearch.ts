@@ -2,7 +2,7 @@
 
 import { useState, useMemo, useEffect, useRef } from 'react';
 import { Asset } from '../types/asset';
-import { assetStore } from '../store/assetStore';
+import { assetStore } from '@nova/store/assetStore';
 
 export function useSearch() {
   const [query, setQuery] = useState('');

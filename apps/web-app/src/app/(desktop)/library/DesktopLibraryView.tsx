@@ -26,7 +26,7 @@ import {
 import { useRouter } from 'next/navigation';
 import { cn } from '@nova/lib/utils';
 import { extractColors } from '@nova/lib/colorExtractor';
-import { LibraryFilters } from '@nova/hooks/useLibraryFilters';
+import { LibraryFilters } from '@nova/hooks';
 import { useDesktopShell } from '../../../components/layout/DesktopShell/index';
 import { LibraryEmptyState } from '../../../components/library/LibraryEmptyState';
 
@@ -71,7 +71,7 @@ interface DesktopLibraryViewProps {
   title?: string;
 }
 
-import { useNavHistory } from '../../../hooks/useNavHistory';
+import { useNavHistory } from '@nova/hooks';
 
 export default function DesktopLibraryView({
   assets, loading, filter, setFilter, selectedAsset, openDetail, closeDetail, deleteAsset, updateAsset, addAsset, moveAssets, isMoving,

@@ -3,7 +3,7 @@
 import React, { useState } from 'react';
 import { Search, X, ChevronRight, ChevronLeft } from 'lucide-react';
 import { useRouter } from 'next/navigation';
-import { useLibraryFilters, LibraryFilters } from '@nova/hooks/useLibraryFilters';
+import { useLibraryFilters, LibraryFilters } from '@nova/hooks';
 import { LibraryControls } from '@nova/components/library/LibraryControls';
 import { FilterChips } from '@nova/components/library/FilterChips';
 import { AssetGrid } from '@nova/components/library/AssetGrid';

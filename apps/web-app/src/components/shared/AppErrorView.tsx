@@ -2,7 +2,7 @@
 
 import { Home, RotateCcw, ArrowLeft } from 'lucide-react';
 import { NVErrorView } from '@nova/ui';
-import { useIsDesktop } from '@nova/hooks/useIsDesktop';
+import { useIsDesktop } from '@nova/hooks';
 import { useRouter } from 'next/navigation';
 
 interface AppErrorViewProps {

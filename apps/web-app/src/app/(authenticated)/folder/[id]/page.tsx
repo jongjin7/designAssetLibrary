@@ -1,7 +1,7 @@
 'use client';
 
 import { useParams } from 'next/navigation';
-import { useLibraryPage } from '@nova/hooks/useLibraryPage';
+import { useLibraryPage } from '@nova/hooks';
 import DesktopLibraryView from '@nova/app/(desktop)/library/DesktopLibraryView';
 import MobileLibraryView from '@nova/app/(mobile)/library/MobileLibraryView';
 import { SearchPalette } from '@nova/components/library/SearchPalette';

@@ -3,7 +3,7 @@
 import { Search, X, ChevronLeft } from 'lucide-react';
 import { useRouter, usePathname } from 'next/navigation';
 import { useAssetStore } from '@nova/store/useAssetStore';
-import { useLibraryFilters } from '@nova/hooks/useLibraryFilters';
+import { useLibraryFilters } from '@nova/hooks';
 import { MobileTopBar } from './MobileTopBar';
 import { LibraryControls } from '@nova/components/library/LibraryControls';
 import { FilterChips } from '@nova/components/library/FilterChips';

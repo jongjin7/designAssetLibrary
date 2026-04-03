@@ -4,7 +4,7 @@ import React from 'react';
 import { ArrowLeft, ChevronLeft, ChevronRight, Settings } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import { DesktopPageHeader } from '@nova/components/layout/DesktopShell';
-import { useIsDesktop } from '@nova/hooks/useIsDesktop';
+import { useIsDesktop } from '@nova/hooks';
 import { NVIconButton } from '@nova/ui';
 
 // ─── 페이지 헤더 ─────────────────────────────────────────────────────────────

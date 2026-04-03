@@ -1,6 +1,6 @@
 'use client';
 
-import { useIsDesktop } from '@nova/hooks/useIsDesktop';
+import { useIsDesktop } from '@nova/hooks';
 import { DesktopPageHeader } from '@nova/components/layout/DesktopShell';
 import AppErrorView from '@nova/components/shared/AppErrorView';
 import { AlertCircle } from 'lucide-react';

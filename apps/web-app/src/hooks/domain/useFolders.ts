@@ -1,6 +1,6 @@
 'use client';
 
-import { useAssetStore } from '../store/useAssetStore';
+import { useAssetStore } from '@nova/store/useAssetStore';
 
 /**
  * useFolders is now a stable hook that consumes the global AssetStore.

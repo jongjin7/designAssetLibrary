@@ -6,7 +6,7 @@ import { useRouter, usePathname } from 'next/navigation';
 import { Grid, Star, Clock, Inbox } from 'lucide-react';
 import { NVLogo } from '@nova/ui';
 import { cn } from '@nova/lib/utils';
-import { useFolders } from '@nova/hooks/useFolders';
+import { useFolders } from '@nova/hooks';
 import { useAssetStore } from '@nova/store/useAssetStore';
 import { FolderTree } from '@nova/components/navigation/FolderTree';
 import { useDesktopShell } from '../context';

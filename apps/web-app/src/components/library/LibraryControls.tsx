@@ -3,7 +3,7 @@
 import React, { useEffect, useState } from 'react';
 import { cn } from '@nova/lib/utils';
 import { NVSearchBar } from '@nova/ui';
-import { LibraryFilters } from '@nova/hooks/useLibraryFilters';
+import { LibraryFilters } from '@nova/hooks';
 import { 
   ArrowLeftRight, Plus,
   ChevronRight, ChevronLeft, 

@@ -4,7 +4,7 @@ import React, { createContext, useContext, useState, useEffect, useCallback, use
 import { Asset } from '@nova/types/asset';
 import { assetRepository } from '@nova/lib/dataService';
 import { Folder } from '@nova/types/folder';
-import { useFolders } from '@nova/hooks/useFolders';
+import { useFolders } from '@nova/hooks';
 
 interface LibraryContextType {
   assets: Asset[];

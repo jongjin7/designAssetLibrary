@@ -9,7 +9,7 @@ import {
   NVPopoverContent,
   NVSearchBar
 } from '@nova/ui';
-import { useFolders } from '@nova/hooks/useFolders';
+import { useFolders } from '@nova/hooks';
 
 interface MoveAssetPopoverProps {
   onMove: (folderId: string | null) => void;

@@ -1,11 +1,11 @@
 'use client';
 
 import { useState, useEffect, useRef, useMemo } from 'react';
-import { useIsDesktop } from './useIsDesktop';
-import { useAssets } from './useAssets';
+import { useIsDesktop } from '../common/useIsDesktop';
+import { useAssets } from '../domain/useAssets';
 import { useLibraryFilters } from './useLibraryFilters';
-import { useAssetSelection } from './useAssetSelection';
-import { useFolders } from './useFolders';
+import { useAssetSelection } from '../domain/useAssetSelection';
+import { useFolders } from '../domain/useFolders';
 import { useAssetStore } from '@nova/store/useAssetStore';
 import { useDesktopShell } from '@nova/components/layout/DesktopShell/index';
 
