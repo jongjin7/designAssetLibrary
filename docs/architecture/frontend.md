@@ -87,7 +87,7 @@ apps/web-app/src/
 
 ### 5.2 State Mangement
 - **React Context:** For lightweight application-wide state (Auth, Theme).
-- **useAssets Hook:** 레포지토리 로직을 캡슐화하여 UI 컴포넌트에 로딩 상태 및 실시간 데이터 제공.
+- **Custom Hooks:** 훅 전용 아키텍처 가이드([Section 7](#7-custom-hooks-architecture))에 따라 도메인 및 피처 로직을 캡슐화하여 제공.
 - **Supabase Realtime:** To push updates to the UI immediately after AI classification.
 
 ---
@@ -107,3 +107,47 @@ Supabase 백엔드 없이도 실제 앱과 동일한 영속성을 가지는 Mock
 | --- | --- | --- |
 | `development` | ✅ 활성화 | ❌ (Mock으로 대체) |
 | `production` | ❌ 비활성화 | ✅ |
+
+---
+
+## 7. Custom Hooks Architecture
+
+코드의 가독성, 재사용성 및 유지보수성을 극대화하기 위해 다음과 같은 커스텀 훅 관리 패턴을 준수합니다.
+
+### 7.1 계층적 구조 (Categorization)
+
+훅의 목적에 따라 디렉토리를 분리하여 관리합니다 (`apps/web-app/src/hooks/`).
+
+- **`/hooks/common`**: UI 라이프사이클이나 공통 브라우저 API (예: `useIsDesktop`, `usePWA`, `useWindowSize`)
+- **`/hooks/domain`**: 특정 비즈니스 엔터티 중심 로직 (예: `useAssets`, `useFolders`, `useAssetSelection`)
+- **`/hooks/features`**: 특정 페이지나 대형 피처 전용 복합 로직 (예: `useLibraryPage`, `useLibraryFilters`)
+- **`/hooks/utils`**: 범용 내비게이션, 검색, 디바운스 등 (예: `useNavHistory`, `useSearch`)
+
+### 7.2 반환 객체 패턴 (Balanced Return)
+
+단일 값 반환보다는 명확한 구조적 반환 패턴을 지향합니다.
+
+```typescript
+// 추천: 데이터, 상태, 액션을 구분하여 반환
+const { 
+  assets,       // Data
+  loading,      // Meta State
+  actions: {    // Controller Actions
+    addAsset, 
+    deleteAsset 
+  }
+} = useAssets();
+```
+
+### 7.3 Composable Pattern (훅의 조립)
+
+복잡한 훅은 작은 단위의 도메인 훅들을 조립하여 만듭니다. (예: `useLibraryPage`는 `useAssets`, `useFolders` 등을 내부에서 호출)
+
+### 7.4 Barrel Export (`index.ts`)
+
+`hooks/index.ts`를 통해 외부에서는 `@nova/hooks`와 같은 경로 별칭으로 깔끔하게 임포트할 수 있도록 합니다.
+
+### 7.5 Pure Logic vs. Connected Logic 분리
+
+- **Pure Hooks**: `useState`, `useEffect`만 사용하여 독립적으로 동작 (테스트 용이)
+- **Connected Hooks**: `useStore`(Zustand 등)에 직접 연결되어 전역 상태를 제어 (기능 중심)
