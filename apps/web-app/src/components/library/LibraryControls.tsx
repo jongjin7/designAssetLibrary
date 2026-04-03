@@ -50,8 +50,12 @@ interface LibraryControlsProps {
   zoom?: number;
   onZoomChange?: (value: number) => void;
   onBack?: () => void;
+  onForward?: () => void;
+  canGoBack?: boolean;
+  canGoForward?: boolean;
   hasParent?: boolean;
   breadcrumbs?: any[];
+  title?: string;
 }
 
 export function LibraryControls({
@@ -73,8 +77,12 @@ export function LibraryControls({
   zoom = 50,
   onZoomChange,
   onBack,
+  onForward,
+  canGoBack = false,
+  canGoForward = false,
   hasParent = false,
   breadcrumbs = [],
+  title,
 }: LibraryControlsProps) {
   const [isAddOpen, setIsAddOpen] = useState(false);
 
@@ -112,7 +120,7 @@ export function LibraryControls({
     <DesktopPageHeader
       className={className}
       left={
-        <>
+        <div className="flex items-center gap-1 min-w-0 flex-1">
           <NVDialog open={isAddOpen} onOpenChange={setIsAddOpen}>
             <NVDialogTrigger asChild>
               <NVIconButton 
@@ -157,18 +165,29 @@ export function LibraryControls({
             variant="ghost" 
             size="sm" 
             onClick={onBack}
-            disabled={!hasParent}
-            className={cn(!hasParent && "opacity-20 cursor-not-allowed")}
-            title="이전 단계로 이동"
+            disabled={!canGoBack}
+            className={cn(!canGoBack && "opacity-20 cursor-not-allowed")}
+            title="이전 페이지로 이동"
           />
-          <NVIconButton icon={ChevronRight} variant="ghost" size="sm" />
+          <NVIconButton 
+            icon={ChevronRight} 
+            variant="ghost" 
+            size="sm" 
+            onClick={onForward}
+            disabled={!canGoForward}
+            className={cn(!canGoForward && "opacity-20 cursor-not-allowed")}
+            title="다음 페이지로 이동"
+          />
           
-          <div className="ml-4 flex items-center gap-1.5 overflow-hidden">
+          <div className="ml-4 hidden lg:flex items-center gap-1.5 overflow-hidden min-w-0 flex-1">
             <button 
               onClick={() => onBack?.()}
-              className="text-xs font-semibold text-slate-500 hover:text-indigo-400 transition-colors whitespace-nowrap"
+              className={cn(
+                "text-xs font-semibold transition-colors whitespace-nowrap shrink-0",
+                breadcrumbs.length === 0 ? "text-slate-200 cursor-default" : "text-slate-500 hover:text-indigo-400"
+              )}
             >
-              Library
+              {breadcrumbs.length === 0 ? (title || "Library") : "Library"}
             </button>
             {breadcrumbs.map((crumb, idx) => (
               <React.Fragment key={crumb.id}>
@@ -187,19 +206,18 @@ export function LibraryControls({
                       ? "text-slate-200 cursor-default" 
                       : "text-slate-500 hover:text-indigo-400"
                   )}
-                  style={{ maxWidth: '120px' }}
+                  style={{ maxWidth: '100px' }}
                 >
                   {crumb.name}
                 </button>
               </React.Fragment>
             ))}
           </div>
-        </>
+        </div>
       }
       center={
-        <div className="flex items-center gap-6 w-full max-w-[600px] justify-center">
-          {/* Zoom Slider */}
-          <div className="flex items-center gap-3 px-2">
+        <div className="flex items-center gap-2 lg:gap-6 w-full max-w-[600px] justify-center min-w-0 px-2 lg:px-4">
+          <div className="hidden lg:flex items-center gap-3 px-2 shrink-0">
             <NVIconButton icon={LayoutGrid} variant="ghost" size="sm" className="shrink-0"/>
             <NVSlider 
               value={zoom} 
@@ -210,8 +228,7 @@ export function LibraryControls({
             <NVIconButton icon={ImageIcon} variant="ghost" size="sm" className="shrink-0" />
           </div>
 
-          {/* Search Bar */}
-          <div className="flex-1 max-w-[320px]">
+          <div className="flex-1 min-w-[140px] max-w-[220px] md:max-w-[480px]">
             <NVPopover open={isFilterOpen} onOpenChange={(open) => {
               if (open !== isFilterOpen) onFilterToggle();
             }}>
@@ -259,25 +276,22 @@ export function LibraryControls({
             isSidebarVisible ? "pr-2" : "pr-13"
           )} 
         >
-          <NVPopover>
-            <NVPopoverTrigger asChild>
-              <NVIconButton 
-                icon={LayoutGrid} 
-                variant="ghost" 
-                size="sm" 
-                className="data-[state=open]:text-white app-no-drag"
-                title="보기 옵션"
-              />
-            </NVPopoverTrigger>
-            
-            <NVPopoverContent 
-              align="end" 
-              sideOffset={8}
-              className="z-[9999]"
-            >
-              <ViewOptionsPopover />
-            </NVPopoverContent>
-          </NVPopover>
+          <div className="hidden sm:flex items-center gap-1">
+            <NVPopover>
+              <NVPopoverTrigger asChild>
+                <NVIconButton 
+                  icon={LayoutGrid} 
+                  variant="ghost" 
+                  size="sm" 
+                  className="app-no-drag"
+                  title="보기 옵션"
+                />
+              </NVPopoverTrigger>
+              <NVPopoverContent align="end" sideOffset={8} className="z-[9999]">
+                <ViewOptionsPopover />
+              </NVPopoverContent>
+            </NVPopover>
+          </div>
 
           <NVIconButton 
             icon={ListChecks} 
@@ -291,7 +305,7 @@ export function LibraryControls({
             onClick={onManagementToggle}
           />
 
-          <NVIconButton icon={Pin} variant="ghost" size="sm" className="app-no-drag"/>
+          
         </div>
       }
     />

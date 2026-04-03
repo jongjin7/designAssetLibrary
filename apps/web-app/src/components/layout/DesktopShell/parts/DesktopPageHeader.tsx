@@ -58,14 +58,14 @@ export function DesktopPageHeader({
         )}
       >
         {/* Left Section: Sidebar Toggle & Custom Left Actions */}
-        <div className="flex items-center gap-1 app-no-drag">
+        <div className="flex-1 flex items-center gap-1 min-w-0 app-no-drag">
           {showSidebarToggle && showToggle && (
             <div className={cn(
               "shrink-0 h-full flex items-center pr-2 mr-1 border-white/[0.05] border-r",
               isDesktopApp ? "pl-15" : ""
             )}>
               {!isDesktopApp && (
-                <h1 className="pl-2 text-2xl font-black bg-gradient-to-br from-indigo-400 via-indigo-500 to-cyan-400 bg-clip-text text-transparent mr-4">
+                <h1 className="pl-2 text-2xl font-black bg-gradient-to-br from-indigo-400 via-indigo-500 to-cyan-400 bg-clip-text text-transparent mr-4 shrink-0">
                   <Link href="/">T</Link>
                 </h1>
               )}
@@ -78,18 +78,18 @@ export function DesktopPageHeader({
               /> 
             </div>
           )}
-          <div className="flex items-center gap-1">
+          <div className="flex items-center gap-1 min-w-0 flex-1">
             {left}
           </div>
         </div>
 
         {/* Center Section: Flexible Content (Search, Title, etc.) */}
-        <div className="flex-1 flex items-center justify-center px-4 min-w-0 app-no-drag">
+        <div className="flex-none flex items-center justify-center px-4 z-10 app-no-drag">
           {center}
         </div>
 
         {/* Right Section: Actions & Utilities */}
-        <div className="flex items-center gap-1 app-no-drag">
+        <div className="flex-1 flex items-center justify-end gap-1 min-w-0 app-no-drag">
           {right}
         </div>
         

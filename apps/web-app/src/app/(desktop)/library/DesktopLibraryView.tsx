@@ -71,6 +71,8 @@ interface DesktopLibraryViewProps {
   title?: string;
 }
 
+import { useNavHistory } from '../../../hooks/useNavHistory';
+
 export default function DesktopLibraryView({
   assets, loading, filter, setFilter, selectedAsset, openDetail, closeDetail, deleteAsset, updateAsset, addAsset, moveAssets, isMoving,
   selectedIds, setSelectedIds,
@@ -82,9 +84,11 @@ export default function DesktopLibraryView({
   setFolderId,
   parentFolderId = null,
   parentFolder = null,
+  breadcrumbs = [],
   title = "라이브러리"
 }: DesktopLibraryViewProps) {
   
+  const { canGoBack, canGoForward } = useNavHistory();
   const [isSidebarVisible, setIsSidebarVisible] = useState(false);
   const [isManagementMode, setIsManagementMode] = useState(false);
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
@@ -290,8 +294,13 @@ export default function DesktopLibraryView({
           }}
           zoom={zoom}
           onZoomChange={setZoom}
-          onBack={handleBack}
+          onBack={() => router.back()}
+          onForward={() => router.forward()}
+          canGoBack={canGoBack}
+          canGoForward={canGoForward}
           hasParent={filter === 'folder' || parentFolderId !== null}
+          breadcrumbs={breadcrumbs}
+          title={title}
         />
 
         {/* Floating Sidebar Toggle - Fixed to FAR RIGHT Edge of Browser */}
