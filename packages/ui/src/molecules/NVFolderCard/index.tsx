@@ -36,7 +36,7 @@ export const NVFolderCard: React.FC<NVFolderCardProps> = ({
       )}
       onClick={(e) => onClick?.(id, e)}
     >
-      {/* 1. Thumbnail Area: Pinterest-inspired 3-split layout */}
+      {/* 1. Thumbnail Area */}
       <div className={cn(
         "relative aspect-[3/2] w-full bg-slate-900 rounded-xl overflow-hidden transition-all duration-500",
         "border border-white/5 group-hover:border-white/10 shadow-lg group-hover:shadow-2xl"
@@ -94,7 +94,7 @@ export const NVFolderCard: React.FC<NVFolderCardProps> = ({
 
       {/* 3. Metadata Area */}
       <div className={cn(
-        "flex flex-col gap-0.5 mt-3 px-1 transition-all duration-500",
+        "flex flex-col gap-0.5 mt-1.5 px-1 transition-all duration-500",
         isMobile ? "translate-y-0" : "translate-y-1 group-hover:translate-y-0"
       )}>
         <h3 className={cn(

@@ -322,7 +322,7 @@ export default function DesktopLibraryView({
                 {/* 1. 하위 폴더 섹션 (하위 폴더 또는 폴더 뷰인 경우 노출) */}
                 {(subFolders.length > 0 || filter === 'folder') && (
                   <div className="animate-in fade-in slide-in-from-top-2 duration-500">
-                    <div className="flex flex-col items-start gap-3 mb-8">
+                    <div className="flex flex-col items-start gap-3 mb-6">
                       {filter === 'folder' && (
                         <NVButton 
                           variant="ghost" 

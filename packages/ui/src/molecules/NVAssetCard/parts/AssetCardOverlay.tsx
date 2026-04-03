@@ -119,6 +119,7 @@ export const AssetCardOverlay: React.FC<AssetCardOverlayProps> = ({
           )}
         </div>
         
+        {/* 미리보기 버튼 */}
         {!isMobile && !hasError && !isLoading && thumbnail && (
           <NVIconButton
             icon={ZoomIn}
