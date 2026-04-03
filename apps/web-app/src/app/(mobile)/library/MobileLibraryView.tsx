@@ -85,6 +85,10 @@ export default function MobileLibraryView({
   const router = useRouter();
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
 
+  // Section Toggle States
+  const [isFoldersExpanded, setIsFoldersExpanded] = useState(true);
+  const [isAssetsExpanded, setIsAssetsExpanded] = useState(true);
+
   const handleFolderClick = (id: string) => {
     router.push(`/folder/${id}`);
   };
@@ -187,55 +191,75 @@ export default function MobileLibraryView({
                         {parentFolder?.name || "Library"}
                       </NVButton>
                     )}
-                    <NVSectionHeader title={title} count={filteredAssets.length} className="mb-0 !p-0" />
+                    <NVSectionHeader 
+                      title={title} 
+                      count={filteredAssets.length} 
+                      className="mb-0 !p-0"
+                      hasDropdown={true}
+                      isExpanded={isFoldersExpanded}
+                      onDropdownClick={() => setIsFoldersExpanded(!isFoldersExpanded)}
+                    />
                   </div>
-                  <div className="grid grid-cols-2 gap-4">
-                    {subFolders.map(folder => (
-                      <NVFolderCard 
-                        key={folder.id}
-                        id={folder.id}
-                        name={folder.name}
-                        assetCount={folder.aggregatedAssetCount || 0}
-                        assetThumbnails={folder.aggregatedThumbnails || []}
-                        hasSubfolders={folder.hasSubfolders}
-                        isMobile={true}
-                        onClick={(id) => handleFolderClick(id)}
-                      />
-                    ))}
-                  </div>
+                  {isFoldersExpanded && (
+                    <div className="grid grid-cols-2 gap-4 animate-in fade-in slide-in-from-top-2 duration-300">
+                      {subFolders.map(folder => (
+                        <NVFolderCard 
+                          key={folder.id}
+                          id={folder.id}
+                          name={folder.name}
+                          assetCount={folder.aggregatedAssetCount || 0}
+                          assetThumbnails={folder.aggregatedThumbnails || []}
+                          hasSubfolders={folder.hasSubfolders}
+                          isMobile={true}
+                          onClick={(id) => handleFolderClick(id)}
+                        />
+                      ))}
+                    </div>
+                  )}
                 </div>
              )}
 
              {/* 2. 에셋 목록 (목차) */}
              <div className="animate-in fade-in slide-in-from-top-4 duration-700 delay-150">
                 {subFolders.length > 0 && (
-                  <NVSectionHeader title="목차" count={filteredAssets.length} className="mb-4" />
-                )}
-                {filteredAssets.length > 0 ? (
-                  <AssetGrid 
-                    assets={filteredAssets} 
-                    onAssetTap={handleAssetTap} 
-                    selectedIds={selectedIds}
-                    onSelect={(id) => handleSelect(id)}
-                    onFavoriteToggle={(id, isFavorite) => {
-                      updateAsset(id, { isFavorite });
-                    }}
-                    isMobile={true}
-                    isSelectMode={isSelectionMode}
-                    zoom={zoom}
+                  <NVSectionHeader 
+                    title="목차" 
+                    count={filteredAssets.length} 
+                    className="mb-4"
+                    hasDropdown={true}
+                    isExpanded={isAssetsExpanded}
+                    onDropdownClick={() => setIsAssetsExpanded(!isAssetsExpanded)}
                   />
-                ) : subFolders.length > 0 ? (
-                   <div className="flex flex-col items-center justify-center py-12 bg-slate-900/10 rounded-2xl border border-dashed border-white/5">
-                      <p className="text-slate-500 text-xs font-medium">이 폴더에는 에셋이 없습니다.</p>
-                   </div>
-                ) : (
-                  <div className="flex items-center justify-center min-h-[60vh]">
-                    <LibraryEmptyState 
-                      assets={assets}
-                      filteredAssets={filteredAssets}
-                      filter={filter}
-                      searchText={searchText}
-                    />
+                )}
+                {isAssetsExpanded && (
+                  <div className="animate-in fade-in slide-in-from-top-4 duration-300">
+                    {filteredAssets.length > 0 ? (
+                      <AssetGrid 
+                        assets={filteredAssets} 
+                        onAssetTap={handleAssetTap} 
+                        selectedIds={selectedIds}
+                        onSelect={(id) => handleSelect(id)}
+                        onFavoriteToggle={(id, isFavorite) => {
+                          updateAsset(id, { isFavorite });
+                        }}
+                        isMobile={true}
+                        isSelectMode={isSelectionMode}
+                        zoom={zoom}
+                      />
+                    ) : subFolders.length > 0 ? (
+                       <div className="flex flex-col items-center justify-center py-12 bg-slate-900/10 rounded-2xl border border-dashed border-white/5">
+                          <p className="text-slate-500 text-xs font-medium">이 폴더에는 에셋이 없습니다.</p>
+                       </div>
+                    ) : (
+                      <div className="flex items-center justify-center min-h-[60vh]">
+                        <LibraryEmptyState 
+                          assets={assets}
+                          filteredAssets={filteredAssets}
+                          filter={filter}
+                          searchText={searchText}
+                        />
+                      </div>
+                    )}
                   </div>
                 )}
              </div>

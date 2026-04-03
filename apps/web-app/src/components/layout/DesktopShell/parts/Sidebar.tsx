@@ -34,7 +34,7 @@ export function Sidebar({ onSearchToggle }: SidebarProps) {
     refreshAssets();
   }, [refreshAssets]);
 
-  const { folders, createFolder } = useFolders();
+  const { folders, createFolder, deleteFolder, moveFolder, renameFolder, copyFolder } = useFolders();
   const context = useDesktopShell();
   
   if (!context) return null;
@@ -123,8 +123,8 @@ export function Sidebar({ onSearchToggle }: SidebarProps) {
           })}
 
           <div className="px-0.5 mt-4">
-            <FolderTree 
-              folders={folders} 
+            <FolderTree
+              folders={folders}
               activeFolderId={folderId}
               getFolderCount={(id) => getFolderCount(id, folders)}
               onFolderClick={(id) => {
@@ -135,6 +135,10 @@ export function Sidebar({ onSearchToggle }: SidebarProps) {
               onCreateFolder={(parent, name) => {
                 if (name) createFolder(name, parent);
               }}
+              onDeleteFolder={(f) => deleteFolder(f.id)}
+              onRenameFolder={(f, newName) => renameFolder(f.id, newName)}
+              onMoveFolder={(f, targetId) => moveFolder(f.id, targetId)}
+              onCopyFolder={(f) => copyFolder(f.id, f.parentId)}
               isCollapsed={false}
             />
           </div>

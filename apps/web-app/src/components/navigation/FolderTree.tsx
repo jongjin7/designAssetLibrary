@@ -1,6 +1,6 @@
 "use client"
 
-import { useState } from 'react';
+import { useState, useMemo } from 'react';
 import { 
   ChevronDown, 
   Folder as FolderIcon, 
@@ -30,11 +30,17 @@ interface FolderTreeProps {
   onFolderClick: (id: string | null) => void;
   getFolderCount?: (id: string) => number;
   onCreateFolder?: (parentId: string | null, name: string) => void;
+  onMoveFolder?: (folder: Folder, targetFolderId: string | null) => void;
+  onCopyFolder?: (folder: Folder) => void;
+  onDeleteFolder?: (folder: Folder) => void;
+  onRenameFolder?: (folder: Folder, newName: string) => void;
   isCollapsed?: boolean;
 }
 
-export function FolderTree({ folders, activeFolderId, onFolderClick, getFolderCount, onCreateFolder, isCollapsed = false }: FolderTreeProps) {
+export function FolderTree({ folders, activeFolderId, onFolderClick, getFolderCount, onCreateFolder, onMoveFolder, onCopyFolder, onDeleteFolder, onRenameFolder, isCollapsed = false }: FolderTreeProps) {
   const [expanded, setExpanded] = useState<Record<string, boolean>>({});
+  const nonSmartFolders = useMemo(() => folders.filter(f => !f.isSmartFolder), [folders]);
+  const smartFolders = useMemo(() => folders.filter(f => f.isSmartFolder), [folders]);
 
   const handleCreateFolder = (parentId: string | null = null, name: string) => {
     if (name.trim()) {
@@ -129,13 +135,15 @@ export function FolderTree({ folders, activeFolderId, onFolderClick, getFolderCo
                       )}
                       
                       {depth === 0 && (
-                        <NVFolderPopover 
+                        <NVFolderPopover
                           folder={folder}
                           subfolders={folderSubfolders}
+                          allFolders={nonSmartFolders}
                           onCreateSubfolder={handleCreateFolder}
-                          onRename={(f) => console.log('Rename folder:', f.id)}
-                          onDelete={(f) => console.log('Delete folder:', f.id)}
-                          onDuplicate={(f) => console.log('Duplicate folder:', f.id)}
+                          onRename={(f, newName) => onRenameFolder?.(f as Folder, newName)}
+                          onDelete={(f) => onDeleteFolder?.(f as Folder)}
+                          onMove={(f, targetId) => onMoveFolder?.(f as Folder, targetId)}
+                          onCopy={(f) => onCopyFolder?.(f as Folder)}
                           onAnalyze={(f) => console.log('Analyze folder:', f.id)}
                           onOrganize={(f) => console.log('Organize folder:', f.id)}
                         />
@@ -192,7 +200,7 @@ export function FolderTree({ folders, activeFolderId, onFolderClick, getFolderCo
           </span>
         )}
         <div className="flex flex-col gap-0.5">
-          {folders.filter(f => f.isSmartFolder).map(folder => {
+          {smartFolders.map(folder => {
             const isActive = activeFolderId === folder.id;
             
             return (

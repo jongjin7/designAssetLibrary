@@ -88,6 +88,10 @@ export default function DesktopLibraryView({
   const [isSidebarVisible, setIsSidebarVisible] = useState(false);
   const [isManagementMode, setIsManagementMode] = useState(false);
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
+
+  // Section Toggle States
+  const [isFoldersExpanded, setIsFoldersExpanded] = useState(true);
+  const [isAssetsExpanded, setIsAssetsExpanded] = useState(true);
   const router = useRouter();
   const shell = useDesktopShell();
   const isDesktopApp = shell?.isDesktopApp ?? false;
@@ -336,58 +340,73 @@ export default function DesktopLibraryView({
                           title={title} 
                           count={filteredAssets.length} 
                           hasDropdown={true} 
+                          isExpanded={isFoldersExpanded}
+                          onDropdownClick={() => setIsFoldersExpanded(!isFoldersExpanded)}
                           className="mb-0 !p-0" 
                         />
                       </div>
                     </div>
-                    <div className={cn("grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-6", subFolders.length > 0 && "mb-12")}>
-                      {subFolders.map(folder => (
-                        <NVFolderCard 
-                          key={folder.id}
-                          id={folder.id}
-                          name={folder.name}
-                          assetCount={folder.aggregatedAssetCount || 0}
-                          assetThumbnails={folder.aggregatedThumbnails || []}
-                          hasSubfolders={folder.hasSubfolders}
-                          onClick={(id) => {
-                            router.push(`/folder/${id}`);
-                          }}
-                        />
-                      ))}
-                    </div>
+                    {isFoldersExpanded && (
+                      <div className={cn("grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-6", subFolders.length > 0 && "mb-12 animate-in fade-in slide-in-from-top-2 duration-300")}>
+                        {subFolders.map(folder => (
+                          <NVFolderCard 
+                            key={folder.id}
+                            id={folder.id}
+                            name={folder.name}
+                            assetCount={folder.aggregatedAssetCount || 0}
+                            assetThumbnails={folder.aggregatedThumbnails || []}
+                            hasSubfolders={folder.hasSubfolders}
+                            onClick={(id) => {
+                              router.push(`/folder/${id}`);
+                            }}
+                          />
+                        ))}
+                      </div>
+                    )}
                   </div>
                 )}
 
                 {/* 2. 목차 섹션 (에셋 목록) */}
                 <div className="animate-in fade-in slide-in-from-top-4 duration-700 delay-150">
                   {subFolders.length > 0 && (
-                    <NVSectionHeader title="목차" count={filteredAssets.length} className="mb-6" />
+                    <NVSectionHeader 
+                      title="목차" 
+                      count={filteredAssets.length} 
+                      className="mb-6"
+                      hasDropdown={true}
+                      isExpanded={isAssetsExpanded}
+                      onDropdownClick={() => setIsAssetsExpanded(!isAssetsExpanded)}
+                    />
                   )}
-                  {filteredAssets.length > 0 ? (
-                    <AssetGrid 
-                      assets={filteredAssets} 
-                      onAssetTap={handleAssetTap} 
-                      selectedIds={selectedIds}
-                      onSelect={handleSelect}
-                      onFavoriteToggle={(id, isFavorite) => {
-                        updateAsset(id, { isFavorite });
-                      }}
-                      isSelectMode={isManagementMode}
-                      zoom={zoom}
-                      isSidebarOpen={isSidebarVisible}
-                      activeAssetId={selectedAsset?.id}
-                    />
-                  ) : subFolders.length > 0 ? (
-                    <div className="flex flex-col items-center justify-center py-20 bg-slate-900/10 rounded-2xl border border-dashed border-white/5">
-                       <p className="text-slate-500 font-medium">이 폴더에는 직접 포함된 에셋이 없습니다.</p>
+                  {isAssetsExpanded && (
+                    <div className="animate-in fade-in slide-in-from-top-4 duration-300">
+                      {filteredAssets.length > 0 ? (
+                        <AssetGrid 
+                          assets={filteredAssets} 
+                          onAssetTap={handleAssetTap} 
+                          selectedIds={selectedIds}
+                          onSelect={handleSelect}
+                          onFavoriteToggle={(id, isFavorite) => {
+                            updateAsset(id, { isFavorite });
+                          }}
+                          isSelectMode={isManagementMode}
+                          zoom={zoom}
+                          isSidebarOpen={isSidebarVisible}
+                          activeAssetId={selectedAsset?.id}
+                        />
+                      ) : subFolders.length > 0 ? (
+                        <div className="flex flex-col items-center justify-center py-20 bg-slate-900/10 rounded-2xl border border-dashed border-white/5">
+                           <p className="text-slate-500 font-medium">이 폴더에는 직접 포함된 에셋이 없습니다.</p>
+                        </div>
+                      ) : (
+                        <LibraryEmptyState 
+                          assets={assets}
+                          filteredAssets={filteredAssets}
+                          filter={filter}
+                          searchText={searchText}
+                        />
+                      )}
                     </div>
-                  ) : (
-                    <LibraryEmptyState 
-                      assets={assets}
-                      filteredAssets={filteredAssets}
-                      filter={filter}
-                      searchText={searchText}
-                    />
                   )}
                 </div>
               </div>

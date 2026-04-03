@@ -28,6 +28,9 @@ interface AssetStore {
   fetchFolders: () => Promise<void>;
   createFolder: (name: string, parentId?: string | null) => Promise<Folder>;
   deleteFolder: (id: string) => Promise<void>;
+  moveFolder: (id: string, targetParentId: string | null) => Promise<void>;
+  renameFolder: (id: string, name: string) => Promise<void>;
+  copyFolder: (id: string, targetParentId: string | null) => Promise<Folder>;
   
   // UI State
   filter: string;
@@ -105,7 +108,7 @@ export const useAssetStore = create<AssetStore>((set, get) => ({
 
   createFolder: async (name, parentId = null) => {
     const newFolder: Folder = {
-      id: Math.random().toString(36).substr(2, 9),
+      id: Math.random().toString(36).substring(2, 11),
       name,
       parentId,
       isSmartFolder: false,
@@ -118,6 +121,37 @@ export const useAssetStore = create<AssetStore>((set, get) => ({
 
   deleteFolder: async (id) => {
     set(state => ({ folders: state.folders.filter(f => f.id !== id) }));
+  },
+
+  moveFolder: async (id, targetParentId) => {
+    set(state => ({
+      folders: state.folders.map(f =>
+        f.id === id ? { ...f, parentId: targetParentId, updatedAt: new Date().toISOString() } : f
+      )
+    }));
+  },
+
+  renameFolder: async (id, name) => {
+    set(state => ({
+      folders: state.folders.map(f =>
+        f.id === id ? { ...f, name, updatedAt: new Date().toISOString() } : f
+      )
+    }));
+  },
+
+  copyFolder: async (id, targetParentId) => {
+    const source = get().folders.find(f => f.id === id);
+    if (!source) throw new Error('Folder not found');
+    const newFolder: Folder = {
+      ...source,
+      id: Math.random().toString(36).substring(2, 11),
+      parentId: targetParentId,
+      name: `${source.name} 복사본`,
+      createdAt: new Date().toISOString(),
+      updatedAt: new Date().toISOString(),
+    };
+    set(state => ({ folders: [...state.folders, newFolder] }));
+    return newFolder;
   },
   
   refreshAssets: async () => {

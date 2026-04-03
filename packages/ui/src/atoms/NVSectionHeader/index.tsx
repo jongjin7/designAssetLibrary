@@ -6,6 +6,7 @@ export interface NVSectionHeaderProps {
   title: string;
   count?: number;
   hasDropdown?: boolean;
+  isExpanded?: boolean;
   className?: string;
   onDropdownClick?: () => void;
 }
@@ -14,6 +15,7 @@ export const NVSectionHeader: React.FC<NVSectionHeaderProps> = ({
   title,
   count,
   hasDropdown = false,
+  isExpanded = true,
   className = '',
   onDropdownClick
 }) => {
@@ -42,7 +44,10 @@ export const NVSectionHeader: React.FC<NVSectionHeaderProps> = ({
         {hasDropdown && (
           <ChevronDown 
             size={18} 
-            className="text-slate-400 group-hover:text-white transition-colors" 
+            className={cn(
+              "text-slate-400 group-hover:text-white transition-all duration-300",
+              !isExpanded && "-rotate-90"
+            )} 
             strokeWidth={2.5}
           />
         )}

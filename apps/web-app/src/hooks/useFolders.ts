@@ -8,18 +8,24 @@ import { useAssetStore } from '../store/useAssetStore';
  * eliminating the 'blink' effect caused by local state re-fetching.
  */
 export function useFolders() {
-  const { 
-    folders, 
-    fetchFolders, 
-    createFolder, 
-    deleteFolder 
+  const {
+    folders,
+    fetchFolders,
+    createFolder,
+    deleteFolder,
+    moveFolder,
+    renameFolder,
+    copyFolder,
   } = useAssetStore();
 
   return {
     folders,
-    loading: false, // Global folders are considered instantly available once refreshed
+    loading: false,
     fetchFolders,
     createFolder,
     deleteFolder,
+    moveFolder,
+    renameFolder,
+    copyFolder,
   };
 }
