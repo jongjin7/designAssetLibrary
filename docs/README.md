@@ -28,25 +28,27 @@ NOVA aims to bridge the gap between physical and digital design inspiration.
 - [Monorepo Structure](setup/structure.md)
 - [Development Commands](setup/commands.md)
 
-### 🏗️ [Architecture](architecture/database-schema.md)
+### 🏗️ [Architecture](architecture/frontend.md)
 
-- [**Database Schema Design**](architecture/database-schema.md) (Sprint 1 & 2 Unified)
+- [**Frontend Architecture & Hooks**](architecture/frontend.md) (Next.js, PWA, Hooks)
+- [**Custom Hooks Management**](architecture/frontend.md#7-custom-hooks-architecture) (Categorization & Patterns)
 - [**Data Layer (Repository Pattern)**](architecture/frontend.md#5-data-layer--state-management) (Local-First & Sync)
+- [**Database Schema Design**](architecture/database-schema.md) (Sprint 1 & 2 Unified)
 - [Backend (Supabase)](architecture/backend.md)
-- [**Frontend (Next.js)**](architecture/frontend.md)
 - [**Coding Implementation Guide**](CONTRIBUTING_CODE.md) (Atomic Granularity & Anti-Bloat)
 
 ### ✨ [Feature Specs](features/sprint1-mobile.md)
 
 - [**Sprint 1: Mobile Collector**](features/sprint1-mobile.md) (PWA & AI)
-- [**PWA Strategy & Status**](architecture/frontend.md#41-pwa-strategy-sprint-1) (Offline & Install)
+- [**Mobile & PWA Architecture**](architecture/frontend.md#41-mobile--pwa-architecture) (Offline & Install)
 - [**Sprint 2: Desktop Manager**](features/sprint2-desktop.md) (Folders & Extensions)
 
 ---
 
 ## 3. Reference Documents
 
-- [**Integrated Development Plan (Sprint 1 & 2)**](DEVELOPMENT_PLAN.md)
+- [**Development Plan (Sprint 1 & 2)**](DEVELOPMENT_PLAN_S1_S2.md)
+- [**Integration Roadmap (Sprint 3 & 4)**](DEVELOPMENT_PLAN_S3_S4.md)
 - [Design Tokens](design/design-tokens.md)
 - [UI Components (Phase 1)](design/components-phase1.md)
 
@@ -54,4 +56,4 @@ NOVA aims to bridge the gap between physical and digital design inspiration.
 
 ## 4. Getting Started
 
-To get the project running locally, refer to the [Setup Guide](setup/structure.md).
+To get the project running locally, refer to the [Monorepo Setup Guide](setup/structure.md) and [Development Commands](setup/commands.md).
