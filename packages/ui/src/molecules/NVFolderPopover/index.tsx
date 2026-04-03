@@ -139,7 +139,7 @@ export const NVFolderPopover: React.FC<NVFolderPopoverProps> = ({
             icon={MoreVertical}
             variant="ghost"
             size="xs"
-            className={cn("absolute -right-[3px] opacity-0 group-hover:opacity-100 transition-all duration-300", triggerClassName)}
+            className={cn("absolute -right-0 opacity-0 group-hover:opacity-100 transition-all duration-300 !h-[19px] !w-[19px]", triggerClassName)}
             onClick={(e) => e.stopPropagation()}
           />
         )}
@@ -160,80 +160,81 @@ export const NVFolderPopover: React.FC<NVFolderPopoverProps> = ({
             </NVPopoverHeader>
             <NVPopoverBody className="px-2 py-2 max-h-[480px] overflow-y-auto custom-scrollbar">
               <div className="flex flex-col gap-0.5">
-                <span className="text-[10px] font-bold text-slate-500 uppercase tracking-widest px-2 py-1.5 mt-1">
-                  {folder.isSmartFolder ? '스마트 기능 제어' : '추천 기능'}
-                </span>
-
-                {folder.isSmartFolder ? (
-                  <NVMenuItem
-                    icon={BrainCircuit}
-                    label="로직 최적화"
-                    description="AI 에디터로 필터 규칙 자동 개선"
-                    variant="vivid"
-                    className="hover:bg-cyan-500/10 hover:text-cyan-400"
-                    onClick={() => onOptimize?.(folder)}
-                  />
-                ) : (
+                {!folder.parentId && (
                   <>
-                    <NVMenuItem
-                      icon={BrainCircuit}
-                      label="AI 에셋 분석"
-                      description="내부 파일 특성 자동 분류"
-                      variant="vivid"
-                      onClick={() => onAnalyze?.(folder)}
-                    />
-                    <NVMenuItem
-                      icon={LayoutGrid}
-                      label="자동 레이아웃 정리"
-                      description="디자인 요소 스타일 그룹화"
-                      className="hover:bg-cyan-500/10 hover:text-cyan-400"
-                      onClick={() => onOrganize?.(folder)}
-                    />
+                    <span className="text-[10px] font-bold text-slate-500 uppercase tracking-widest px-2 py-1.5 mt-1">
+                      {folder.isSmartFolder ? '스마트 기능 제어' : '추천 기능'}
+                    </span>
+
+                    {folder.isSmartFolder ? (
+                      <NVMenuItem
+                        icon={BrainCircuit}
+                        label="로직 최적화"
+                        description="AI 에디터로 필터 규칙 자동 개선"
+                        variant="vivid"
+                        className="hover:bg-cyan-500/10 hover:text-cyan-400"
+                        onClick={() => onOptimize?.(folder)}
+                      />
+                    ) : (
+                      <>
+                        <NVMenuItem
+                          icon={BrainCircuit}
+                          label="AI 에셋 분석"
+                          description="내부 파일 특성 자동 분류"
+                          variant="vivid"
+                          onClick={() => onAnalyze?.(folder)}
+                        />
+                        <NVMenuItem
+                          icon={LayoutGrid}
+                          label="자동 레이아웃 정리"
+                          description="디자인 요소 스타일 그룹화"
+                          className="hover:bg-cyan-500/10 hover:text-cyan-400"
+                          onClick={() => onOrganize?.(folder)}
+                        />
+                      </>
+                    )}
+
+                    <div className="h-px bg-white/5 my-1.5 mx-1" />
                   </>
                 )}
-
-                <div className="h-px bg-white/5 my-1.5 mx-1" />
 
                 <span className="text-[10px] font-bold text-slate-500 uppercase tracking-widest px-2 py-1.5">
                   폴더 관리
                 </span>
-
-                {!folder.isSmartFolder && (
-                  <>
-                    {subfolders.length > 0 && (
-                      <NVMenuItem
-                        label="하위 폴더 목록 보기"
-                        icon={FolderIcon}
-                        rightElement={<ChevronRight size={12} className="text-slate-600 group-hover:text-indigo-500 transition-all" />}
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          setView('list');
-                        }}
-                      />
-                    )}
-                    <NVMenuItem
-                      icon={Plus}
-                      label="하위 폴더 추가"
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        setView('create');
-                      }}
-                    />
-                    <NVMenuItem
-                      icon={FolderInput}
-                      label="이동"
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        startMove(folder, 'menu');
-                      }}
-                    />
-                    <NVMenuItem
-                      icon={Copy}
-                      label="복사"
-                      onClick={() => { onCopy?.(folder); resetAndClose(); }}
-                    />
-                  </>
+                
+                {/* Management Actions for ALL folder types */}
+                {subfolders.length > 0 && (
+                  <NVMenuItem
+                    label="하위 폴더 목록 보기"
+                    icon={FolderIcon}
+                    rightElement={<ChevronRight size={12} className="text-slate-600 group-hover:text-indigo-500 transition-all" />}
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      setView('list');
+                    }}
+                  />
                 )}
+                <NVMenuItem
+                  icon={Plus}
+                  label="하위 폴더 추가"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    setView('create');
+                  }}
+                />
+                <NVMenuItem
+                  icon={FolderInput}
+                  label="이동"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    startMove(folder, 'menu');
+                  }}
+                />
+                <NVMenuItem
+                  icon={Copy}
+                  label="복사"
+                  onClick={() => { onCopy?.(folder); resetAndClose(); }}
+                />
                 <NVMenuItem
                   icon={Pencil}
                   label="이름 바꾸기"
