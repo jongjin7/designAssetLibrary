@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { getDeferredPrompt, clearDeferredPrompt, subscribePWAPrompt } from '../lib/pwaPromptStore';
+import { getDeferredPrompt, clearDeferredPrompt, subscribePWAPrompt } from '../../lib/pwaPromptStore';
 
 const STORAGE_KEY = 'nova-pwa-installable';
 
