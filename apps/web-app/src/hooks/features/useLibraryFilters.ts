@@ -1,5 +1,5 @@
 import { useMemo, useCallback } from 'react';
-import { Asset } from '../types/asset';
+import { Asset } from '@nova/types/asset';
 import { useAssetStore, LibraryFilters } from '@nova/store/useAssetStore';
 
 export function useLibraryFilters(assets: Asset[]) {

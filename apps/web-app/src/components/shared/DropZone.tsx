@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { Upload } from 'lucide-react';
 
 interface DropZoneProps {
-  onDrop: (files: FileList) => void;
+  onDrop: (files: File[]) => void;
 }
 
 export function DropZone({ onDrop }: DropZoneProps) {
@@ -22,11 +22,42 @@ export function DropZone({ onDrop }: DropZoneProps) {
       }
     };
 
-    const handleDrop = (e: DragEvent) => {
+    const handleDrop = async (e: DragEvent) => {
       e.preventDefault();
       setIsDragging(false);
-      if (e.dataTransfer?.files) {
-        onDrop(e.dataTransfer.files);
+      
+      const files: File[] = [];
+      
+      if (e.dataTransfer?.items) {
+        const items = Array.from(e.dataTransfer.items);
+        
+        const traverseEntry = async (entry: any): Promise<void> => {
+          if (entry.isFile) {
+            const file = await new Promise<File>((resolve) => entry.file(resolve));
+            files.push(file);
+          } else if (entry.isDirectory) {
+            const reader = entry.createReader();
+            const entries = await new Promise<any[]>((resolve) => {
+              reader.readEntries(resolve);
+            });
+            for (const child of entries) {
+              await traverseEntry(child);
+            }
+          }
+        };
+
+        for (const item of items) {
+          const entry = (item as any).webkitGetAsEntry();
+          if (entry) {
+            await traverseEntry(entry);
+          }
+        }
+      } else if (e.dataTransfer?.files) {
+        files.push(...Array.from(e.dataTransfer.files));
+      }
+
+      if (files.length > 0) {
+        onDrop(files);
       }
     };
 
@@ -49,8 +80,12 @@ export function DropZone({ onDrop }: DropZoneProps) {
         <div className="w-24 h-24 rounded-full bg-indigo-500/15 flex items-center justify-center text-indigo-500 border border-indigo-500/30">
           <Upload size={48} />
         </div>
-        <h3 className="text-2xl font-extrabold tracking-tight">여기에 파일을 드롭하여 업로드</h3>
-        <p className="text-slate-400 font-medium">PNG, JPG, SVG, WebP 파일을 지원합니다.</p>
+        <div className="text-center">
+          <h3 className="text-2xl font-extrabold tracking-tight mb-2">여기에 파일을 드롭하여 업로드</h3>
+          <p className="text-slate-400 font-medium max-w-[400px]">
+            JPG, PNG, WebP, GIF, SVG, PDF 및 폰트(OTF, TTF) 파일을 지원합니다.
+          </p>
+        </div>
       </div>
     </div>
   );

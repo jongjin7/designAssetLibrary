@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useMemo, useEffect, useRef } from 'react';
-import { Asset } from '../types/asset';
+import { Asset } from '@nova/types/asset';
 import { assetStore } from '@nova/store/assetStore';
 
 export function useSearch() {

@@ -1,4 +1,4 @@
-import { Asset } from '../../types/asset';
+import { Asset } from '@nova/types/asset';
 
 export interface AssetRepository {
   getAssets(): Promise<Asset[]>;
@@ -16,6 +16,7 @@ export const mapToAsset = (data: any): Asset => {
   return {
     id: data.id,
     fileName: data.file_name || data.fileName,
+    extension: data.extension || (data.file_name || data.fileName || '').split('.').pop() || 'webp',
     fileSize: data.file_size || data.fileSize || '0 KB',
     mimeType: data.mime_type || data.mimeType || 'image/webp',
     thumbnailGradient: data.thumbnailGradient || 'linear-gradient(135deg, #1e293b 0%, #334155 100%)',

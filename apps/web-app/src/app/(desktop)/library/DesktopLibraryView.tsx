@@ -71,6 +71,7 @@ interface DesktopLibraryViewProps {
   title?: string;
 }
 
+import { filterSupportedFiles, chunkArray, SUPPORTED_EXTENSIONS } from '@nova/lib/fileValidation';
 import { useNavHistory } from '@nova/hooks';
 
 export default function DesktopLibraryView({
@@ -99,6 +100,35 @@ export default function DesktopLibraryView({
   const router = useRouter();
   const shell = useDesktopShell();
   const isDesktopApp = shell?.isDesktopApp ?? false;
+
+  // Watch for files from Electron (Monitored Folder)
+  useEffect(() => {
+    if (!isDesktopApp || !(window as any).electron) return;
+
+    const handleFileFromMain = async (fileData: { path: string, name: string, type: string, size: number }) => {
+      console.log('File detected in watched folder:', fileData.name);
+      try {
+        // Fetch the file content via our custom protocol
+        const response = await fetch(`nova-asset://${fileData.path}`);
+        if (!response.ok) throw new Error('Failed to fetch file content');
+        
+        const blob = await response.blob();
+        const file = new File([blob], fileData.name, { type: fileData.type });
+        
+        const assetData = await processFileToAsset(file, ['monitored', 'new']);
+        await addAsset(assetData, file);
+        console.log(`Successfully imported monitored file: ${fileData.name}`);
+      } catch (err) {
+        console.error('Failed to import monitored file:', err);
+      }
+    };
+
+    const unsubscribe = (window as any).electron.receive('file-added', handleFileFromMain);
+    
+    return () => {
+      if (unsubscribe) unsubscribe();
+    };
+  }, [isDesktopApp, addAsset]);
 
   // Clear management mode when selection is cancelled or successful
   useEffect(() => {
@@ -251,22 +281,34 @@ export default function DesktopLibraryView({
     }
   };
 
-  const handleDrop = async (files: FileList) => {
-    for (let i = 0; i < files.length; i++) {
-      const file = files[i];
-      if (!file.type.startsWith('image/')) continue;
-      
-      try {
-        const assetData = await processFileToAsset(file);
-        const newAsset = await addAsset(assetData, file);
-        if (newAsset) {
-          openDetail(newAsset);
-          setIsSidebarVisible(true);
-        }
-      } catch (err) {
-        console.error('Failed to process dropped file:', err);
-      }
+  const handleDrop = async (files: File[]) => {
+    const { validFiles, unsupportedCount } = filterSupportedFiles(files);
+
+    if (unsupportedCount > 0) {
+      console.warn(`${unsupportedCount}개의 지원하지 않는 파일 형식이 제외되었습니다. (지원: ${SUPPORTED_EXTENSIONS.join(', ').toUpperCase()})`);
     }
+
+    if (validFiles.length === 0) return;
+
+    // Process in batches
+    const batches = chunkArray(validFiles, 5);
+    for (const batch of batches) {
+      await Promise.all(batch.map(async (file) => {
+        try {
+          const assetData = await processFileToAsset(file);
+          const newAsset = await addAsset(assetData, file);
+          
+          if (validFiles.length === 1 && newAsset) {
+            openDetail(newAsset);
+            setIsSidebarVisible(true);
+          }
+        } catch (err) {
+          console.error(`Failed to process file ${file.name}:`, err);
+        }
+      }));
+    }
+
+    console.log(`Successfully processed ${validFiles.length} files`);
   };
 
   return (

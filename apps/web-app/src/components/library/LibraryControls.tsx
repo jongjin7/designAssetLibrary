@@ -10,7 +10,8 @@ import {
   LayoutGrid, 
   Pin,
   Image as ImageIcon,
-  ListChecks
+  ListChecks,
+  FolderSearch
 } from 'lucide-react';
 import { ViewOptionsPopover } from './ViewOptionsPopover';
 import { processFileToAsset } from '@nova/lib/assetProcessor';
@@ -85,6 +86,15 @@ export function LibraryControls({
   title,
 }: LibraryControlsProps) {
   const [isAddOpen, setIsAddOpen] = useState(false);
+  const handleSetWatchFolder = async () => {
+    if ((window as any).electron) {
+      const path = await (window as any).electron.invoke('select-folder');
+      if (path) {
+        console.log('Watched folder set to:', path);
+        // We could add a toast notification here
+      }
+    }
+  };
 
   if (isMobile) {
     return (
@@ -121,6 +131,17 @@ export function LibraryControls({
       className={className}
       left={
         <div className="flex items-center gap-1 min-w-0 flex-1">
+          {typeof window !== 'undefined' && (window as any).electron && (
+            <NVIconButton 
+              icon={FolderSearch} 
+              variant="ghost" 
+              size="sm" 
+              className="hover:text-indigo-400 animate-in fade-in zoom-in duration-500"
+              title="감시 폴더 설정 (Monitor Folder)"
+              onClick={handleSetWatchFolder}
+            />
+          )}
+
           <NVDialog open={isAddOpen} onOpenChange={setIsAddOpen}>
             <NVDialogTrigger asChild>
               <NVIconButton 
