@@ -85,10 +85,12 @@ export async function GET(request: NextRequest) {
     let existing = null;
     let page = 1;
     while (!existing) {
-      const { data: pageData, error: listError } = await supabaseAdmin.auth.admin.listUsers({ page, perPage: 1000 });
+      const { data, error: listError } = await supabaseAdmin.auth.admin.listUsers({ page, perPage: 1000 });
       if (listError) return NextResponse.redirect(`${origin}/login?error=user_upsert_failed`);
-      existing = pageData.users.find(u => u.email === email) ?? null;
-      if (pageData.users.length < 1000) break;
+      
+      const userList = Array.isArray(data) ? data : (data as any)?.users || [];
+      existing = userList.find((u: any) => u.email === email) ?? null;
+      if (userList.length < 1000) break;
       page++;
     }
     if (existing) {

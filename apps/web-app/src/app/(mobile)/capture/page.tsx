@@ -5,7 +5,7 @@ import { X, CheckCircle } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import { CaptureViewfinder, CaptureViewfinderRef } from '../../../components/capture/CaptureViewfinder';
 import { CaptureControls } from '../../../components/capture/CaptureControls';
-import { useAssets } from '../../../hooks/useAssets';
+import { useAssets } from '../../../hooks/domain/useAssets';
 import { processFileToAsset } from '../../../lib/assetProcessor';
 
 export default function CapturePage() {
