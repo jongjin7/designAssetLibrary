@@ -129,3 +129,38 @@ export const RowLayout: Story = {
     </div>
   ),
 };
+
+/**
+ * 설명(Description)과 에러(Error) 메시지가 포함된 예시입니다. 모든 요소 간의 간격이 일정하게 유지됩니다.
+ */
+export const ValidationAndDescription: Story = {
+  render: () => (
+    <div className="max-w-md p-8 bg-slate-950 rounded-3xl space-y-8">
+      <NVField 
+        label="Username" 
+        description="Public display name that others will see."
+        size="sm"
+      >
+        <NVInput placeholder="antigravity" />
+      </NVField>
+
+      <NVField 
+        label="Password" 
+        error="Password must be at least 8 characters long."
+        size="md"
+      >
+        <NVInput type="password" placeholder="••••••••" />
+      </NVField>
+
+      <NVField 
+        label="API Key" 
+        description="Used for authenticating your requests."
+        error="Invalid key format detected."
+        size="lg"
+      >
+        <NVInput placeholder="nv_live_..." />
+      </NVField>
+    </div>
+  ),
+};
+

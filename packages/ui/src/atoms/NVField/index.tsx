@@ -8,6 +8,10 @@ export interface NVFieldProps {
   htmlFor?: string;
   /** 필드 내부에 들어갈 폼 컨트롤 (Input, Select 등) */
   children: React.ReactNode;
+  /** 필드 설명 텍스트 */
+  description?: React.ReactNode;
+  /** 에러 또는 알럿 메시지 */
+  error?: React.ReactNode;
   /** 수평 레이아웃 여부 (Label + Input, Select 등) */
   row?: boolean;
   /** 수평 레이아웃일 때 레이블의 너비 (예: '120px', '30%') */
@@ -22,12 +26,14 @@ export interface NVFieldProps {
 
 /**
  * 폼 필드 구성을 위한 레이아웃 컴포넌트입니다.
- * 레이블과 폼 컨트롤을 결합하고 일관된 간격과 크기를 제공합니다.
+ * 레이블, 폼 컨트롤, 설명을 결합하고 일관된 간격과 크기를 제공합니다.
  */
 export const NVField: React.FC<NVFieldProps> = ({
   label,
   htmlFor,
   children,
+  description,
+  error,
   row = false,
   labelWidth,
   className = '',
@@ -38,31 +44,51 @@ export const NVField: React.FC<NVFieldProps> = ({
     xs: {
       vertical: 'space-y-1.5',
       horizontal: 'gap-x-3',
-      label: 'text-xs'
+      label: 'text-xs',
+      desc: 'text-[10px]'
     },
     sm: {
-      vertical: 'space-y-2',
+      vertical: 'space-y-1.75',
       horizontal: 'gap-x-4',
-      label: 'text-sm'
+      label: 'text-sm',
+      desc: 'text-xs'
     },
     md: {
-      vertical: 'space-y-3',
+      vertical: 'space-y-2',
       horizontal: 'gap-x-5',
-      label: 'text-md'
+      label: 'text-md',
+      desc: 'text-sm'
     },
     lg: {
-      vertical: 'space-y-4',
+      vertical: 'space-y-3',
       horizontal: 'gap-x-6',
-      label: 'text-xl'
+      label: 'text-xl',
+      desc: 'text-md'
     }
   };
 
   const config = sizeConfigs[size];
 
+  // 디스크립션 및 에러 렌더링 함수
+  const renderMessages = () => (
+    <>
+      {description && (
+        <p className={cn("text-slate-500 leading-relaxed pl-1", config.desc)}>
+          {description}
+        </p>
+      )}
+      {error && (
+        <p className={cn("text-red-400 font-medium leading-relaxed pl-1", config.desc)}>
+          {error}
+        </p>
+      )}
+    </>
+  );
+
   return (
     <div className={cn(
       "flex",
-      row ? "flex-row items-center" : "flex-col",
+      row ? "flex-row items-baseline" : "flex-col",
       row ? config.horizontal : config.vertical,
       className
     )}>
@@ -79,9 +105,19 @@ export const NVField: React.FC<NVFieldProps> = ({
           {label}
         </label>
       )}
-      <div className={cn(row ? "flex-1" : "")}>
-        {children}
-      </div>
+      
+      {row ? (
+        <div className={cn("flex-1 flex flex-col", config.vertical)}>
+          {children}
+          {renderMessages()}
+        </div>
+      ) : (
+        <>
+          {children}
+          {renderMessages()}
+        </>
+      )}
     </div>
   );
 };
+
