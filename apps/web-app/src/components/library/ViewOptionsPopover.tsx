@@ -1,6 +1,6 @@
 import React from 'react';
 import { 
-  Columns2, 
+  LayoutGrid,
   ArrowUpAz, 
   ArrowDownAz, 
   RefreshCw,
@@ -14,48 +14,38 @@ import {
 } from '@nova/ui';
 import { cn } from '@nova/lib/utils';
 
+import { useAssetStore, ViewOptions } from '@nova/store/useAssetStore';
+
 interface ViewOptionsPopoverProps {
   className?: string;
   onClose?: () => void;
 }
 
 export function ViewOptionsPopover({ className, onClose }: ViewOptionsPopoverProps) {
-  const [options, setOptions] = React.useState({
-    layout: 'both',
-    thumbnail: 'quality', 
-    sortMethod: 'default',
-    sortOrder: 'asc', 
-    showName: true,
-    showInfo: true,
-    infoType: 'size',
-    showExtension: true,
-    showExtensionLabel: true,
-    showAnnotation: true,
-    showSubfolder: false,
-    showSidebar: true,
-    showInspector: true,
-  });
+  const viewOptions = useAssetStore(state => state.viewOptions);
+  const updateViewOption = useAssetStore(state => state.updateViewOption);
+  const refreshAssets = useAssetStore(state => state.refreshAssets);
 
-  const updateOption = (key: keyof typeof options, value: any) => {
-    setOptions(prev => ({ ...prev, [key]: value }));
+  const updateOption = (key: keyof ViewOptions, value: any) => {
+    updateViewOption(key, value);
   };
 
   return (
     <div className={cn("select-none", className)}>
       <div className="p-3.5 space-y-3">
-        {/* Layout Select */}
+        {/* Gallery View Mode */}
         <div className="flex items-center justify-between">
-          <span className="text-xs text-slate-500">레이아웃</span>
+          <span className="text-xs text-slate-500">보기 모드</span>
           <NVSelect 
             size="sm"
             className="w-32"
-            icon={<Columns2 size={13} />}
-            value={options.layout}
+            icon={<LayoutGrid size={13} />}
+            value={viewOptions.layout}
             onChange={(e) => updateOption('layout', e.target.value)}
             options={[
-              { value: 'both', label: '양쪽' },
-              { value: 'left', label: '왼쪽' },
-              { value: 'right', label: '오른쪽' },
+              { value: 'grid', label: '격자형 (Grid)' },
+              { value: 'masonry', label: '폭포형 (Masonry)' },
+              { value: 'list', label: '리스트형 (List)' },
             ]}
           />
         </div>
@@ -70,7 +60,7 @@ export function ViewOptionsPopover({ className, onClose }: ViewOptionsPopoverPro
               onClick={() => updateOption('thumbnail', 'speed')}
               className={cn(
                 "!px-2 !py-1 !rounded-md",
-                options.thumbnail === 'speed' ? "bg-white/15 text-white shadow-sm" : "text-slate-500 hover:text-slate-300"
+                viewOptions.thumbnail === 'speed' ? "bg-white/15 text-white shadow-sm" : "text-slate-500 hover:text-slate-300"
               )}
             >
               속도
@@ -81,7 +71,7 @@ export function ViewOptionsPopover({ className, onClose }: ViewOptionsPopoverPro
               onClick={() => updateOption('thumbnail', 'quality')}
               className={cn(
                 "!px-2 !py-1 !rounded-md",
-                options.thumbnail === 'quality' ? "bg-white/15 text-white shadow-sm" : "text-slate-500 hover:text-slate-300"
+                viewOptions.thumbnail === 'quality' ? "bg-white/15 text-white shadow-sm" : "text-slate-500 hover:text-slate-300"
               )}
             >
               품질
@@ -96,7 +86,7 @@ export function ViewOptionsPopover({ className, onClose }: ViewOptionsPopoverPro
             <NVSelect 
               size="sm"
               className="w-22"
-              value={options.sortMethod}
+              value={viewOptions.sortMethod}
               onChange={(e) => updateOption('sortMethod', e.target.value)}
               options={[
                 { value: 'default', label: '기본' },
@@ -109,14 +99,14 @@ export function ViewOptionsPopover({ className, onClose }: ViewOptionsPopoverPro
                 icon={ArrowUpAz} 
                 size="sm" 
                 variant="ghost" 
-                className={cn("!w-7 !h-6 !rounded-md", options.sortOrder === 'asc' ? "bg-white/15 text-white" : "text-slate-500")}
+                className={cn("!w-7 !h-6 !rounded-md", viewOptions.sortOrder === 'asc' ? "bg-white/15 text-white" : "text-slate-500")}
                 onClick={() => updateOption('sortOrder', 'asc')}
               />
               <NVIconButton 
                 icon={ArrowDownAz} 
                 size="sm" 
                 variant="ghost" 
-                className={cn("!w-7 !h-6 !rounded-md", options.sortOrder === 'desc' ? "bg-white/15 text-white" : "text-slate-500")}
+                className={cn("!w-7 !h-6 !rounded-md", viewOptions.sortOrder === 'desc' ? "bg-white/15 text-white" : "text-slate-500")}
                 onClick={() => updateOption('sortOrder', 'desc')}
               />
             </div>
@@ -129,7 +119,7 @@ export function ViewOptionsPopover({ className, onClose }: ViewOptionsPopoverPro
         <div className="space-y-3 pt-1">
           <div className="flex items-center justify-between">
             <span className="text-xs text-slate-200">이름 표시</span>
-            <NVSwitch checked={options.showName} onChange={(v) => updateOption('showName', v)} size="sm" />
+            <NVSwitch checked={viewOptions.showName} onChange={(v) => updateOption('showName', v)} size="sm" />
           </div>
 
           <div className="flex items-center justify-between">
@@ -139,14 +129,14 @@ export function ViewOptionsPopover({ className, onClose }: ViewOptionsPopoverPro
                 size="sm"
                 className="w-22"
                 icon={<Maximize2 size={11} />}
-                value={options.infoType}
+                value={viewOptions.infoType}
                 onChange={(e) => updateOption('infoType', e.target.value)}
                 options={[
                   { value: 'size', label: '규격' },
                   { value: 'weight', label: '용량' },
                 ]}
               />
-              <NVSwitch checked={options.showInfo} onChange={(v) => updateOption('showInfo', v)} size="sm" />
+              <NVSwitch checked={viewOptions.showInfo} onChange={(v) => updateOption('showInfo', v)} size="sm" />
             </div>
           </div>
 
@@ -159,8 +149,8 @@ export function ViewOptionsPopover({ className, onClose }: ViewOptionsPopoverPro
             <div key={item.id} className="flex items-center justify-between">
               <span className="text-xs text-slate-200">{item.label}</span>
               <NVSwitch 
-                checked={options[item.id as keyof typeof options] as boolean} 
-                onChange={(v) => updateOption(item.id as keyof typeof options, v)} 
+                checked={viewOptions[item.id as keyof ViewOptions] as boolean} 
+                onChange={(v) => updateOption(item.id as keyof ViewOptions, v)} 
                 size="sm" 
               />
             </div>
@@ -169,23 +159,14 @@ export function ViewOptionsPopover({ className, onClose }: ViewOptionsPopoverPro
 
         <div className="h-[1px] bg-white/5 -mx-4" />
 
-        <div className="space-y-3">
-          <div className="flex items-center justify-between">
-            <span className="text-xs text-slate-200">사이드바 표시</span>
-            <NVSwitch checked={options.showSidebar} onChange={(v) => updateOption('showSidebar', v)} size="sm" />
-          </div>
-          <div className="flex items-center justify-between">
-            <span className="text-xs text-slate-200">인스펙터 표시</span>
-            <NVSwitch checked={options.showInspector} onChange={(v) => updateOption('showInspector', v)} size="sm" />
-          </div>
-        </div>
-
-        <div className="h-[1px] bg-white/5 -mx-4" />
-
         <NVButton 
           variant="secondary"
           size="sm"
           className="w-full shadow-none"
+          onClick={() => {
+            refreshAssets();
+            onClose?.();
+          }}
         >
           <RefreshCw size={12} className="text-slate-500 mr-2" />
           새로 고침

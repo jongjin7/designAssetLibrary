@@ -10,6 +10,20 @@ export interface LibraryFilters {
   period: string;
 }
 
+export interface ViewOptions {
+  layout: 'grid' | 'masonry' | 'list';
+  thumbnail: 'speed' | 'quality';
+  sortMethod: 'default' | 'name' | 'date';
+  sortOrder: 'asc' | 'desc';
+  showName: boolean;
+  showInfo: boolean;
+  infoType: 'size' | 'weight';
+  showExtension: boolean;
+  showExtensionLabel: boolean;
+  showAnnotation: boolean;
+  showSubfolder: boolean;
+}
+
 interface AssetStore {
   assets: Asset[];
   loading: boolean;
@@ -44,6 +58,10 @@ interface AssetStore {
   isSearchVisible: boolean;
   setIsSearchVisible: (visible: boolean | ((prev: boolean) => boolean)) => void;
 
+  // View Options
+  viewOptions: ViewOptions;
+  updateViewOption: (key: keyof ViewOptions, value: any) => void;
+
   // Advanced Filters
   activeFilters: LibraryFilters;
   setActiveFilters: (filters: LibraryFilters | ((prev: LibraryFilters) => LibraryFilters)) => void;
@@ -68,6 +86,19 @@ export const useAssetStore = create<AssetStore>((set, get) => ({
     tags: [],
     period: '',
   },
+  viewOptions: {
+    layout: 'grid',
+    thumbnail: 'quality',
+    sortMethod: 'default',
+    sortOrder: 'asc',
+    showName: true,
+    showInfo: true,
+    infoType: 'size',
+    showExtension: true,
+    showExtensionLabel: true,
+    showAnnotation: true,
+    showSubfolder: false,
+  },
   
   setFilter: (filter) => set((state) => ({ 
     filter: typeof filter === 'function' ? filter(state.filter) : filter 
@@ -83,6 +114,10 @@ export const useAssetStore = create<AssetStore>((set, get) => ({
   })),
   setIsSearchVisible: (isSearchVisible) => set((state) => ({ 
     isSearchVisible: typeof isSearchVisible === 'function' ? isSearchVisible(state.isSearchVisible) : isSearchVisible 
+  })),
+
+  updateViewOption: (key, value) => set((state) => ({
+    viewOptions: { ...state.viewOptions, [key]: value }
   })),
 
   setActiveFilters: (activeFilters) => set((state) => ({ 
