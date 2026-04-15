@@ -19,6 +19,7 @@ export * from './atoms/NVPowerTooltip';
 export * from './atoms/NVSlider';
 export * from './atoms/NVTypography';
 export * from './atoms/NVLogo';
+export * from './atoms/NVSeparator';
 
 
 // Molecules

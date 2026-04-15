@@ -3,6 +3,7 @@ import React from 'react';
 import { Edit2, Copy, Trash2, Share2, FolderInput } from 'lucide-react';
 import { NVMoreMenu } from './index';
 import { NVMenuItem } from '../NVMenuItem';
+import { NVSeparator } from '../../atoms/NVSeparator';
 
 const meta: Meta<typeof NVMoreMenu> = {
   title: 'Molecules/MoreMenu',
@@ -29,7 +30,7 @@ export const Default: Story = {
         <NVMenuItem icon={Edit2} label="이름 변경" />
         <NVMenuItem icon={FolderInput} label="위치 이동" />
         <NVMenuItem icon={Copy} label="복제하기" />
-        <div className="h-px bg-white/5 my-1" />
+        <NVSeparator variant="subtle" className="my-1" />
         <NVMenuItem icon={Trash2} label="삭제하기" variant="danger" />
       </>
     ),
@@ -53,7 +54,7 @@ export const Mobile: Story = {
       <>
         <NVMenuItem icon={Share2} label="공유하기" />
         <NVMenuItem icon={Edit2} label="편집" />
-        <div className="h-px bg-white/5 my-1" />
+        <NVSeparator variant="subtle" className="my-1" />
         <NVMenuItem icon={Trash2} label="삭제" variant="danger" />
       </>
     ),

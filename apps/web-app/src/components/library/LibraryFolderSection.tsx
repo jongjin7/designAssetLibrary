@@ -4,7 +4,8 @@ import {
   NVSectionHeader, 
   NVFolderCard,
   NVMoreMenu,
-  NVMenuItem
+  NVMenuItem,
+  NVSeparator
 } from '@nova/ui';
 import { MoveAssetPopover } from './MoveAssetPopover';
 import { cn } from '@nova/lib/utils';
@@ -73,7 +74,7 @@ export const LibraryFolderSection: React.FC<LibraryFolderSectionProps> = ({
                       <NVMenuItem icon={ArrowRightLeft} label="위치 이동" />
                     }
                   />
-                  <div className="h-px bg-white/5 my-1" />
+                  <NVSeparator variant="subtle" className="my-1" />
                   <NVMenuItem 
                     icon={Trash2} 
                     label="폴더 삭제" 
