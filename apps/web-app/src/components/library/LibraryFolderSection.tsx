@@ -4,6 +4,7 @@ import {
   NVSectionHeader, 
   NVFolderCard,
   NVMoreMenu,
+  NVFolderPopover,
   NVMenuItem,
   NVSeparator
 } from '@nova/ui';
@@ -63,10 +64,16 @@ export const LibraryFolderSection: React.FC<LibraryFolderSectionProps> = ({
               onClick={(id) => onFolderClick(id)}
               moreMenu={
                 <NVMoreMenu isMobile={isMobile}>
-                  <NVMenuItem 
-                    icon={Edit2} 
-                    label="이름 변경" 
-                    onClick={() => onFolderRename(folder.id, folder.name)} 
+                  <NVFolderPopover 
+                    folder={folder}
+                    isRenameMode={true}
+                    onRename={(f, newName) => onFolderRename(f.id, newName)}
+                    trigger={
+                      <NVMenuItem 
+                        icon={Edit2} 
+                        label="이름 변경" 
+                      />
+                    }
                   />
                   <MoveAssetPopover 
                     onMove={(targetId) => onFolderMove(folder.id, targetId)}

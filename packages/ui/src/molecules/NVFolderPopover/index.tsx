@@ -50,6 +50,7 @@ interface NVFolderPopoverProps {
   onOptimize?: (folder: SimpleFolder) => void;
   triggerClassName?: string;
   isCreationMode?: boolean;
+  isRenameMode?: boolean;
   trigger?: React.ReactNode;
   initialName?: string;
 }
@@ -69,25 +70,28 @@ export const NVFolderPopover: React.FC<NVFolderPopoverProps> = ({
   onOptimize,
   triggerClassName,
   isCreationMode = false,
+  isRenameMode = false,
   trigger,
   initialName = ''
-}) => {
-  const [view, setView] = useState<'menu' | 'list' | 'create' | 'move' | 'rename'>(isCreationMode ? 'create' : 'menu');
+}: NVFolderPopoverProps) => {
+  const [view, setView] = useState<'menu' | 'list' | 'create' | 'move' | 'rename'>(
+    isCreationMode ? 'create' : isRenameMode ? 'rename' : 'menu'
+  );
   const [newSubfolderName, setNewSubfolderName] = useState(initialName);
   const [isOpen, setIsOpen] = useState(false);
   const [movingFolder, setMovingFolder] = useState<SimpleFolder | null>(null);
-  const [moveReturnView, setMoveReturnView] = useState<'menu' | 'list'>('menu');
-  const [renamingFolder, setRenamingFolder] = useState<SimpleFolder | null>(null);
-  const [renameReturnView, setRenameReturnView] = useState<'menu' | 'list'>('menu');
-  const [renameValue, setRenameValue] = useState('');
+  const [moveReturnView, setMoveReturnView] = useState<'menu' | 'list' | 'create' | 'rename'>('menu');
+  const [renamingFolder, setRenamingFolder] = useState<SimpleFolder | null>(isRenameMode && folder ? folder : null);
+  const [renameReturnView, setRenameReturnView] = useState<'menu' | 'list' | 'create' | 'rename'>(isRenameMode ? 'rename' : 'menu');
+  const [renameValue, setRenameValue] = useState(isRenameMode && folder ? folder.name : '');
 
   const resetState = () => {
-    setView(isCreationMode ? 'create' : 'menu');
+    setView(isCreationMode ? 'create' : isRenameMode ? 'rename' : 'menu');
     setMovingFolder(null);
     setMoveReturnView('menu');
-    setRenamingFolder(null);
-    setRenameReturnView('menu');
-    setRenameValue('');
+    setRenamingFolder(isRenameMode && folder ? folder : null);
+    setRenameReturnView(isRenameMode ? 'rename' : 'menu');
+    setRenameValue(isRenameMode && folder ? folder.name : '');
     setNewSubfolderName(initialName);
   };
 
@@ -106,13 +110,13 @@ export const NVFolderPopover: React.FC<NVFolderPopoverProps> = ({
     }
   };
 
-  const startMove = (target: SimpleFolder, returnView: 'menu' | 'list') => {
+  const startMove = (target: SimpleFolder, returnView: 'menu' | 'list' | 'create' | 'rename') => {
     setMovingFolder(target);
     setMoveReturnView(returnView);
     setView('move');
   };
 
-  const startRename = (target: SimpleFolder, returnView: 'menu' | 'list') => {
+  const startRename = (target: SimpleFolder, returnView: 'menu' | 'list' | 'create' | 'rename') => {
     setRenamingFolder(target);
     setRenameReturnView(returnView);
     setRenameValue(target.name);
@@ -374,12 +378,14 @@ export const NVFolderPopover: React.FC<NVFolderPopoverProps> = ({
         {view === 'rename' && renamingFolder && (
           <>
             <NVPopoverHeader className="flex items-center gap-3 py-2.5">
-              <button
-                className="p-1 -ml-1 rounded-md text-slate-500 hover:text-slate-200 hover:bg-white/5 transition-all"
-                onClick={(e) => { e.stopPropagation(); setView(renameReturnView); }}
-              >
-                <ArrowLeft size={14} />
-              </button>
+              {!isCreationMode && !isRenameMode && (
+                <button
+                  className="p-1 -ml-1 rounded-md text-slate-500 hover:text-slate-200 hover:bg-white/5 transition-all"
+                  onClick={(e) => { e.stopPropagation(); setView(renameReturnView); }}
+                >
+                  <ArrowLeft size={14} />
+                </button>
+              )}
               <div className="flex flex-col min-w-0">
                 <span className="text-xs font-bold text-white">이름 바꾸기</span>
                 <span className="text-[10px] text-slate-500 truncate">&ldquo;{renamingFolder.name}&rdquo;</span>
@@ -398,7 +404,11 @@ export const NVFolderPopover: React.FC<NVFolderPopoverProps> = ({
                 <div className="flex justify-end gap-2">
                   <NVButton size="xs" variant="ghost" className="h-9 px-4 rounded-lg" onClick={(e) => {
                     e.stopPropagation();
-                    setView(renameReturnView);
+                    if (isRenameMode) {
+                      resetAndClose();
+                    } else {
+                      setView(renameReturnView);
+                    }
                   }}>취소</NVButton>
                   <NVButton size="xs" variant="primary" className="h-9 px-4 rounded-lg shadow-lg shadow-indigo-500/20" onClick={(e) => {
                     e.stopPropagation();

@@ -2,7 +2,7 @@
 
 import React from 'react';
 import { Plus } from 'lucide-react';
-import { NVFolderPopover } from '@nova/ui';
+import { NVFolderPopover, NVIconButton } from '@nova/ui';
 import { Folder } from '@nova/types/folder';
 import { FolderItem } from './FolderItem';
 
@@ -56,12 +56,13 @@ export function FolderSection({
             isCreationMode={true}
             onCreateSubfolder={(parentId, name) => onCreateFolder(parentId, name)}
             trigger={
-              <button 
-                className={`p-1 rounded-md text-slate-500 hover:bg-white/5 hover:text-indigo-500 transition-all ${isCollapsed ? 'mx-auto' : ''}`}
+              <NVIconButton 
+                icon={Plus}
+                variant="ghost"
+                size="sm"
+                className={isCollapsed ? 'mx-auto' : ''}
                 title="폴더 추가"
-              >
-                <Plus size={14} />
-              </button>
+              />
             }
           />
         )}

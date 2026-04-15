@@ -21,6 +21,7 @@ import { useDesktopShell } from '../../../components/layout/DesktopShell/index';
 import { LibraryFolderSection } from '../../../components/library/LibraryFolderSection';
 import { LibraryAssetGridSection } from '../../../components/library/LibraryAssetGridSection';
 import { LibraryDeleteDialogs } from '../../../components/library/LibraryDeleteDialogs';
+import { LibraryFolderDialogs } from '../../../components/library/LibraryFolderDialogs';
 
 interface DesktopLibraryViewProps {
   assets: Asset[];
@@ -101,6 +102,9 @@ export default function DesktopLibraryView({
   // Section Toggle States
   const [isFoldersExpanded, setIsFoldersExpanded] = useState(true);
   const [isAssetsExpanded, setIsAssetsExpanded] = useState(true);
+
+  // Folder Dialog States
+  const [pendingDeleteFolderId, setPendingDeleteFolderId] = useState<string | null>(null);
   const router = useRouter();
   const shell = useDesktopShell();
   const isDesktopApp = shell?.isDesktopApp ?? false;
@@ -210,27 +214,29 @@ export default function DesktopLibraryView({
   };
 
   const handleFolderDelete = async (id: string) => {
-    if (confirm('폴더를 삭제하시겠습니까? 내부의 에셋은 삭제되지 않고 인박스로 이동됩니다.')) {
-      try {
-        await deleteFolder(id);
-        toast('폴더가 삭제되었습니다.', { type: 'success' });
-      } catch (err) {
-        console.error('Failed to delete folder:', err);
-        toast('폴더 삭제 중 오류가 발생했습니다.', { type: 'error' });
-      }
+    setPendingDeleteFolderId(id);
+  };
+
+  const confirmFolderDelete = async (id: string) => {
+    try {
+      await deleteFolder(id);
+      setPendingDeleteFolderId(null);
+      toast('폴더가 삭제되었습니다.', { type: 'success' });
+    } catch (err) {
+      console.error('Failed to delete folder:', err);
+      toast('폴더 삭제 중 오류가 발생했습니다.', { type: 'error' });
     }
   };
 
-  const handleFolderRename = async (id: string, currentName: string) => {
-    const newName = prompt('새로운 폴더 이름을 입력하세요:', currentName);
-    if (newName && newName !== currentName) {
-      try {
-        await renameFolder(id, newName);
-        toast(`폴더 이름이 "${newName}"으로 변경되었습니다.`, { type: 'success' });
-      } catch (err) {
-        console.error('Failed to rename folder:', err);
-        toast('폴더 이름 변경 중 오류가 발생했습니다.', { type: 'error' });
-      }
+
+
+  const confirmFolderRename = async (id: string, newName: string) => {
+    try {
+      await renameFolder(id, newName);
+      toast(`폴더 이름이 "${newName}"으로 변경되었습니다.`, { type: 'success' });
+    } catch (err) {
+      console.error('Failed to rename folder:', err);
+      toast('폴더 이름 변경 중 오류가 발생했습니다.', { type: 'error' });
     }
   };
 
@@ -303,7 +309,7 @@ export default function DesktopLibraryView({
         }
       }
     } else {
-       alert('링크가 클립보드에 복사되었습니다.');
+       toast('링크가 클립보드에 복사되었습니다.', { type: 'success' });
     }
   };
 
@@ -408,7 +414,7 @@ export default function DesktopLibraryView({
                       isExpanded={isFoldersExpanded}
                       onToggleExpand={() => setIsFoldersExpanded(!isFoldersExpanded)}
                       onFolderClick={(id) => router.push(`/folder/${id}`)}
-                      onFolderRename={handleFolderRename}
+                      onFolderRename={confirmFolderRename}
                       onFolderMove={handleFolderMove}
                       onFolderDelete={handleFolderDelete}
                     />
@@ -531,6 +537,13 @@ export default function DesktopLibraryView({
         pendingDeleteAssetId={pendingDeleteAssetId}
         onPendingDeleteAssetIdChange={setPendingDeleteAssetId}
         onConfirmSingleDelete={confirmDetailDelete}
+        isMobile={false}
+      />
+
+      <LibraryFolderDialogs 
+        pendingDeleteFolderId={pendingDeleteFolderId}
+        onPendingDeleteFolderIdChange={setPendingDeleteFolderId}
+        onConfirmDelete={confirmFolderDelete}
         isMobile={false}
       />
     </div>
