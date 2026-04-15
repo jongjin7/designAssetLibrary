@@ -1,12 +1,7 @@
-'use client';
-
 import React, { useState } from 'react';
-import { Search, X, ChevronRight, ChevronLeft, MoreVertical, Trash2, Edit2, ArrowRightLeft, FolderInput } from 'lucide-react';
+import { ChevronLeft, FolderInput } from 'lucide-react';
 import { useRouter } from 'next/navigation';
-import { useLibraryFilters, LibraryFilters } from '@nova/hooks';
-import { LibraryControls } from '@nova/components/library/LibraryControls';
-import { FilterChips } from '@nova/components/library/FilterChips';
-import { AssetGrid } from '@nova/components/library/AssetGrid';
+import { LibraryFilters } from '@nova/hooks';
 import {
   NVLoadingState,
   NVIconButton,
@@ -14,27 +9,14 @@ import {
   NVAssetDetailSheet,
   Asset,
   NVButton,
-  NVEmptyState,
-  NVSectionHeader,
-  NVFolderCard,
-  NVDialog,
-  NVDialogContent,
-  NVDialogHeader,
-  NVDialogTitle,
-  NVDialogDescription,
-  NVDialogFooter,
-  NVDialogBody,
   useToast,
 } from '@nova/ui';
 import { extractColors } from '@nova/lib/colorExtractor';
-import { LibraryEmptyState } from '../../../components/library/LibraryEmptyState';
 import { MoveAssetPopover } from '@nova/components/library/MoveAssetPopover';
 import { cn } from '@nova/lib/utils';
-import { 
-  NVPopover, 
-  NVPopoverTrigger, 
-  NVPopoverContent,
-} from '@nova/ui';
+import { LibraryFolderSection } from '../../../components/library/LibraryFolderSection';
+import { LibraryAssetGridSection } from '../../../components/library/LibraryAssetGridSection';
+import { LibraryDeleteDialogs } from '../../../components/library/LibraryDeleteDialogs';
 
 interface MobileLibraryViewProps {
   assets: Asset[];
@@ -89,7 +71,6 @@ export default function MobileLibraryView({
   searchText, setSearchText, isFilterOpen, setIsFilterOpen, filteredAssets, handleFilterApply, handleFilterReset,
   isSearchVisible = false, onSearchToggle,
   zoom, setZoom,
-  activeKey,
   subFolders = [],
   allAssets = [],
   parentFolderId = null,
@@ -103,7 +84,7 @@ export default function MobileLibraryView({
 }: MobileLibraryViewProps) {
   const router = useRouter();
   const { toast } = useToast();
-  const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
+  const [isBulkDeleteDialogOpen, setIsBulkDeleteDialogOpen] = useState(false);
   const [pendingDeleteAssetId, setPendingDeleteAssetId] = useState<string | null>(null);
 
   // Section Toggle States
@@ -112,31 +93,6 @@ export default function MobileLibraryView({
 
   const handleFolderClick = (id: string) => {
     router.push(`/folder/${id}`);
-  };
-
-  const handleFilterChange = (key: string) => {
-    if (key.startsWith('folder_')) {
-      const folderId = key.replace('folder_', '');
-      router.push(`/folder/${folderId}`);
-      return;
-    }
-
-    const pathMap: Record<string, string> = {
-      all: '/library',
-      inbox: '/inbox',
-      favorites: '/favorites',
-      recent: '/recent'
-    };
-    const target = pathMap[key] || '/library';
-    router.push(target);
-  };
-
-  const handleSearchToggle = () => {
-    if (isSearchVisible) {
-      setSearchText('');
-      setIsFilterOpen(false);
-    }
-    onSearchToggle?.();
   };
 
   const handleSelect = (id: string) => {
@@ -159,11 +115,6 @@ export default function MobileLibraryView({
     openDetail(asset);
   };
 
-  const handleBulkDelete = () => {
-    if (selectedIds.size === 0) return;
-    setIsDeleteDialogOpen(true);
-  };
-
   const confirmBulkDelete = async () => {
     const count = selectedIds.size;
     try {
@@ -171,7 +122,7 @@ export default function MobileLibraryView({
       await Promise.all(idsToDelete.map(id => deleteAsset(id)));
       setSelectedIds(new Set());
       setIsSelectionMode(false);
-      setIsDeleteDialogOpen(false);
+      setIsBulkDeleteDialogOpen(false);
       toast(`${count}개의 에셋이 삭제되었습니다.`, { type: 'success' });
     } catch (err) {
       console.error('Failed to delete assets in bulk:', err);
@@ -218,8 +169,14 @@ export default function MobileLibraryView({
     }
   };
 
-  const handleDetailDelete = (id: string) => {
-    setPendingDeleteAssetId(id);
+  const handleFolderMove = async (id: string, targetId: string | null) => {
+    try {
+      await moveFolder(id, targetId);
+      toast('폴더 위치를 이동했습니다.', { type: 'success' });
+    } catch (err) {
+      console.error('Failed to move folder:', err);
+      toast('폴더 이동 중 오류가 발생했습니다.', { type: 'error' });
+    }
   };
 
   const confirmDetailDelete = async () => {
@@ -296,7 +253,7 @@ export default function MobileLibraryView({
             }
           />
         }
-        onDelete={handleBulkDelete}
+        onDelete={() => setIsBulkDeleteDialogOpen(true)}
       />
       
       <main className={cn("px-5 py-4", (filteredAssets.length === 0 && subFolders.length === 0) && "h-[calc(100%-128px)]")}>
@@ -304,133 +261,69 @@ export default function MobileLibraryView({
           <NVLoadingState fullHeight />
         ) : (filteredAssets.length > 0 || subFolders.length > 0 || filter === 'folder') ? (
           <div className="flex flex-col gap-8 pb-20">
-             {/* 1. 하위 폴더 섹션 (모바일) */}
+             {/* 1. 하위 폴더 섹션 */}
              {(subFolders.length > 0 || filter === 'folder') && (
-                <div className="animate-in fade-in slide-in-from-top-2 duration-500">
-                  <div className="flex flex-col items-start gap-1 mb-6">
-                    {filter === 'folder' && (
-                      <NVButton 
-                        variant="ghost" 
-                        size="md" 
-                        className="-ml-2 pl-1 pr-2 !h-auto !py-1"
-                        onClick={() => router.push(parentFolderId ? `/folder/${parentFolderId}` : '/library')}
-                      >
-                        <ChevronLeft className="w-3 h-3 mr-1" />
-                        {parentFolder?.name || "Library"}
-                      </NVButton>
-                    )}
-                    <NVSectionHeader 
-                      title={title} 
-                      count={filteredAssets.length} 
-                      className="mb-0 !p-0"
-                      hasDropdown={true}
-                      isExpanded={isFoldersExpanded}
-                      onDropdownClick={() => setIsFoldersExpanded(!isFoldersExpanded)}
-                    />
-                  </div>
-                  {isFoldersExpanded && (
-                    <div className="grid grid-cols-2 gap-4 animate-in fade-in slide-in-from-top-2 duration-300">
-                      {subFolders.map(folder => (
-                        <NVFolderCard 
-                          key={folder.id}
-                          id={folder.id}
-                          name={folder.name}
-                          assetCount={folder.aggregatedAssetCount || 0}
-                          assetThumbnails={folder.aggregatedThumbnails || []}
-                          hasSubfolders={folder.hasSubfolders}
-                          isMobile={true}
-                          onClick={(id) => handleFolderClick(id)}
-                          moreMenu={
-                            <NVPopover>
-                              <NVPopoverTrigger asChild>
-                                <button className="p-1.5 rounded-full bg-black/40 backdrop-blur-md text-white/70 hover:text-white transition-colors border border-white/10 shadow-lg">
-                                  <MoreVertical size={16} />
-                                </button>
-                              </NVPopoverTrigger>
-                              <NVPopoverContent align="end" className="w-40 p-1 bg-slate-900/90 border-white/10 backdrop-blur-2xl">
-                                <button 
-                                  onClick={() => handleFolderRename(folder.id, folder.name)}
-                                  className="w-full flex items-center gap-2 px-3 py-2 text-xs font-medium text-slate-300 hover:bg-white/5 rounded-lg transition-colors"
-                                >
-                                  <Edit2 size={14} /> 이름 변경
-                                </button>
-                                <MoveAssetPopover 
-                                  onMove={(targetId) => moveFolder(folder.id, targetId)}
-                                  trigger={
-                                    <button className="w-full flex items-center gap-2 px-3 py-2 text-xs font-medium text-slate-300 hover:bg-white/5 rounded-lg transition-colors">
-                                      <ArrowRightLeft size={14} /> 위치 이동
-                                    </button>
-                                  }
-                                />
-                                <div className="h-px bg-white/5 my-1" />
-                                <button 
-                                  onClick={() => handleFolderDelete(folder.id)}
-                                  className="w-full flex items-center gap-2 px-3 py-2 text-xs font-medium text-rose-400 hover:bg-rose-500/10 rounded-lg transition-colors"
-                                >
-                                  <Trash2 size={14} /> 폴더 삭제
-                                </button>
-                              </NVPopoverContent>
-                            </NVPopover>
-                          }
-                        />
-                      ))}
-                    </div>
+                <div>
+                  {filter === 'folder' && (
+                    <NVButton 
+                      variant="ghost" 
+                      size="md" 
+                      className="-ml-2 pl-1 pr-2 mb-2 !h-auto !py-1"
+                      onClick={() => router.push(parentFolderId ? `/folder/${parentFolderId}` : '/library')}
+                    >
+                      <ChevronLeft className="w-3 h-3 mr-1" />
+                      {parentFolder?.name || "Library"}
+                    </NVButton>
                   )}
+                  <LibraryFolderSection 
+                    title={title}
+                    folders={subFolders}
+                    isExpanded={isFoldersExpanded}
+                    onToggleExpand={() => setIsFoldersExpanded(!isFoldersExpanded)}
+                    onFolderClick={handleFolderClick}
+                    onFolderRename={handleFolderRename}
+                    onFolderMove={handleFolderMove}
+                    onFolderDelete={handleFolderDelete}
+                    isMobile={true}
+                  />
                 </div>
              )}
 
-             {/* 2. 에셋 목록 (목차) */}
-             <div className="animate-in fade-in slide-in-from-top-4 duration-700 delay-150">
-                {subFolders.length > 0 && (
-                  <NVSectionHeader 
-                    title="목차" 
-                    count={filteredAssets.length} 
-                    className="mb-4"
-                    hasDropdown={true}
-                    isExpanded={isAssetsExpanded}
-                    onDropdownClick={() => setIsAssetsExpanded(!isAssetsExpanded)}
-                  />
-                )}
-                {isAssetsExpanded && (
-                  <div className="animate-in fade-in slide-in-from-top-4 duration-300">
-                    {filteredAssets.length > 0 ? (
-                      <AssetGrid 
-                        assets={filteredAssets} 
-                        onAssetTap={handleAssetTap} 
-                        selectedIds={selectedIds}
-                        onSelect={(id) => handleSelect(id)}
-                        onFavoriteToggle={(id, isFavorite) => {
-                          updateAsset(id, { isFavorite });
-                        }}
-                        isMobile={true}
-                        isSelectMode={isSelectionMode}
-                        zoom={zoom}
-                      />
-                    ) : subFolders.length > 0 ? (
-                       <div className="flex flex-col items-center justify-center py-12 bg-slate-900/10 rounded-2xl border border-dashed border-white/5">
-                          <p className="text-slate-500 text-xs font-medium">이 폴더에는 에셋이 없습니다.</p>
-                       </div>
-                    ) : (
-                      <div className="flex items-center justify-center min-h-[60vh]">
-                        <LibraryEmptyState 
-                          assets={assets}
-                          filteredAssets={filteredAssets}
-                          filter={filter}
-                          searchText={searchText}
-                        />
-                      </div>
-                    )}
-                  </div>
-                )}
-             </div>
+             {/* 2. 에셋 목록 */}
+             <LibraryAssetGridSection 
+                assets={assets}
+                filteredAssets={filteredAssets}
+                isExpanded={isAssetsExpanded}
+                onToggleExpand={() => setIsAssetsExpanded(!isAssetsExpanded)}
+                onAssetTap={handleAssetTap}
+                selectedIds={selectedIds}
+                onSelect={handleSelect}
+                onFavoriteToggle={(id, isFavorite) => updateAsset(id, { isFavorite })}
+                isMobile={true}
+                isSelectMode={isSelectionMode}
+                zoom={zoom}
+                filter={filter}
+                searchText={searchText}
+                hasSubFolders={subFolders.length > 0}
+             />
           </div>
         ) : (
           <div className="flex items-center justify-center min-h-[60vh]">
-            <LibraryEmptyState 
+            <LibraryAssetGridSection 
               assets={assets}
               filteredAssets={filteredAssets}
+              isExpanded={true}
+              onToggleExpand={() => {}}
+              onAssetTap={handleAssetTap}
+              selectedIds={selectedIds}
+              onSelect={handleSelect}
+              onFavoriteToggle={(id, isFavorite) => updateAsset(id, { isFavorite })}
+              isMobile={true}
+              isSelectMode={isSelectionMode}
+              zoom={zoom}
               filter={filter}
               searchText={searchText}
+              hasSubFolders={false}
             />
           </div>
         )}
@@ -439,14 +332,14 @@ export default function MobileLibraryView({
       <NVAssetDetailSheet
         asset={selectedAsset}
         onClose={closeDetail}
-        onDelete={handleDetailDelete}
+        onDelete={(id) => setPendingDeleteAssetId(id)}
         onUpdate={updateAsset}
         onShare={handleShare}
         moveTrigger={
           <MoveAssetPopover
             variant="context"
-            onMove={(folderId) => {
-              if (selectedAsset) handleMoveAsset(selectedAsset.id, folderId);
+            onMove={(fId) => {
+              if (selectedAsset) handleMoveAsset(selectedAsset.id, fId);
             }}
             trigger={
               <NVIconButton
@@ -465,57 +358,16 @@ export default function MobileLibraryView({
         onExtractBasic={extractColors}
       />
 
-      <NVDialog open={isDeleteDialogOpen} onOpenChange={setIsDeleteDialogOpen}>
-        <NVDialogContent className="w-[calc(100%-40px)] rounded-2xl max-w-sm">
-          <NVDialogHeader className="px-5 pt-6 pb-2">
-            <NVDialogTitle className="text-lg">에셋 삭제 확인</NVDialogTitle>
-            <NVDialogDescription className="text-xs">
-              선택한 {selectedIds.size}개의 에셋을 라이브러리에서 완전히 삭제하시겠습니까?
-            </NVDialogDescription>
-          </NVDialogHeader>
-          <NVDialogBody className="px-5 pb-6">
-            <div className="p-3 rounded-xl bg-rose-500/5 border border-rose-500/10 mb-2">
-              <p className="text-[10px] text-rose-400 font-medium leading-relaxed">
-                * 삭제된 에셋은 복구할 수 없습니다.
-              </p>
-            </div>
-          </NVDialogBody>
-          <NVDialogFooter className="flex-row gap-2 px-5 py-3">
-            <NVButton variant="ghost" className="flex-1 h-11 rounded-xl" onClick={() => setIsDeleteDialogOpen(false)}>
-              취소
-            </NVButton>
-            <NVButton variant="primary" className="flex-1 h-11 rounded-xl bg-rose-500 hover:bg-rose-600 border-none" onClick={confirmBulkDelete}>
-              삭제
-            </NVButton>
-          </NVDialogFooter>
-        </NVDialogContent>
-      </NVDialog>
-
-      <NVDialog open={pendingDeleteAssetId !== null} onOpenChange={(open) => { if (!open) setPendingDeleteAssetId(null); }}>
-        <NVDialogContent className="w-[calc(100%-40px)] rounded-2xl max-w-sm">
-          <NVDialogHeader className="px-5 pt-6 pb-2">
-            <NVDialogTitle className="text-lg">에셋 삭제 확인</NVDialogTitle>
-            <NVDialogDescription className="text-xs">
-              이 에셋을 라이브러리에서 완전히 삭제하시겠습니까?
-            </NVDialogDescription>
-          </NVDialogHeader>
-          <NVDialogBody className="px-5 pb-6">
-            <div className="p-3 rounded-xl bg-rose-500/5 border border-rose-500/10 mb-2">
-              <p className="text-[10px] text-rose-400 font-medium leading-relaxed">
-                * 삭제된 에셋은 복구할 수 없습니다.
-              </p>
-            </div>
-          </NVDialogBody>
-          <NVDialogFooter className="flex-row gap-2 px-5 py-3">
-            <NVButton variant="ghost" className="flex-1 h-11 rounded-xl" onClick={() => setPendingDeleteAssetId(null)}>
-              취소
-            </NVButton>
-            <NVButton variant="primary" className="flex-1 h-11 rounded-xl bg-rose-500 hover:bg-rose-600 border-none" onClick={confirmDetailDelete}>
-              삭제
-            </NVButton>
-          </NVDialogFooter>
-        </NVDialogContent>
-      </NVDialog>
+      <LibraryDeleteDialogs 
+        isBulkDeleteDialogOpen={isBulkDeleteDialogOpen}
+        onBulkDeleteOpenChange={setIsBulkDeleteDialogOpen}
+        selectedCount={selectedIds.size}
+        onConfirmBulkDelete={confirmBulkDelete}
+        pendingDeleteAssetId={pendingDeleteAssetId}
+        onPendingDeleteAssetIdChange={setPendingDeleteAssetId}
+        onConfirmSingleDelete={confirmDetailDelete}
+        isMobile={true}
+      />
     </>
   );
 }

@@ -33,6 +33,7 @@ export * from './molecules/NVErrorView';
 export * from './molecules/NVFolderCard';
 export * from './molecules/NVFolderPopover';
 export * from './molecules/NVMenuItem';
+export * from './molecules/NVMoreMenu';
 
 // Organisms / Combined Components
 export { NVAssetGrid } from './composition/NVAssetGrid';

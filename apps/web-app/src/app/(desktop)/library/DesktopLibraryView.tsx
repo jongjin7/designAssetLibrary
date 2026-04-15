@@ -1,7 +1,6 @@
 import { useState, useEffect, useRef } from 'react';
-import { PanelRightOpen, PanelRightClose, ArrowLeftRight, FolderInput, ChevronRight, ChevronLeft, MoreVertical, Trash2, Edit2, ArrowRightLeft } from 'lucide-react';
+import { PanelRightOpen, PanelRightClose, ArrowLeftRight, FolderInput, ChevronLeft } from 'lucide-react';
 import { processFileToAsset } from '@nova/lib/assetProcessor';
-import { AssetGrid } from '@nova/components/library/AssetGrid';
 import { LibraryControls } from '@nova/components/library/LibraryControls';
 import { MoveAssetPopover } from '@nova/components/library/MoveAssetPopover';
 import { DropZone } from '@nova/components/shared/DropZone';
@@ -11,20 +10,7 @@ import {
   NVAssetDetailSidebar, 
   Asset, 
   NVIconButton, 
-  NVEmptyState, 
-  NVSectionHeader, 
-  NVFolderCard,
-  NVDialog,
-  NVDialogContent,
-  NVDialogHeader,
-  NVDialogTitle,
-  NVDialogDescription,
-  NVDialogFooter,
   NVButton,
-  NVDialogBody,
-  NVPopover,
-  NVPopoverTrigger,
-  NVPopoverContent,
   useToast,
 } from '@nova/ui';
 import { useRouter } from 'next/navigation';
@@ -32,7 +18,9 @@ import { cn } from '@nova/lib/utils';
 import { extractColors } from '@nova/lib/colorExtractor';
 import { LibraryFilters } from '@nova/hooks';
 import { useDesktopShell } from '../../../components/layout/DesktopShell/index';
-import { LibraryEmptyState } from '../../../components/library/LibraryEmptyState';
+import { LibraryFolderSection } from '../../../components/library/LibraryFolderSection';
+import { LibraryAssetGridSection } from '../../../components/library/LibraryAssetGridSection';
+import { LibraryDeleteDialogs } from '../../../components/library/LibraryDeleteDialogs';
 
 interface DesktopLibraryViewProps {
   assets: Asset[];
@@ -107,7 +95,7 @@ export default function DesktopLibraryView({
   const { toast } = useToast();
   const [isSidebarVisible, setIsSidebarVisible] = useState(false);
   const [isManagementMode, setIsManagementMode] = useState(false);
-  const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
+  const [isBulkDeleteDialogOpen, setIsBulkDeleteDialogOpen] = useState(false);
   const [pendingDeleteAssetId, setPendingDeleteAssetId] = useState<string | null>(null);
 
   // Section Toggle States
@@ -124,7 +112,6 @@ export default function DesktopLibraryView({
     const handleFileFromMain = async (fileData: { path: string, name: string, type: string, size: number }) => {
       console.log('File detected in watched folder:', fileData.name);
       try {
-        // Fetch the file content via our custom protocol
         const response = await fetch(`nova-asset://${fileData.path}`);
         if (!response.ok) throw new Error('Failed to fetch file content');
         
@@ -146,16 +133,8 @@ export default function DesktopLibraryView({
     };
   }, [isDesktopApp, addAsset]);
 
-  // Clear management mode when selection is cancelled or successful
-  useEffect(() => {
-    if (selectedIds.size === 0 && !isManagementMode) {
-      // Nothing to do
-    }
-  }, [selectedIds, isManagementMode]);
-
   const lastWidthRef = typeof window !== 'undefined' ? useRef(window.innerWidth) : { current: 1024 };
 
-  // Handle automatic collapse on resize CROSSING the 1024px threshold
   useEffect(() => {
     const handleResize = () => {
       const currentWidth = window.innerWidth;
@@ -177,7 +156,6 @@ export default function DesktopLibraryView({
     const nextVisible = !isSidebarVisible;
     setIsSidebarVisible(nextVisible);
     
-    // If we are closing the sidebar, also clear the current asset selection
     if (!nextVisible) {
       closeDetail();
     }
@@ -187,16 +165,7 @@ export default function DesktopLibraryView({
     setIsManagementMode(prev => !prev);
   };
 
-  const handleBack = () => {
-    if (parentFolderId) {
-      router.push(`/folder/${parentFolderId}`);
-    } else {
-      router.push('/library');
-    }
-  };
-
   const handleAssetTap = (asset: Asset, e: React.MouseEvent) => {
-    // Selection mode: Management mode active OR Cmd/Ctrl or Shift
     if (isManagementMode || e.metaKey || e.ctrlKey || e.shiftKey || selectedIds.size > 0) {
       const newSelected = new Set(selectedIds);
       if (newSelected.has(asset.id)) {
@@ -208,7 +177,6 @@ export default function DesktopLibraryView({
       return;
     }
     
-    // Default mode: toggle inspector (re-click same asset to close)
     if (selectedAsset?.id === asset.id && isSidebarVisible) {
       handleToggleSidebar();
       return;
@@ -227,18 +195,13 @@ export default function DesktopLibraryView({
     setSelectedIds(newSelected);
   };
 
-  const handleBulkDelete = async () => {
-    if (selectedIds.size === 0) return;
-    setIsDeleteDialogOpen(true);
-  };
-
   const confirmBulkDelete = async () => {
     const count = selectedIds.size;
     try {
       const idsToDelete = Array.from(selectedIds);
       await Promise.all(idsToDelete.map(id => deleteAsset(id)));
       setSelectedIds(new Set());
-      setIsDeleteDialogOpen(false);
+      setIsBulkDeleteDialogOpen(false);
       toast(`${count}개의 에셋이 삭제되었습니다.`, { type: 'success' });
     } catch (err) {
       console.error('Failed to delete assets in bulk:', err);
@@ -271,6 +234,16 @@ export default function DesktopLibraryView({
     }
   };
 
+  const handleFolderMove = async (id: string, targetId: string | null) => {
+    try {
+      await moveFolder(id, targetId);
+      toast('폴더 위치를 이동했습니다.', { type: 'success' });
+    } catch (err) {
+      console.error('Failed to move folder:', err);
+      toast('폴더 이동 중 오류가 발생했습니다.', { type: 'error' });
+    }
+  };
+
   const handleMoveAsset = async (id: string, folderId: string | null) => {
     try {
       await updateAsset(id, { folderId });
@@ -295,10 +268,6 @@ export default function DesktopLibraryView({
     }
   };
 
-  const handleDetailDelete = (id: string) => {
-    setPendingDeleteAssetId(id);
-  };
-
   const confirmDetailDelete = async () => {
     if (!pendingDeleteAssetId) return;
     try {
@@ -314,8 +283,6 @@ export default function DesktopLibraryView({
 
   const handleShare = async (asset: Asset) => {
     const shareUrl = `${window.location.origin}/asset/${asset.id}`;
-    
-    // Copy to clipboard first as a fallback/primary on desktop
     try {
       await navigator.clipboard.writeText(shareUrl);
       console.log('Share link copied to clipboard');
@@ -331,35 +298,28 @@ export default function DesktopLibraryView({
           url: shareUrl,
         });
       } catch (err: any) {
-        // Silently handle user cancellation
         if (err.name !== 'AbortError') {
           console.error('Share failed:', err);
         }
       }
     } else {
-       // On platforms without navigator.share, the clipboard copy above is enough
-       // Show a simple alert if not already handled by a toast system
        alert('링크가 클립보드에 복사되었습니다.');
     }
   };
 
   const handleDrop = async (files: File[]) => {
     const { validFiles, unsupportedCount } = filterSupportedFiles(files);
-
     if (unsupportedCount > 0) {
-      console.warn(`${unsupportedCount}개의 지원하지 않는 파일 형식이 제외되었습니다. (지원: ${SUPPORTED_EXTENSIONS.join(', ').toUpperCase()})`);
+      console.warn(`${unsupportedCount}개의 지원하지 않는 파일 형식이 제외되었습니다.`);
     }
-
     if (validFiles.length === 0) return;
 
-    // Process in batches
     const batches = chunkArray(validFiles, 5);
     for (const batch of batches) {
       await Promise.all(batch.map(async (file) => {
         try {
           const assetData = await processFileToAsset(file);
           const newAsset = await addAsset(assetData, file);
-          
           if (validFiles.length === 1 && newAsset) {
             openDetail(newAsset);
             setIsSidebarVisible(true);
@@ -369,8 +329,6 @@ export default function DesktopLibraryView({
         }
       }));
     }
-
-    console.log(`Successfully processed ${validFiles.length} files`);
   };
 
   return (
@@ -407,7 +365,6 @@ export default function DesktopLibraryView({
           title={title}
         />
 
-        {/* Floating Sidebar Toggle - Fixed to FAR RIGHT Edge of Browser */}
         <div className={cn(
           "fixed h-8 right-6 z-50 flex items-center app-no-drag",
           isDesktopApp ? "top-[3px]" : "top-[7px]"
@@ -432,136 +389,66 @@ export default function DesktopLibraryView({
               <NVLoadingState className="h-full" />
             ) : (filteredAssets.length > 0 || subFolders.length > 0 || filter === 'folder') ? (
               <div className="flex flex-col pb-20">
-                {/* 1. 하위 폴더 섹션 (하위 폴더 또는 폴더 뷰인 경우 노출) */}
                 {(subFolders.length > 0 || filter === 'folder') && (
-                  <div className="animate-in fade-in slide-in-from-top-2 duration-500">
-                    <div className="flex flex-col items-start gap-3 mb-6">
-                      {filter === 'folder' && (
-                        <NVButton 
-                          variant="ghost" 
-                          size="md" 
-                          className="-ml-2 pl-1 pr-2 !h-auto !py-1"
-                          onClick={() => router.push(parentFolderId ? `/folder/${parentFolderId}` : '/library')}
-                        >
-                          <ChevronLeft className="w-3 h-3 mr-1" />
-                          {parentFolder?.name || "Library"}
-                        </NVButton>
-                      )}
-                      
-                      <div className="flex items-center justify-between w-full">
-                        <NVSectionHeader 
-                          title={title} 
-                          count={filteredAssets.length} 
-                          hasDropdown={true} 
-                          isExpanded={isFoldersExpanded}
-                          onDropdownClick={() => setIsFoldersExpanded(!isFoldersExpanded)}
-                          className="mb-0 !p-0" 
-                        />
-                      </div>
-                    </div>
-                    {isFoldersExpanded && (
-                      <div className={cn("grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-6", subFolders.length > 0 && "mb-12 animate-in fade-in slide-in-from-top-2 duration-300")}>
-                        {subFolders.map(folder => (
-                          <NVFolderCard 
-                            key={folder.id}
-                            id={folder.id}
-                            name={folder.name}
-                            assetCount={folder.aggregatedAssetCount || 0}
-                            assetThumbnails={folder.aggregatedThumbnails || []}
-                            hasSubfolders={folder.hasSubfolders}
-                            onClick={(id) => {
-                              router.push(`/folder/${id}`);
-                            }}
-                            moreMenu={
-                              <NVPopover>
-                                <NVPopoverTrigger asChild>
-                                  <button className="p-1.5 rounded-full bg-black/40 backdrop-blur-md text-white/70 hover:text-white transition-colors border border-white/10 shadow-lg opacity-0 group-hover:opacity-100">
-                                    <MoreVertical size={16} />
-                                  </button>
-                                </NVPopoverTrigger>
-                                <NVPopoverContent align="end" className="w-40 p-1 bg-slate-900/90 border-white/10 backdrop-blur-2xl">
-                                  <button 
-                                    onClick={() => handleFolderRename(folder.id, folder.name)}
-                                    className="w-full flex items-center gap-2 px-3 py-2 text-xs font-medium text-slate-300 hover:bg-white/5 rounded-lg transition-colors"
-                                  >
-                                    <Edit2 size={14} /> 이름 변경
-                                  </button>
-                                  <MoveAssetPopover 
-                                    onMove={(targetId) => moveFolder(folder.id, targetId)}
-                                    trigger={
-                                      <button className="w-full flex items-center gap-2 px-3 py-2 text-xs font-medium text-slate-300 hover:bg-white/5 rounded-lg transition-colors">
-                                        <ArrowRightLeft size={14} /> 위치 이동
-                                      </button>
-                                    }
-                                  />
-                                  <div className="h-px bg-white/5 my-1" />
-                                  <button 
-                                    onClick={() => handleFolderDelete(folder.id)}
-                                    className="w-full flex items-center gap-2 px-3 py-2 text-xs font-medium text-rose-400 hover:bg-rose-500/10 rounded-lg transition-colors"
-                                  >
-                                    <Trash2 size={14} /> 폴더 삭제
-                                  </button>
-                                </NVPopoverContent>
-                              </NVPopover>
-                            }
-                          />
-                        ))}
-                      </div>
+                  <div>
+                    {filter === 'folder' && (
+                      <NVButton 
+                        variant="ghost" 
+                        size="md" 
+                        className="-ml-2 pl-1 pr-2 mb-4 !h-auto !py-1"
+                        onClick={() => router.push(parentFolderId ? `/folder/${parentFolderId}` : '/library')}
+                      >
+                        <ChevronLeft className="w-3 h-3 mr-1" />
+                        {parentFolder?.name || "Library"}
+                      </NVButton>
                     )}
+                    <LibraryFolderSection 
+                      title={title}
+                      folders={subFolders}
+                      isExpanded={isFoldersExpanded}
+                      onToggleExpand={() => setIsFoldersExpanded(!isFoldersExpanded)}
+                      onFolderClick={(id) => router.push(`/folder/${id}`)}
+                      onFolderRename={handleFolderRename}
+                      onFolderMove={handleFolderMove}
+                      onFolderDelete={handleFolderDelete}
+                    />
                   </div>
                 )}
 
-                {/* 2. 목차 섹션 (에셋 목록) */}
-                <div className="animate-in fade-in slide-in-from-top-4 duration-700 delay-150">
-                  {subFolders.length > 0 && (
-                    <NVSectionHeader 
-                      title="목차" 
-                      count={filteredAssets.length} 
-                      className="mb-6"
-                      hasDropdown={true}
-                      isExpanded={isAssetsExpanded}
-                      onDropdownClick={() => setIsAssetsExpanded(!isAssetsExpanded)}
-                    />
-                  )}
-                  {isAssetsExpanded && (
-                    <div className="animate-in fade-in slide-in-from-top-4 duration-300">
-                      {filteredAssets.length > 0 ? (
-                        <AssetGrid 
-                          assets={filteredAssets} 
-                          onAssetTap={handleAssetTap} 
-                          selectedIds={selectedIds}
-                          onSelect={handleSelect}
-                          onFavoriteToggle={(id, isFavorite) => {
-                            updateAsset(id, { isFavorite });
-                          }}
-                          isSelectMode={isManagementMode}
-                          zoom={zoom}
-                          isSidebarOpen={isSidebarVisible}
-                          activeAssetId={selectedAsset?.id}
-                        />
-                      ) : subFolders.length > 0 ? (
-                        <div className="flex flex-col items-center justify-center py-20 bg-slate-900/10 rounded-2xl border border-dashed border-white/5">
-                           <p className="text-slate-500 font-medium">이 폴더에는 직접 포함된 에셋이 없습니다.</p>
-                        </div>
-                      ) : (
-                        <LibraryEmptyState 
-                          assets={assets}
-                          filteredAssets={filteredAssets}
-                          filter={filter}
-                          searchText={searchText}
-                        />
-                      )}
-                    </div>
-                  )}
-                </div>
+                <LibraryAssetGridSection 
+                  assets={assets}
+                  filteredAssets={filteredAssets}
+                  isExpanded={isAssetsExpanded}
+                  onToggleExpand={() => setIsAssetsExpanded(!isAssetsExpanded)}
+                  onAssetTap={handleAssetTap}
+                  selectedIds={selectedIds}
+                  onSelect={handleSelect}
+                  onFavoriteToggle={(id, isFavorite) => updateAsset(id, { isFavorite })}
+                  isSelectMode={isManagementMode}
+                  zoom={zoom}
+                  filter={filter}
+                  searchText={searchText}
+                  hasSubFolders={subFolders.length > 0}
+                  isSidebarOpen={isSidebarVisible}
+                  activeAssetId={selectedAsset?.id}
+                />
               </div>
             ) : (
               <div className="flex items-center justify-center h-full">
-                <LibraryEmptyState 
+                <LibraryAssetGridSection 
                   assets={assets}
                   filteredAssets={filteredAssets}
+                  isExpanded={true}
+                  onToggleExpand={() => {}}
+                  onAssetTap={handleAssetTap}
+                  selectedIds={selectedIds}
+                  onSelect={handleSelect}
+                  onFavoriteToggle={(id, isFavorite) => updateAsset(id, { isFavorite })}
+                  isSelectMode={isManagementMode}
+                  zoom={zoom}
                   filter={filter}
                   searchText={searchText}
+                  hasSubFolders={false}
                 />
               </div>
             )}
@@ -594,11 +481,10 @@ export default function DesktopLibraryView({
               }
             />
           }
-          onDelete={handleBulkDelete}
+          onDelete={() => setIsBulkDeleteDialogOpen(true)}
         />
       </div>
 
-      {/* Desktop Sidebar Inspector with Slide-in Transition */}
       <div 
         className={cn(
           "h-full overflow-hidden transition-all duration-300 ease-in-out border-l border-white/[0.04]",
@@ -608,10 +494,10 @@ export default function DesktopLibraryView({
         <NVAssetDetailSidebar
           asset={selectedAsset}
           onClose={handleToggleSidebar}
-          onDelete={handleDetailDelete}
+          onDelete={(id) => setPendingDeleteAssetId(id)}
           onUpdate={updateAsset} 
           onShare={handleShare}
-          onMove={(id) => handleMoveAsset(id, null)} // Default to inbox if somehow triggered directly
+          onMove={(id) => handleMoveAsset(id, null)}
           moveTrigger={
             <MoveAssetPopover 
               variant="context"
@@ -637,57 +523,16 @@ export default function DesktopLibraryView({
         />
       </div>
 
-      <NVDialog open={isDeleteDialogOpen} onOpenChange={setIsDeleteDialogOpen}>
-        <NVDialogContent className="max-w-md">
-          <NVDialogHeader>
-            <NVDialogTitle>에셋 삭제 확인</NVDialogTitle>
-            <NVDialogDescription>
-              선택한 {selectedIds.size}개의 에셋을 라이브러리에서 완전히 삭제하시겠습니까? 이 작업은 되돌릴 수 없습니다.
-            </NVDialogDescription>
-          </NVDialogHeader>
-          <NVDialogBody className="pt-2 pb-6">
-            <div className="p-4 rounded-xl bg-rose-500/5 border border-rose-500/10">
-              <p className="text-xs text-rose-400 font-medium leading-relaxed">
-                * 삭제된 에셋은 복구할 수 없으며, 연결된 모든 폴더 및 즐겨찾기 정보가 함께 제거됩니다.
-              </p>
-            </div>
-          </NVDialogBody>
-          <NVDialogFooter>
-            <NVButton variant="ghost" onClick={() => setIsDeleteDialogOpen(false)}>
-              취소
-            </NVButton>
-            <NVButton variant="primary" className="bg-rose-500 hover:bg-rose-600 border-rose-400/20" onClick={confirmBulkDelete}>
-              에셋 삭제하기
-            </NVButton>
-          </NVDialogFooter>
-        </NVDialogContent>
-      </NVDialog>
-
-      <NVDialog open={pendingDeleteAssetId !== null} onOpenChange={(open) => { if (!open) setPendingDeleteAssetId(null); }}>
-        <NVDialogContent className="max-w-md">
-          <NVDialogHeader>
-            <NVDialogTitle>에셋 삭제 확인</NVDialogTitle>
-            <NVDialogDescription>
-              이 에셋을 라이브러리에서 완전히 삭제하시겠습니까? 이 작업은 되돌릴 수 없습니다.
-            </NVDialogDescription>
-          </NVDialogHeader>
-          <NVDialogBody className="pt-2 pb-6">
-            <div className="p-4 rounded-xl bg-rose-500/5 border border-rose-500/10">
-              <p className="text-xs text-rose-400 font-medium leading-relaxed">
-                * 삭제된 에셋은 복구할 수 없으며, 연결된 모든 폴더 및 즐겨찾기 정보가 함께 제거됩니다.
-              </p>
-            </div>
-          </NVDialogBody>
-          <NVDialogFooter>
-            <NVButton variant="ghost" onClick={() => setPendingDeleteAssetId(null)}>
-              취소
-            </NVButton>
-            <NVButton variant="primary" className="bg-rose-500 hover:bg-rose-600 border-rose-400/20" onClick={confirmDetailDelete}>
-              에셋 삭제하기
-            </NVButton>
-          </NVDialogFooter>
-        </NVDialogContent>
-      </NVDialog>
+      <LibraryDeleteDialogs 
+        isBulkDeleteDialogOpen={isBulkDeleteDialogOpen}
+        onBulkDeleteOpenChange={setIsBulkDeleteDialogOpen}
+        selectedCount={selectedIds.size}
+        onConfirmBulkDelete={confirmBulkDelete}
+        pendingDeleteAssetId={pendingDeleteAssetId}
+        onPendingDeleteAssetIdChange={setPendingDeleteAssetId}
+        onConfirmSingleDelete={confirmDetailDelete}
+        isMobile={false}
+      />
     </div>
   );
 }
