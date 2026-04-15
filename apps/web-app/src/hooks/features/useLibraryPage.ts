@@ -18,7 +18,7 @@ interface UseLibraryPageConfig {
 export function useLibraryPage({ initialFilter, title, folderId = null }: UseLibraryPageConfig) {
   const isDesktop = useIsDesktop();
   const desktopShell = useDesktopShell();
-  const { folders } = useFolders();
+  const { folders, deleteFolder, moveFolder, renameFolder, createFolder } = useFolders();
 
   const {
     assets, loading, filter, setFilter, selectedAsset, openDetail, closeDetail,
@@ -137,6 +137,7 @@ export function useLibraryPage({ initialFilter, title, folderId = null }: UseLib
   const commonProps = {
     assets, loading, filter, setFilter, selectedAsset, openDetail, closeDetail,
     deleteAsset, updateAsset, addAsset, moveAssets, isMoving,
+    deleteFolder, moveFolder, renameFolder, createFolder,
     selectedIds, setSelectedIds,
     searchText, setSearchText, isFilterOpen, setIsFilterOpen,
     filteredAssets, handleFilterApply, handleFilterReset,
