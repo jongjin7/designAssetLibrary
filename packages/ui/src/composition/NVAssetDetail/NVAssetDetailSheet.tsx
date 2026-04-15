@@ -11,15 +11,19 @@ interface NVAssetDetailSheetProps {
   onDelete?: (id: string) => void;
   onMove?: (id: string) => void;
   onUpdate?: (id: string, updates: Partial<Asset>) => void;
+  onShare?: (asset: Asset) => void;
+  moveTrigger?: React.ReactNode;
   onExtractAI?: (imageUrl: string) => Promise<string[]>;
   onExtractBasic?: (imageUrl: string) => Promise<string[]>;
 }
 
-export function NVAssetDetailSheet({ 
-  asset, 
-  onClose, 
-  onDelete, 
-  onMove, 
+export function NVAssetDetailSheet({
+  asset,
+  onClose,
+  onDelete,
+  onMove,
+  onShare,
+  moveTrigger,
   onUpdate,
   onExtractAI,
   onExtractBasic
@@ -41,11 +45,13 @@ export function NVAssetDetailSheet({
 
   return (
     <NVBottomSheet isOpen={!!asset} onClose={onClose}>
-      <NVAssetDetailContent 
-        asset={asset || lastAsset!} 
-        onClose={onClose} 
-        onDelete={onDelete} 
-        onMove={onMove} 
+      <NVAssetDetailContent
+        asset={asset || lastAsset!}
+        onClose={onClose}
+        onDelete={onDelete}
+        onMove={onMove}
+        onShare={onShare}
+        moveTrigger={moveTrigger}
         onUpdate={onUpdate}
         onExtractAI={onExtractAI}
         onExtractBasic={onExtractBasic}

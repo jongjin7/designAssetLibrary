@@ -1,5 +1,5 @@
 import React from 'react';
-import { Folder, FolderPlus } from 'lucide-react';
+import { Folder, FolderPlus, MoreVertical } from 'lucide-react';
 import { cn } from '@ui/lib/utils';
 
 export interface NVFolderCardProps {
@@ -11,6 +11,8 @@ export interface NVFolderCardProps {
   hasSubfolders?: boolean;
   className?: string;
   onClick?: (id: string, e: React.MouseEvent) => void;
+  /** 모바일 환경 등에서 노출할 추가 메뉴 (삭제, 이동 등) */
+  moreMenu?: React.ReactNode;
 }
 
 export const NVFolderCard: React.FC<NVFolderCardProps> = ({
@@ -21,7 +23,8 @@ export const NVFolderCard: React.FC<NVFolderCardProps> = ({
   hasSubfolders = false,
   isMobile = false,
   className = '',
-  onClick
+  onClick,
+  moreMenu
 }) => {
   const displayThumbnails = assetThumbnails.slice(0, 3);
   const thumbCount = displayThumbnails.length;
@@ -90,6 +93,16 @@ export const NVFolderCard: React.FC<NVFolderCardProps> = ({
         {/* 2. Seamless Glass Overlays */}
         <div className="absolute inset-0 pointer-events-none bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-60 group-hover:opacity-40 transition-opacity duration-500" />
         <div className="absolute inset-0 pointer-events-none ring-1 ring-inset ring-white/15 rounded-xl" />
+        
+        {/* 2.1 More Menu Button (Mobile focused) */}
+        {moreMenu && (
+          <div 
+            className="absolute top-2 right-2 z-10"
+            onClick={(e) => e.stopPropagation()}
+          >
+            {moreMenu}
+          </div>
+        )}
       </div>
 
       {/* 3. Metadata Area */}
