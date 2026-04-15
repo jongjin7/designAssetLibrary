@@ -24,7 +24,8 @@ import {
   NVIconButton,
   NVMenuItem,
   NVInput,
-  NVButton
+  NVButton,
+  NVSeparator
 } from '../../index';
 import { cn } from '../../lib/utils';
 
@@ -51,6 +52,7 @@ interface NVFolderPopoverProps {
   triggerClassName?: string;
   isCreationMode?: boolean;
   isRenameMode?: boolean;
+  isSimpleMode?: boolean;
   trigger?: React.ReactNode;
   initialName?: string;
 }
@@ -71,6 +73,7 @@ export const NVFolderPopover: React.FC<NVFolderPopoverProps> = ({
   triggerClassName,
   isCreationMode = false,
   isRenameMode = false,
+  isSimpleMode = false,
   trigger,
   initialName = ''
 }: NVFolderPopoverProps) => {
@@ -149,22 +152,30 @@ export const NVFolderPopover: React.FC<NVFolderPopoverProps> = ({
         )}
       </NVPopoverTrigger>
 
-      <NVPopoverContent className="w-[280px] p-0" align="start" alignOffset={-4} side="right" sideOffset={12}>
+      <NVPopoverContent 
+        className={cn(isSimpleMode ? "w-[200px]" : "w-[280px]", "p-0")} 
+        align="start"
+        alignOffset={isSimpleMode ? 0 : -4}
+        side={isSimpleMode ? "bottom" : "right"} 
+        sideOffset={isSimpleMode ? 0 : 12}
+      >
         {view === 'menu' && folder && (
           <>
-            <NVPopoverHeader className="flex items-center gap-2 py-2.5">
-              {folder.isSmartFolder ? (
-                <Sparkles size={14} className="text-cyan-500" />
-              ) : (
-                <FolderIcon size={14} className="text-indigo-500" />
-              )}
-              <span className="text-xs font-bold text-white truncate">
-                {folder.name} {folder.isSmartFolder && '(스마트)'}
-              </span>
-            </NVPopoverHeader>
+            {!isSimpleMode && (
+              <NVPopoverHeader className="flex items-center gap-2 py-2.5">
+                {folder.isSmartFolder ? (
+                  <Sparkles size={14} className="text-cyan-500" />
+                ) : (
+                  <FolderIcon size={14} className="text-indigo-500" />
+                )}
+                <span className="text-xs font-bold text-white truncate">
+                  {folder.name} {folder.isSmartFolder && '(스마트)'}
+                </span>
+              </NVPopoverHeader>
+            )}
             <NVPopoverBody className="px-2 py-2 max-h-[480px] overflow-y-auto custom-scrollbar">
               <div className="flex flex-col gap-0.5">
-                {!folder.parentId && (
+                {!isSimpleMode && !folder.parentId && (
                   <>
                     <span className="text-[10px] font-bold text-slate-500 uppercase tracking-widest px-2 py-1.5 mt-1">
                       {folder.isSmartFolder ? '스마트 기능 제어' : '추천 기능'}
@@ -202,12 +213,14 @@ export const NVFolderPopover: React.FC<NVFolderPopoverProps> = ({
                   </>
                 )}
 
-                <span className="text-[10px] font-bold text-slate-500 uppercase tracking-widest px-2 py-1.5">
-                  폴더 관리
-                </span>
+                {!isSimpleMode && (
+                  <span className="text-[10px] font-bold text-slate-500 uppercase tracking-widest px-2 py-1.5">
+                    폴더 관리
+                  </span>
+                )}
                 
                 {/* Management Actions for ALL folder types */}
-                {subfolders.length > 0 && (
+                {!isSimpleMode && subfolders.length > 0 && (
                   <NVMenuItem
                     label="하위 폴더 목록 보기"
                     icon={FolderIcon}
@@ -218,32 +231,37 @@ export const NVFolderPopover: React.FC<NVFolderPopoverProps> = ({
                     }}
                   />
                 )}
-                <NVMenuItem
-                  icon={Plus}
-                  label="하위 폴더 추가"
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    setView('create');
-                  }}
-                />
+                {!isSimpleMode && (
+                  <NVMenuItem
+                    icon={Plus}
+                    label="하위 폴더 생성"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      setView('create');
+                    }}
+                  />
+                )}
                 <NVMenuItem
                   icon={FolderInput}
-                  label="이동"
+                  label="이동하기"
                   onClick={(e) => {
                     e.stopPropagation();
                     startMove(folder, 'menu');
                   }}
                 />
-                <NVMenuItem
-                  icon={Copy}
-                  label="복사"
-                  onClick={() => { onCopy?.(folder); resetAndClose(); }}
-                />
+                {!isSimpleMode && (
+                  <NVMenuItem
+                    icon={Copy}
+                    label="복사"
+                    onClick={() => { onCopy?.(folder); resetAndClose(); }}
+                  />
+                )}
                 <NVMenuItem
                   icon={Pencil}
-                  label="이름 바꾸기"
+                  label="이름 변경"
                   onClick={(e) => { e.stopPropagation(); startRename(folder, 'menu'); }}
                 />
+                <NVSeparator />
                 <NVMenuItem
                   icon={Trash2}
                   label={folder.isSmartFolder ? "스마트 폴더 삭제" : "삭제하기"}

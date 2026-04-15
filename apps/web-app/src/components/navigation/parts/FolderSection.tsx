@@ -61,7 +61,7 @@ export function FolderSection({
                 variant="ghost"
                 size="sm"
                 className={isCollapsed ? 'mx-auto' : ''}
-                title="폴더 추가"
+                title="폴더 생성"
               />
             }
           />

@@ -1,15 +1,11 @@
 import React from 'react';
-import { Edit2, ArrowRightLeft, Trash2 } from 'lucide-react';
 import { 
   NVSectionHeader, 
   NVFolderCard,
-  NVMoreMenu,
   NVFolderPopover,
-  NVMenuItem,
-  NVSeparator
 } from '@nova/ui';
-import { MoveAssetPopover } from './MoveAssetPopover';
 import { cn } from '@nova/lib/utils';
+import { useFolders } from '@nova/hooks';
 
 interface LibraryFolderSectionProps {
   title: string;
@@ -34,6 +30,8 @@ export const LibraryFolderSection: React.FC<LibraryFolderSectionProps> = ({
   onFolderDelete,
   isMobile = false
 }) => {
+  const { folders: allFolders } = useFolders();
+
   if (folders.length === 0) return null;
 
   return (
@@ -63,32 +61,15 @@ export const LibraryFolderSection: React.FC<LibraryFolderSectionProps> = ({
               isMobile={isMobile}
               onClick={(id) => onFolderClick(id)}
               moreMenu={
-                <NVMoreMenu isMobile={isMobile}>
-                  <NVFolderPopover 
-                    folder={folder}
-                    isRenameMode={true}
-                    onRename={(f, newName) => onFolderRename(f.id, newName)}
-                    trigger={
-                      <NVMenuItem 
-                        icon={Edit2} 
-                        label="이름 변경" 
-                      />
-                    }
-                  />
-                  <MoveAssetPopover 
-                    onMove={(targetId) => onFolderMove(folder.id, targetId)}
-                    trigger={
-                      <NVMenuItem icon={ArrowRightLeft} label="위치 이동" />
-                    }
-                  />
-                  <NVSeparator variant="subtle" className="my-1" />
-                  <NVMenuItem 
-                    icon={Trash2} 
-                    label="폴더 삭제" 
-                    variant="danger"
-                    onClick={() => onFolderDelete(folder.id)} 
-                  />
-                </NVMoreMenu>
+                <NVFolderPopover 
+                  folder={folder}
+                  allFolders={allFolders}
+                  isSimpleMode={true}
+                  onRename={(f, newName) => onFolderRename(f.id, newName)}
+                  onMove={(f, targetId) => onFolderMove(f.id, targetId)}
+                  onDelete={(f) => onFolderDelete(f.id)}
+                  triggerClassName="opacity-0 group-hover:opacity-100 transition-opacity"
+                />
               }
             />
           ))}
