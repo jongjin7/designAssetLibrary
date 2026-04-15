@@ -41,7 +41,7 @@ interface DesktopLibraryViewProps {
   deleteFolder: (id: string) => Promise<void>;
   moveFolder: (id: string, targetId: string | null) => Promise<void>;
   renameFolder: (id: string, name: string) => Promise<void>;
-  createFolder: (name: string, parentId?: string | null) => Promise<void>;
+  createFolder: (name: string, parentId?: string | null) => Promise<any>;
   
   // Selection
   selectedIds: Set<string>;

@@ -17,7 +17,7 @@ export const supabase = shouldInitialize
   ? createClient(supabaseUrl, supabaseAnonKey) 
   : ({
       auth: {
-        getUser: async () => ({ data: { user: JSON.parse(localStorage.getItem('nova_mock_user') || 'null') }, error: null }),
+        getUser: async () => ({ data: { user: typeof window !== 'undefined' ? JSON.parse(localStorage.getItem('nova_mock_user') || 'null') : null }, error: null }),
         getSession: async () => ({ data: { session: null }, error: null }),
         onAuthStateChange: () => ({ data: { subscription: { unsubscribe: () => {} } } }),
         signInWithPassword: async () => ({ data: {}, error: { message: 'Supabase not initialized' } }),
