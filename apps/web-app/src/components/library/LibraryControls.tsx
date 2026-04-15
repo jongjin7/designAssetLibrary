@@ -2,7 +2,6 @@
 
 import React, { useEffect, useState } from 'react';
 import { cn } from '@nova/lib/utils';
-import { NVSearchBar } from '@nova/ui';
 import { LibraryFilters } from '@nova/hooks';
 import { 
   ArrowLeftRight, Plus,
@@ -16,6 +15,7 @@ import {
 import { ViewOptionsPopover } from './ViewOptionsPopover';
 import { processFileToAsset } from '@nova/lib/assetProcessor';
 import { 
+  NVSearchBar,
   NVPopover, 
   NVPopoverTrigger, 
   NVPopoverContent,

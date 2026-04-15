@@ -2,6 +2,7 @@ import { create } from 'zustand';
 import { Asset } from '@nova/types/asset';
 import { Folder } from '@nova/types/folder';
 import { assetRepository } from '@nova/lib/dataService';
+import { mockFolders } from '../data/mockAssets';
 
 export interface LibraryFilters {
   keyword: string;
@@ -67,8 +68,6 @@ interface AssetStore {
   setActiveFilters: (filters: LibraryFilters | ((prev: LibraryFilters) => LibraryFilters)) => void;
   handleFilterReset: () => void;
 }
-
-import { mockFolders } from '../data/mockAssets';
 
 export const useAssetStore = create<AssetStore>((set, get) => ({
   assets: [],
