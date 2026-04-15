@@ -239,14 +239,28 @@ export function LibraryControls({
       center={
         <div className="flex items-center gap-2 lg:gap-6 w-full max-w-[600px] justify-center min-w-0 px-2 lg:px-4">
           <div className="hidden lg:flex items-center gap-3 px-2 shrink-0">
-            <NVIconButton icon={LayoutGrid} variant="ghost" size="sm" className="shrink-0"/>
+            <NVIconButton 
+              icon={LayoutGrid} 
+              variant="ghost" 
+              size="sm" 
+              className="shrink-0"
+              onClick={() => onZoomChange?.(Math.max(0, (zoom || 50) - 10))}
+              title="축소"
+            />
             <NVSlider 
               value={zoom} 
               onChange={(v) => onZoomChange?.(v)} 
               size="sm" 
               className="w-24" 
             />
-            <NVIconButton icon={ImageIcon} variant="ghost" size="sm" className="shrink-0" />
+            <NVIconButton 
+              icon={ImageIcon} 
+              variant="ghost" 
+              size="sm" 
+              className="shrink-0"
+              onClick={() => onZoomChange?.(Math.min(100, (zoom || 50) + 10))}
+              title="확대"
+            />
           </div>
 
           <div className="flex-1 min-w-[140px] max-w-[220px] md:max-w-[480px]">
