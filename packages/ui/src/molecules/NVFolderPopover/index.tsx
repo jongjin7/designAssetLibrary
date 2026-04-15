@@ -108,7 +108,8 @@ export const NVFolderPopover: React.FC<NVFolderPopoverProps> = ({
 
   const handleCreateSubmit = () => {
     if (newSubfolderName.trim() && onCreateSubfolder) {
-      onCreateSubfolder(folder?.id || null, newSubfolderName);
+      console.log('[NVFolderPopover] Submitting create:', folder?.id || null, 'name:', newSubfolderName.trim());
+      onCreateSubfolder(folder?.id || null, newSubfolderName.trim());
       resetAndClose();
     }
   };
@@ -128,6 +129,7 @@ export const NVFolderPopover: React.FC<NVFolderPopoverProps> = ({
 
   const handleRenameSubmit = () => {
     if (renamingFolder && renameValue.trim()) {
+      console.log('[NVFolderPopover] Submitting rename:', renamingFolder.id, 'to', renameValue.trim());
       onRename?.(renamingFolder, renameValue.trim());
       resetAndClose();
     }

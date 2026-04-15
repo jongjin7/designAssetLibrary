@@ -100,8 +100,24 @@ export const useAssetStore = create<AssetStore>((set, get) => ({
   }),
 
   fetchFolders: async () => {
-    // Fill folders from mock if not yet loaded
+    // 1. Try to load from localStorage first
+    const saved = typeof window !== 'undefined' ? localStorage.getItem('nova_folders') : null;
+    if (saved) {
+      try {
+        const parsed = JSON.parse(saved);
+        if (Array.isArray(parsed) && parsed.length > 0) {
+          console.log('[AssetStore] Loaded folders from localStorage');
+          set({ folders: parsed });
+          return;
+        }
+      } catch (e) {
+        console.error('[AssetStore] Failed to parse saved folders:', e);
+      }
+    }
+
+    // 2. Fallback to mock data if nothing saved
     if (get().folders.length === 0) {
+      console.log('[AssetStore] Initializing folders with mock data');
       set({ folders: mockFolders as Folder[] });
     }
   },
@@ -115,28 +131,53 @@ export const useAssetStore = create<AssetStore>((set, get) => ({
       createdAt: new Date().toISOString(),
       updatedAt: new Date().toISOString(),
     };
-    set(state => ({ folders: [...state.folders, newFolder] }));
+    
+    set(state => {
+      const nextFolders = [...state.folders, newFolder];
+      if (typeof window !== 'undefined') {
+        localStorage.setItem('nova_folders', JSON.stringify(nextFolders));
+      }
+      return { folders: nextFolders };
+    });
+    
     return newFolder;
   },
 
   deleteFolder: async (id) => {
-    set(state => ({ folders: state.folders.filter(f => f.id !== id) }));
+    console.log('[AssetStore] deleteFolder:', id);
+    set(state => {
+      const nextFolders = state.folders.filter(f => f.id !== id);
+      if (typeof window !== 'undefined') {
+        localStorage.setItem('nova_folders', JSON.stringify(nextFolders));
+      }
+      return { folders: nextFolders };
+    });
   },
 
   moveFolder: async (id, targetParentId) => {
-    set(state => ({
-      folders: state.folders.map(f =>
+    console.log('[AssetStore] moveFolder:', id, '->', targetParentId);
+    set(state => {
+      const nextFolders = state.folders.map(f =>
         f.id === id ? { ...f, parentId: targetParentId, updatedAt: new Date().toISOString() } : f
-      )
-    }));
+      );
+      if (typeof window !== 'undefined') {
+        localStorage.setItem('nova_folders', JSON.stringify(nextFolders));
+      }
+      return { folders: nextFolders };
+    });
   },
 
   renameFolder: async (id, name) => {
-    set(state => ({
-      folders: state.folders.map(f =>
+    console.log('[AssetStore] renameFolder:', id, '->', name);
+    set(state => {
+      const nextFolders = state.folders.map(f =>
         f.id === id ? { ...f, name, updatedAt: new Date().toISOString() } : f
-      )
-    }));
+      );
+      if (typeof window !== 'undefined') {
+        localStorage.setItem('nova_folders', JSON.stringify(nextFolders));
+      }
+      return { folders: nextFolders };
+    });
   },
 
   copyFolder: async (id, targetParentId) => {
