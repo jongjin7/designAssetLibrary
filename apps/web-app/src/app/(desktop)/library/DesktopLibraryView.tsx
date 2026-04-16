@@ -138,12 +138,16 @@ export default function DesktopLibraryView({
   }, [isDesktopApp, addAsset]);
 
   const lastWidthRef = typeof window !== 'undefined' ? useRef(window.innerWidth) : { current: 1024 };
+  const [isSmallDesktop, setIsSmallDesktop] = useState(typeof window !== 'undefined' ? window.innerWidth < 1024 : false);
 
   useEffect(() => {
     const handleResize = () => {
       const currentWidth = window.innerWidth;
+      const isSmall = currentWidth < 1024;
+      setIsSmallDesktop(isSmall);
+
       const wasAbove = lastWidthRef.current >= 1024;
-      const nowBelow = currentWidth < 1024;
+      const nowBelow = isSmall;
 
       if (wasAbove && nowBelow) {
         setIsSidebarVisible(false);
@@ -338,7 +342,7 @@ export default function DesktopLibraryView({
   };
 
   return (
-    <div className="flex h-full w-full overflow-hidden bg-[#0A0C13]">
+    <div className="flex h-full w-full overflow-hidden bg-[#0A0C13] relative">
       <div className="flex-1 flex flex-col overflow-hidden relative">
         <DropZone onDrop={handleDrop} />
         
@@ -372,7 +376,7 @@ export default function DesktopLibraryView({
         />
 
         <div className={cn(
-          "fixed h-8 right-6 z-50 flex items-center app-no-drag",
+          "fixed h-8 right-6 z-[70] flex items-center app-no-drag",
           isDesktopApp ? "top-[3px]" : "top-[7px]"
         )}>
            <NVIconButton 
@@ -383,6 +387,14 @@ export default function DesktopLibraryView({
              title={isSidebarVisible ? "사이드바 닫기" : "사이드바 열기 (상세 정보)"}
            />
         </div>
+
+        {/* Small Desktop 전용 백드롭: 영역 밖 클릭 시 닫기 */}
+        {isSmallDesktop && isSidebarVisible && (
+          <div 
+            className="absolute inset-0 z-[55] bg-black/20 backdrop-blur-[2px] animate-in fade-in duration-300"
+            onClick={handleToggleSidebar}
+          />
+        )}
 
         <div className="flex-1 overflow-y-auto p-8 relative cursor-default">
           {isMoving && (
@@ -494,7 +506,9 @@ export default function DesktopLibraryView({
       <div 
         className={cn(
           "h-full overflow-hidden transition-all duration-300 ease-in-out border-l border-white/[0.04]",
-          isSidebarVisible ? "w-[380px] opacity-100" : "w-0 opacity-0 border-l-0"
+          isSidebarVisible ? "w-[380px] opacity-100" : "w-0 opacity-0 border-l-0",
+          isSmallDesktop && isSidebarVisible && "absolute right-0 top-0 z-[60] bg-[#0A0C13]/95 backdrop-blur-xl shadow-[-20px_0_50px_rgba(0,0,0,0.5)] w-[380px]",
+          isSmallDesktop && !isSidebarVisible && "absolute right-0 top-0 w-0"
         )}
       >
         <NVAssetDetailSidebar
