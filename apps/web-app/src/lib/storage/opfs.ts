@@ -300,6 +300,17 @@ export class OPFSService {
       return false;
     }
   }
+
+  /**
+   * Proactively prepare storage by initializing directory handles and DB connections.
+   */
+  public async prepareStorage(): Promise<void> {
+    console.log('[Storage] Preparing local library...');
+    await Promise.all([
+      this.getDB(),
+      this.getRoot()
+    ]);
+  }
 }
 
 export const opfsStorage = OPFSService.getInstance();

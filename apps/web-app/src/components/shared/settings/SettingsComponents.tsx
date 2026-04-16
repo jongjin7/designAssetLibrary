@@ -66,7 +66,7 @@ export const SettingsSection: React.FC<SettingsSectionProps> = ({
 }) => {
   return (
     <NVCard className={`mb-6 !p-5 ${className}`} hoverEffect={false}>
-      <h4 className="text-xs font-bold text-slate-500 uppercase tracking-wider px-1 mb-4 opacity-70">
+      <h4 className="text-sm font-medium text-slate-500 uppercase tracking-wider px-1 mb-4 opacity-70">
         {title}
       </h4>
       <div className="flex flex-col gap-1">

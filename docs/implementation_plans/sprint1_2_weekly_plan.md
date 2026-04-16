@@ -13,7 +13,7 @@
 #### **Week 1: Foundations & Local Storage**
 - [x] **Infrastructure**: `apps/web-app` PWA 설정 및 standalone 모드 대응.
 - [x] **Core Layout**: 모바일-데스크탑 반응형 셸 엔진 및 `useIsDesktop` 구현.
-- [ ] **Onboarding & Setup (US-1-01)**: 앱 최초 실행 가이드 및 로컬 라이브러리(OPFS) 생성 자동화.
+- [x] **Onboarding & Setup (US-1-01)**: 앱 최초 실행 가이드 및 로컬 라이브러리(OPFS) 생성 자동화.
 - [x] **Persistence (US-1-04)**: `OPFS` 원본 저장 및 `IndexedDB` 메타데이터 영구 저장 브릿지 (`opfs.ts`).
 
 #### **Week 2: AI Capture & Smart Ingestion**

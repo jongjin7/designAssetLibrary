@@ -1,13 +1,14 @@
 'use client';
 
-import { LogOut } from 'lucide-react';
-import { NVButton } from '@nova/ui';
+import { LogOut, Trash2 } from 'lucide-react';
+import { NVButton, useToast } from '@nova/ui';
 import { SETTINGS_GROUPS } from '@nova/lib/constants/settings';
 import { SettingsSection, SettingsItem } from './SettingsComponents';
 import { InstallBanner } from '@nova/components/shared/InstallBanner';
 import { ProfileCard } from './ProfileCard';
 
 import { useAuth } from '@nova/providers/AuthProvider';
+import { useAssetStore } from '@nova/store/useAssetStore';
 
 interface SettingsContentProps {
   isMobile?: boolean;
@@ -16,6 +17,8 @@ interface SettingsContentProps {
 
 export function SettingsContent({ isMobile = false, onLogout }: SettingsContentProps) {
   const { profile, loading } = useAuth();
+  const { resetLibrary } = useAssetStore();
+  const { toast } = useToast();
   
   // 현재 개발 단계 (Sprint 1) 기준으로 필터링
   const CURRENT_SPRINT = 1;
@@ -69,17 +72,42 @@ export function SettingsContent({ isMobile = false, onLogout }: SettingsContentP
             </SettingsSection>
           </div>
         ))}
+        
+        {/* 위험 구역 섹션 추가 (로그아웃과 격리) */}
+        <div className={`${!isMobile ? 'animate-in fade-in slide-in-from-bottom-4 duration-500 fill-mode-both' : ''}`}>
+          <SettingsSection title="위험 구역" className="!bg-red-500/5 border-red-500/20">
+            <div className="flex flex-col md:flex-row items-center justify-between h-full gap-2 md:gap-4 py-2">
+              <p className="text-xs text-slate-500">
+                라이브러리를 초기화하면 로컬에 저장된 모든 에셋과 설정이 영구적으로 삭제됩니다.
+              </p>
+              <NVButton
+                variant="glass"
+                size="sm"
+                className="opacity-50 hover:opacity-100"
+                onClick={async () => {
+                  if (confirm('정말 라이브러리를 초기화하시겠습니까? 모든 로컬 데이터가 삭제됩니다.')) {
+                    await resetLibrary();
+                    toast('라이브러리가 초기화되었습니다.', { type: 'success' });
+                  }
+                }}
+              >
+                <Trash2 size={16} className="mr-2" />
+                라이브러리 데이터 초기화
+              </NVButton>
+            </div>
+          </SettingsSection>
+        </div>
       </div>
 
 
-      <div className="flex justify-center px-5">
+      <div className="flex justify-center px-5 mt-10 mb-8 items-center">
         <NVButton
           variant="danger"
           size="md"
-          className={(isMobile ? 'w-full mt-4 mb-2.5' : 'mt-12 mb-6 w-full max-w-[200px]')}
+          className={(isMobile ? 'w-full' : 'w-full max-w-[200px]')}
           onClick={onLogout}
         >
-          <LogOut size={isMobile ? 18 : 20} />
+          <LogOut size={isMobile ? 18 : 20} className="mr-2" />
           로그아웃
         </NVButton>
       </div>

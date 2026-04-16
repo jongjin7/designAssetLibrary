@@ -48,12 +48,7 @@ export class MockAssetRepository implements AssetRepository {
       await migrateFromLocalStorage();
 
       const stored = await idbGetAllAssets();
-      if (stored.length > 0) {
-        this.assets = stored;
-      } else {
-        this.assets = [...mockAssets];
-        await idbPutAllAssets(this.assets);
-      }
+      this.assets = stored;
 
       this.initialized = true;
       console.log('[Mock/IDB] Initialized with', this.assets.length, 'assets');

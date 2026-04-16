@@ -45,6 +45,7 @@ export * from './composition/NVDesktopUploadPanel';
 export * from './composition/NVErrorLayout';
 export { NVLoginCard } from './composition/NVLoginCard';
 export { NVSplashScreen } from './composition/NVSplashScreen';
+export { NVOnboarding } from './composition/NVOnboarding';
 
 // Foundations
 export * from './foundations/NVColorPalette';

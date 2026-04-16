@@ -160,3 +160,10 @@ export async function migrateFromLocalStorage(): Promise<void> {
   localStorage.removeItem('nova_folders');
   console.log('[NovaDB] Migration complete, localStorage keys removed');
 }
+
+export async function resetDB(): Promise<void> {
+  const db = await getDB();
+  await db.clear('assets');
+  await db.clear('folders');
+  console.log('[NovaDB] Database cleared');
+}

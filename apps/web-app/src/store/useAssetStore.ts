@@ -8,6 +8,7 @@ import {
   idbPutFolder,
   idbDeleteFolder,
   migrateFromLocalStorage,
+  resetDB,
 } from '../lib/storage/novaDB';
 
 export interface LibraryFilters {
@@ -73,6 +74,7 @@ interface AssetStore {
   activeFilters: LibraryFilters;
   setActiveFilters: (filters: LibraryFilters | ((prev: LibraryFilters) => LibraryFilters)) => void;
   handleFilterReset: () => void;
+  resetLibrary: () => Promise<void>;
 }
 
 export const useAssetStore = create<AssetStore>((set, get) => ({
@@ -139,25 +141,21 @@ export const useAssetStore = create<AssetStore>((set, get) => ({
     }
   }),
 
+  resetLibrary: async () => {
+    set({ loading: true });
+    await resetDB();
+    set({ assets: [], folders: [], loading: false });
+    console.log('[AssetStore] Library reset complete');
+  },
+
   fetchFolders: async () => {
     // localStorage에 저장된 데이터가 있으면 IndexedDB로 마이그레이션 (중복 실행 안전)
     await migrateFromLocalStorage();
 
-    // 1. IndexedDB에서 불러오기
+    // IndexedDB에서 불러오기
     const saved = await idbGetAllFolders();
-    if (saved.length > 0) {
-      console.log('[AssetStore] Loaded folders from IndexedDB');
-      set({ folders: saved });
-      return;
-    }
-
-    // 2. IDB에 아무것도 없으면 목 데이터로 초기화 후 저장
-    if (get().folders.length === 0) {
-      console.log('[AssetStore] Initializing folders with mock data');
-      const initial = mockFolders as Folder[];
-      await Promise.all(initial.map(f => idbPutFolder(f)));
-      set({ folders: initial });
-    }
+    console.log('[AssetStore] Loaded folders from IndexedDB:', saved.length);
+    set({ folders: saved });
   },
 
   createFolder: async (name, parentId = null) => {
