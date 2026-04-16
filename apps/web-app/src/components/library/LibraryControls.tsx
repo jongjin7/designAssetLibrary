@@ -4,7 +4,7 @@ import React, { useEffect, useState } from 'react';
 import { cn } from '@nova/lib/utils';
 import { LibraryFilters } from '@nova/hooks';
 import { 
-  ArrowLeftRight, Plus,
+  FolderInput, Plus,
   ChevronRight, ChevronLeft, 
   LayoutGrid, 
   Pin,
@@ -173,10 +173,10 @@ export function LibraryControls({
             onMove={onMoveAsset || (() => {})}
             trigger={
               <NVIconButton 
-                icon={ArrowLeftRight} 
+                icon={FolderInput} 
                 variant="ghost" 
                 size="sm" 
-                title="폴더로 이동 (F)" 
+                title="폴더로 이동" 
               />
             }
           />
