@@ -3,6 +3,12 @@ import { Asset } from '@nova/types/asset';
 import { Folder } from '@nova/types/folder';
 import { assetRepository } from '@nova/lib/dataService';
 import { mockFolders } from '../data/mockAssets';
+import {
+  idbGetAllFolders,
+  idbPutFolder,
+  idbDeleteFolder,
+  migrateFromLocalStorage,
+} from '../lib/storage/novaDB';
 
 export interface LibraryFilters {
   keyword: string;
@@ -134,25 +140,23 @@ export const useAssetStore = create<AssetStore>((set, get) => ({
   }),
 
   fetchFolders: async () => {
-    // 1. Try to load from localStorage first
-    const saved = typeof window !== 'undefined' ? localStorage.getItem('nova_folders') : null;
-    if (saved) {
-      try {
-        const parsed = JSON.parse(saved);
-        if (Array.isArray(parsed) && parsed.length > 0) {
-          console.log('[AssetStore] Loaded folders from localStorage');
-          set({ folders: parsed });
-          return;
-        }
-      } catch (e) {
-        console.error('[AssetStore] Failed to parse saved folders:', e);
-      }
+    // localStorage에 저장된 데이터가 있으면 IndexedDB로 마이그레이션 (중복 실행 안전)
+    await migrateFromLocalStorage();
+
+    // 1. IndexedDB에서 불러오기
+    const saved = await idbGetAllFolders();
+    if (saved.length > 0) {
+      console.log('[AssetStore] Loaded folders from IndexedDB');
+      set({ folders: saved });
+      return;
     }
 
-    // 2. Fallback to mock data if nothing saved
+    // 2. IDB에 아무것도 없으면 목 데이터로 초기화 후 저장
     if (get().folders.length === 0) {
       console.log('[AssetStore] Initializing folders with mock data');
-      set({ folders: mockFolders as Folder[] });
+      const initial = mockFolders as Folder[];
+      await Promise.all(initial.map(f => idbPutFolder(f)));
+      set({ folders: initial });
     }
   },
 
@@ -166,52 +170,33 @@ export const useAssetStore = create<AssetStore>((set, get) => ({
       updatedAt: new Date().toISOString(),
     };
     
-    set(state => {
-      const nextFolders = [...state.folders, newFolder];
-      if (typeof window !== 'undefined') {
-        localStorage.setItem('nova_folders', JSON.stringify(nextFolders));
-      }
-      return { folders: nextFolders };
-    });
-    
+    await idbPutFolder(newFolder);
+    set(state => ({ folders: [...state.folders, newFolder] }));
     return newFolder;
   },
 
   deleteFolder: async (id) => {
     console.log('[AssetStore] deleteFolder:', id);
-    set(state => {
-      const nextFolders = state.folders.filter(f => f.id !== id);
-      if (typeof window !== 'undefined') {
-        localStorage.setItem('nova_folders', JSON.stringify(nextFolders));
-      }
-      return { folders: nextFolders };
-    });
+    await idbDeleteFolder(id);
+    set(state => ({ folders: state.folders.filter(f => f.id !== id) }));
   },
 
   moveFolder: async (id, targetParentId) => {
     console.log('[AssetStore] moveFolder:', id, '->', targetParentId);
-    set(state => {
-      const nextFolders = state.folders.map(f =>
-        f.id === id ? { ...f, parentId: targetParentId, updatedAt: new Date().toISOString() } : f
-      );
-      if (typeof window !== 'undefined') {
-        localStorage.setItem('nova_folders', JSON.stringify(nextFolders));
-      }
-      return { folders: nextFolders };
-    });
+    const updated = { ...get().folders.find(f => f.id === id)!, parentId: targetParentId, updatedAt: new Date().toISOString() };
+    await idbPutFolder(updated);
+    set(state => ({
+      folders: state.folders.map(f => f.id === id ? updated : f),
+    }));
   },
 
   renameFolder: async (id, name) => {
     console.log('[AssetStore] renameFolder:', id, '->', name);
-    set(state => {
-      const nextFolders = state.folders.map(f =>
-        f.id === id ? { ...f, name, updatedAt: new Date().toISOString() } : f
-      );
-      if (typeof window !== 'undefined') {
-        localStorage.setItem('nova_folders', JSON.stringify(nextFolders));
-      }
-      return { folders: nextFolders };
-    });
+    const updated = { ...get().folders.find(f => f.id === id)!, name, updatedAt: new Date().toISOString() };
+    await idbPutFolder(updated);
+    set(state => ({
+      folders: state.folders.map(f => f.id === id ? updated : f),
+    }));
   },
 
   copyFolder: async (id, targetParentId) => {
@@ -225,6 +210,7 @@ export const useAssetStore = create<AssetStore>((set, get) => ({
       createdAt: new Date().toISOString(),
       updatedAt: new Date().toISOString(),
     };
+    await idbPutFolder(newFolder);
     set(state => ({ folders: [...state.folders, newFolder] }));
     return newFolder;
   },

@@ -3,7 +3,7 @@ export interface Folder {
   name: string;
   parentId: string | null;
   isSmartFolder: boolean;
-  smartLogic?: any;
+  smartLogic?: unknown;
   createdAt: string;
   updatedAt: string;
   autoTags?: string[]; // Defined in Sprint 2 spec

@@ -2,8 +2,13 @@ import { Asset } from '../../types/asset';
 import { AssetRepository } from './AssetRepository';
 import { mockAssets } from '../../data/mockAssets';
 import { OPFSService } from '../storage/opfs';
-
-const STORAGE_KEY = 'nova_mock_assets';
+import {
+  idbGetAllAssets,
+  idbPutAsset,
+  idbPutAllAssets,
+  idbDeleteAsset,
+  migrateFromLocalStorage,
+} from '../storage/novaDB';
 
 // Helper to convert Data URL to Blob
 function dataURLToBlob(dataurl: string): Blob | null {
@@ -38,27 +43,20 @@ export class MockAssetRepository implements AssetRepository {
 
     this.initializationPromise = (async () => {
       if (this.initialized) return;
-      
-      const stored = localStorage.getItem(STORAGE_KEY);
-      if (stored) {
-        try {
-          const parsed = JSON.parse(stored);
-          // 저장된 데이터가 실제 Asset 배열인지 가볍게 확인
-          if (Array.isArray(parsed)) {
-            this.assets = parsed;
-          } else {
-            this.assets = [...mockAssets];
-          }
-        } catch (e) {
-          console.error('Failed to parse stored assets:', e);
-          this.assets = [...mockAssets];
-        }
+
+      // localStorage에 저장된 데이터가 있으면 IndexedDB로 마이그레이션
+      await migrateFromLocalStorage();
+
+      const stored = await idbGetAllAssets();
+      if (stored.length > 0) {
+        this.assets = stored;
       } else {
         this.assets = [...mockAssets];
+        await idbPutAllAssets(this.assets);
       }
-      
+
       this.initialized = true;
-      console.log('[Mock/OPFS] Initialized with', this.assets.length, 'assets');
+      console.log('[Mock/IDB] Initialized with', this.assets.length, 'assets');
     })();
 
     return this.initializationPromise;
@@ -162,7 +160,7 @@ export class MockAssetRepository implements AssetRepository {
     };
     
     this.assets = [newAsset, ...this.assets];
-    this.persist();
+    await idbPutAsset(newAsset);
     
     // Return with a usable Blob URL if it's an local path
     if (newAsset.thumbnail.startsWith('assets/')) {
@@ -185,35 +183,26 @@ export class MockAssetRepository implements AssetRepository {
     }
     
     this.assets = this.assets.filter(a => a.id !== id);
-    this.persist();
+    await idbDeleteAsset(id);
   }
 
   async toggleFavorite(id: string): Promise<void> {
     await this.initialize();
-    this.assets = this.assets.map(a => 
+    this.assets = this.assets.map(a =>
       a.id === id ? { ...a, isFavorite: !a.isFavorite } : a
     );
-    this.persist();
+    const updated = this.assets.find(a => a.id === id);
+    if (updated) await idbPutAsset(updated);
   }
 
   async updateAsset(id: string, updates: Partial<Asset>): Promise<void> {
     await this.initialize();
-    this.assets = this.assets.map(a => 
+    this.assets = this.assets.map(a =>
       a.id === id ? { ...a, ...updates } : a
     );
-    this.persist();
-    console.log('[Mock/OPFS] Asset updated:', id, updates);
+    const updated = this.assets.find(a => a.id === id);
+    if (updated) await idbPutAsset(updated);
+    console.log('[Mock/IDB] Asset updated:', id, updates);
   }
 
-  private persist() {
-    try {
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(this.assets));
-    } catch (e: any) {
-      if (e.name === 'QuotaExceededError') {
-        console.error('[Mock/Storage] LocalStorage FULL! Cannot save more asset metadata.');
-      } else {
-        console.error('[Mock/Storage] Failed to persist assets:', e);
-      }
-    }
-  }
 }
