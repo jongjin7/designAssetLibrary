@@ -1,5 +1,6 @@
 import { NVAssetCard } from '@nova/ui';
 import { Asset } from '@nova/types/asset';
+import { useAssetStore } from '@nova/store/useAssetStore';
 
 interface AssetCardProps {
   asset: Asset;
@@ -21,10 +22,22 @@ export function AssetCard({ asset, onTap, isSelected, onSelect, onFavoriteToggle
     onSelect?.(asset.id, e);
   };
 
+  const viewOptions = useAssetStore(state => state.viewOptions);
+  const displayOptions = {
+    showName: viewOptions.showName,
+    showExtension: viewOptions.showExtension,
+    showExtensionLabel: viewOptions.showExtensionLabel,
+    showInfo: viewOptions.showInfo,
+    infoType: viewOptions.infoType,
+    showAnnotation: viewOptions.showAnnotation,
+  };
+
   return (
     <NVAssetCard
       id={asset.id}
       fileName={asset.fileName}
+      extension={asset.extension}
+      fileSize={asset.fileSize}
       thumbnail={asset.thumbnail}
       thumbnailGradient={asset.thumbnailGradient}
       palette={asset.palette}
@@ -34,6 +47,7 @@ export function AssetCard({ asset, onTap, isSelected, onSelect, onFavoriteToggle
       isDimmed={isDimmed}
       thumbnailQuality={thumbnailQuality}
       isGridLayout={isGridLayout}
+      displayOptions={displayOptions}
       onTap={(e) => onTap(asset, e)}
       onSelect={handleSelect}
       onFavoriteToggle={(e) => {

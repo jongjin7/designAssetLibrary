@@ -5,9 +5,20 @@ import { AssetCardImage } from './parts/AssetCardImage';
 import { AssetCardOverlay } from './parts/AssetCardOverlay';
 import { AssetCardZoomPortal } from './parts/AssetCardZoomPortal';
 
+export interface AssetDisplayOptions {
+  showName?: boolean;
+  showExtension?: boolean;
+  showExtensionLabel?: boolean;
+  showInfo?: boolean;
+  infoType?: 'size' | 'weight';
+  showAnnotation?: boolean;
+}
+
 export interface NVAssetCardProps {
   id: string;
   fileName: string;
+  extension?: string;
+  fileSize?: string;
   thumbnail?: string;
   thumbnailGradient?: string;
   palette: string[];
@@ -18,6 +29,7 @@ export interface NVAssetCardProps {
   isLoading?: boolean;
   thumbnailQuality?: 'speed' | 'quality';
   isGridLayout?: boolean;
+  displayOptions?: AssetDisplayOptions;
   onTap?: (e: React.MouseEvent) => void;
   onSelect?: (e: React.MouseEvent) => void;
   onFavoriteToggle?: (e: React.MouseEvent) => void;
@@ -29,6 +41,8 @@ export interface NVAssetCardProps {
 export const NVAssetCard: React.FC<NVAssetCardProps> = ({
   id,
   fileName,
+  extension,
+  fileSize,
   thumbnail,
   thumbnailGradient,
   palette,
@@ -39,6 +53,7 @@ export const NVAssetCard: React.FC<NVAssetCardProps> = ({
   isLoading = false,
   thumbnailQuality = 'quality',
   isGridLayout = false,
+  displayOptions = {},
   onTap,
   onSelect,
   onFavoriteToggle,
@@ -137,8 +152,11 @@ export const NVAssetCard: React.FC<NVAssetCardProps> = ({
         hasError={hasError}
         isLoading={isLoading}
         fileName={fileName}
+        extension={extension}
+        fileSize={fileSize}
         palette={palette}
         thumbnail={thumbnail}
+        displayOptions={displayOptions}
         onSelect={onSelect}
         onFavoriteToggle={onFavoriteToggle}
         onTap={onTap}

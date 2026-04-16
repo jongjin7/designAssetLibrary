@@ -35,6 +35,7 @@ export * from './molecules/NVFolderCard';
 export * from './molecules/NVFolderPopover';
 export * from './molecules/NVMenuItem';
 export * from './molecules/NVMoreMenu';
+export * from './molecules/NVAssetListCell';
 
 // Organisms / Combined Components
 export { NVAssetGrid } from './composition/NVAssetGrid';

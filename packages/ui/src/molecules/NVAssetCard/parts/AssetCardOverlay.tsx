@@ -1,6 +1,7 @@
 import { Star, Check, ZoomIn } from 'lucide-react';
 import { cn } from '@ui/lib/utils';
 import { NVIconButton } from '@ui/atoms/NVIconButton';
+import { AssetDisplayOptions } from '../index';
 
 interface AssetCardOverlayProps {
   isSelected?: boolean;
@@ -9,8 +10,11 @@ interface AssetCardOverlayProps {
   hasError: boolean;
   isLoading: boolean;
   fileName: string;
+  extension?: string;
+  fileSize?: string;
   palette: string[];
   thumbnail?: string;
+  displayOptions?: AssetDisplayOptions;
   onSelect?: (e: React.MouseEvent) => void;
   onFavoriteToggle?: (e: React.MouseEvent) => void;
   onTap?: (e: React.MouseEvent) => void;
@@ -25,15 +29,32 @@ export const AssetCardOverlay: React.FC<AssetCardOverlayProps> = ({
   hasError,
   isLoading,
   fileName,
+  extension,
+  fileSize,
   palette,
   thumbnail,
+  displayOptions = {},
   onSelect,
   onFavoriteToggle,
   onTap,
   onZoomEnter,
   onZoomLeave
 }) => {
+  const {
+    showName = true,
+    showExtension = true,
+    showExtensionLabel = true,
+    showInfo = true,
+    infoType = 'size',
+    showAnnotation = true,
+  } = displayOptions;
+
+  // 파일명 처리: showExtension에 따라 확장자 포함 여부 결정
   const nameWithoutExt = fileName.split('.').slice(0, -1).join('.') || fileName;
+  const displayName = showExtension ? fileName : nameWithoutExt;
+
+  // 정보 표시: infoType에 따라 용량 또는 규격
+  const infoText = infoType === 'weight' ? fileSize : extension?.toUpperCase();
 
   return (
     <div className="absolute inset-0 flex flex-col justify-between p-2.5 z-10">
@@ -74,26 +95,39 @@ export const AssetCardOverlay: React.FC<AssetCardOverlayProps> = ({
           />
         )}
 
-        {!hasError && !isLoading && (
-          <NVIconButton 
-              icon={Star}
-              variant='neutral'
-              size="xs"
-              iconSize={16}
-              rounded={true}
-              strokeWidth={isFavorite ? 2.5 : 2}
-              iconProps={{ fill: isFavorite ? "currentColor" : "none" }}
-              className={cn(
-                "transition-all duration-300",
-                isFavorite ? "!text-yellow-300" : "!text-white/50"
-              )}
-              onClick={(e) => {
-                e.stopPropagation();
-                onFavoriteToggle?.(e);
-              }}
-              aria-label="즐겨찾기 토글"
-          />
-        )}
+        <div className="flex items-start gap-1 ml-auto">
+          {/* 확장자 레이블 배지 */}
+          {showExtensionLabel && !hasError && !isLoading && extension && (
+            <span className={cn(
+              "text-[9px] font-bold uppercase tracking-widest px-1.5 py-0.5 rounded-md",
+              "bg-black/40 backdrop-blur-sm text-white/60 border border-white/10",
+              "opacity-0 group-hover:opacity-100 transition-opacity duration-300"
+            )}>
+              {extension}
+            </span>
+          )}
+
+          {!hasError && !isLoading && (
+            <NVIconButton 
+                icon={Star}
+                variant='neutral'
+                size="xs"
+                iconSize={16}
+                rounded={true}
+                strokeWidth={isFavorite ? 2.5 : 2}
+                iconProps={{ fill: isFavorite ? "currentColor" : "none" }}
+                className={cn(
+                  "transition-all duration-300",
+                  isFavorite ? "!text-yellow-300" : "!text-white/50"
+                )}
+                onClick={(e) => {
+                  e.stopPropagation();
+                  onFavoriteToggle?.(e);
+                }}
+                aria-label="즐겨찾기 토글"
+            />
+          )}
+        </div>
       </div>
 
       {/* Bottom: Frameless Metadata (Floating Text) & Actions */}
@@ -103,14 +137,28 @@ export const AssetCardOverlay: React.FC<AssetCardOverlayProps> = ({
         (hasError || isLoading) && "opacity-40"
       )}>
         <div className="flex flex-col gap-1.5 min-w-0 pr-2">
-          <p className={cn(
-            "text-xs font-medium text-white/70 truncate drop-shadow-sm px-0.5 tracking-tight transition-colors",
-            (!hasError && !isLoading) && "group-hover:text-white"
-          )}>
-            {nameWithoutExt}
-          </p>
+          {/* 파일명 */}
+          {showName && (
+            <p className={cn(
+              "text-xs font-medium text-white/70 truncate drop-shadow-sm px-0.5 tracking-tight transition-colors",
+              (!hasError && !isLoading) && "group-hover:text-white"
+            )}>
+              {displayName}
+            </p>
+          )}
+
+          {/* 파일 정보 (용량 / 확장자) */}
+          {showInfo && !hasError && !isLoading && infoText && (
+            <p className={cn(
+              "text-[10px] font-medium text-white/40 px-0.5 tracking-tight truncate",
+              "opacity-0 group-hover:opacity-100 transition-opacity duration-300"
+            )}>
+              {infoText}
+            </p>
+          )}
           
-          {!hasError && !isLoading && (
+          {/* 팔레트 컬러바 (showAnnotation) */}
+          {showAnnotation && !hasError && !isLoading && (
             <div className="flex h-0.5 w-8 rounded-full overflow-hidden opacity-40 group-hover:opacity-70 transition-opacity ml-0.5">
               {palette.slice(0, 3).map((color, i) => (
                 <div key={i} className="h-full flex-1" style={{ backgroundColor: color }} />
