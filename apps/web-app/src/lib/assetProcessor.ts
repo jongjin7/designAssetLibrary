@@ -3,7 +3,7 @@ import { Asset } from '@nova/types/asset';
 
 export async function processFileToAsset(
   file: File | Blob, 
-  defaultTags: string[] = ['uploaded', 'new']
+  defaultTags: string[] = []
 ): Promise<Partial<Asset>> {
   const fullFileName = (file as File).name || `asset-${Date.now()}.webp`;
   const extension = fullFileName.includes('.') ? fullFileName.split('.').pop() || 'webp' : 'webp';

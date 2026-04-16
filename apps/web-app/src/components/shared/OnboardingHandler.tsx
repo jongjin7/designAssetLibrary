@@ -6,6 +6,7 @@ import { useAuth } from '@nova/providers/AuthProvider';
 import { opfsStorage } from '@nova/lib/storage/opfs';
 import { assetRepository } from '@nova/lib/dataService';
 import { useToast } from '@nova/ui';
+import { warmUpModel } from '@nova/lib/classificationService';
 
 export function OnboardingHandler() {
   const { user } = useAuth();
@@ -18,6 +19,9 @@ export function OnboardingHandler() {
     if (!user || isInitialized) return;
 
     const hasCompletedOnboarding = localStorage.getItem('nova_onboarding_completed');
+
+    // Pre-warm AI model for faster first analysis
+    warmUpModel();
     
     if (!hasCompletedOnboarding) {
       setShowOnboarding(true);

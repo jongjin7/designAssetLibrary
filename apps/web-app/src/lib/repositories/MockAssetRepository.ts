@@ -120,25 +120,53 @@ export class MockAssetRepository implements AssetRepository {
       console.error(`[Mock/Storage] CRITICAL: Failed to save file to ${opfsPath}:`, e);
     }
 
-    // AI Color Extraction Integration
+    // AI Analysis (Color Palette & Object Classification) - With Performance Guards
     let palette = asset.palette;
     let aiTags: string[] = [];
     
-    if (previewUrl) {
-      try {
-        const { extractColors } = await import('../colorExtractor');
-        palette = await extractColors(previewUrl);
-        // Clean up object URL if it was created
-        if (previewUrl.startsWith('blob:')) URL.revokeObjectURL(previewUrl);
-        
-        // Add color tags automatically based on primary colors
-        if (palette && palette.length > 0) {
-          aiTags = palette.slice(0, 2).map(hex => `color/${hex.replace('#', '')}`);
-        }
-      } catch (err) {
-        console.error('[Mock/AI] Color extraction failed, using fallback:', err);
+    try {
+      const analysisUrl = await this.opfs.getFileUrl(opfsPath);
+      
+      const [{ extractColors }, { classifyImage, analyzeMood }] = await Promise.all([
+        import('../colorExtractor'),
+        import('../classificationService')
+      ]);
+
+      // 1. Extract Palette (Time-limited)
+      const extractedPalette = await extractColors(analysisUrl);
+      if (extractedPalette && extractedPalette.length > 0) {
+        palette = extractedPalette;
       }
+
+      // 2. Classify Image & Analyze Mood with 5-second Hard Timeout
+      const aiPromise = Promise.all([
+        classifyImage(analysisUrl),
+        analyzeMood(palette || [])
+      ]);
+
+      const timeoutPromise = new Promise<[string[], string[]]>((resolve) => 
+        setTimeout(() => {
+          console.warn('[Mock/AI] Analysis timed out, proceeding with partial data');
+          resolve([[], []]);
+        }, 5000)
+      );
+
+      const [objects, moods] = await Promise.race([aiPromise, timeoutPromise]);
+
+      aiTags = [...(objects || []), ...(moods || [])];
+      
+      console.log(`[Mock/AI] Final tags for ${fileName}:`, aiTags);
+    } catch (err) {
+      console.error('[Mock/AI] Analysis failed or timed out:', err);
     }
+
+    // Combine existing tags with AI tags, ensuring uniqueness and no empty strings
+    const finalTags = [
+      ...new Set([
+        ...(asset.tags || []),
+        ...aiTags
+      ])
+    ].filter(tag => tag && tag.trim() !== '');
 
     const newAsset: Asset = {
       id,
@@ -149,11 +177,12 @@ export class MockAssetRepository implements AssetRepository {
       thumbnailGradient: asset.thumbnailGradient || `linear-gradient(135deg, ${palette?.[0] || '#6366F1'} 0%, ${palette?.[1] || '#06B6D4'} 100%)`,
       thumbnail: opfsPath,
       palette: palette || ['#6366F1', '#06B6D4'],
-      tags: [...(asset.tags || []), 'captured', ...aiTags],
+      tags: finalTags,
       createdAt: asset.createdAt || new Date().toISOString().split('T')[0],
       isFavorite: !!asset.isFavorite,
     };
     
+    console.log('[Mock/IDB] Saving asset with tags:', newAsset.tags);
     this.assets = [newAsset, ...this.assets];
     await idbPutAsset(newAsset);
     

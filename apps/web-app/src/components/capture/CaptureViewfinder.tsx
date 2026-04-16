@@ -31,7 +31,6 @@ export const CaptureViewfinder = forwardRef<CaptureViewfinderRef, CaptureViewfin
 
     const startCamera = async (mode: 'user' | 'environment') => {
       if (isRequestingRef.current) {
-        console.log('[Camera] Request already in progress, skipping...');
         return;
       }
 
@@ -41,35 +40,65 @@ export const CaptureViewfinder = forwardRef<CaptureViewfinderRef, CaptureViewfin
         return;
       }
 
-      // 기존 스트림이 있다면 중지
+      // 기존 스트림 중지
       if (activeStreamRef.current) {
         activeStreamRef.current.getTracks().forEach(track => track.stop());
         activeStreamRef.current = null;
       }
 
       isRequestingRef.current = true;
+      setError(null);
+
       try {
-        const constraints = {
-          video: { 
-            facingMode: { ideal: mode },
-            width: { ideal: 1920 },
-            height: { ideal: 1080 }
+        // [1단계] 이상적인 해상도와 방향으로 시도
+        const constraintsList = [
+          {
+            video: { facingMode: { ideal: mode }, width: { ideal: 1920 }, height: { ideal: 1080 } },
+            audio: false
           },
-          audio: false
-        };
-        
-        console.log('[Camera] Requesting access with mode:', mode);
-        const newStream = await navigator.mediaDevices.getUserMedia(constraints);
-        activeStreamRef.current = newStream;
-        setStream(newStream || null);
+          {
+            video: { facingMode: { ideal: mode } }, // 해상도 제한 없이 방향만
+            audio: false
+          },
+          {
+            video: true, // 아무 카메라나 허용
+            audio: false
+          }
+        ];
+
+        let lastError = null;
+        let successfulStream = null;
+
+        for (const constraints of constraintsList) {
+          try {
+            console.log('[Camera] Attempting stream with constraints:', JSON.stringify(constraints));
+            successfulStream = await navigator.mediaDevices.getUserMedia(constraints);
+            if (successfulStream) break;
+          } catch (e) {
+            lastError = e;
+            console.warn('[Camera] Constraint attempt failed, trying next...');
+          }
+        }
+
+        if (!successfulStream) throw lastError;
+
+        activeStreamRef.current = successfulStream;
+        setStream(successfulStream);
         
         if (videoRef.current) {
-          videoRef.current.srcObject = newStream;
+          videoRef.current.srcObject = successfulStream;
         }
-        setError(null);
       } catch (err: any) {
-        console.error('카메라 시작 오류:', err);
-        setError(err.name === 'NotAllowedError' ? 'PERMISSION' : 'NOT_FOUND');
+        console.error('[Camera] All attempts failed:', err.name, err.message);
+        
+        if (err.name === 'NotAllowedError') {
+          setError('PERMISSION');
+        } else {
+          // NotFoundError, OverconstrainedError 등 하드웨어 관련 에러 처리
+          setError('NOT_FOUND');
+          // 폴백 UI를 보여주기 위해 스트림 상태 초기화
+          setStream(null);
+        }
       } finally {
         isRequestingRef.current = false;
       }

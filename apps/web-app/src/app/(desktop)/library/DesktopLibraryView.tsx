@@ -17,6 +17,7 @@ import { useRouter } from 'next/navigation';
 import { cn } from '@nova/lib/utils';
 import { extractColors } from '@nova/lib/colorExtractor';
 import { LibraryFilters } from '@nova/hooks';
+import { useAssetStore } from '@nova/store/useAssetStore';
 import { useDesktopShell } from '../../../components/layout/DesktopShell/index';
 import { LibraryFolderSection } from '../../../components/library/LibraryFolderSection';
 import { LibraryAssetGridSection } from '../../../components/library/LibraryAssetGridSection';
@@ -94,6 +95,8 @@ export default function DesktopLibraryView({
   
   const { canGoBack, canGoForward } = useNavHistory();
   const { toast } = useToast();
+  const { isAnalyzing } = useAssetStore();
+  const { profile, loading: authLoading } = { profile: null, loading: false }; // Mock or actual if needed
   const [isSidebarVisible, setIsSidebarVisible] = useState(false);
   const [isManagementMode, setIsManagementMode] = useState(false);
   const [isBulkDeleteDialogOpen, setIsBulkDeleteDialogOpen] = useState(false);

@@ -7,6 +7,8 @@ import { CaptureViewfinder, CaptureViewfinderRef } from '../../../components/cap
 import { CaptureControls } from '../../../components/capture/CaptureControls';
 import { useAssets } from '../../../hooks/domain/useAssets';
 import { processFileToAsset } from '../../../lib/assetProcessor';
+import { NVLoadingState } from '@nova/ui';
+import { useAssetStore } from '@nova/store/useAssetStore';
 
 export default function CapturePage() {
   const router = useRouter();
@@ -17,6 +19,7 @@ export default function CapturePage() {
   const [capturedImage, setCapturedImage] = useState<string | null>(null);
   const [isFileMode, setIsFileMode] = useState(false);
   const isCapturing = useRef(false);
+  const { isAnalyzing } = useAssetStore();
 
   const captureIntervalRef = useRef<NodeJS.Timeout | null>(null);
 
@@ -58,7 +61,7 @@ export default function CapturePage() {
 
     // Process using unified processor
     const blob = dataURLToBlob(dataUrl) || new Blob();
-    const processedAsset = await processFileToAsset(blob, ['captured', 'new']);
+    const processedAsset = await processFileToAsset(blob, []);
 
     const rawFileName = fileName || processedAsset.fileName || '';
     const finalName = rawFileName.includes('.') 
@@ -146,6 +149,14 @@ export default function CapturePage() {
         <div className="upload-toast">
           <CheckCircle size={16} />
           <span>에셋이 라이브러리에 추가되었습니다</span>
+        </div>
+      )}
+
+      {isAnalyzing && (
+        <div className="fixed inset-0 z-[9999] flex flex-col items-center justify-center bg-[#0A0C13]/80 backdrop-blur-md transition-all animate-in fade-in duration-300">
+           <NVLoadingState 
+             message="AI가 에셋에서 사물과 분위기를 분석하고 있습니다..." 
+           />
         </div>
       )}
     </div>

@@ -75,6 +75,9 @@ interface AssetStore {
   setActiveFilters: (filters: LibraryFilters | ((prev: LibraryFilters) => LibraryFilters)) => void;
   handleFilterReset: () => void;
   resetLibrary: () => Promise<void>;
+  
+  // AI Status
+  isAnalyzing: boolean;
 }
 
 export const useAssetStore = create<AssetStore>((set, get) => ({
@@ -106,6 +109,8 @@ export const useAssetStore = create<AssetStore>((set, get) => ({
     showAnnotation: true,
     showSubfolder: false,
   },
+  
+  isAnalyzing: false,
   
   setFilter: (filter) => set((state) => ({ 
     filter: typeof filter === 'function' ? filter(state.filter) : filter 
@@ -225,6 +230,7 @@ export const useAssetStore = create<AssetStore>((set, get) => ({
   },
 
   addAsset: async (asset, file) => {
+    set({ isAnalyzing: true });
     try {
       const newAsset = await assetRepository.saveAsset(asset, file);
       await get().refreshAssets();
@@ -232,6 +238,8 @@ export const useAssetStore = create<AssetStore>((set, get) => ({
     } catch (error) {
        console.error('Failed to add asset:', error);
        throw error;
+    } finally {
+      set({ isAnalyzing: false });
     }
   },
 
