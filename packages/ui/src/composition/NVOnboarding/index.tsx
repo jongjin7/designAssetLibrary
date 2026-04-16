@@ -87,7 +87,7 @@ export function NVOnboarding({ isOpen, onComplete }: NVOnboardingProps) {
                   {step.icon}
                 </div>
                 
-                <NVTypography variant="h2" className="text-2xl font-bold text-white mb-4 tracking-tight">
+                <NVTypography variant="header" className="text-2xl font-bold text-white mb-4 tracking-tight">
                   {step.title}
                 </NVTypography>
                 

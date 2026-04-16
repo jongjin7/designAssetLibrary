@@ -1,4 +1,13 @@
-import * as tf from '@tensorflow/tfjs';
+import type * as TF from '@tensorflow/tfjs';
+
+let tfModule: typeof TF | null = null;
+
+async function getTF(): Promise<typeof TF> {
+  if (!tfModule) {
+    tfModule = await import('@tensorflow/tfjs');
+  }
+  return tfModule;
+}
 
 /**
  * AI-powered color extraction using K-Means clustering with TensorFlow.js
@@ -12,14 +21,16 @@ export async function extractColors(imageUrl: string, count: number = 5): Promis
 
     img.onload = async () => {
       try {
+        const tf = await getTF();
+
         // 1. Process image to Tensor - Optimized resolution 40x40
         const pixels = tf.browser.fromPixels(img);
         const resizedPixels = tf.image.resizeBilinear(pixels, [40, 40]);
-        const data = resizedPixels.reshape([-1, 3]).toFloat() as tf.Tensor2D;
+        const data = resizedPixels.reshape([-1, 3]).toFloat() as TF.Tensor2D;
 
         // 2. Perform K-Means clustering (Optimized for speed)
-        const centroids = await kMeans(data, count);
-        
+        const centroids = await kMeans(tf, data, count);
+
         // 3. Convert results back to Hex colors
         const colors = await getHexFromCentroids(centroids);
 
@@ -48,10 +59,10 @@ export async function extractColors(imageUrl: string, count: number = 5): Promis
  * - Added tf.tidy to minimize memory overhead
  * - Reduced max iterations for faster convergence
  */
-async function kMeans(data: tf.Tensor2D, k: number, maxIterations: number = 5): Promise<tf.Tensor2D> {
+async function kMeans(tf: typeof TF, data: TF.Tensor2D, k: number, maxIterations: number = 5): Promise<TF.Tensor2D> {
   const numItems = data.shape[0];
   const randomIndices = tf.util.createShuffledIndices(numItems).slice(0, k);
-  let centroids = tf.gather(data, Array.from(randomIndices)) as tf.Tensor2D;
+  let centroids = tf.gather(data, Array.from(randomIndices)) as TF.Tensor2D;
 
   for (let i = 0; i < maxIterations; i++) {
     const nextCentroids = tf.tidy(() => {
@@ -60,19 +71,19 @@ async function kMeans(data: tf.Tensor2D, k: number, maxIterations: number = 5): 
       const centroidsSq = centroids.square().sum(1).expandDims(0);
       const twoAB = data.matMul(centroids.transpose());
       const distances = dataSq.add(centroidsSq).sub(twoAB.mul(2));
-      
+
       const assignments = distances.argMin(1);
-      
+
       // 2. Efficiently update centroids without moving data out of GPU
       const oneHotAssignments = tf.oneHot(assignments, k).toFloat();
       const clusterSums = oneHotAssignments.transpose().matMul(data);
-      const clusterCounts = oneHotAssignments.sum(0).expandDims(1).add(1e-5); 
-      
-      return clusterSums.div(clusterCounts) as tf.Tensor2D;
+      const clusterCounts = oneHotAssignments.sum(0).expandDims(1).add(1e-5);
+
+      return clusterSums.div(clusterCounts) as TF.Tensor2D;
     });
 
     const diff = tf.tidy(() => centroids.sub(nextCentroids).abs().sum().dataSync()[0]);
-    
+
     centroids.dispose();
     centroids = nextCentroids;
 
@@ -82,18 +93,18 @@ async function kMeans(data: tf.Tensor2D, k: number, maxIterations: number = 5): 
   return centroids;
 }
 
-async function getHexFromCentroids(centroids: tf.Tensor2D): Promise<string[]> {
+async function getHexFromCentroids(centroids: TF.Tensor2D): Promise<string[]> {
   const data = await centroids.data();
   const colors: string[] = [];
-  
+
   for (let i = 0; i < data.length; i += 3) {
     const r = Math.round(Math.max(0, Math.min(255, data[i])));
     const g = Math.round(Math.max(0, Math.min(255, data[i+1])));
     const b = Math.round(Math.max(0, Math.min(255, data[i+2])));
-    
+
     colors.push(rgbToHex(r, g, b));
   }
-  
+
   return colors;
 }
 

@@ -20,6 +20,17 @@ const nextConfig = {
       'https://192.168.103.*:3000',
     ],
   },
+  webpack: (config, { isServer }) => {
+    if (isServer) {
+      // TensorFlow.js and MobileNet are browser-only — exclude from server bundle
+      config.externals = [
+        ...(Array.isArray(config.externals) ? config.externals : []),
+        '@tensorflow/tfjs',
+        '@tensorflow-models/mobilenet',
+      ];
+    }
+    return config;
+  },
 };
 
 module.exports = withPWA(nextConfig);

@@ -1,7 +1,6 @@
-import * as mobilenet from '@tensorflow-models/mobilenet';
-import '@tensorflow/tfjs';
+import type * as MobileNetModule from '@tensorflow-models/mobilenet';
 
-let model: mobilenet.MobileNet | null = null;
+let model: MobileNetModule.MobileNet | null = null;
 
 /**
  * Pre-warm the model to speed up first analysis
@@ -10,6 +9,8 @@ export async function warmUpModel() {
   if (model) return;
   try {
     console.log('[AI] Pre-warming MobileNet model...');
+    await import('@tensorflow/tfjs');
+    const mobilenet = await import('@tensorflow-models/mobilenet');
     model = await mobilenet.load({ version: 2, alpha: 1.0 });
     console.log('[AI] MobileNet model is ready.');
   } catch (err) {
@@ -56,7 +57,7 @@ export async function classifyImage(imageUrl: string): Promise<string[]> {
     const tagSet = new Set<string>();
 
     const predictions = await model.classify(img);
-    
+
     // Sort by probability and take top candidates
     const sortedPredictions = predictions.sort((a, b) => b.probability - a.probability);
 
@@ -92,12 +93,12 @@ export async function analyzeMood(palette: string[]): Promise<string[]> {
   };
 
   const rgbs = palette.map(hexToRgb);
-  
+
   // Calculate average brightness and temperature
   let totalBrightness = 0;
-  let totalTemp = 0; 
+  let totalTemp = 0;
   let totalSatur = 0;
-  
+
   rgbs.forEach(rgb => {
     // Standard Luminance calculation
     totalBrightness += (rgb.r * 299 + rgb.g * 587 + rgb.b * 114) / 1000;
