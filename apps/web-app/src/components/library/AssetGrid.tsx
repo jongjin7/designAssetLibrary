@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { NVAssetGrid } from '@nova/ui';
 import { Asset } from '@nova/types/asset';
 import { AssetCard } from '@nova/components/library/AssetCard';
+import { AssetListCell } from '@nova/components/library/AssetListCell';
 import { useAssetStore } from '@nova/store/useAssetStore';
 
 interface AssetGridProps {
@@ -61,9 +62,40 @@ export function AssetGrid({
     }
   }, [activeAssetId, isSidebarOpen]);
 
+  if (layout === 'list') {
+    return (
+      <div
+        onMouseEnter={() => setIsHovered(true)}
+        onMouseLeave={() => setIsHovered(false)}
+        className="h-full w-full"
+      >
+        <NVAssetGrid layout="list">
+          {assets.map(asset => {
+            const isDimmed = isSidebarOpen && activeAssetId && !isHovered && asset.id !== activeAssetId;
+            return (
+              <AssetListCell
+                key={asset.id}
+                asset={asset}
+                onTap={onAssetTap}
+                isSelected={selectedIds?.has(asset.id)}
+                onSelect={onSelect}
+                onFavoriteToggle={onFavoriteToggle}
+                isMobile={isMobile}
+                isSelectMode={isSelectMode}
+                isDimmed={isDimmed}
+                thumbnailQuality={viewOptions.thumbnail}
+                viewOptions={viewOptions}
+              />
+            );
+          })}
+        </NVAssetGrid>
+      </div>
+    );
+  }
+
   return (
-    <div 
-      onMouseEnter={() => setIsHovered(true)} 
+    <div
+      onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
       className="h-full w-full"
     >
@@ -71,12 +103,12 @@ export function AssetGrid({
         {assets.map(asset => {
           // Dim other assets when a detail sidebar is open, UNLESS the grid is being hovered
           const isDimmed = isSidebarOpen && activeAssetId && !isHovered && asset.id !== activeAssetId;
-          
+
           return (
-            <AssetCard 
-              key={asset.id} 
-              asset={asset} 
-              onTap={onAssetTap} 
+            <AssetCard
+              key={asset.id}
+              asset={asset}
+              onTap={onAssetTap}
               isSelected={selectedIds?.has(asset.id)}
               onSelect={onSelect}
               onFavoriteToggle={onFavoriteToggle}

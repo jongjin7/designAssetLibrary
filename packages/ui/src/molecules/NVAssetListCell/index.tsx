@@ -1,3 +1,5 @@
+'use client';
+
 import React, { useState } from 'react';
 import { Star, Check, ZoomIn, Aperture } from 'lucide-react';
 import { cn } from '@ui/lib/utils';
