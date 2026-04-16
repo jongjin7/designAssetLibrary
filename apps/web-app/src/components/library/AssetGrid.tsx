@@ -84,6 +84,7 @@ export function AssetGrid({
               isSelectMode={isSelectMode}
               isDimmed={isDimmed}
               thumbnailQuality={viewOptions.thumbnail}
+              isGridLayout={layout === 'grid'}
             />
           );
         })}

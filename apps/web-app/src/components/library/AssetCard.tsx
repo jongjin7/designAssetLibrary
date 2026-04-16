@@ -12,9 +12,10 @@ interface AssetCardProps {
   isSelectMode?: boolean;
   isDimmed?: boolean;
   thumbnailQuality?: 'speed' | 'quality';
+  isGridLayout?: boolean;
 }
 
-export function AssetCard({ asset, onTap, isSelected, onSelect, onFavoriteToggle, onAssetTap, isMobile, isSelectMode, isDimmed, thumbnailQuality = 'quality' }: AssetCardProps) {
+export function AssetCard({ asset, onTap, isSelected, onSelect, onFavoriteToggle, onAssetTap, isMobile, isSelectMode, isDimmed, thumbnailQuality = 'quality', isGridLayout = false }: AssetCardProps) {
   const handleSelect = (e: React.MouseEvent) => {
     e.stopPropagation();
     onSelect?.(asset.id, e);
@@ -32,6 +33,7 @@ export function AssetCard({ asset, onTap, isSelected, onSelect, onFavoriteToggle
       isMobile={isMobile || isSelectMode}
       isDimmed={isDimmed}
       thumbnailQuality={thumbnailQuality}
+      isGridLayout={isGridLayout}
       onTap={(e) => onTap(asset, e)}
       onSelect={handleSelect}
       onFavoriteToggle={(e) => {

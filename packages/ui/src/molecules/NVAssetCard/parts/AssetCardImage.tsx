@@ -14,6 +14,7 @@ interface AssetCardImageProps {
   isLoading: boolean;
   isLongPressing: boolean;
   thumbnailQuality?: 'speed' | 'quality';
+  isGridLayout?: boolean;
 }
 
 export const AssetCardImage: React.FC<AssetCardImageProps> = ({
@@ -28,12 +29,14 @@ export const AssetCardImage: React.FC<AssetCardImageProps> = ({
   isLoading,
   isLongPressing,
   thumbnailQuality = 'quality',
+  isGridLayout = false,
 }) => {
   return (
     <div className={cn(
       "w-full bg-slate-900 rounded-lg overflow-hidden transition-all duration-500 relative",
       isLongPressing ? "scale-[0.98]" : "",
-      (!isLoaded || hasError || isLoading) ? "aspect-square" : ""
+      // Grid 모드: 고정 비율 셀로 통일, 그 외: 이미지 비율 유지
+      isGridLayout ? "aspect-[4/3]" : ((!isLoaded || hasError || isLoading) ? "aspect-square" : "")
     )}>
       {/* Shimmer Skeleton */}
       {(isLoading || (!isLoaded && !hasError)) && (
@@ -60,7 +63,11 @@ export const AssetCardImage: React.FC<AssetCardImageProps> = ({
             setIsLoaded(true);
           }}
           className={cn(
-            "w-full h-auto object-contain transition-all duration-700 ease-out group-hover:scale-105 rounded-lg",
+            "transition-all duration-700 ease-out group-hover:scale-105 rounded-lg",
+            // Grid: absolute fill + cover, Masonry/List: 자연 비율 유지
+            isGridLayout
+              ? "absolute inset-0 w-full h-full object-cover rounded-none"
+              : "w-full h-auto object-contain",
             isLoaded ? "opacity-100 scale-100" : "opacity-0 scale-100"
           )} 
         />
