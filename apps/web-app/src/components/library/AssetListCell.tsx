@@ -43,10 +43,7 @@ export function AssetListCell({
       isSelectMode={isSelectMode}
       thumbnailQuality={thumbnailQuality}
       showName={viewOptions.showName}
-      showInfo={viewOptions.showInfo}
-      infoType={viewOptions.infoType}
-      showExtension={viewOptions.showExtension}
-      showExtensionLabel={viewOptions.showExtensionLabel}
+      showAnnotation={viewOptions.showAnnotation}
       onTap={(e) => onTap(asset, e)}
       onSelect={(e) => onSelect?.(asset.id, e)}
       onFavoriteToggle={(e) => {

@@ -21,10 +21,7 @@ export interface NVAssetListCellProps {
   thumbnailQuality?: 'speed' | 'quality';
   // ViewOptions display flags
   showName?: boolean;
-  showInfo?: boolean;
-  infoType?: 'size' | 'weight';
-  showExtension?: boolean;
-  showExtensionLabel?: boolean;
+  showAnnotation?: boolean;
   onTap?: (e: React.MouseEvent) => void;
   onSelect?: (e: React.MouseEvent) => void;
   onFavoriteToggle?: (e: React.MouseEvent) => void;
@@ -46,10 +43,7 @@ export const NVAssetListCell: React.FC<NVAssetListCellProps> = ({
   isSelectMode = false,
   thumbnailQuality = 'quality',
   showName = true,
-  showInfo = true,
-  infoType = 'size',
-  showExtension = true,
-  showExtensionLabel = true,
+  showAnnotation = true,
   onTap,
   onSelect,
   onFavoriteToggle,
@@ -59,7 +53,6 @@ export const NVAssetListCell: React.FC<NVAssetListCellProps> = ({
   const [hasError, setHasError] = useState(false);
 
   const nameWithoutExt = fileName.split('.').slice(0, -1).join('.') || fileName;
-  const ext = extension || fileName.split('.').pop()?.toUpperCase() || '';
 
   const handleClick = (e: React.MouseEvent) => {
     if (isSelected) { onSelect?.(e); return; }
@@ -154,23 +147,15 @@ export const NVAssetListCell: React.FC<NVAssetListCellProps> = ({
               {nameWithoutExt}
             </span>
           )}
-          {showExtensionLabel && ext && (
-            <span className="flex-shrink-0 text-[10px] font-semibold tracking-wide px-1.5 py-0.5 rounded bg-white/8 text-slate-400 uppercase">
-              {ext}
-            </span>
-          )}
         </div>
 
         <div className="flex items-center gap-2 mt-0.5">
-          {showInfo && fileSize && (
+          {fileSize && (
             <span className="text-[11px] text-slate-500 truncate">
-              {infoType === 'weight' ? fileSize : fileSize}
+              {fileSize}
             </span>
           )}
-          {showExtension && !showExtensionLabel && ext && (
-            <span className="text-[11px] text-slate-600">.{ext.toLowerCase()}</span>
-          )}
-          {palette.length > 0 && (
+          {showAnnotation && palette.length > 0 && (
             <div className="flex h-1.5 w-6 rounded-full overflow-hidden opacity-50 group-hover:opacity-80 transition-opacity flex-shrink-0">
               {palette.slice(0, 3).map((color, i) => (
                 <div key={i} className="h-full flex-1" style={{ backgroundColor: color }} />

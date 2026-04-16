@@ -3,8 +3,7 @@ import {
   LayoutGrid,
   ArrowUpAz, 
   ArrowDownAz, 
-  RefreshCw,
-  Maximize2
+  RefreshCw
 } from 'lucide-react';
 import { 
   NVSwitch, 
@@ -122,28 +121,8 @@ export function ViewOptionsPopover({ className, onClose }: ViewOptionsPopoverPro
             <NVSwitch checked={viewOptions.showName} onChange={(v) => updateOption('showName', v)} size="sm" />
           </div>
 
-          <div className="flex items-center justify-between">
-            <span className="text-xs text-slate-200">정보 표시</span>
-            <div className="flex items-center gap-2">
-              <NVSelect 
-                size="sm"
-                className="w-22"
-                icon={<Maximize2 size={11} />}
-                value={viewOptions.infoType}
-                onChange={(e) => updateOption('infoType', e.target.value)}
-                options={[
-                  { value: 'size', label: '규격' },
-                  { value: 'weight', label: '용량' },
-                ]}
-              />
-              <NVSwitch checked={viewOptions.showInfo} onChange={(v) => updateOption('showInfo', v)} size="sm" />
-            </div>
-          </div>
-
           {[
-            { id: 'showExtension', label: '확장명 표시' },
-            { id: 'showExtensionLabel', label: '확장명 레이블 표시' },
-            { id: 'showAnnotation', label: '주석 표시' },
+            { id: 'showAnnotation', label: '주석(컬러칩) 표시' },
             { id: 'showSubfolder', label: '하위 폴더 내용 표시' },
           ].map(item => (
             <div key={item.id} className="flex items-center justify-between">

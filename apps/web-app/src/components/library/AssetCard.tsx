@@ -25,10 +25,6 @@ export function AssetCard({ asset, onTap, isSelected, onSelect, onFavoriteToggle
   const viewOptions = useAssetStore(state => state.viewOptions);
   const displayOptions = {
     showName: viewOptions.showName,
-    showExtension: viewOptions.showExtension,
-    showExtensionLabel: viewOptions.showExtensionLabel,
-    showInfo: viewOptions.showInfo,
-    infoType: viewOptions.infoType,
     showAnnotation: viewOptions.showAnnotation,
   };
 

@@ -42,19 +42,11 @@ export const AssetCardOverlay: React.FC<AssetCardOverlayProps> = ({
 }) => {
   const {
     showName = true,
-    showExtension = true,
-    showExtensionLabel = true,
-    showInfo = true,
-    infoType = 'size',
     showAnnotation = true,
   } = displayOptions;
 
-  // 파일명 처리: showExtension에 따라 확장자 포함 여부 결정
-  const nameWithoutExt = fileName.split('.').slice(0, -1).join('.') || fileName;
-  const displayName = showExtension ? fileName : nameWithoutExt;
-
-  // 정보 표시: infoType에 따라 용량 또는 규격
-  const infoText = infoType === 'weight' ? fileSize : extension?.toUpperCase();
+  // 파일명 처리: 항상 확장자 제외
+  const displayName = fileName.split('.').slice(0, -1).join('.') || fileName;
 
   return (
     <div className="absolute inset-0 flex flex-col justify-between p-2.5 z-10">
@@ -96,17 +88,6 @@ export const AssetCardOverlay: React.FC<AssetCardOverlayProps> = ({
         )}
 
         <div className="flex items-start gap-1 ml-auto">
-          {/* 확장자 레이블 배지 */}
-          {showExtensionLabel && !hasError && !isLoading && extension && (
-            <span className={cn(
-              "text-[9px] font-bold uppercase tracking-widest px-1.5 py-0.5 rounded-md",
-              "bg-black/40 backdrop-blur-sm text-white/60 border border-white/10",
-              "opacity-0 group-hover:opacity-100 transition-opacity duration-300"
-            )}>
-              {extension}
-            </span>
-          )}
-
           {!hasError && !isLoading && (
             <NVIconButton 
                 icon={Star}
@@ -144,16 +125,6 @@ export const AssetCardOverlay: React.FC<AssetCardOverlayProps> = ({
               (!hasError && !isLoading) && "group-hover:text-white"
             )}>
               {displayName}
-            </p>
-          )}
-
-          {/* 파일 정보 (용량 / 확장자) */}
-          {showInfo && !hasError && !isLoading && infoText && (
-            <p className={cn(
-              "text-[10px] font-medium text-white/40 px-0.5 tracking-tight truncate",
-              "opacity-0 group-hover:opacity-100 transition-opacity duration-300"
-            )}>
-              {infoText}
             </p>
           )}
           

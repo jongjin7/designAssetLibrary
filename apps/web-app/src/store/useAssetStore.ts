@@ -24,10 +24,6 @@ export interface ViewOptions {
   sortMethod: 'default' | 'name' | 'date';
   sortOrder: 'asc' | 'desc';
   showName: boolean;
-  showInfo: boolean;
-  infoType: 'size' | 'weight';
-  showExtension: boolean;
-  showExtensionLabel: boolean;
   showAnnotation: boolean;
   showSubfolder: boolean;
 }
@@ -102,10 +98,6 @@ export const useAssetStore = create<AssetStore>((set, get) => ({
     sortMethod: 'default',
     sortOrder: 'asc',
     showName: true,
-    showInfo: true,
-    infoType: 'size',
-    showExtension: true,
-    showExtensionLabel: true,
     showAnnotation: true,
     showSubfolder: false,
   },

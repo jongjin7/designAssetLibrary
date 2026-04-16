@@ -7,8 +7,6 @@ import { AssetCardZoomPortal } from './parts/AssetCardZoomPortal';
 
 export interface AssetDisplayOptions {
   showName?: boolean;
-  showExtension?: boolean;
-  showExtensionLabel?: boolean;
   showInfo?: boolean;
   infoType?: 'size' | 'weight';
   showAnnotation?: boolean;
