@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { NVAssetGrid } from '@nova/ui';
 import { Asset } from '@nova/types/asset';
 import { AssetCard } from '@nova/components/library/AssetCard';
+import { useAssetStore } from '@nova/store/useAssetStore';
 
 interface AssetGridProps {
   assets: Asset[];
@@ -29,6 +30,8 @@ export function AssetGrid({
   isSidebarOpen 
 }: AssetGridProps) {
   const [isHovered, setIsHovered] = useState(false);
+  const viewOptions = useAssetStore(state => state.viewOptions);
+  const layout = isMobile ? 'masonry' : viewOptions.layout;
 
   // Auto-scroll to active asset when isSidebarOpen changes or activeAssetId changes
   useEffect(() => {
@@ -64,7 +67,7 @@ export function AssetGrid({
       onMouseLeave={() => setIsHovered(false)}
       className="h-full w-full"
     >
-      <NVAssetGrid zoom={zoom} isMobile={isMobile}>
+      <NVAssetGrid zoom={zoom} isMobile={isMobile} layout={layout}>
         {assets.map(asset => {
           // Dim other assets when a detail sidebar is open, UNLESS the grid is being hovered
           const isDimmed = isSidebarOpen && activeAssetId && !isHovered && asset.id !== activeAssetId;
@@ -80,6 +83,7 @@ export function AssetGrid({
               isMobile={isMobile}
               isSelectMode={isSelectMode}
               isDimmed={isDimmed}
+              thumbnailQuality={viewOptions.thumbnail}
             />
           );
         })}

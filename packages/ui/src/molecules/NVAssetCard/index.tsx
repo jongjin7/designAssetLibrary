@@ -16,6 +16,7 @@ export interface NVAssetCardProps {
   isCompact?: boolean;
   isMobile?: boolean;
   isLoading?: boolean;
+  thumbnailQuality?: 'speed' | 'quality';
   onTap?: (e: React.MouseEvent) => void;
   onSelect?: (e: React.MouseEvent) => void;
   onFavoriteToggle?: (e: React.MouseEvent) => void;
@@ -35,6 +36,7 @@ export const NVAssetCard: React.FC<NVAssetCardProps> = ({
   isCompact = false,
   isMobile = false,
   isLoading = false,
+  thumbnailQuality = 'quality',
   onTap,
   onSelect,
   onFavoriteToggle,
@@ -122,6 +124,7 @@ export const NVAssetCard: React.FC<NVAssetCardProps> = ({
         setHasError={setHasError}
         isLoading={isLoading}
         isLongPressing={isLongPressing}
+        thumbnailQuality={thumbnailQuality}
       />
 
       <AssetCardOverlay 

@@ -5,7 +5,8 @@ import { useAssetStore, LibraryFilters } from '@nova/store/useAssetStore';
 export function useLibraryFilters(assets: Asset[]) {
   const {
      searchText, setSearchText, isFilterOpen, setIsFilterOpen,
-     activeFilters, setActiveFilters, handleFilterReset: resetAll
+     activeFilters, setActiveFilters, handleFilterReset: resetAll,
+     viewOptions,
   } = useAssetStore();
   
   const filteredAssets = useMemo(() => {
@@ -62,9 +63,23 @@ export function useLibraryFilters(assets: Asset[]) {
         });
       }
     }
+
+    // Sort
+    const { sortMethod, sortOrder } = viewOptions;
+    if (sortMethod !== 'default') {
+      result = [...result].sort((a, b) => {
+        let cmp = 0;
+        if (sortMethod === 'name') {
+          cmp = a.fileName.localeCompare(b.fileName, undefined, { numeric: true, sensitivity: 'base' });
+        } else if (sortMethod === 'date') {
+          cmp = new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime();
+        }
+        return sortOrder === 'desc' ? -cmp : cmp;
+      });
+    }
     
     return result;
-  }, [assets, searchText, activeFilters]);
+  }, [assets, searchText, activeFilters, viewOptions]);
 
   const handleFilterApply = useCallback((filters: LibraryFilters) => {
     setActiveFilters(filters);

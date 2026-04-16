@@ -13,6 +13,7 @@ interface AssetCardImageProps {
   setHasError: (v: boolean) => void;
   isLoading: boolean;
   isLongPressing: boolean;
+  thumbnailQuality?: 'speed' | 'quality';
 }
 
 export const AssetCardImage: React.FC<AssetCardImageProps> = ({
@@ -25,7 +26,8 @@ export const AssetCardImage: React.FC<AssetCardImageProps> = ({
   hasError,
   setHasError,
   isLoading,
-  isLongPressing
+  isLongPressing,
+  thumbnailQuality = 'quality',
 }) => {
   return (
     <div className={cn(
@@ -50,7 +52,7 @@ export const AssetCardImage: React.FC<AssetCardImageProps> = ({
         <img 
           src={thumbnail} 
           alt={fileName} 
-          loading="lazy" 
+          loading={thumbnailQuality === 'speed' ? 'lazy' : 'eager'}
           onLoad={() => setIsLoaded(true)}
           onError={() => {
             console.error(`Failed to load asset image: ${thumbnail}`);
