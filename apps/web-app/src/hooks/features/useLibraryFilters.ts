@@ -66,7 +66,12 @@ export function useLibraryFilters(assets: Asset[]) {
 
     // Sort
     const { sortMethod, sortOrder } = viewOptions;
-    if (sortMethod !== 'default') {
+    if (sortMethod === 'default') {
+      // 기본: 최근 등록순 (createdAt 내림차순)
+      result = [...result].sort((a, b) =>
+        new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
+      );
+    } else {
       result = [...result].sort((a, b) => {
         let cmp = 0;
         if (sortMethod === 'name') {
